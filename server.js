@@ -1,6 +1,7 @@
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -8,10 +9,12 @@ const PORT = process.env.PORT || 10000;
 app.use(cors());
 app.use(express.json({ limit: "32kb" }));
 
+// Homepage
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Health check
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -19,6 +22,7 @@ app.get("/health", (req, res) => {
   });
 });
 
+// AI Chat
 app.post("/api/chat", async (req, res) => {
   const message = req.body?.message;
 
@@ -76,10 +80,9 @@ app.post("/api/chat", async (req, res) => {
     }
 
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content;
 
     return res.json({
-      reply: reply || "No response received."
+      reply: data.choices?.[0]?.message?.content || "No response received."
     });
 
   } catch (error) {
@@ -90,6 +93,7 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
+// Start server
 app.listen(PORT, "0.0.0.0", () => {
   console.log("AXON-AI server running on port " + PORT);
 });
