@@ -62,6 +62,8 @@ app.get("/api/health", async (req, res) => {
     );
 
     clearTimeout(timeout);
+    const data = await response.json();
+console.log("GROQ HEALTH RESPONSE:", JSON.stringify(data));
 
     if (!response.ok) {
       console.error("Groq health check failed:", response.status);
