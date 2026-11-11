@@ -82,7 +82,6 @@ console.log("GROQ HEALTH RESPONSE:", JSON.stringify(data));
       });
     }
 
-    const data = await response.json();
 
     if (!data.choices?.[0]?.message?.content) {
       return res.status(502).json({
