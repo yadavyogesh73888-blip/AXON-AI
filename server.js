@@ -49,7 +49,7 @@ app.get("/api/health", async (req, res) => {
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+          model: process.env.GROQ_MODEL || openai/gpt-oss-120b
           messages: [
             {
               role: "user",
@@ -96,7 +96,7 @@ console.log("GROQ HEALTH RESPONSE:", JSON.stringify(data));
       status: "ok",
       server: "online",
       ai_api: "connected",
-      model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+      model: process.env.GROQ_MODEL || openai/gpt-oss-120b
       message: "AXON-AI Groq connection successful."
     });
 
@@ -150,7 +150,7 @@ app.post("/api/chat", async (req, res) => {
           "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+          model: process.env.GROQ_MODEL || openai/gpt-oss-120b
           messages: [
             {
               role: "system",
