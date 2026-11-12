@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Server Health Check
+// Basic Server Health Check
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -22,11 +22,11 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Actual Groq API Health Check
+// Groq API Health Check
 app.get("/api/health", async (req, res) => {
   const apiKey = process.env.GROQ_API_KEY;
 
-  if (!apiKey) {
+  if (!apiKey || !apiKey.trim()) {
     return res.status(503).json({
       status: "failed",
       server: "online",
@@ -45,11 +45,11 @@ app.get("/api/health", async (req, res) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
+          "Authorization": `Bearer ${apiKey.trim()}`
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || openai/gpt-oss-120b
+          model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
           messages: [
             {
               role: "user",
@@ -61,12 +61,22 @@ app.get("/api/health", async (req, res) => {
       }
     );
 
+    const responseText = await response.text();
+
+    let data = {};
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      data = {};
+    }
+
     clearTimeout(timeout);
-    const data = await response.json();
-console.log("GROQ HEALTH RESPONSE:", JSON.stringify(data));
 
     if (!response.ok) {
-      console.error("Groq health check failed:", response.status);
+      console.error("GROQ HEALTH ERROR:", {
+        status: response.status,
+        details: responseText.slice(0, 1000)
+      });
 
       return res.status(502).json({
         status: "failed",
@@ -75,13 +85,14 @@ console.log("GROQ HEALTH RESPONSE:", JSON.stringify(data));
         http_status: response.status,
         message:
           response.status === 401 || response.status === 403
-            ? "API authentication failed."
+            ? "API authentication failed. Check your API key."
+            : response.status === 404
+            ? "Model or API endpoint not found. Check GROQ_MODEL."
             : response.status === 429
             ? "API rate limit reached."
             : "Groq API request failed."
       });
     }
-
 
     if (!data.choices?.[0]?.message?.content) {
       return res.status(502).json({
@@ -96,7 +107,7 @@ console.log("GROQ HEALTH RESPONSE:", JSON.stringify(data));
       status: "ok",
       server: "online",
       ai_api: "connected",
-      model: process.env.GROQ_MODEL || openai/gpt-oss-120b
+      model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
       message: "AXON-AI Groq connection successful."
     });
 
@@ -109,9 +120,10 @@ console.log("GROQ HEALTH RESPONSE:", JSON.stringify(data));
       status: "failed",
       server: "online",
       ai_api: "unavailable",
-      message: error.name === "AbortError"
-        ? "Groq API request timed out."
-        : "Unable to connect to Groq API."
+      message:
+        error.name === "AbortError"
+          ? "Groq API request timed out."
+          : "Unable to connect to Groq API."
     });
   }
 });
@@ -134,11 +146,14 @@ app.post("/api/chat", async (req, res) => {
 
   const apiKey = process.env.GROQ_API_KEY;
 
-  if (!apiKey) {
-    return res.status(500).json({
+  if (!apiKey || !apiKey.trim()) {
+    return res.status(503).json({
       reply: "AI service is not configured."
     });
   }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
 
   try {
     const response = await fetch(
@@ -147,18 +162,20 @@ app.post("/api/chat", async (req, res) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
+          "Authorization": `Bearer ${apiKey.trim()}`
         },
+        signal: controller.signal,
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || openai/gpt-oss-120b
+          model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
           messages: [
             {
               role: "system",
-              content: "You are AXON-AI, a helpful AI assistant. Reply in the language the user uses."
+              content:
+                "You are AXON-AI, a helpful AI assistant. Reply in the language the user uses. Be clear, accurate and helpful."
             },
             {
               role: "user",
-              content: message
+              content: message.trim()
             }
           ],
           max_tokens: 800
@@ -166,12 +183,20 @@ app.post("/api/chat", async (req, res) => {
       }
     );
 
-    if (!response.ok) {
-      const errorBody = await response.text();
+    const responseText = await response.text();
+    clearTimeout(timeout);
 
+    let data = {};
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      data = {};
+    }
+
+    if (!response.ok) {
       console.error("GROQ API ERROR:", {
         status: response.status,
-        details: errorBody.slice(0, 1000)
+        details: responseText.slice(0, 1000)
       });
 
       return res.status(502).json({
@@ -179,17 +204,24 @@ app.post("/api/chat", async (req, res) => {
       });
     }
 
-    const data = await response.json();
+    const aiReply = data.choices?.[0]?.message?.content;
 
     return res.json({
-      reply: data.choices?.[0]?.message?.content || "No response received."
+      reply: aiReply || "No response received."
     });
 
   } catch (error) {
+    clearTimeout(timeout);
+
     console.error("Server error:", error.message);
 
-    return res.status(500).json({
-      reply: "Something went wrong."
+    return res.status(
+      error.name === "AbortError" ? 504 : 500
+    ).json({
+      reply:
+        error.name === "AbortError"
+          ? "AI response timed out. Please try again."
+          : "Something went wrong."
     });
   }
 });
@@ -198,4 +230,3 @@ app.post("/api/chat", async (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log("AXON-AI server running on port " + PORT);
 });
-        
