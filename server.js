@@ -31,7 +31,7 @@ app.get("/api/health", async (req, res) => {
       status: "failed",
       server: "online",
       ai_api: "not_configured",
-      message: "GROQ_API_KEY is missing."
+      message: "hi"
     });
   }
 
