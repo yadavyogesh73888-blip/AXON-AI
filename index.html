@@ -96,13 +96,26 @@ button{
 .secondary{
   background:#18314a;
   border:1px solid var(--line);
+  }.panel{
+  background:linear-gradient(145deg,#111f35,#0a1425);
+  border:1px solid rgba(90,140,190,.22);
+  border-radius:22px;
+  padding:30px;
+  margin-top:30px;
+  box-shadow:0 18px 55px rgba(0,0,0,.35);
+  backdrop-filter:blur(18px);
+  transition:all .3s ease;
 }
-.panel{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:22px;
-  margin-top:25px;
+
+.panel h2{
+  color:#f5f8ff;
+  font-size:26px;
+  font-weight:700;
+  letter-spacing:.3px;
+}
+
+.panel .small{
+  color:#9aafc8;
 }
 h2{margin-top:0}
 input,textarea{
