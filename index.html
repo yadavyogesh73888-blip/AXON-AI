@@ -131,15 +131,52 @@ input,textarea{
 input:focus,textarea:focus{border-color:var(--cyan)}
 .actions{
   display:flex;
-  flex-wrap:wrap;
-  gap:9px;
-  margin-top:12px;
+  flex-direction:column;
+  gap:14px;
+  margin-top:22px;
 }
+
+.actions button{
+  width:100%;
+  min-height:50px;
+  padding:14px 18px;
+  border:1px solid #294765;
+  border-radius:13px;
+  background:linear-gradient(135deg,#12304d,#0c2035);
+  color:#f5f8ff;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:.3px;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+
+.actions button:hover{
+  border-color:var(--cyan);
+  background:linear-gradient(135deg,#17466b,#10304d);
+  transform:translateY(-2px);
+}
+
+.actions button:active{
+  transform:scale(.98);
+}
+
+.actions button.secondary{
+  background:#0a1929;
+  border-color:#29415a;
+}
+
+.actions button.secondary:hover{
+  background:#122941;
+  border-color:var(--cyan);
+}
+
 #status{
   color:var(--muted);
   font-size:13px;
-  margin-top:12px;
+  margin-top:16px;
   overflow-wrap:anywhere;
+  text-align:center;
 }
 #chat{
   display:none;
