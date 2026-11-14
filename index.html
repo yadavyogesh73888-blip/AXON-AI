@@ -3,623 +3,785 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
-<title>AXON AI</title>
+<title>AXON AI — Your AI Assistant</title>
 
 <style>
-:root {
-  --bg:#07111f;
-  --panel:#10243a;
-  --panel2:#142b40;
-  --line:#29445f;
-  --text:#f2f7ff;
-  --muted:#91a9c1;
-  --cyan:#46e0d3;
-  --blue:#438cf2;
+:root{
+ --bg:#07111f;
+ --panel:#10243a;
+ --panel2:#0c1b2c;
+ --line:#29445f;
+ --text:#f2f7ff;
+ --muted:#91a9c1;
+ --cyan:#35d6ff;
+ --blue:#1677ff;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
-  height:100vh;
-  height:100dvh;
-  overflow:hidden;
-  background:radial-gradient(ellipse at 50% 0%,#172b49,#090f1d 58%,#060a13);
-  color:var(--text);
-  font-family:Inter,Arial,sans-serif;
+ margin:0;
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,Helvetica,sans-serif;
+ min-height:100vh;
 }
 button,input,textarea{font:inherit}
-button{color:white;cursor:pointer}
-button:focus-visible,textarea:focus-visible{
-  outline:2px solid var(--cyan);
-  outline-offset:3px;
-}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
 
-/* CINEMATIC SPLASH */
-
+/* SPLASH SCREEN */
 #splash{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:19px;
-  background:radial-gradient(circle,#183b59 0%,#09182b 45%,#030812 100%);
-  transition:opacity .9s,visibility .9s;
-  overflow:hidden;
+ position:fixed;
+ inset:0;
+ z-index:100;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ background:radial-gradient(circle,#153d59,#07111f 70%);
+ animation:splashOut 1s ease 2.4s forwards;
 }
-#splash:before{
-  content:"";
-  position:absolute;
-  width:260px;
-  height:260px;
-  border:1px solid #46e0d366;
-  border-radius:50%;
-  box-shadow:0 0 75px #46e0d322,inset 0 0 60px #46e0d322;
-  animation:ring 3s ease-in-out infinite;
+.splash-logo{
+ font-size:42px;
+ font-weight:900;
+ letter-spacing:6px;
+ color:var(--cyan);
+ text-shadow:0 0 30px #35d6ff;
+ animation:logoIn 1.3s ease;
 }
-#splash.done{opacity:0;visibility:hidden;pointer-events:none}
-.splash-image{
-  width:190px;height:190px;
-  object-fit:contain;
-  position:relative;
-  filter:drop-shadow(0 0 28px #46e0d366);
-  animation:logoEnter 1.5s ease both;
+.splash-line{
+ width:130px;
+ height:3px;
+ margin-top:20px;
+ background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+ animation:loading 1.5s infinite;
 }
-.splash-title{
-  position:relative;
-  font-size:26px;
-  font-weight:800;
-  letter-spacing:8px;
-  animation:fadeUp 1.4s ease both;
-}
-.splash-sub{
-  position:relative;
-  color:var(--muted);
-  font-size:11px;
-  letter-spacing:4px;
-}
-.loader{
-  width:115px;height:3px;
-  background:#ffffff22;
-  border-radius:10px;
-  overflow:hidden;
-}
-.loader:after{
-  content:"";
-  display:block;
-  width:40%;height:100%;
-  background:var(--cyan);
-  box-shadow:0 0 12px var(--cyan);
-  animation:loading 1.4s infinite;
-}
-@keyframes ring{
-  0%,100%{transform:scale(.85);opacity:.3}
-  50%{transform:scale(1.15);opacity:1}
-}
-@keyframes logoEnter{
-  from{opacity:0;transform:scale(.65) rotate(-8deg)}
-  to{opacity:1;transform:scale(1) rotate(0)}
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(14px)}
-  to{opacity:1;transform:translateY(0)}
+@keyframes logoIn{
+ from{opacity:0;transform:scale(.7)}
+ to{opacity:1;transform:scale(1)}
 }
 @keyframes loading{
-  from{transform:translateX(-120%)}
-  to{transform:translateX(280%)}
+ from{transform:scaleX(.3);opacity:.3}
+ to{transform:scaleX(1);opacity:1}
+}
+@keyframes splashOut{
+ to{opacity:0;visibility:hidden}
 }
 
-/* APP */
+/* LOGIN */
+.screen{display:none}
+#authScreen{
+ min-height:100vh;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+.auth-card{
+ width:100%;
+ max-width:420px;
+ padding:32px;
+ background:linear-gradient(145deg,#132b42,#0b1929);
+ border:1px solid var(--line);
+ border-radius:22px;
+ box-shadow:0 20px 70px #0008;
+}
+.brand{
+ text-align:center;
+ font-size:34px;
+ font-weight:900;
+ letter-spacing:4px;
+ color:var(--cyan);
+}
+.auth-sub{
+ text-align:center;
+ color:var(--muted);
+ margin-bottom:25px;
+}
+.auth-card h2{text-align:center}
+.field{
+ width:100%;
+ padding:15px;
+ margin:8px 0;
+ border:1px solid var(--line);
+ border-radius:11px;
+ background:#071827;
+ color:white;
+ outline:none;
+}
+.field:focus{border-color:var(--cyan)}
+.primary,.secondary{
+ width:100%;
+ border:0;
+ padding:14px;
+ margin-top:12px;
+ border-radius:11px;
+ font-weight:bold;
+}
+.primary{
+ background:var(--cyan);
+ color:#061421;
+}
+.secondary{
+ background:#193650;
+ color:white;
+ border:1px solid var(--line);
+}
+.link-btn{
+ background:none;
+ border:0;
+ color:var(--cyan);
+ padding:12px;
+}
+.auth-actions{
+ display:flex;
+ justify-content:space-between;
+ flex-wrap:wrap;
+}
+#authStatus{
+ color:#ffb7a8;
+ text-align:center;
+ font-size:13px;
+}
 
-.app{
-  width:100%;height:100%;
-  max-width:1200px;
-  margin:auto;
-  padding:0 22px;
-  display:flex;
-  flex-direction:column;
+/* MAIN APP */
+#appScreen{
+ height:100dvh;
+ flex-direction:column;
+ overflow:hidden;
 }
 header{
-  height:64px;
-  flex:none;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--line);
+ height:65px;
+ flex-shrink:0;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 17px;
+ border-bottom:1px solid var(--line);
+ background:#091827;
+ position:relative;
 }
-.header-btn{
-  width:43px;height:43px;
-  display:grid;
-  place-items:center;
-  border:1px solid transparent;
-  border-radius:13px;
-  background:transparent;
-  color:white;
-  font-size:24px;
+.header-brand{
+ color:var(--cyan);
+ font-weight:900;
+ letter-spacing:3px;
 }
-.header-btn:hover{
-  background:var(--panel2);
-  border-color:var(--line);
+.icon-btn{
+ border:1px solid var(--line);
+ background:#142b40;
+ color:white;
+ border-radius:10px;
+ padding:10px 14px;
 }
-.dots{font-size:27px;letter-spacing:2px;padding-bottom:12px}
-.new-chat-icon{font-size:24px}
+#menu{
+ display:none;
+ position:absolute;
+ top:58px;
+ left:12px;
+ z-index:30;
+ width:190px;
+ padding:8px;
+ background:#10243a;
+ border:1px solid var(--line);
+ border-radius:13px;
+ box-shadow:0 15px 35px #0008;
+}
+#menu button{
+ display:block;
+ width:100%;
+ padding:13px;
+ text-align:left;
+ background:none;
+ border:0;
+ color:white;
+ border-radius:8px;
+}
+#menu button:hover{background:#1b3b55}
 
 /* CHAT */
-
-#chat{
-  flex:1;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  position:relative;
+#chatArea{
+ flex:1;
+ overflow-y:auto;
+ padding:22px 16px;
+ scroll-behavior:smooth;
 }
-#messages{
-  flex:1;
-  min-height:0;
-  overflow-y:auto;
-  padding:20px 5px;
-  scrollbar-width:thin;
-  scrollbar-color:var(--line) transparent;
+#welcome{
+ max-width:700px;
+ margin:auto;
+ text-align:center;
+ position:relative;
+ top:25%;
 }
-.welcome{
-  position:absolute;
-  top:39%;
-  left:0;right:0;
-  transform:translateY(-50%);
-  text-align:center;
-  padding:15px;
-  pointer-events:none;
+#welcome h1{
+ font-size:clamp(26px,5vw,42px);
+ margin-bottom:12px;
 }
-.welcome h1{
-  margin:0 0 10px;
-  font-size:clamp(21px,4vw,29px);
-  letter-spacing:1px;
-  font-weight:750;
-}
-.welcome p{
-  margin:0;
-  color:var(--muted);
-  font-size:14px;
-}
+#welcome p{color:var(--muted)}
 .message{
-  width:fit-content;
-  max-width:min(85%,700px);
-  padding:13px 17px;
-  margin:14px 0;
-  border-radius:17px;
-  font-size:15px;
-  line-height:1.65;
-  overflow-wrap:anywhere;
-  white-space:pre-wrap;
+ max-width:850px;
+ width:fit-content;
+ padding:14px 17px;
+ margin:12px auto;
+ border-radius:17px;
+ line-height:1.6;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
 }
 .user{
-  margin-left:auto;
-  background:linear-gradient(135deg,#244777,#1b3762);
-  border:1px solid #355b91;
-  border-bottom-right-radius:5px;
+ margin-right:max(calc((100% - 850px)/2),0px);
+ margin-left:auto;
+ background:#16435e;
 }
 .ai{
-  margin-right:auto;
-  background:var(--panel2);
-  border:1px solid #25445d;
-  border-bottom-left-radius:5px;
+ margin-left:max(calc((100% - 850px)/2),0px);
+ margin-right:auto;
+ background:#122a40;
+ border:1px solid var(--line);
 }
-.typing{color:var(--cyan);font-size:13px}
+.typing{color:var(--cyan)}
 
 /* COMPOSER */
-
-.composer-area{
-  flex:none;
-  padding:12px 0 13px;
+footer{
+ flex-shrink:0;
+ padding:12px 15px 16px;
+ background:#091827;
+ border-top:1px solid var(--line);
 }
 .composer{
-  width:100%;
-  border:1px solid #31516c;
-  border-radius:22px;
-  background:var(--panel);
-  padding:11px 13px 9px;
-  box-shadow:0 8px 30px #0003;
-  transition:border-color .2s,box-shadow .2s;
-}
-.composer:focus-within{
-  border-color:#4389c0;
-  box-shadow:0 0 0 2px #318ce71c;
+ max-width:850px;
+ margin:auto;
+ padding:10px;
+ background:#10243a;
+ border:1px solid var(--line);
+ border-radius:17px;
 }
 #prompt{
-  display:block;
-  width:100%;
-  min-height:43px;
-  max-height:130px;
-  resize:none;
-  border:0;
-  outline:none;
-  background:transparent;
-  color:white;
-  padding:9px 3px;
-  font-size:15px;
-  line-height:1.5;
+ width:100%;
+ min-height:48px;
+ max-height:140px;
+ resize:none;
+ border:0;
+ outline:none;
+ background:transparent;
+ color:white;
+ padding:10px;
 }
-#prompt::placeholder{color:var(--muted)}
-.composer-bottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding-top:7px;
-}
-.composer-left,.composer-right{
-  display:flex;
-  align-items:center;
-  gap:10px;
+#prompt::placeholder{color:#91a9c1}
+.toolbar{
+ display:flex;
+ align-items:center;
+ gap:9px;
 }
 .tool-btn{
-  width:39px;height:39px;
-  display:grid;
-  place-items:center;
-  border:1px solid transparent;
-  border-radius:12px;
-  background:transparent;
-  color:#dcecff;
-  font-size:23px;
+ padding:11px 14px;
+ border:0;
+ border-radius:10px;
+ background:#193650;
+ color:white;
 }
-.tool-btn:hover{
-  background:#1a3650;
-  border-color:#31516c;
+.send-btn{
+ margin-left:auto;
+ background:var(--cyan);
+ color:#061421;
+ font-weight:bold;
 }
-.ask-label{
-  font-size:13px;
-  font-weight:750;
-  letter-spacing:.5px;
-  white-space:nowrap;
-}
-#sendBtn{
-  width:41px;height:41px;
-  display:grid;place-items:center;
-  border:0;border-radius:13px;
-  background:linear-gradient(135deg,#438cf2,#2467cf);
-  color:white;font-size:21px;
-}
-#sendBtn:disabled{opacity:.4;cursor:not-allowed}
-#fileInput{display:none}
-#fileName{
-  display:none;
-  color:var(--cyan);
-  font-size:12px;
-  padding:5px 3px;
-}
-.footer-note{
-  text-align:center;
-  color:#718ba4;
-  font-size:11px;
-  margin:10px 0 0;
+#status{
+ text-align:center;
+ font-size:12px;
+ color:var(--muted);
+ padding-top:8px;
 }
 
 /* SETTINGS */
-
 #settingsPanel{
-  position:fixed;
-  top:70px;
-  left:15px;
-  z-index:100;
-  display:none;
-  width:220px;
-  padding:12px;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:16px;
-  box-shadow:0 15px 40px #0008;
+ display:none;
+ position:fixed;
+ z-index:50;
+ inset:0;
+ background:#0009;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
 }
-#settingsPanel button{
-  width:100%;
-  text-align:left;
-  padding:12px;
-  background:transparent;
-  border:0;
-  border-radius:9px;
-  color:var(--text);
+.settings-card{
+ width:100%;
+ max-width:380px;
+ padding:24px;
+ background:var(--panel);
+ border:1px solid var(--line);
+ border-radius:18px;
 }
-#settingsPanel button:hover{background:var(--panel2)}
-#status{
-  font-size:11px;
-  color:var(--muted);
-  padding:8px 12px;
+.settings-card button{margin-top:10px}
+.setting-row{
+ padding:12px 0;
+ border-bottom:1px solid var(--line);
+ color:var(--muted);
 }
-
-/* MOBILE */
-
-@media(max-width:600px){
-  .app{padding:0 13px}
-  header{height:57px}
-  #messages{padding:12px 2px}
-  .welcome{top:39%;padding:12px 5px}
-  .welcome h1{font-size:22px}
-  .welcome p{font-size:12px}
-  .message{max-width:90%;font-size:14px;padding:12px 14px}
-  .composer-area{padding:8px 0 10px}
-  .composer{padding:10px 10px 8px;border-radius:20px}
-  #prompt{min-height:40px;font-size:14px}
-  .composer-left,.composer-right{gap:6px}
-  .tool-btn{width:36px;height:36px}
-  .ask-label{font-size:11px}
-  #sendBtn{width:38px;height:38px}
-  .footer-note{font-size:10px}
+@media(max-width:500px){
+ .auth-card{padding:23px}
+ header{padding:0 12px}
+ footer{padding:9px}
+ .message{max-width:94%}
+ .user{margin-right:0}
+ .ai{margin-left:0}
 }
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH -->
-
 <div id="splash">
-  <img src="/IMG_20261114_073941.png" class="splash-image" alt="AXON AI">
-  <div class="splash-title">AXON AI</div>
-  <div class="splash-sub">INTELLIGENCE REDEFINED</div>
-  <div class="loader"></div>
+ <div class="splash-logo">AXON AI</div>
+ <div class="splash-line"></div>
 </div>
 
-<!-- SETTINGS -->
+<!-- LOGIN SCREEN -->
+<section id="authScreen" class="screen">
+ <div class="auth-card">
+  <div class="brand">AXON AI</div>
+  <p class="auth-sub">Your intelligent AI assistant</p>
 
-<div id="settingsPanel">
-  <button id="newChatMenu">✎ &nbsp; New Chat</button>
-  <button id="clearChat">⌫ &nbsp; Clear Chat</button>
-  <div id="status">AXON AI Ready</div>
-</div>
+  <h2 id="authHeading">Welcome Back</h2>
 
-<!-- APP -->
+  <input id="displayName" class="field"
+   placeholder="Your name" style="display:none">
 
-<div class="app">
+  <input id="email" class="field"
+   type="email" placeholder="Email address">
 
-<header>
-  <button class="header-btn dots" id="menuBtn" aria-label="Menu">•••</button>
-  <button class="header-btn new-chat-icon" id="newChatBtn" aria-label="New Chat" title="New Chat">✎</button>
-</header>
+  <input id="password" class="field"
+   type="password" placeholder="Password">
 
-<main id="chat">
-  <div id="messages"></div>
-  <div class="welcome" id="welcome">
-    <h1>HOW CAN I HELP YOU?</h1>
-    <p>Ask anything. AXON AI is here to help.</p>
-  </div>
-</main>
+  <button id="authButton" class="primary">Login</button>
+  <button id="googleButton" class="secondary">
+   Continue with Google
+  </button>
 
-<section class="composer-area">
-  <div class="composer">
-
-    <textarea id="prompt" rows="1" placeholder="Message AXON AI..." aria-label="Message AXON AI"></textarea>
-
-    <div id="fileName"></div>
-
-    <div class="composer-bottom">
-      <div class="composer-left">
-        <button class="tool-btn" id="attachBtn" aria-label="Attach file" title="Attach file">+</button>
-        <span class="ask-label">ASK AXON AI</span>
-      </div>
-
-      <div class="composer-right">
-        <button class="tool-btn" id="micBtn" aria-label="Voice input" title="Voice input">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="2" width="6" height="12" rx="3"/>
-            <path d="M5 10v2a7 7 0 0 0 14 0v-2"/>
-            <path d="M12 19v3M8 22h8"/>
-          </svg>
-        </button>
-        <button id="sendBtn" aria-label="Send message" title="Send">➤</button>
-      </div>
-    </div>
-
-    <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.doc,.docx">
+  <div class="auth-actions">
+   <button id="switchAuth" class="link-btn">
+    Create account
+   </button>
+   <button id="forgotPassword" class="link-btn">
+    Forgot password?
+   </button>
   </div>
 
-  <p class="footer-note">AXON AI can make mistakes. Check important information.</p>
+  <p id="authStatus"></p>
+ </div>
 </section>
 
+<!-- MAIN CHAT SCREEN -->
+<section id="appScreen" class="screen">
+
+ <header>
+  <button class="icon-btn" id="menuButton">•••</button>
+  <div class="header-brand">AXON AI</div>
+  <button class="icon-btn" id="newChatButton">＋</button>
+
+  <div id="menu">
+   <button id="menuNewChat">＋ New Chat</button>
+   <button id="menuClear">Clear Chat</button>
+   <button id="menuSettings">Settings</button>
+   <button id="menuLogout">Logout</button>
+  </div>
+ </header>
+
+ <main id="chatArea">
+  <div id="welcome">
+   <h1>HOW CAN I HELP YOU?</h1>
+   <p>Ask anything. Explore ideas. Create something amazing.</p>
+  </div>
+ </main>
+
+ <footer>
+  <div class="composer">
+   <textarea id="prompt"
+    placeholder="Message AXON AI..."></textarea>
+
+   <div class="toolbar">
+    <button class="tool-btn" id="attachButton">＋</button>
+    <input type="file" id="fileInput" hidden>
+
+    <button class="tool-btn" id="micButton">🎙</button>
+
+    <button class="tool-btn send-btn" id="sendButton">
+     ASK AXON AI ➤
+    </button>
+   </div>
+  </div>
+  <div id="status">AXON AI Ready</div>
+ </footer>
+</section>
+
+<!-- SETTINGS WINDOW -->
+<div id="settingsPanel">
+ <div class="settings-card">
+  <h2>AXON AI Settings</h2>
+  <div class="setting-row" id="accountInfo">
+   Account information
+  </div>
+  <div class="setting-row">
+   Version: AXON AI
+  </div>
+  <button class="secondary" id="closeSettings">Close</button>
+  <button class="primary" id="settingsLogout">Logout</button>
+ </div>
 </div>
 
-<script>
-/* SPLASH */
+<script type="module">
 
-const splash = document.getElementById("splash");
+/* FIREBASE CONNECTION */
+import {initializeApp}
+ from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 
-function hideSplash(){
-  setTimeout(()=>splash.classList.add("done"),1700);
-}
-window.addEventListener("load",hideSplash);
+import {
+ getAuth,onAuthStateChanged,
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ GoogleAuthProvider,signInWithPopup,
+ sendPasswordResetEmail,signOut,
+ updateProfile
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
-/* ELEMENTS */
+/* APNI EXISTING FIREBASE CONFIG YAHAN LAGANA */
+const firebaseConfig={
+ apiKey:"YOUR_FIREBASE_API_KEY",
+ authDomain:"axon-ai-9ee3b.firebaseapp.com",
+ projectId:"axon-ai-9ee3b",
+ storageBucket:"YOUR_STORAGE_BUCKET",
+ messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
+ appId:"YOUR_FIREBASE_APP_ID"
+};
 
-const promptInput=document.getElementById("prompt");
-const messages=document.getElementById("messages");
-const welcome=document.getElementById("welcome");
-const sendBtn=document.getElementById("sendBtn");
-const statusText=document.getElementById("status");
+const firebaseApp=initializeApp(firebaseConfig);
+const auth=getAuth(firebaseApp);
+const provider=new GoogleAuthProvider();
 
-let history=[];
+const $=id=>document.getElementById(id);
+
+let signupMode=false;
 let busy=false;
+let chatHistory=[];
 
-/* MESSAGE DISPLAY */
-
-function addMessage(text,type){
-  const div=document.createElement("div");
-  div.className="message "+type;
-  div.textContent=text;
-  messages.appendChild(div);
-  messages.scrollTop=messages.scrollHeight;
-  return div;
+/* SCREEN MANAGEMENT */
+function showStatus(message){
+ $("status").textContent=message;
 }
-
-function showStatus(text){
-  statusText.textContent=text;
+function showAuthStatus(message){
+ $("authStatus").textContent=message;
 }
+function showScreen(user){
+ $("authScreen").style.display=user?"none":"flex";
+ $("appScreen").style.display=user?"flex":"none";
+ if(user){
+  $("accountInfo").textContent=
+   "Signed in: "+(user.email||"AXON User");
+ }
+}
+onAuthStateChanged(auth,user=>{
+ showScreen(user);
+});
 
-/* AI REQUEST */
+/* LOGIN AND SIGNUP */
+$("switchAuth").onclick=()=>{
+ signupMode=!signupMode;
+ $("displayName").style.display=
+  signupMode?"block":"none";
+ $("authHeading").textContent=
+  signupMode?"Create Account":"Welcome Back";
+ $("authButton").textContent=
+  signupMode?"Sign Up":"Login";
+ $("switchAuth").textContent=
+  signupMode?"Already registered? Login":"Create account";
+};
 
-async function sendMessage(){
+$("authButton").onclick=async()=>{
+ const email=$("email").value.trim();
+ const password=$("password").value;
 
-  const text=promptInput.value.trim();
+ if(!email||!password){
+  showAuthStatus("Email aur password enter karo.");
+  return;
+ }
 
-  if(!text || busy) return;
-
-  busy=true;
-  sendBtn.disabled=true;
-  welcome.style.display="none";
-
-  addMessage(text,"user");
-
-  promptInput.value="";
-  promptInput.style.height="auto";
-
-  const typing=addMessage("AXON AI is thinking...","ai typing");
-
-  try{
-
-    const response=await fetch("/api/chat",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        message:text,
-        history:history
-      })
+ try{
+  if(signupMode){
+   const result=await createUserWithEmailAndPassword(
+    auth,email,password
+   );
+   const name=$("displayName").value.trim();
+   if(name){
+    await updateProfile(result.user,{
+     displayName:name
     });
-
-    const data=await response.json();
-
-    if(!response.ok){
-      throw new Error(data.error || "AI response failed.");
-    }
-
-    if(!data.reply){
-      throw new Error("AI response was empty.");
-    }
-
-    typing.className="message ai";
-    typing.textContent=data.reply;
-
-    history.push(
-      {role:"user",content:text},
-      {role:"assistant",content:data.reply}
-    );
-
-    showStatus("AXON AI Ready");
-
-  }catch(error){
-
-    typing.className="message ai";
-    typing.textContent="Sorry, AI response nahi aa paya.\n"+error.message;
-
-    showStatus("Connection Error");
-    console.error(error);
-
-  }finally{
-
-    busy=false;
-    sendBtn.disabled=false;
-    promptInput.focus();
-
+   }
+  }else{
+   await signInWithEmailAndPassword(
+    auth,email,password
+   );
   }
+  showAuthStatus("Login successful.");
+ }catch(error){
+  showAuthStatus(error.message);
+ }
+};
+
+/* GOOGLE LOGIN */
+$("googleButton").onclick=async()=>{
+ try{
+  await signInWithPopup(auth,provider);
+ }catch(error){
+  showAuthStatus(error.message);
+ }
+};
+
+/* FORGOT PASSWORD */
+$("forgotPassword").onclick=async()=>{
+ const email=$("email").value.trim();
+ if(!email){
+  showAuthStatus("Pehle email enter karo.");
+  return;
+ }
+ try{
+  await sendPasswordResetEmail(auth,email);
+  showAuthStatus("Password reset email sent.");
+ }catch(error){
+  showAuthStatus(error.message);
+ }
+};
+
+/* LOGOUT */
+async function logout(){
+ try{
+  await signOut(auth);
+ }catch(error){
+  alert(error.message);
+ }
 }
-
-/* SEND */
-
-sendBtn.addEventListener("click",sendMessage);
-
-promptInput.addEventListener("keydown",event=>{
-  if(event.key==="Enter" && !event.shiftKey){
-    event.preventDefault();
-    sendMessage();
-  }
-});
-
-/* AUTO RESIZE */
-
-promptInput.addEventListener("input",()=>{
-  promptInput.style.height="auto";
-  promptInput.style.height=Math.min(promptInput.scrollHeight,130)+"px";
-});
-
-/* NEW CHAT */
-
-function newChat(){
-  messages.innerHTML="";
-  history=[];
-  welcome.style.display="block";
-  promptInput.value="";
-  promptInput.style.height="auto";
-  document.getElementById("settingsPanel").style.display="none";
-  promptInput.focus();
-}
-
-document.getElementById("newChatBtn").addEventListener("click",newChat);
-document.getElementById("newChatMenu").addEventListener("click",newChat);
-document.getElementById("clearChat").addEventListener("click",newChat);
+$("menuLogout").onclick=logout;
+$("settingsLogout").onclick=logout;
 
 /* MENU */
+$("menuButton").onclick=()=>{
+ const menu=$("menu");
+ menu.style.display=
+  menu.style.display==="block"?"none":"block";
+};
 
-document.getElementById("menuBtn").addEventListener("click",()=>{
-  const panel=document.getElementById("settingsPanel");
-  panel.style.display=panel.style.display==="block"?"none":"block";
-});
+/* SETTINGS */
+function openSettings(){
+ $("menu").style.display="none";
+ $("settingsPanel").style.display="flex";
+}
+$("menuSettings").onclick=openSettings;
+$("closeSettings").onclick=()=>{
+ $("settingsPanel").style.display="none";
+};
 
-/* ATTACHMENT */
+/* CHAT MESSAGE */
+function addMessage(message,type){
+ const element=document.createElement("div");
+ element.className="message "+type;
+ element.textContent=message;
+ $("chatArea").appendChild(element);
+ $("chatArea").scrollTop=$("chatArea").scrollHeight;
+ return element;
+}
 
-const fileInput=document.getElementById("fileInput");
-const fileName=document.getElementById("fileName");
+/* NEW CHAT */
+function newChat(){
+ chatHistory=[];
+ $("chatArea").innerHTML=`
+  <div id="welcome">
+   <h1>HOW CAN I HELP YOU?</h1>
+   <p>Ask anything. Explore ideas. Create something amazing.</p>
+  </div>`;
+ $("menu").style.display="none";
+ showStatus("New chat started");
+}
+$("newChatButton").onclick=newChat;
+$("menuNewChat").onclick=newChat;
 
-document.getElementById("attachBtn").addEventListener("click",()=>{
-  fileInput.click();
-});
+/* CLEAR CHAT */
+$("menuClear").onclick=()=>{
+ if(confirm("Do you want to clear this chat?")){
+  newChat();
+ }
+};
 
-fileInput.addEventListener("change",()=>{
-  if(fileInput.files.length){
-    fileName.textContent="Selected: "+fileInput.files[0].name;
-    fileName.style.display="block";
-  }
-});
+/* REAL AI CONNECTION */
+async function sendMessage(){
 
-/* MICROPHONE */
+ const message=$("prompt").value.trim();
 
-document.getElementById("micBtn").addEventListener("click",()=>{
-  const SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition;
+ if(!message||busy)return;
 
-  if(!SpeechRecognition){
-    alert("Voice input is not supported in this browser.");
-    return;
-  }
+ busy=true;
+ $("sendButton").disabled=true;
 
-  const recognition=new SpeechRecognition();
-  recognition.lang="en-IN";
-  recognition.interimResults=false;
+ $("welcome")?.remove();
 
-  recognition.onresult=event=>{
-    promptInput.value=event.results[0][0].transcript;
-    promptInput.dispatchEvent(new Event("input"));
-    promptInput.focus();
-  };
+ addMessage(message,"user");
 
-  recognition.onerror=()=>{
-    showStatus("Voice input unavailable");
-  };
+ $("prompt").value="";
+ const typing=addMessage(
+  "AXON AI is thinking...","ai typing"
+ );
 
-  recognition.start();
-});
+ showStatus("Connecting to AXON AI...");
 
-/* INITIAL CONNECTION CHECK */
+ try{
 
-fetch("/api/health")
-  .then(response=>{
-    if(!response.ok) throw new Error();
-    showStatus("AXON AI Connected");
-  })
-  .catch(()=>{
-    showStatus("AI Server Unavailable");
+  const response=await fetch("/api/chat",{
+   method:"POST",
+   headers:{
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify({
+    message:message,
+    history:chatHistory
+   })
   });
 
-</script>
+  const raw=await response.text();
+  let data;
 
+  try{
+   data=JSON.parse(raw);
+  }catch{
+   throw new Error(
+    "Server returned invalid response: "+
+    raw.slice(0,150)
+   );
+  }
+
+  if(!response.ok){
+   throw new Error(
+    data.error||"AI server request failed."
+   );
+  }
+
+  const reply=
+   data.reply||data.response||data.answer;
+
+  if(!reply){
+   throw new Error("AI response was empty.");
+  }
+
+  typing.className="message ai";
+  typing.textContent=reply;
+
+  chatHistory.push(
+   {role:"user",content:message},
+   {role:"assistant",content:reply}
+  );
+
+  showStatus("AXON AI Ready");
+
+ }catch(error){
+
+  typing.className="message ai";
+  typing.textContent=
+   "Sorry, AI response nahi aa paya.\n"+
+   error.message;
+
+  showStatus("Connection Error");
+  console.error(error);
+
+ }finally{
+
+  busy=false;
+  $("sendButton").disabled=false;
+  $("prompt").focus();
+
+ }
+}
+
+$("sendButton").onclick=sendMessage;
+
+/* ENTER TO SEND */
+$("prompt").addEventListener("keydown",event=>{
+ if(event.key==="Enter"&&!event.shiftKey){
+  event.preventDefault();
+  sendMessage();
+ }
+});
+
+/* AUTO TEXTAREA HEIGHT */
+$("prompt").addEventListener("input",()=>{
+ $("prompt").style.height="auto";
+ $("prompt").style.height=
+  Math.min($("prompt").scrollHeight,140)+"px";
+});
+
+/* FILE SELECTION */
+$("attachButton").onclick=()=>{
+ $("fileInput").click();
+};
+
+$("fileInput").onchange=()=>{
+ const file=$("fileInput").files[0];
+ if(file){
+  addMessage("Selected file: "+file.name,"user");
+  showStatus(
+   "File selected. Backend upload support is required to send it to AI."
+  );
+ }
+};
+
+/* MICROPHONE */
+$("micButton").onclick=()=>{
+ const SpeechRecognition=
+  window.SpeechRecognition||
+  window.webkitSpeechRecognition;
+
+ if(!SpeechRecognition){
+  showStatus("Voice input is not supported.");
+  return;
+ }
+
+ const recognition=new SpeechRecognition();
+ recognition.lang="hi-IN";
+ recognition.interimResults=false;
+
+ recognition.onstart=()=>{
+  showStatus("Listening...");
+ };
+
+ recognition.onresult=event=>{
+  $("prompt").value+=
+   event.results[0][0].transcript;
+  $("prompt").focus();
+  showStatus("Voice input ready.");
+ };
+
+ recognition.onerror=()=>{
+  showStatus("Microphone error.");
+ };
+
+ recognition.onend=()=>{
+  if($("status").textContent==="Listening..."){
+   showStatus("AXON AI Ready");
+  }
+ };
+
+ recognition.start();
+};
+
+/* OPTIONAL HEALTH CHECK */
+async function checkServer(){
+ try{
+  const response=await fetch("/api/health");
+  if(response.ok){
+   showStatus("AXON AI Server Connected");
+  }
+ }catch(error){
+  showStatus("AI server status unavailable");
+ }
+}
+
+checkServer();
+
+</script>
 </body>
 </html>
