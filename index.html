@@ -3,785 +3,355 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111f">
-<title>AXON AI — Your AI Assistant</title>
-
+<title>AXON AI</title>
 <style>
-:root{
- --bg:#07111f;
- --panel:#10243a;
- --panel2:#0c1b2c;
- --line:#29445f;
- --text:#f2f7ff;
- --muted:#91a9c1;
- --cyan:#35d6ff;
- --blue:#1677ff;
-}
+:root{--bg:#07111f;--panel:#10243a;--line:#29445f;--text:#f2f7ff;--muted:#91a9c1;--cyan:#35d6ff}
 *{box-sizing:border-box}
-body{
- margin:0;
- background:var(--bg);
- color:var(--text);
- font-family:Arial,Helvetica,sans-serif;
- min-height:100vh;
-}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-
-/* SPLASH SCREEN */
-#splash{
- position:fixed;
- inset:0;
- z-index:100;
- display:flex;
- align-items:center;
- justify-content:center;
- flex-direction:column;
- background:radial-gradient(circle,#153d59,#07111f 70%);
- animation:splashOut 1s ease 2.4s forwards;
-}
-.splash-logo{
- font-size:42px;
- font-weight:900;
- letter-spacing:6px;
- color:var(--cyan);
- text-shadow:0 0 30px #35d6ff;
- animation:logoIn 1.3s ease;
-}
-.splash-line{
- width:130px;
- height:3px;
- margin-top:20px;
- background:linear-gradient(90deg,transparent,var(--cyan),transparent);
- animation:loading 1.5s infinite;
-}
-@keyframes logoIn{
- from{opacity:0;transform:scale(.7)}
- to{opacity:1;transform:scale(1)}
-}
-@keyframes loading{
- from{transform:scaleX(.3);opacity:.3}
- to{transform:scaleX(1);opacity:1}
-}
-@keyframes splashOut{
- to{opacity:0;visibility:hidden}
-}
-
-/* LOGIN */
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}
 .screen{display:none}
-#authScreen{
- min-height:100vh;
- align-items:center;
- justify-content:center;
- padding:20px;
-}
-.auth-card{
- width:100%;
- max-width:420px;
- padding:32px;
- background:linear-gradient(145deg,#132b42,#0b1929);
- border:1px solid var(--line);
- border-radius:22px;
- box-shadow:0 20px 70px #0008;
-}
-.brand{
- text-align:center;
- font-size:34px;
- font-weight:900;
- letter-spacing:4px;
- color:var(--cyan);
-}
-.auth-sub{
- text-align:center;
- color:var(--muted);
- margin-bottom:25px;
-}
+#splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle,#153d59,#07111f 70%);display:flex;align-items:center;justify-content:center;flex-direction:column;animation:out 1s 2.4s forwards}
+.splash-logo{font-size:42px;font-weight:900;letter-spacing:6px;color:var(--cyan);text-shadow:0 0 30px var(--cyan)}
+.splash-line{width:130px;height:3px;margin-top:20px;background:var(--cyan);animation:load 1s infinite alternate}
+@keyframes load{to{transform:scaleX(.3);opacity:.3}}
+@keyframes out{to{opacity:0;visibility:hidden}}
+#authScreen{min-height:100vh;align-items:center;justify-content:center;padding:20px}
+.auth-card{width:100%;max-width:420px;padding:30px;background:linear-gradient(145deg,#132b42,#0b1929);border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 70px #0008}
+.brand{text-align:center;font-size:34px;font-weight:900;letter-spacing:4px;color:var(--cyan)}
+.auth-sub{text-align:center;color:var(--muted)}
 .auth-card h2{text-align:center}
-.field{
- width:100%;
- padding:15px;
- margin:8px 0;
- border:1px solid var(--line);
- border-radius:11px;
- background:#071827;
- color:white;
- outline:none;
-}
-.field:focus{border-color:var(--cyan)}
-.primary,.secondary{
- width:100%;
- border:0;
- padding:14px;
- margin-top:12px;
- border-radius:11px;
- font-weight:bold;
-}
-.primary{
- background:var(--cyan);
- color:#061421;
-}
-.secondary{
- background:#193650;
- color:white;
- border:1px solid var(--line);
-}
-.link-btn{
- background:none;
- border:0;
- color:var(--cyan);
- padding:12px;
-}
-.auth-actions{
- display:flex;
- justify-content:space-between;
- flex-wrap:wrap;
-}
-#authStatus{
- color:#ffb7a8;
- text-align:center;
- font-size:13px;
-}
-
-/* MAIN APP */
-#appScreen{
- height:100dvh;
- flex-direction:column;
- overflow:hidden;
-}
-header{
- height:65px;
- flex-shrink:0;
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:0 17px;
- border-bottom:1px solid var(--line);
- background:#091827;
- position:relative;
-}
-.header-brand{
- color:var(--cyan);
- font-weight:900;
- letter-spacing:3px;
-}
-.icon-btn{
- border:1px solid var(--line);
- background:#142b40;
- color:white;
- border-radius:10px;
- padding:10px 14px;
-}
-#menu{
- display:none;
- position:absolute;
- top:58px;
- left:12px;
- z-index:30;
- width:190px;
- padding:8px;
- background:#10243a;
- border:1px solid var(--line);
- border-radius:13px;
- box-shadow:0 15px 35px #0008;
-}
-#menu button{
- display:block;
- width:100%;
- padding:13px;
- text-align:left;
- background:none;
- border:0;
- color:white;
- border-radius:8px;
-}
-#menu button:hover{background:#1b3b55}
-
-/* CHAT */
-#chatArea{
- flex:1;
- overflow-y:auto;
- padding:22px 16px;
- scroll-behavior:smooth;
-}
-#welcome{
- max-width:700px;
- margin:auto;
- text-align:center;
- position:relative;
- top:25%;
-}
-#welcome h1{
- font-size:clamp(26px,5vw,42px);
- margin-bottom:12px;
-}
+.field{width:100%;padding:15px;margin:8px 0;border:1px solid var(--line);border-radius:11px;background:#071827;color:white}
+.primary,.secondary{width:100%;padding:14px;margin-top:10px;border:0;border-radius:11px;font-weight:bold}
+.primary{background:var(--cyan);color:#061421}
+.secondary{background:#193650;color:white;border:1px solid var(--line)}
+.link-btn{background:none;border:0;color:var(--cyan);padding:12px}
+.auth-actions{display:flex;justify-content:space-between;flex-wrap:wrap}
+#authStatus{color:#ffb7a8;text-align:center;font-size:13px}
+#appScreen{height:100dvh;flex-direction:column;overflow:hidden}
+header{height:65px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 17px;border-bottom:1px solid var(--line);background:#091827;position:relative}
+.header-brand{color:var(--cyan);font-weight:900;letter-spacing:3px}
+.icon-btn{border:1px solid var(--line);background:#142b40;color:white;border-radius:10px;padding:10px 14px}
+#menu{display:none;position:absolute;top:58px;left:12px;z-index:30;width:210px;padding:8px;background:var(--panel);border:1px solid var(--line);border-radius:13px}
+#menu button,.popup-menu button{display:block;width:100%;padding:13px;text-align:left;background:none;border:0;color:var(--text);border-radius:8px}
+#chatArea{flex:1;overflow-y:auto;padding:22px 16px}
+#welcome{text-align:center;position:relative;top:25%}
+#welcome h1{font-size:clamp(26px,5vw,42px)}
 #welcome p{color:var(--muted)}
-.message{
- max-width:850px;
- width:fit-content;
- padding:14px 17px;
- margin:12px auto;
- border-radius:17px;
- line-height:1.6;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
-}
-.user{
- margin-right:max(calc((100% - 850px)/2),0px);
- margin-left:auto;
- background:#16435e;
-}
-.ai{
- margin-left:max(calc((100% - 850px)/2),0px);
- margin-right:auto;
- background:#122a40;
- border:1px solid var(--line);
-}
+.message{max-width:850px;width:fit-content;padding:14px 17px;margin:12px auto;border-radius:17px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{margin-right:0;margin-left:auto;background:#16435e}
+.ai{margin-left:0;margin-right:auto;background:#122a40;border:1px solid var(--line)}
 .typing{color:var(--cyan)}
-
-/* COMPOSER */
-footer{
- flex-shrink:0;
- padding:12px 15px 16px;
- background:#091827;
- border-top:1px solid var(--line);
-}
-.composer{
- max-width:850px;
- margin:auto;
- padding:10px;
- background:#10243a;
- border:1px solid var(--line);
- border-radius:17px;
-}
-#prompt{
- width:100%;
- min-height:48px;
- max-height:140px;
- resize:none;
- border:0;
- outline:none;
- background:transparent;
- color:white;
- padding:10px;
-}
-#prompt::placeholder{color:#91a9c1}
-.toolbar{
- display:flex;
- align-items:center;
- gap:9px;
-}
-.tool-btn{
- padding:11px 14px;
- border:0;
- border-radius:10px;
- background:#193650;
- color:white;
-}
-.send-btn{
- margin-left:auto;
- background:var(--cyan);
- color:#061421;
- font-weight:bold;
-}
-#status{
- text-align:center;
- font-size:12px;
- color:var(--muted);
- padding-top:8px;
-}
-
-/* SETTINGS */
-#settingsPanel{
- display:none;
- position:fixed;
- z-index:50;
- inset:0;
- background:#0009;
- align-items:center;
- justify-content:center;
- padding:20px;
-}
-.settings-card{
- width:100%;
- max-width:380px;
- padding:24px;
- background:var(--panel);
- border:1px solid var(--line);
- border-radius:18px;
-}
-.settings-card button{margin-top:10px}
-.setting-row{
- padding:12px 0;
- border-bottom:1px solid var(--line);
- color:var(--muted);
-}
-@media(max-width:500px){
- .auth-card{padding:23px}
- header{padding:0 12px}
- footer{padding:9px}
- .message{max-width:94%}
- .user{margin-right:0}
- .ai{margin-left:0}
-}
+footer{flex-shrink:0;padding:12px 15px 16px;background:#091827;border-top:1px solid var(--line)}
+.composer{max-width:850px;margin:auto;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:17px}
+#prompt{width:100%;min-height:48px;max-height:140px;resize:none;border:0;outline:none;background:transparent;color:white;padding:10px}
+.toolbar{display:flex;align-items:center;gap:9px}
+.tool-btn{padding:11px 14px;border:0;border-radius:10px;background:#193650;color:white}
+.send-btn{margin-left:auto;background:var(--cyan);color:#061421}
+#status{text-align:center;font-size:12px;color:var(--muted);padding-top:8px}
+.popup-menu{display:none;position:absolute;bottom:110px;left:15px;z-index:40;width:220px;padding:9px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.panel-overlay{display:none;position:fixed;inset:0;z-index:60;background:#000b;align-items:center;justify-content:center;padding:18px}
+.panel-card{width:100%;max-width:430px;max-height:85vh;overflow:auto;padding:22px;background:var(--panel);border:1px solid var(--line);border-radius:18px}
+.panel-row{padding:13px 4px;border-bottom:1px solid var(--line);color:var(--muted)}
+.panel-row button{width:100%;text-align:left;background:none;border:0;color:var(--text);padding:7px}
+.history-item{padding:12px;margin:7px 0;background:#193650;border-radius:10px;cursor:pointer}
+.history-item small{display:block;color:var(--muted);margin-top:5px}
+.media-preview{width:100%;max-height:55vh;background:#000;border-radius:12px}
+body.light{--bg:#edf4fa;--panel:#fff;--line:#c5d4e2;--text:#12263a;--muted:#526b82}
+body.light header,body.light footer{background:#e8f0f7}
+body.light #prompt{color:#12263a}
+body.light .ai{background:white;color:#12263a}
+body.light .tool-btn,body.light .icon-btn{background:#dce9f3;color:#12263a}
+@media(max-width:500px){.auth-card{padding:23px}header{padding:0 12px}footer{padding:9px}}
 </style>
 </head>
-
 <body>
 
-<div id="splash">
- <div class="splash-logo">AXON AI</div>
- <div class="splash-line"></div>
-</div>
+<div id="splash"><div class="splash-logo">AXON AI</div><div class="splash-line"></div></div>
 
-<!-- LOGIN SCREEN -->
 <section id="authScreen" class="screen">
- <div class="auth-card">
-  <div class="brand">AXON AI</div>
-  <p class="auth-sub">Your intelligent AI assistant</p>
-
-  <h2 id="authHeading">Welcome Back</h2>
-
-  <input id="displayName" class="field"
-   placeholder="Your name" style="display:none">
-
-  <input id="email" class="field"
-   type="email" placeholder="Email address">
-
-  <input id="password" class="field"
-   type="password" placeholder="Password">
-
-  <button id="authButton" class="primary">Login</button>
-  <button id="googleButton" class="secondary">
-   Continue with Google
-  </button>
-
-  <div class="auth-actions">
-   <button id="switchAuth" class="link-btn">
-    Create account
-   </button>
-   <button id="forgotPassword" class="link-btn">
-    Forgot password?
-   </button>
-  </div>
-
-  <p id="authStatus"></p>
- </div>
-</section>
-
-<!-- MAIN CHAT SCREEN -->
-<section id="appScreen" class="screen">
-
- <header>
-  <button class="icon-btn" id="menuButton">•••</button>
-  <div class="header-brand">AXON AI</div>
-  <button class="icon-btn" id="newChatButton">＋</button>
-
-  <div id="menu">
-   <button id="menuNewChat">＋ New Chat</button>
-   <button id="menuClear">Clear Chat</button>
-   <button id="menuSettings">Settings</button>
-   <button id="menuLogout">Logout</button>
-  </div>
- </header>
-
- <main id="chatArea">
-  <div id="welcome">
-   <h1>HOW CAN I HELP YOU?</h1>
-   <p>Ask anything. Explore ideas. Create something amazing.</p>
-  </div>
- </main>
-
- <footer>
-  <div class="composer">
-   <textarea id="prompt"
-    placeholder="Message AXON AI..."></textarea>
-
-   <div class="toolbar">
-    <button class="tool-btn" id="attachButton">＋</button>
-    <input type="file" id="fileInput" hidden>
-
-    <button class="tool-btn" id="micButton">🎙</button>
-
-    <button class="tool-btn send-btn" id="sendButton">
-     ASK AXON AI ➤
-    </button>
-   </div>
-  </div>
-  <div id="status">AXON AI Ready</div>
- </footer>
-</section>
-
-<!-- SETTINGS WINDOW -->
-<div id="settingsPanel">
- <div class="settings-card">
-  <h2>AXON AI Settings</h2>
-  <div class="setting-row" id="accountInfo">
-   Account information
-  </div>
-  <div class="setting-row">
-   Version: AXON AI
-  </div>
-  <button class="secondary" id="closeSettings">Close</button>
-  <button class="primary" id="settingsLogout">Logout</button>
- </div>
+<div class="auth-card">
+<div class="brand">AXON AI</div>
+<p class="auth-sub">Your intelligent AI assistant</p>
+<h2 id="authHeading">Welcome Back</h2>
+<input id="displayName" class="field" placeholder="Your name" style="display:none">
+<input id="email" class="field" type="email" placeholder="Email address">
+<input id="password" class="field" type="password" placeholder="Password">
+<button id="authButton" class="primary">Login</button>
+<button id="googleButton" class="secondary">Continue with Google</button>
+<div class="auth-actions">
+<button id="switchAuth" class="link-btn">Create account</button>
+<button id="forgotPassword" class="link-btn">Forgot password?</button>
 </div>
+<p id="authStatus"></p>
+</div>
+</section>
+
+<section id="appScreen" class="screen">
+<header>
+<button class="icon-btn" id="menuButton">•••</button>
+<div class="header-brand">AXON AI</div>
+<button class="icon-btn" id="newChatButton">＋</button>
+<div id="menu">
+<button id="menuSettings">⚙ My Settings</button>
+<button id="menuHistory">▤ History</button>
+<button id="menuProfile">👤 Profile</button>
+<button id="menuNewChat">＋ New Chat</button>
+<button id="menuLogout">Logout</button>
+</div>
+</header>
+<main id="chatArea">
+<div id="welcome"><h1>HOW CAN I HELP YOU?</h1><p>Ask anything. Explore ideas. Create something amazing.</p></div>
+</main>
+<footer>
+<div class="composer">
+<textarea id="prompt" placeholder="Message AXON AI..."></textarea>
+<div class="toolbar">
+<button class="tool-btn" id="attachButton">＋</button>
+<button class="tool-btn" id="micButton">🎙</button>
+<button class="tool-btn" id="liveButton">📞</button>
+<button class="tool-btn send-btn" id="sendButton">➤</button>
+</div>
+</div>
+<div id="status">AXON AI Ready</div>
+</footer>
+<div class="popup-menu" id="plusMenu">
+<button id="photoButton">🖼 Photo</button>
+<button id="cameraButton">📷 Camera</button>
+<button id="filesButton">📁 Files</button>
+<button id="videoCallButton">🎥 Video Call</button>
+<button id="screenRecordButton">▣ Screen Record</button>
+</div>
+<input type="file" id="fileInput" hidden>
+</section>
+
+<div class="panel-overlay" id="settingsPanel"><div class="panel-card">
+<h2>⚙ My Settings</h2>
+<div class="panel-row"><button id="voiceControlButton">🎙 Voice Control: ON</button></div>
+<div class="panel-row"><button id="historyButton">▤ History</button></div>
+<div class="panel-row"><button id="profileButton">👤 Profile</button></div>
+<div class="panel-row"><button id="imageButton">🖼 Image Generation</button></div>
+<div class="panel-row"><button id="videoButton">🎬 Video Generation</button></div>
+<div class="panel-row"><button id="musicButton">🎵 Music / Song</button></div>
+<div class="panel-row"><button id="themeButton">Dark Theme ON / OFF</button></div>
+<button class="primary" id="closeSettings">Close</button>
+</div></div>
+
+<div class="panel-overlay" id="historyPanel"><div class="panel-card">
+<h2>Conversation History</h2><div id="historyList"></div>
+<button class="secondary" id="closeHistory">Close</button>
+</div></div>
+
+<div class="panel-overlay" id="profilePanel"><div class="panel-card">
+<h2>My Profile</h2><p id="profileEmail"></p><p id="profileName"></p>
+<button class="secondary" id="closeProfile">Close</button>
+</div></div>
+
+<div class="panel-overlay" id="cameraPanel"><div class="panel-card">
+<h2 id="cameraTitle">Camera</h2>
+<video id="cameraVideo" class="media-preview" autoplay playsinline muted></video>
+<canvas id="photoCanvas" hidden></canvas>
+<p id="mediaStatus">Camera permission required.</p>
+<button class="primary" id="takePhotoButton">Take Photo</button>
+<button class="secondary" id="stopCameraButton">Stop / Close</button>
+</div></div>
+
+<div class="panel-overlay" id="recordPanel"><div class="panel-card">
+<h2>Screen Recording</h2><p id="recordStatus">Screen recording permission required.</p>
+<button class="primary" id="startRecordButton">Start Recording</button>
+<button class="secondary" id="stopRecordButton">Stop & Save</button>
+<button class="secondary" id="closeRecordButton">Close</button>
+</div></div>
 
 <script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,sendPasswordResetEmail,signOut,updateProfile}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
-/* FIREBASE CONNECTION */
-import {initializeApp}
- from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-
-import {
- getAuth,onAuthStateChanged,
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- GoogleAuthProvider,signInWithPopup,
- sendPasswordResetEmail,signOut,
- updateProfile
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
-/* APNI EXISTING FIREBASE CONFIG YAHAN LAGANA */
+/* ENTER YOUR FIREBASE WEB CONFIG */
 const firebaseConfig={
- apiKey:"YOUR_FIREBASE_API_KEY",
- authDomain:"axon-ai-9ee3b.firebaseapp.com",
- projectId:"axon-ai-9ee3b",
- storageBucket:"YOUR_STORAGE_BUCKET",
- messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
- appId:"YOUR_FIREBASE_APP_ID"
+apiKey:"YOUR_FIREBASE_API_KEY",
+authDomain:"axon-ai-9ee3b.firebaseapp.com",
+projectId:"axon-ai-9ee3b",
+storageBucket:"YOUR_STORAGE_BUCKET",
+messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
+appId:"YOUR_FIREBASE_APP_ID"
 };
-
-const firebaseApp=initializeApp(firebaseConfig);
-const auth=getAuth(firebaseApp);
-const provider=new GoogleAuthProvider();
-
+const app=initializeApp(firebaseConfig),auth=getAuth(app),provider=new GoogleAuthProvider();
 const $=id=>document.getElementById(id);
+let signup=false,busy=false,history=[],currentId="",user=null;
+let voice=true,live=false,camera=null,screen=null,recorder=null,chunks=[];
 
-let signupMode=false;
-let busy=false;
-let chatHistory=[];
+const status=t=>$("status").textContent=t;
+const show=(id)=>$(id).style.display="flex";
+const hide=(id)=>$(id).style.display="none";
+const key=()=>"axon_history_"+(user?.uid||"guest");
+const saved=()=>{try{return JSON.parse(localStorage.getItem(key())||"[]")}catch{return[]}};
 
-/* SCREEN MANAGEMENT */
-function showStatus(message){
- $("status").textContent=message;
+function save(){
+if(!history.length)return;
+let list=saved(),i=list.findIndex(x=>x.id===currentId);
+let item={id:currentId,title:history.find(x=>x.role==="user")?.content.slice(0,45)||"Conversation",date:new Date().toLocaleString(),messages:history};
+if(i<0)list.unshift(item);else list[i]=item;
+localStorage.setItem(key(),JSON.stringify(list.slice(0,50)));
 }
-function showAuthStatus(message){
- $("authStatus").textContent=message;
+function welcome(){
+$("chatArea").innerHTML='<div id="welcome"><h1>HOW CAN I HELP YOU?</h1><p>Ask anything. Explore ideas. Create something amazing.</p></div>';
 }
-function showScreen(user){
- $("authScreen").style.display=user?"none":"flex";
- $("appScreen").style.display=user?"flex":"none";
- if(user){
-  $("accountInfo").textContent=
-   "Signed in: "+(user.email||"AXON User");
- }
+function message(text,type){
+let d=document.createElement("div");d.className="message "+type;d.textContent=text;
+$("chatArea").appendChild(d);$("chatArea").scrollTop=$("chatArea").scrollHeight;return d;
 }
-onAuthStateChanged(auth,user=>{
- showScreen(user);
+onAuthStateChanged(auth,u=>{
+user=u;$("authScreen").style.display=u?"none":"flex";$("appScreen").style.display=u?"flex":"none";
+if(u){currentId="chat_"+Date.now();history=[];welcome()}
 });
 
-/* LOGIN AND SIGNUP */
 $("switchAuth").onclick=()=>{
- signupMode=!signupMode;
- $("displayName").style.display=
-  signupMode?"block":"none";
- $("authHeading").textContent=
-  signupMode?"Create Account":"Welcome Back";
- $("authButton").textContent=
-  signupMode?"Sign Up":"Login";
- $("switchAuth").textContent=
-  signupMode?"Already registered? Login":"Create account";
+signup=!signup;$("displayName").style.display=signup?"block":"none";
+$("authHeading").textContent=signup?"Create Account":"Welcome Back";
+$("authButton").textContent=signup?"Sign Up":"Login";
+$("switchAuth").textContent=signup?"Already registered? Login":"Create account";
 };
-
 $("authButton").onclick=async()=>{
- const email=$("email").value.trim();
- const password=$("password").value;
-
- if(!email||!password){
-  showAuthStatus("Email aur password enter karo.");
-  return;
- }
-
- try{
-  if(signupMode){
-   const result=await createUserWithEmailAndPassword(
-    auth,email,password
-   );
-   const name=$("displayName").value.trim();
-   if(name){
-    await updateProfile(result.user,{
-     displayName:name
-    });
-   }
-  }else{
-   await signInWithEmailAndPassword(
-    auth,email,password
-   );
-  }
-  showAuthStatus("Login successful.");
- }catch(error){
-  showAuthStatus(error.message);
- }
+let email=$("email").value.trim(),pass=$("password").value;
+if(!email||!pass){$("authStatus").textContent="Enter email and password.";return}
+try{
+if(signup){let r=await createUserWithEmailAndPassword(auth,email,pass);let n=$("displayName").value.trim();if(n)await updateProfile(r.user,{displayName:n})}
+else await signInWithEmailAndPassword(auth,email,pass);
+}catch(e){$("authStatus").textContent=e.message}
 };
-
-/* GOOGLE LOGIN */
-$("googleButton").onclick=async()=>{
- try{
-  await signInWithPopup(auth,provider);
- }catch(error){
-  showAuthStatus(error.message);
- }
-};
-
-/* FORGOT PASSWORD */
+$("googleButton").onclick=async()=>{try{await signInWithPopup(auth,provider)}catch(e){$("authStatus").textContent=e.message}};
 $("forgotPassword").onclick=async()=>{
- const email=$("email").value.trim();
- if(!email){
-  showAuthStatus("Pehle email enter karo.");
-  return;
- }
- try{
-  await sendPasswordResetEmail(auth,email);
-  showAuthStatus("Password reset email sent.");
- }catch(error){
-  showAuthStatus(error.message);
- }
+let email=$("email").value.trim();if(!email){$("authStatus").textContent="Enter your email.";return}
+try{await sendPasswordResetEmail(auth,email);$("authStatus").textContent="Reset email sent."}catch(e){$("authStatus").textContent=e.message}
 };
+$("menuLogout").onclick=()=>signOut(auth);
 
-/* LOGOUT */
-async function logout(){
- try{
-  await signOut(auth);
- }catch(error){
-  alert(error.message);
- }
-}
-$("menuLogout").onclick=logout;
-$("settingsLogout").onclick=logout;
-
-/* MENU */
-$("menuButton").onclick=()=>{
- const menu=$("menu");
- menu.style.display=
-  menu.style.display==="block"?"none":"block";
+$("menuButton").onclick=()=>{$("menu").style.display=$("menu").style.display==="block"?"none":"block"};
+$("menuSettings").onclick=()=>{hide("menu");show("settingsPanel")};
+$("closeSettings").onclick=()=>hide("settingsPanel");
+$("menuHistory").onclick=()=>{hide("menu");openHistory()};
+$("historyButton").onclick=()=>{hide("settingsPanel");openHistory()};
+$("menuProfile").onclick=()=>{hide("menu");openProfile()};
+$("profileButton").onclick=()=>{hide("settingsPanel");openProfile()};
+$("voiceControlButton").onclick=()=>{voice=!voice;$("voiceControlButton").textContent="🎙 Voice Control: "+(voice?"ON":"OFF");status("Voice "+(voice?"enabled":"disabled"))};
+$("themeButton").onclick=()=>{
+document.body.classList.toggle("light");
+localStorage.setItem("axon_theme",document.body.classList.contains("light")?"light":"dark");
 };
+if(localStorage.getItem("axon_theme")==="light")document.body.classList.add("light");
 
-/* SETTINGS */
-function openSettings(){
- $("menu").style.display="none";
- $("settingsPanel").style.display="flex";
+function newChat(){save();history=[];currentId="chat_"+Date.now();welcome();hide("menu");status("New chat started")}
+$("newChatButton").onclick=newChat;$("menuNewChat").onclick=newChat;
+
+function openHistory(){
+let list=saved();$("historyList").innerHTML="";
+if(!list.length)$("historyList").textContent="No saved conversations.";
+list.forEach((item,i)=>{
+let d=document.createElement("div");d.className="history-item";
+d.textContent="Conversation "+(i+1)+": "+item.title;
+let small=document.createElement("small");small.textContent=item.date;d.appendChild(small);
+d.onclick=()=>{history=item.messages||[];currentId=item.id;welcome();$("welcome").remove();history.forEach(m=>message(m.content,m.role==="user"?"user":"ai"));hide("historyPanel")};
+$("historyList").appendChild(d);
+});show("historyPanel");
 }
-$("menuSettings").onclick=openSettings;
-$("closeSettings").onclick=()=>{
- $("settingsPanel").style.display="none";
-};
-
-/* CHAT MESSAGE */
-function addMessage(message,type){
- const element=document.createElement("div");
- element.className="message "+type;
- element.textContent=message;
- $("chatArea").appendChild(element);
- $("chatArea").scrollTop=$("chatArea").scrollHeight;
- return element;
+$("closeHistory").onclick=()=>hide("historyPanel");
+function openProfile(){
+$("profileEmail").textContent="Email: "+(auth.currentUser?.email||"Not available");
+$("profileName").textContent="Name: "+(auth.currentUser?.displayName||"AXON User");show("profilePanel");
 }
+$("closeProfile").onclick=()=>hide("profilePanel");
 
-/* NEW CHAT */
-function newChat(){
- chatHistory=[];
- $("chatArea").innerHTML=`
-  <div id="welcome">
-   <h1>HOW CAN I HELP YOU?</h1>
-   <p>Ask anything. Explore ideas. Create something amazing.</p>
-  </div>`;
- $("menu").style.display="none";
- showStatus("New chat started");
-}
-$("newChatButton").onclick=newChat;
-$("menuNewChat").onclick=newChat;
-
-/* CLEAR CHAT */
-$("menuClear").onclick=()=>{
- if(confirm("Do you want to clear this chat?")){
-  newChat();
- }
-};
-
-/* REAL AI CONNECTION */
 async function sendMessage(){
-
- const message=$("prompt").value.trim();
-
- if(!message||busy)return;
-
- busy=true;
- $("sendButton").disabled=true;
-
- $("welcome")?.remove();
-
- addMessage(message,"user");
-
- $("prompt").value="";
- const typing=addMessage(
-  "AXON AI is thinking...","ai typing"
- );
-
- showStatus("Connecting to AXON AI...");
-
- try{
-
-  const response=await fetch("/api/chat",{
-   method:"POST",
-   headers:{
-    "Content-Type":"application/json"
-   },
-   body:JSON.stringify({
-    message:message,
-    history:chatHistory
-   })
-  });
-
-  const raw=await response.text();
-  let data;
-
-  try{
-   data=JSON.parse(raw);
-  }catch{
-   throw new Error(
-    "Server returned invalid response: "+
-    raw.slice(0,150)
-   );
-  }
-
-  if(!response.ok){
-   throw new Error(
-    data.error||"AI server request failed."
-   );
-  }
-
-  const reply=
-   data.reply||data.response||data.answer;
-
-  if(!reply){
-   throw new Error("AI response was empty.");
-  }
-
-  typing.className="message ai";
-  typing.textContent=reply;
-
-  chatHistory.push(
-   {role:"user",content:message},
-   {role:"assistant",content:reply}
-  );
-
-  showStatus("AXON AI Ready");
-
- }catch(error){
-
-  typing.className="message ai";
-  typing.textContent=
-   "Sorry, AI response nahi aa paya.\n"+
-   error.message;
-
-  showStatus("Connection Error");
-  console.error(error);
-
- }finally{
-
-  busy=false;
-  $("sendButton").disabled=false;
-  $("prompt").focus();
-
- }
+let text=$("prompt").value.trim();if(!text||busy)return;
+busy=true;$("sendButton").disabled=true;$("welcome")?.remove();
+message(text,"user");$("prompt").value="";
+let wait=message("AXON AI is thinking...","ai typing");status("Connecting...");
+try{
+let r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,history})});
+let raw=await r.text(),data;try{data=JSON.parse(raw)}catch{throw Error("Invalid server response")}
+if(!r.ok)throw Error(data.error||"Server error");
+let reply=data.reply||data.response||data.answer;if(!reply)throw Error("Empty AI response");
+wait.textContent=reply;wait.className="message ai";
+history.push({role:"user",content:text},{role:"assistant",content:reply});save();status("AXON AI Ready");
+if(live&&voice)speak(reply);
+}catch(e){wait.textContent="AI error: "+e.message;wait.className="message ai";status("Connection Error")}
+finally{busy=false;$("sendButton").disabled=false}
 }
-
 $("sendButton").onclick=sendMessage;
+$("prompt").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}};
+$("prompt").oninput=()=>{$("prompt").style.height="auto";$("prompt").style.height=Math.min($("prompt").scrollHeight,140)+"px"};
 
-/* ENTER TO SEND */
-$("prompt").addEventListener("keydown",event=>{
- if(event.key==="Enter"&&!event.shiftKey){
-  event.preventDefault();
-  sendMessage();
- }
-});
-
-/* AUTO TEXTAREA HEIGHT */
-$("prompt").addEventListener("input",()=>{
- $("prompt").style.height="auto";
- $("prompt").style.height=
-  Math.min($("prompt").scrollHeight,140)+"px";
-});
-
-/* FILE SELECTION */
-$("attachButton").onclick=()=>{
- $("fileInput").click();
-};
-
-$("fileInput").onchange=()=>{
- const file=$("fileInput").files[0];
- if(file){
-  addMessage("Selected file: "+file.name,"user");
-  showStatus(
-   "File selected. Backend upload support is required to send it to AI."
-  );
- }
-};
-
-/* MICROPHONE */
-$("micButton").onclick=()=>{
- const SpeechRecognition=
-  window.SpeechRecognition||
-  window.webkitSpeechRecognition;
-
- if(!SpeechRecognition){
-  showStatus("Voice input is not supported.");
-  return;
- }
-
- const recognition=new SpeechRecognition();
- recognition.lang="hi-IN";
- recognition.interimResults=false;
-
- recognition.onstart=()=>{
-  showStatus("Listening...");
- };
-
- recognition.onresult=event=>{
-  $("prompt").value+=
-   event.results[0][0].transcript;
-  $("prompt").focus();
-  showStatus("Voice input ready.");
- };
-
- recognition.onerror=()=>{
-  showStatus("Microphone error.");
- };
-
- recognition.onend=()=>{
-  if($("status").textContent==="Listening..."){
-   showStatus("AXON AI Ready");
-  }
- };
-
- recognition.start();
-};
-
-/* OPTIONAL HEALTH CHECK */
-async function checkServer(){
- try{
-  const response=await fetch("/api/health");
-  if(response.ok){
-   showStatus("AXON AI Server Connected");
-  }
- }catch(error){
-  showStatus("AI server status unavailable");
- }
+function speak(t){if(!window.speechSynthesis)return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="hi-IN";speechSynthesis.speak(u)}
+function listen(auto=false){
+let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){status("Speech recognition not supported.");return}
+let rec=new SR();rec.lang="hi-IN";rec.interimResults=false;
+rec.onstart=()=>status("Listening...");
+rec.onresult=e=>{$("prompt").value=e.results[0][0].transcript;if(auto)sendMessage()};
+rec.onerror=()=>status("Microphone permission error.");rec.start();
 }
+$("micButton").onclick=()=>voice?listen(false):status("Voice control is OFF");
+$("liveButton").onclick=()=>{
+if(!voice){status("Enable Voice Control first.");return}
+live=!live;$("liveButton").textContent=live?"⏹":"📞";
+if(live)listen(true);else speechSynthesis?.cancel();
+};
 
-checkServer();
+$("attachButton").onclick=()=>{$("plusMenu").style.display=$("plusMenu").style.display==="block"?"none":"block"};
+function closePlus(){hide("plusMenu")}
+$("photoButton").onclick=()=>{closePlus();$("fileInput").accept="image/*";$("fileInput").click()};
+$("filesButton").onclick=()=>{closePlus();$("fileInput").accept="*/*";$("fileInput").click()};
+$("fileInput").onchange=()=>{let f=$("fileInput").files[0];if(f)message("Selected: "+f.name,"user");$("fileInput").value=""};
 
+async function startCamera(call=false){
+closePlus();$("cameraTitle").textContent=call?"Video Call Preview":"Camera";
+$("takePhotoButton").style.display=call?"none":"block";show("cameraPanel");
+try{
+camera=await navigator.mediaDevices.getUserMedia({video:true,audio:call});
+$("cameraVideo").srcObject=camera;
+$("mediaStatus").textContent=call?"Local preview only. Remote calling needs a calling server.":"Camera ready.";
+}catch(e){$("mediaStatus").textContent=e.message}
+}
+$("cameraButton").onclick=()=>startCamera(false);
+$("videoCallButton").onclick=()=>startCamera(true);
+function stopCamera(){camera?.getTracks().forEach(t=>t.stop());camera=null;$("cameraVideo").srcObject=null}
+$("stopCameraButton").onclick=()=>{stopCamera();hide("cameraPanel")};
+$("takePhotoButton").onclick=()=>{
+let v=$("cameraVideo"),c=$("photoCanvas");if(!v.videoWidth)return;
+c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0);
+let img=document.createElement("img");img.src=c.toDataURL("image/png");img.className="media-preview";
+$("chatArea").appendChild(img);stopCamera();hide("cameraPanel");
+};
+
+$("screenRecordButton").onclick=()=>{closePlus();show("recordPanel")};
+$("startRecordButton").onclick=async()=>{
+try{
+screen=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true});chunks=[];
+recorder=new MediaRecorder(screen);
+recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+recorder.onstop=()=>{
+let blob=new Blob(chunks,{type:recorder.mimeType||"video/webm"}),url=URL.createObjectURL(blob);
+let a=document.createElement("a");a.href=url;a.download="axon-recording.webm";a.click();
+setTimeout(()=>URL.revokeObjectURL(url),30000);
+screen?.getTracks().forEach(t=>t.stop());screen=null;$("recordStatus").textContent="Recording saved.";
+};
+recorder.start();$("recordStatus").textContent="Recording started.";
+}catch(e){$("recordStatus").textContent=e.message}
+};
+$("stopRecordButton").onclick=()=>{if(recorder?.state==="recording")recorder.stop();else $("recordStatus").textContent="No recording active."};
+$("closeRecordButton").onclick=()=>hide("recordPanel");
+
+function unavailable(name){alert(name+" API abhi connected nahi hai. Is feature ke liye backend/API integration chahiye.")}
+$("imageButton").onclick=()=>unavailable("Image generation");
+$("videoButton").onclick=()=>unavailable("Video generation");
+$("musicButton").onclick=()=>unavailable("Music generation");
+
+document.addEventListener("click",e=>{
+if(!$("menu").contains(e.target)&&e.target!==$("menuButton"))hide("menu");
+if(!$("plusMenu").contains(e.target)&&e.target!==$("attachButton"))closePlus();
+});
 </script>
 </body>
 </html>
