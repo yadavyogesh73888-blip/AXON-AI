@@ -8,121 +8,146 @@
 <title>AXON AI</title>
 
 <style>
-:root{
+:root {
   --bg:#07111f;
   --panel:#10243a;
+  --panel2:#142b40;
   --line:#29445f;
   --text:#f2f7ff;
   --muted:#91a9c1;
   --cyan:#46e0d3;
-  --blue:#318ce7;
+  --blue:#438cf2;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   height:100vh;
   height:100dvh;
   overflow:hidden;
-  background:
-    radial-gradient(ellipse at 50% 0%,#172b49 0%,#090f1d 55%,#060a13 100%);
+  background:radial-gradient(ellipse at 50% 0%,#172b49,#090f1d 58%,#060a13);
   color:var(--text);
   font-family:Inter,Arial,sans-serif;
 }
-
-button,textarea{font:inherit}
-button{cursor:pointer;color:white}
+button,input,textarea{font:inherit}
+button{color:white;cursor:pointer}
 button:focus-visible,textarea:focus-visible{
   outline:2px solid var(--cyan);
   outline-offset:3px;
 }
 
-/* SPLASH SCREEN */
+/* CINEMATIC SPLASH */
 
 #splash{
   position:fixed;
   inset:0;
   z-index:1000;
-  background:#030812;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:opacity .5s,visibility .5s;
-}
-
-#splash.done{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
-
-.splash-image{
-  width:250px;
-  height:250px;
-  max-width:80vw;
-  max-height:80vw;
-  object-fit:contain;
-  animation:logoEnter 1s ease;
-}
-
-@keyframes logoEnter{
-  from{opacity:0;transform:scale(.85)}
-  to{opacity:1;transform:scale(1)}
-}
-
-/* MAIN APP */
-
-.app{
-  width:100%;
-  height:100%;
-  max-width:1200px;
-  margin:auto;
   display:flex;
   flex-direction:column;
-  padding:0 24px;
+  align-items:center;
+  justify-content:center;
+  gap:19px;
+  background:radial-gradient(circle,#183b59 0%,#09182b 45%,#030812 100%);
+  transition:opacity .9s,visibility .9s;
+  overflow:hidden;
+}
+#splash:before{
+  content:"";
+  position:absolute;
+  width:260px;
+  height:260px;
+  border:1px solid #46e0d366;
+  border-radius:50%;
+  box-shadow:0 0 75px #46e0d322,inset 0 0 60px #46e0d322;
+  animation:ring 3s ease-in-out infinite;
+}
+#splash.done{opacity:0;visibility:hidden;pointer-events:none}
+.splash-image{
+  width:190px;height:190px;
+  object-fit:contain;
+  position:relative;
+  filter:drop-shadow(0 0 28px #46e0d366);
+  animation:logoEnter 1.5s ease both;
+}
+.splash-title{
+  position:relative;
+  font-size:26px;
+  font-weight:800;
+  letter-spacing:8px;
+  animation:fadeUp 1.4s ease both;
+}
+.splash-sub{
+  position:relative;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:4px;
+}
+.loader{
+  width:115px;height:3px;
+  background:#ffffff22;
+  border-radius:10px;
+  overflow:hidden;
+}
+.loader:after{
+  content:"";
+  display:block;
+  width:40%;height:100%;
+  background:var(--cyan);
+  box-shadow:0 0 12px var(--cyan);
+  animation:loading 1.4s infinite;
+}
+@keyframes ring{
+  0%,100%{transform:scale(.85);opacity:.3}
+  50%{transform:scale(1.15);opacity:1}
+}
+@keyframes logoEnter{
+  from{opacity:0;transform:scale(.65) rotate(-8deg)}
+  to{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes loading{
+  from{transform:translateX(-120%)}
+  to{transform:translateX(280%)}
 }
 
-/* HEADER */
+/* APP */
 
+.app{
+  width:100%;height:100%;
+  max-width:1200px;
+  margin:auto;
+  padding:0 22px;
+  display:flex;
+  flex-direction:column;
+}
 header{
-  height:65px;
+  height:64px;
   flex:none;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  border-bottom:1px solid #29445f;
+  border-bottom:1px solid var(--line);
 }
-
 .header-btn{
-  width:43px;
-  height:43px;
+  width:43px;height:43px;
   display:grid;
   place-items:center;
   border:1px solid transparent;
   border-radius:13px;
   background:transparent;
-  color:#eaf4ff;
-  font-size:25px;
-  transition:.2s;
+  color:white;
+  font-size:24px;
 }
-
 .header-btn:hover{
-  background:#142b40;
-  border-color:#29445f;
+  background:var(--panel2);
+  border-color:var(--line);
 }
+.dots{font-size:27px;letter-spacing:2px;padding-bottom:12px}
+.new-chat-icon{font-size:24px}
 
-.dots{
-  font-size:27px;
-  letter-spacing:2px;
-  padding-bottom:12px;
-}
-
-.new-chat-icon{
-  font-size:23px;
-}
-
-/* CHAT AREA */
+/* CHAT */
 
 #chat{
   flex:1;
@@ -131,44 +156,37 @@ header{
   flex-direction:column;
   position:relative;
 }
-
 #messages{
   flex:1;
   min-height:0;
   overflow-y:auto;
   padding:20px 5px;
   scrollbar-width:thin;
-  scrollbar-color:#29445f transparent;
+  scrollbar-color:var(--line) transparent;
 }
-
 .welcome{
   position:absolute;
   top:39%;
-  left:0;
-  right:0;
+  left:0;right:0;
   transform:translateY(-50%);
   text-align:center;
   padding:15px;
   pointer-events:none;
 }
-
 .welcome h1{
   margin:0 0 10px;
   font-size:clamp(21px,4vw,29px);
-  font-weight:750;
   letter-spacing:1px;
-  color:#f2f7ff;
+  font-weight:750;
 }
-
 .welcome p{
   margin:0;
   color:var(--muted);
   font-size:14px;
 }
-
 .message{
   width:fit-content;
-  max-width:min(82%,700px);
+  max-width:min(85%,700px);
   padding:13px 17px;
   margin:14px 0;
   border-radius:17px;
@@ -177,44 +195,39 @@ header{
   overflow-wrap:anywhere;
   white-space:pre-wrap;
 }
-
 .user{
   margin-left:auto;
   background:linear-gradient(135deg,#244777,#1b3762);
   border:1px solid #355b91;
   border-bottom-right-radius:5px;
 }
-
 .ai{
   margin-right:auto;
-  background:#142b40;
+  background:var(--panel2);
   border:1px solid #25445d;
   border-bottom-left-radius:5px;
 }
+.typing{color:var(--cyan);font-size:13px}
 
 /* COMPOSER */
 
 .composer-area{
   flex:none;
   padding:12px 0 13px;
-  background:transparent;
 }
-
 .composer{
   width:100%;
   border:1px solid #31516c;
-  border-radius:23px;
-  background:#10243a;
-  padding:12px 14px 10px;
+  border-radius:22px;
+  background:var(--panel);
+  padding:11px 13px 9px;
   box-shadow:0 8px 30px #0003;
   transition:border-color .2s,box-shadow .2s;
 }
-
 .composer:focus-within{
   border-color:#4389c0;
   box-shadow:0 0 0 2px #318ce71c;
 }
-
 #prompt{
   display:block;
   width:100%;
@@ -229,11 +242,7 @@ header{
   font-size:15px;
   line-height:1.5;
 }
-
-#prompt::placeholder{
-  color:#91a9c1;
-}
-
+#prompt::placeholder{color:var(--muted)}
 .composer-bottom{
   display:flex;
   align-items:center;
@@ -241,18 +250,13 @@ header{
   gap:10px;
   padding-top:7px;
 }
-
-.composer-left,
-.composer-right{
+.composer-left,.composer-right{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:10px;
 }
-
 .tool-btn{
-  width:39px;
-  height:39px;
-  flex:none;
+  width:39px;height:39px;
   display:grid;
   place-items:center;
   border:1px solid transparent;
@@ -260,46 +264,32 @@ header{
   background:transparent;
   color:#dcecff;
   font-size:23px;
-  transition:.2s;
 }
-
 .tool-btn:hover{
   background:#1a3650;
   border-color:#31516c;
 }
-
 .ask-label{
-  font-size:14px;
+  font-size:13px;
   font-weight:750;
   letter-spacing:.5px;
-  color:#f2f7ff;
   white-space:nowrap;
 }
-
 #sendBtn{
-  width:41px;
-  height:41px;
-  flex:none;
-  display:grid;
-  place-items:center;
-  border:0;
-  border-radius:13px;
+  width:41px;height:41px;
+  display:grid;place-items:center;
+  border:0;border-radius:13px;
   background:linear-gradient(135deg,#438cf2,#2467cf);
-  color:white;
-  font-size:21px;
-  transition:.2s;
+  color:white;font-size:21px;
 }
-
-#sendBtn:hover{
-  filter:brightness(1.15);
-  transform:translateY(-1px);
+#sendBtn:disabled{opacity:.4;cursor:not-allowed}
+#fileInput{display:none}
+#fileName{
+  display:none;
+  color:var(--cyan);
+  font-size:12px;
+  padding:5px 3px;
 }
-
-#sendBtn:disabled{
-  opacity:.4;
-  cursor:not-allowed;
-}
-
 .footer-note{
   text-align:center;
   color:#718ba4;
@@ -307,364 +297,327 @@ header{
   margin:10px 0 0;
 }
 
-/* ATTACHMENT */
+/* SETTINGS */
 
-#fileInput{display:none}
-
-#fileName{
+#settingsPanel{
+  position:fixed;
+  top:70px;
+  left:15px;
+  z-index:100;
   display:none;
-  color:var(--cyan);
-  font-size:12px;
-  padding:5px 3px;
+  width:220px;
+  padding:12px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 15px 40px #0008;
+}
+#settingsPanel button{
+  width:100%;
+  text-align:left;
+  padding:12px;
+  background:transparent;
+  border:0;
+  border-radius:9px;
+  color:var(--text);
+}
+#settingsPanel button:hover{background:var(--panel2)}
+#status{
+  font-size:11px;
+  color:var(--muted);
+  padding:8px 12px;
 }
 
 /* MOBILE */
 
 @media(max-width:600px){
-
-  .app{
-    padding:0 13px;
-  }
-
-  header{
-    height:57px;
-  }
-
-  .header-btn{
-    width:40px;
-    height:40px;
-  }
-
-  #messages{
-    padding:12px 2px;
-  }
-
-  .welcome{
-    top:39%;
-    padding:12px 5px;
-  }
-
-  .welcome h1{
-    font-size:22px;
-  }
-
-  .welcome p{
-    font-size:12px;
-  }
-
-  .message{
-    max-width:90%;
-    font-size:14px;
-    padding:12px 14px;
-  }
-
-  .composer-area{
-    padding:8px 0 10px;
-  }
-
-  .composer{
-    padding:10px 10px 8px;
-    border-radius:20px;
-  }
-
-  #prompt{
-    min-height:40px;
-    font-size:14px;
-  }
-
-  .composer-left,
-  .composer-right{
-    gap:7px;
-  }
-
-  .tool-btn{
-    width:36px;
-    height:36px;
-  }
-
-  .ask-label{
-    font-size:12px;
-  }
-
-  #sendBtn{
-    width:38px;
-    height:38px;
-  }
-
-  .footer-note{
-    font-size:10px;
-  }
+  .app{padding:0 13px}
+  header{height:57px}
+  #messages{padding:12px 2px}
+  .welcome{top:39%;padding:12px 5px}
+  .welcome h1{font-size:22px}
+  .welcome p{font-size:12px}
+  .message{max-width:90%;font-size:14px;padding:12px 14px}
+  .composer-area{padding:8px 0 10px}
+  .composer{padding:10px 10px 8px;border-radius:20px}
+  #prompt{min-height:40px;font-size:14px}
+  .composer-left,.composer-right{gap:6px}
+  .tool-btn{width:36px;height:36px}
+  .ask-label{font-size:11px}
+  #sendBtn{width:38px;height:38px}
+  .footer-note{font-size:10px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH SCREEN -->
+<!-- SPLASH -->
 
 <div id="splash">
-  <img
-    src="/IMG_20261114_073941.png"
-    alt="AXON AI"
-    class="splash-image"
-  >
+  <img src="/IMG_20261114_073941.png" class="splash-image" alt="AXON AI">
+  <div class="splash-title">AXON AI</div>
+  <div class="splash-sub">INTELLIGENCE REDEFINED</div>
+  <div class="loader"></div>
 </div>
 
-<!-- MAIN APP -->
+<!-- SETTINGS -->
+
+<div id="settingsPanel">
+  <button id="newChatMenu">✎ &nbsp; New Chat</button>
+  <button id="clearChat">⌫ &nbsp; Clear Chat</button>
+  <div id="status">AXON AI Ready</div>
+</div>
+
+<!-- APP -->
 
 <div class="app">
 
-  <!-- HEADER -->
+<header>
+  <button class="header-btn dots" id="menuBtn" aria-label="Menu">•••</button>
+  <button class="header-btn new-chat-icon" id="newChatBtn" aria-label="New Chat" title="New Chat">✎</button>
+</header>
 
-  <header>
+<main id="chat">
+  <div id="messages"></div>
+  <div class="welcome" id="welcome">
+    <h1>HOW CAN I HELP YOU?</h1>
+    <p>Ask anything. AXON AI is here to help.</p>
+  </div>
+</main>
 
-    <!-- LEFT THREE DOTS -->
+<section class="composer-area">
+  <div class="composer">
 
-    <button
-      class="header-btn dots"
-      type="button"
-      aria-label="More options"
-    >•••</button>
+    <textarea id="prompt" rows="1" placeholder="Message AXON AI..." aria-label="Message AXON AI"></textarea>
 
-    <!-- RIGHT NEW CHAT -->
+    <div id="fileName"></div>
 
-    <button
-      class="header-btn new-chat-icon"
-      id="newChatBtn"
-      type="button"
-      aria-label="New Chat"
-      title="New Chat"
-    >✎</button>
-
-  </header>
-
-  <!-- CHAT AREA -->
-
-  <main id="chat">
-
-    <div id="messages"></div>
-
-    <!-- WELCOME TEXT -->
-
-    <div class="welcome" id="welcome">
-      <h1>HOW CAN I HELP YOU?</h1>
-      <p>Ask anything. AXON AI is here to help.</p>
-    </div>
-
-  </main>
-
-  <!-- MESSAGE BOX -->
-
-  <section class="composer-area">
-
-    <div class="composer">
-
-      <textarea
-        id="prompt"
-        rows="1"
-        placeholder="Message AXON AI..."
-        aria-label="Message AXON AI"
-      ></textarea>
-
-      <div id="fileName"></div>
-
-      <div class="composer-bottom">
-
-        <!-- LEFT SIDE -->
-
-        <div class="composer-left">
-
-          <button
-            class="tool-btn"
-            id="attachBtn"
-            type="button"
-            aria-label="Attach file"
-            title="Attach file"
-          >+</button>
-
-          <span class="ask-label">ASK AXON AI</span>
-
-        </div>
-
-        <!-- RIGHT SIDE -->
-
-        <div class="composer-right">
-
-          <button
-            class="tool-btn"
-            id="micBtn"
-            type="button"
-            aria-label="Microphone"
-            title="Microphone"
-          >
-            <svg width="22" height="22"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="1.8"
-                 stroke-linecap="round"
-                 stroke-linejoin="round">
-              <rect x="9" y="2" width="6" height="12" rx="3"/>
-              <path d="M5 10v2a7 7 0 0 0 14 0v-2"/>
-              <path d="M12 19v3M8 22h8"/>
-            </svg>
-          </button>
-
-          <button
-            id="sendBtn"
-            type="button"
-            aria-label="Send message"
-            title="Send"
-          >
-            ➤
-          </button>
-
-        </div>
-
+    <div class="composer-bottom">
+      <div class="composer-left">
+        <button class="tool-btn" id="attachBtn" aria-label="Attach file" title="Attach file">+</button>
+        <span class="ask-label">ASK AXON AI</span>
       </div>
 
-      <input type="file" id="fileInput">
-
+      <div class="composer-right">
+        <button class="tool-btn" id="micBtn" aria-label="Voice input" title="Voice input">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="2" width="6" height="12" rx="3"/>
+            <path d="M5 10v2a7 7 0 0 0 14 0v-2"/>
+            <path d="M12 19v3M8 22h8"/>
+          </svg>
+        </button>
+        <button id="sendBtn" aria-label="Send message" title="Send">➤</button>
+      </div>
     </div>
 
-    <p class="footer-note">
-      AXON AI can make mistakes. Check important information.
-    </p>
+    <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.doc,.docx">
+  </div>
 
-  </section>
+  <p class="footer-note">AXON AI can make mistakes. Check important information.</p>
+</section>
 
 </div>
 
-<!-- FRONTEND ONLY JAVASCRIPT -->
-
 <script>
-
-/* SPLASH SCREEN */
+/* SPLASH */
 
 const splash = document.getElementById("splash");
 
-window.addEventListener("load",()=>{
-  setTimeout(()=>{
-    splash.classList.add("done");
-  },1500);
-});
+function hideSplash(){
+  setTimeout(()=>splash.classList.add("done"),1700);
+}
+window.addEventListener("load",hideSplash);
 
 /* ELEMENTS */
 
-const promptInput = document.getElementById("prompt");
-const messages = document.getElementById("messages");
-const welcome = document.getElementById("welcome");
-const sendBtn = document.getElementById("sendBtn");
+const promptInput=document.getElementById("prompt");
+const messages=document.getElementById("messages");
+const welcome=document.getElementById("welcome");
+const sendBtn=document.getElementById("sendBtn");
+const statusText=document.getElementById("status");
 
-/* ADD MESSAGE */
+let history=[];
+let busy=false;
+
+/* MESSAGE DISPLAY */
 
 function addMessage(text,type){
-
-  const div = document.createElement("div");
-
-  div.className = "message " + type;
-  div.textContent = text;
-
+  const div=document.createElement("div");
+  div.className="message "+type;
+  div.textContent=text;
   messages.appendChild(div);
-
-  messages.scrollTop = messages.scrollHeight;
-
+  messages.scrollTop=messages.scrollHeight;
   return div;
 }
 
-/* SEND MESSAGE - UI PREVIEW ONLY */
+function showStatus(text){
+  statusText.textContent=text;
+}
 
-function sendMessage(){
+/* AI REQUEST */
 
-  const text = promptInput.value.trim();
+async function sendMessage(){
 
-  if(!text) return;
+  const text=promptInput.value.trim();
 
-  welcome.style.display = "none";
+  if(!text || busy) return;
+
+  busy=true;
+  sendBtn.disabled=true;
+  welcome.style.display="none";
 
   addMessage(text,"user");
 
-  promptInput.value = "";
-  promptInput.style.height = "auto";
+  promptInput.value="";
+  promptInput.style.height="auto";
 
-  // No AI server or API connection.
-  addMessage(
-    "Message displayed successfully. AI response service is not connected in this UI-only version.",
-    "ai"
-  );
+  const typing=addMessage("AXON AI is thinking...","ai typing");
+
+  try{
+
+    const response=await fetch("/api/chat",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        message:text,
+        history:history
+      })
+    });
+
+    const data=await response.json();
+
+    if(!response.ok){
+      throw new Error(data.error || "AI response failed.");
+    }
+
+    if(!data.reply){
+      throw new Error("AI response was empty.");
+    }
+
+    typing.className="message ai";
+    typing.textContent=data.reply;
+
+    history.push(
+      {role:"user",content:text},
+      {role:"assistant",content:data.reply}
+    );
+
+    showStatus("AXON AI Ready");
+
+  }catch(error){
+
+    typing.className="message ai";
+    typing.textContent="Sorry, AI response nahi aa paya.\n"+error.message;
+
+    showStatus("Connection Error");
+    console.error(error);
+
+  }finally{
+
+    busy=false;
+    sendBtn.disabled=false;
+    promptInput.focus();
+
+  }
 }
 
-/* SEND BUTTON */
+/* SEND */
 
 sendBtn.addEventListener("click",sendMessage);
 
-/* ENTER TO SEND */
-
 promptInput.addEventListener("keydown",event=>{
-
-  if(event.key === "Enter" && !event.shiftKey){
-
+  if(event.key==="Enter" && !event.shiftKey){
     event.preventDefault();
-
     sendMessage();
   }
-
 });
 
-/* AUTO RESIZE TEXTAREA */
+/* AUTO RESIZE */
 
 promptInput.addEventListener("input",()=>{
-
-  promptInput.style.height = "auto";
-
-  promptInput.style.height =
-    Math.min(promptInput.scrollHeight,130) + "px";
-
+  promptInput.style.height="auto";
+  promptInput.style.height=Math.min(promptInput.scrollHeight,130)+"px";
 });
 
 /* NEW CHAT */
 
-document.getElementById("newChatBtn").addEventListener("click",()=>{
-
-  messages.innerHTML = "";
-
-  welcome.style.display = "block";
-
-  promptInput.value = "";
-  promptInput.style.height = "auto";
-
+function newChat(){
+  messages.innerHTML="";
+  history=[];
+  welcome.style.display="block";
+  promptInput.value="";
+  promptInput.style.height="auto";
+  document.getElementById("settingsPanel").style.display="none";
   promptInput.focus();
+}
 
+document.getElementById("newChatBtn").addEventListener("click",newChat);
+document.getElementById("newChatMenu").addEventListener("click",newChat);
+document.getElementById("clearChat").addEventListener("click",newChat);
+
+/* MENU */
+
+document.getElementById("menuBtn").addEventListener("click",()=>{
+  const panel=document.getElementById("settingsPanel");
+  panel.style.display=panel.style.display==="block"?"none":"block";
 });
 
-/* ATTACHMENT BUTTON */
+/* ATTACHMENT */
 
-const fileInput = document.getElementById("fileInput");
-const fileName = document.getElementById("fileName");
+const fileInput=document.getElementById("fileInput");
+const fileName=document.getElementById("fileName");
 
 document.getElementById("attachBtn").addEventListener("click",()=>{
   fileInput.click();
 });
 
 fileInput.addEventListener("change",()=>{
-
   if(fileInput.files.length){
-
-    fileName.textContent =
-      "Selected: " + fileInput.files[0].name;
-
-    fileName.style.display = "block";
+    fileName.textContent="Selected: "+fileInput.files[0].name;
+    fileName.style.display="block";
   }
-
 });
 
-/* MIC BUTTON - UI PLACEHOLDER */
+/* MICROPHONE */
 
 document.getElementById("micBtn").addEventListener("click",()=>{
+  const SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  alert("Voice input is not connected in this UI-only version.");
+  if(!SpeechRecognition){
+    alert("Voice input is not supported in this browser.");
+    return;
+  }
 
+  const recognition=new SpeechRecognition();
+  recognition.lang="en-IN";
+  recognition.interimResults=false;
+
+  recognition.onresult=event=>{
+    promptInput.value=event.results[0][0].transcript;
+    promptInput.dispatchEvent(new Event("input"));
+    promptInput.focus();
+  };
+
+  recognition.onerror=()=>{
+    showStatus("Voice input unavailable");
+  };
+
+  recognition.start();
 });
+
+/* INITIAL CONNECTION CHECK */
+
+fetch("/api/health")
+  .then(response=>{
+    if(!response.ok) throw new Error();
+    showStatus("AXON AI Connected");
+  })
+  .catch(()=>{
+    showStatus("AI Server Unavailable");
+  });
 
 </script>
 
