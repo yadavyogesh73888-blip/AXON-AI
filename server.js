@@ -12,6 +12,9 @@ app.use(express.json({ limit: "32kb" }));
 // Homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
+});// Splash Screen Image
+app.get("/IMG_20261114_073941.png", (req, res) => {
+  res.sendFile(path.join(__dirname, "IMG_20261114_073941.png"));
 });
 
 // Basic Server Health Check
