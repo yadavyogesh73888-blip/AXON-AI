@@ -1140,7 +1140,167 @@ function initialize(){
   console.log('AXON AI initialized');
 }
 
-initialize();
-</script>
+/* ==================================
+   AXON AI - EXTRA FEATURES
+================================== */
+
+/* EXPORT CURRENT CHAT */
+
+const exportBtn = document.createElement('button');
+
+exportBtn.className = 'icon-btn';
+exportBtn.textContent = '⬇';
+exportBtn.title = 'Export Chat';
+
+$('topNewBtn').parentElement.appendChild(exportBtn);
+
+exportBtn.addEventListener('click',()=>{
+  const chat = getActiveChat();
+
+  if(!chat || !chat.messages.length){
+    showToast('No messages to export');
+    return;
+  }
+
+  const content = chat.messages.map(message=>{
+    return (
+      (message.role === 'user' ? 'YOU' : 'AXON AI') +
+      '\n' + message.text
+    );
+  }).join('\n\n--------------------\n\n');
+
+  const blob = new Blob(
+    [content],
+    {type:'text/plain;charset=utf-8'}
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'AXON-AI-Chat.txt';
+  link.click();
+
+  URL.revokeObjectURL(url);
+
+  showToast('Chat exported successfully');
+});
+
+/* DELETE CURRENT CHAT */
+
+const deleteCurrentBtn = document.createElement('button');
+
+deleteCurrentBtn.className = 'icon-btn';
+deleteCurrentBtn.textContent = '🗑';
+deleteCurrentBtn.title = 'Delete Current Chat';
+
+$('topNewBtn').parentElement.appendChild(deleteCurrentBtn);
+
+deleteCurrentBtn.addEventListener('click',()=>{
+  const chat = getActiveChat();
+
+  if(!chat) return;
+
+  if(!confirm('Delete this conversation?')) return;
+
+  chats = chats.filter(item=>item.id !== activeChatId);
+
+  activeChatId = null;
+
+  saveChats();
+
+  if(chats.length){
+    activeChatId = chats[0].id;
+    renderHistory();
+    renderChat();
+  }else{
+    createChat();
+  }
+
+  showToast('Conversation deleted');
+});
+
+/* STOP VOICE READING */
+
+const stopVoiceBtn = document.createElement('button');
+
+stopVoiceBtn.className = 'icon-btn';
+stopVoiceBtn.textContent = '🔇';
+stopVoiceBtn.title = 'Stop Voice';
+
+$('topNewBtn').parentElement.appendChild(stopVoiceBtn);
+
+stopVoiceBtn.addEventListener('click',()=>{
+  if('speechSynthesis' in window){
+    speechSynthesis.cancel();
+    showToast('Voice stopped');
+  }
+});
+
+/* KEYBOARD SHORTCUTS */
+
+document.addEventListener('keydown',event=>{
+
+  if(event.key === 'Escape'){
+
+    $('settingsModal').classList.remove('show');
+    $('sidebar').classList.remove('active');
+
+  }
+
+  if(event.ctrlKey && event.key.toLowerCase() === 'k'){
+
+    event.preventDefault();
+    newChat();
+
+  }
+
+  if(event.ctrlKey && event.key.toLowerCase() === 'e'){
+
+    event.preventDefault();
+    exportBtn.click();
+
+  }
+
+});
+
+/* CLOSE SETTINGS BY OUTSIDE CLICK */
+
+$('settingsModal').addEventListener('click',event=>{
+
+  if(event.target === $('settingsModal')){
+
+    $('settingsModal').classList.remove('show');
+
+  }
+
+});
+
+/* SAVE CHAT SAFELY */
+
+window.addEventListener('beforeunload',()=>{
+
+  try{
+    saveChats();
+  }catch(error){
+    console.error('Chat save error:',error);
+  }
+
+});
+
+/* ONLINE STATUS */
+
+window.addEventListener('online',()=>{
+  showToast('Internet connection restored');
+});
+
+window.addEventListener('offline',()=>{
+  showToast('Internet connection lost');
+});
+
+/* FINAL INITIALIZATION MESSAGE */
+
+console.log('AXON AI extra features loaded successfully.');
+  </script>
 </body>
 </html>
