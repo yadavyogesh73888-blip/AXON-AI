@@ -1,1302 +1,1146 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#030817">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090d18">
 <title>AXON AI</title>
 
 <style>
 :root{
---bg:#030817;
---panel:#09142c;
---panel2:#0c1b38;
---line:#153d83;
---text:#f4f8ff;
---muted:#91a8ce;
---blue:#087cff;
---cyan:#20d9ff;
---glow:0 0 18px #087cff66;
+  --bg:#090d18;
+  --panel:#111827;
+  --panel2:#172033;
+  --text:#f5f7ff;
+  --muted:#929db2;
+  --border:#263149;
+  --accent:#7868ff;
+  --accent2:#a18cff;
+  --user:#302b65;
+  --shadow:0 15px 45px #0005;
 }
-
 *{box-sizing:border-box}
-
 body{
-margin:0;
-height:100dvh;
-overflow:hidden;
-background:var(--bg);
-color:var(--text);
-font-family:Arial,sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  height:100dvh;
+  overflow:hidden;
 }
-
 button,input,textarea{font:inherit}
 button{cursor:pointer}
-.hidden{display:none!important}
-
-button:focus-visible,
-textarea:focus-visible{
-outline:2px solid var(--cyan);
-outline-offset:3px;
+.app{
+  height:100dvh;
+  display:flex;
+  overflow:hidden;
 }
-
-#app{
-height:100dvh;
-display:flex;
-overflow:hidden;
-}
-
-/* SIDEBAR */
-
 .sidebar{
-width:225px;
-flex-shrink:0;
-height:100%;
-background:linear-gradient(180deg,#08132c,#03091c);
-border-right:1px solid var(--line);
-display:flex;
-flex-direction:column;
-padding:15px 12px;
-gap:9px;
-overflow-y:auto;
-transition:.25s;
-z-index:20;
+  width:270px;
+  flex-shrink:0;
+  background:#0d1321;
+  border-right:1px solid var(--border);
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:17px;
+  transition:.25s;
+  z-index:5;
 }
-
 .brand{
-text-align:center;
-padding:15px 5px 22px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:5px 3px 15px;
 }
-
-.brand-logo{
-font-size:35px;
-font-weight:900;
-background:linear-gradient(90deg,#00c8ff,#7655ff);
-background-clip:text;
--webkit-background-clip:text;
-color:transparent;
+.logo{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#7868ff,#36c7e8);
+  font-size:23px;
+  font-weight:bold;
+  box-shadow:0 5px 25px #7868ff55;
 }
-
-.brand p{
-font-size:12px;
-color:var(--muted);
-margin:5px;
+.brand-name{font-size:20px;font-weight:800;letter-spacing:1px}
+.brand-small{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:2px}
+.new-chat{
+  border:1px solid #7868ff77;
+  background:linear-gradient(120deg,#7868ff,#5545c9);
+  color:white;
+  padding:14px;
+  border-radius:13px;
+  font-weight:700;
+  text-align:left;
 }
-
-.nav-button{
-width:100%;
-display:flex;
-align-items:center;
-gap:13px;
-padding:13px;
-border:1px solid transparent;
-border-radius:13px;
-background:transparent;
-color:#dceaff;
-text-align:left;
-font-size:14px;
-transition:.2s;
+.new-chat:hover{filter:brightness(1.15)}
+.side-label{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin:6px 3px 0;
 }
-
-.nav-button:hover{
-background:#102b58;
-border-color:#1469ed;
-box-shadow:var(--glow);
+.history{
+  flex:1;
+  overflow:auto;
 }
-
-.nav-button.active{
-background:linear-gradient(100deg,#0758dc,#123c92);
-border-color:#27a9ff;
-box-shadow:0 0 18px #087cff88;
+.history-item{
+  padding:12px;
+  border-radius:10px;
+  margin-top:5px;
+  color:#cbd3e4;
+  font-size:13px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  cursor:pointer;
 }
-
-.nav-icon{
-font-size:20px;
-width:24px;
-text-align:center;
+.history-item:hover,.history-item.active{
+  background:#202a40;
+  color:white;
 }
-
-.sidebar-bottom{
-margin-top:auto;
-padding-top:20px;
+.side-bottom{
+  border-top:1px solid var(--border);
+  padding-top:12px;
 }
-
-.pro-card{
-padding:15px;
-border:1px solid #254e9c;
-border-radius:15px;
-background:linear-gradient(140deg,#102c62,#10113e);
-text-align:center;
+.side-button{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  border:0;
+  color:#cbd3e4;
+  background:transparent;
+  padding:12px;
+  border-radius:10px;
+  text-align:left;
 }
-
-.pro-card strong{color:#ffd66c}
-.pro-card p{font-size:11px;color:var(--muted)}
-
-/* MAIN CHAT */
-
+.side-button:hover{background:#202a40}
 .main{
-flex:1;
-min-width:0;
-height:100%;
-display:flex;
-flex-direction:column;
-position:relative;
-background:
-radial-gradient(ellipse at 85% 30%,#08205255,transparent 45%),
-var(--bg);
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  position:relative;
 }
-
 .topbar{
-height:76px;
-flex-shrink:0;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 20px;
-border-bottom:1px solid #153d8355;
-background:#050d20dd;
+  height:66px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 23px;
+  border-bottom:1px solid var(--border);
+  background:#0b101c;
 }
-
-.top-left{
-display:flex;
-align-items:center;
-gap:14px;
+.top-left{display:flex;align-items:center;gap:13px}
+.menu-btn{
+  display:none;
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:23px;
 }
-
-.icon-button{
-width:43px;
-height:43px;
-border-radius:14px;
-background:#0c1b3b;
-border:1px solid #2452a0;
-color:var(--cyan);
-font-size:22px;
-display:grid;
-place-items:center;
-transition:.2s;
+.top-title{font-weight:700;font-size:15px}
+.status{
+  color:#65dfb1;
+  font-size:11px;
+  margin-top:4px;
 }
-
-.icon-button:hover{
-background:#123a7b;
-box-shadow:var(--glow);
+.top-actions{display:flex;gap:9px}
+.icon-btn{
+  width:38px;height:38px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:var(--panel);
+  color:white;
+  font-size:17px;
 }
-
-.top-title{
-font-weight:bold;
-font-size:22px;
-color:var(--cyan);
+.icon-btn:hover{border-color:var(--accent)}
+.chat-area{
+  flex:1;
+  overflow:auto;
+  padding:25px 20px 30px;
+  scroll-behavior:smooth;
 }
-
-.user-pill{
-padding:11px 15px;
-border:1px solid #3158a0;
-border-radius:30px;
-font-size:12px;
-background:#101d40;
-}
-
-.online{
-display:inline-block;
-width:8px;
-height:8px;
-border-radius:50%;
-background:#00ee9a;
-margin-right:6px;
-}
-
-/* CHAT AREA */
-
-.chat{
-flex:1;
-width:100%;
-max-width:1000px;
-margin:auto;
-padding:25px;
-overflow-y:auto;
-scroll-behavior:smooth;
-}
-
 .welcome{
-text-align:center;
-margin:35px 0;
+  max-width:750px;
+  margin:9vh auto 0;
+  text-align:center;
 }
-
+.welcome-logo{
+  width:76px;height:76px;
+  border-radius:25px;
+  display:grid;
+  place-items:center;
+  margin:auto;
+  font-size:38px;
+  background:linear-gradient(135deg,#7868ff,#32c7e7);
+  box-shadow:0 12px 45px #7868ff44;
+}
 .welcome h1{
-font-size:30px;
-color:var(--cyan);
+  font-size:34px;
+  margin:24px 0 9px;
 }
-
-.welcome p{
-color:var(--muted);
-font-size:14px;
+.gradient{
+  background:linear-gradient(90deg,#a18cff,#55d5ec);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
-
-.message-row{
-display:flex;
-align-items:flex-start;
-gap:11px;
-margin:20px 0;
+.welcome p{color:var(--muted);font-size:14px;line-height:1.7}
+.suggestions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:35px auto;
+  max-width:650px;
 }
-
-.message-row.user-row{
-justify-content:flex-end;
+.suggestion{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:13px;
+  color:#dce3f4;
+  text-align:left;
+  padding:16px;
+  line-height:1.5;
+  font-size:13px;
 }
-
+.suggestion:hover{
+  border-color:var(--accent);
+  background:#192139;
+}
+.suggestion strong{display:block;margin-bottom:5px}
+.messages{
+  max-width:850px;
+  margin:auto;
+}
+.message{
+  display:flex;
+  gap:12px;
+  margin:22px 0;
+  align-items:flex-start;
+}
+.message.user{flex-direction:row-reverse}
 .avatar{
-width:39px;
-height:39px;
-flex-shrink:0;
-border-radius:50%;
-display:grid;
-place-items:center;
-background:#101c54;
-border:1px solid #287cff;
-box-shadow:var(--glow);
-font-size:19px;
+  width:35px;height:35px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:linear-gradient(135deg,#7868ff,#32b8d7);
+  font-size:14px;
+  font-weight:bold;
 }
-
-.bubble{
-max-width:78%;
-padding:15px 18px;
-border-radius:18px;
-line-height:1.65;
-font-size:15px;
-overflow-wrap:anywhere;
-white-space:pre-wrap;
+.user .avatar{background:#33305e}
+.message-content{
+  max-width:82%;
+  min-width:0;
 }
-
-.bot-bubble{
-background:linear-gradient(140deg,#101f46,#0b1633);
-border:1px solid #1d4388;
-border-top-left-radius:5px;
+.message-name{
+  color:var(--muted);
+  font-size:11px;
+  margin:2px 4px 7px;
 }
-
-.user-bubble{
-background:linear-gradient(120deg,#075fe5,#0753ba);
-border:1px solid #328eff;
-border-top-right-radius:5px;
-box-shadow:0 0 17px #087cff55;
+.message-text{
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:13px 15px;
+  border-radius:4px 15px 15px 15px;
+  font-size:14px;
+  line-height:1.7;
+  overflow-wrap:anywhere;
 }
-
-.time{
-font-size:10px;
-color:#819ac2;
-margin-top:5px;
+.user .message-text{
+  background:var(--user);
+  border-color:#51479a;
+  border-radius:15px 4px 15px 15px;
 }
-
-.user-row .message-content{text-align:right}
-
-/* COMPOSER */
-
-.composer-area{
-width:100%;
-max-width:1000px;
-margin:auto;
-padding:12px 20px 15px;
+.message-text pre{
+  background:#080d17;
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:9px;
+  overflow:auto;
+  white-space:pre-wrap;
 }
-
+.message-text code{
+  color:#a9a0ff;
+  background:#171c30;
+  padding:2px 5px;
+  border-radius:4px;
+}
+.message-tools{
+  display:flex;
+  gap:7px;
+  margin:7px 2px;
+}
+.message-tools button{
+  color:var(--muted);
+  border:0;
+  background:transparent;
+  font-size:11px;
+}
+.message-tools button:hover{color:white}
+.composer-wrap{
+  padding:12px 20px 17px;
+  background:linear-gradient(transparent,var(--bg) 18%);
+}
 .composer{
-display:flex;
-align-items:center;
-gap:9px;
-padding:10px;
-border-radius:24px;
-background:linear-gradient(130deg,#08142f,#0b1c40);
-border:1px solid #1766df;
-box-shadow:0 0 22px #075bce33;
+  max-width:850px;
+  margin:auto;
+  background:var(--panel);
+  border:1px solid #39445f;
+  border-radius:17px;
+  padding:12px;
+  box-shadow:var(--shadow);
 }
-
-.composer textarea{
-flex:1;
-min-width:0;
-resize:none;
-height:45px;
-max-height:120px;
-padding:12px;
-border:0;
-outline:0;
-background:transparent;
-color:white;
+.composer:focus-within{border-color:var(--accent)}
+#messageInput{
+  width:100%;
+  min-height:48px;
+  max-height:160px;
+  resize:none;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  padding:8px;
+  font-size:14px;
 }
-
-.composer textarea::placeholder{
-color:#8299bd;
+#messageInput::placeholder{color:#758198}
+.composer-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
 }
-
-.send-button{
-width:49px;
-height:49px;
-border-radius:50%;
-background:linear-gradient(140deg,#00c9ff,#0759ff);
-color:white;
-font-size:22px;
-border:1px solid #5bdfff;
-box-shadow:0 0 16px #087cff88;
+.tools{display:flex;gap:7px}
+.tool-btn{
+  background:#202a40;
+  color:#cbd3e4;
+  border:0;
+  border-radius:9px;
+  min-width:36px;
+  height:35px;
+  padding:0 10px;
 }
-
-.send-button:hover{
-transform:scale(1.06);
+.tool-btn:hover{background:#303c59}
+.send-btn{
+  background:var(--accent);
+  border:0;
+  color:white;
+  border-radius:10px;
+  height:38px;
+  min-width:45px;
+  font-weight:bold;
 }
-
-.footer-status{
-font-size:11px;
-color:#7791b8;
-padding:10px 5px 0;
+.send-btn:disabled{opacity:.5}
+.file-info{
+  font-size:11px;
+  color:#a99cff;
+  padding:5px 8px;
+  display:none;
 }
-
-/* MENU DRAWER */
-
-.drawer-overlay{
-position:fixed;
-inset:0;
-background:#0009;
-z-index:30;
+.disclaimer{
+  text-align:center;
+  color:#68748b;
+  font-size:10px;
+  margin:10px auto 0;
 }
-
-.drawer{
-position:fixed;
-top:0;
-left:0;
-bottom:0;
-width:min(290px,85vw);
-background:#07132c;
-border-right:1px solid #1d55ae;
-z-index:31;
-padding:18px;
-overflow-y:auto;
-transform:translateX(-105%);
-transition:.25s;
+.typing{color:var(--muted);font-size:13px}
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:#0009;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:20;
 }
-
-.drawer.open{transform:translateX(0)}
-
-.drawer-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:22px;
+.modal-bg.show{display:flex}
+.modal{
+  width:100%;
+  max-width:440px;
+  background:#121a2a;
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:22px;
+  box-shadow:var(--shadow);
 }
-
-.drawer h3{
-color:var(--cyan);
-font-size:17px;
+.modal h2{margin:0 0 18px;font-size:20px}
+.modal label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin:14px 0 7px;
 }
-
-.drawer .nav-button{margin-bottom:5px}
-
-.drawer-close{
-background:#12244a;
-color:white;
-border:1px solid #2857a4;
-border-radius:10px;
-padding:9px 13px;
+.modal input{
+  width:100%;
+  background:#080e1b;
+  border:1px solid var(--border);
+  border-radius:9px;
+  color:white;
+  padding:12px;
+  outline:0;
 }
-
-/* SETTINGS PANEL */
-
-.settings-panel{
-position:fixed;
-top:85px;
-left:50%;
-transform:translateX(-50%);
-width:min(420px,92vw);
-max-height:75vh;
-overflow:auto;
-z-index:45;
-padding:20px;
-background:#091832;
-border:1px solid #2475e7;
-border-radius:20px;
-box-shadow:0 0 35px #006dff55;
+.modal-note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+  margin-top:12px;
 }
-
-.settings-panel h2{color:var(--cyan)}
-
-.setting-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:14px 0;
-border-bottom:1px solid #20375f;
-font-size:14px;
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  margin-top:20px;
 }
-
-.toggle{
-width:45px;
-height:24px;
-border-radius:20px;
-background:#40506b;
-position:relative;
-border:0;
+.modal-actions button{
+  border:0;
+  border-radius:9px;
+  padding:11px 16px;
+  color:white;
+  background:#29344c;
 }
-
-.toggle:after{
-content:"";
-position:absolute;
-width:18px;
-height:18px;
-left:3px;
-top:3px;
-border-radius:50%;
-background:white;
-transition:.2s;
+.modal-actions .primary{background:var(--accent)}
+.toast{
+  position:fixed;
+  bottom:100px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#26334c;
+  color:white;
+  padding:11px 17px;
+  border-radius:10px;
+  font-size:12px;
+  display:none;
+  z-index:30;
 }
-
-.toggle.on{background:#087cff}
-.toggle.on:after{left:24px}
-
-/* POPUP MENU */
-
-.popup{
-position:fixed;
-bottom:100px;
-left:15px;
-width:210px;
-padding:12px;
-background:#091832;
-border:1px solid #2675ec;
-border-radius:17px;
-box-shadow:0 0 25px #006dff66;
-z-index:40;
+.toast.show{display:block}
+.light-theme{
+  --bg:#f1f3fa;
+  --panel:#ffffff;
+  --panel2:#e7eaf3;
+  --text:#172033;
+  --muted:#68748b;
+  --border:#d8ddeb;
+  --user:#e5e1ff;
 }
-
-.popup button{
-width:100%;
-margin:4px 0;
+.light-theme .sidebar,
+.light-theme .topbar{background:#e9edf7}
+.light-theme .side-button,
+.light-theme .history-item{color:#26334c}
+.light-theme .message-text{color:#172033}
+.light-theme #messageInput{color:#172033}
+.light-theme .icon-btn{color:#172033}
+.light-theme .suggestion{color:#172033}
+.light-theme .menu-btn{color:#172033}
+.light-theme .user .message-text{background:#e5e1ff}
+@media(max-width:760px){
+  .sidebar{
+    position:fixed;
+    left:-290px;
+    top:0;
+    bottom:0;
+    height:100dvh;
+    box-shadow:var(--shadow);
+  }
+  .sidebar.active{left:0}
+  .menu-btn{display:block}
+  .topbar{padding:0 13px}
+  .chat-area{padding:18px 12px}
+  .composer-wrap{padding:9px 10px 13px}
+  .welcome{margin-top:7vh}
+  .welcome h1{font-size:28px}
+  .suggestions{gap:8px;margin-top:25px}
+  .suggestion{padding:12px;font-size:12px}
+  .message-content{max-width:86%}
 }
-
-/* MEDIA */
-
-.media-preview{
-max-width:100%;
-max-height:280px;
-border-radius:15px;
-margin-top:10px;
-}
-
-video{
-max-width:100%;
-max-height:350px;
-border-radius:15px;
-background:black;
-}
-
-#cameraBox{
-position:fixed;
-inset:8%;
-z-index:60;
-background:#07142d;
-border:1px solid #2675ec;
-border-radius:20px;
-padding:20px;
-overflow:auto;
-}
-
-#cameraBox h3{color:var(--cyan)}
-
-#camera{
-width:100%;
-max-height:65vh;
-object-fit:contain;
-}
-
-.close-camera{
-margin-top:15px;
-background:#c52c50;
-color:white;
-padding:12px 22px;
-border-radius:12px;
-border:0;
-}
-
-/* MOBILE */
-
-@media(max-width:700px){
-
-.sidebar{
-display:none;
-}
-
-.topbar{
-height:65px;
-padding:0 12px;
-}
-
-.top-title{font-size:19px}
-
-.user-pill{
-font-size:10px;
-padding:9px;
-}
-
-.chat{padding:14px}
-
-.welcome h1{font-size:24px}
-
-.bubble{
-max-width:88%;
-font-size:14px;
-padding:12px;
-}
-
-.composer-area{
-padding:8px 9px 12px;
-}
-
-.composer{
-gap:5px;
-padding:7px;
-}
-
-.icon-button{
-width:39px;
-height:39px;
-}
-
-.send-button{
-width:43px;
-height:43px;
-}
-
-.composer textarea{
-font-size:14px;
-}
-
+@media(max-width:380px){
+  .suggestions{grid-template-columns:1fr}
+  .brand-name{font-size:18px}
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">A</div>
+      <div>
+        <div class="brand-name">AXON AI</div>
+        <div class="brand-small">INTELLIGENCE SYSTEM</div>
+      </div>
+    </div>
 
-<!-- DESKTOP SIDEBAR -->
+    <button class="new-chat" id="newChatBtn">＋ &nbsp; New Chat</button>
 
-<aside class="sidebar">
+    <div class="side-label">Recent conversations</div>
+    <div class="history" id="historyList"></div>
 
-<div class="brand">
-<div class="brand-logo">AXON AI</div>
-<p>Your Smart AI Assistant</p>
+    <div class="side-bottom">
+      <button class="side-button" id="settingsBtn">⚙️ &nbsp; Settings</button>
+      <button class="side-button" id="themeBtn">🌙 &nbsp; Change Theme</button>
+      <button class="side-button" id="clearAllBtn">🗑️ &nbsp; Clear History</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn" id="menuBtn">☰</button>
+        <div>
+          <div class="top-title">AXON AI Assistant</div>
+          <div class="status">● Ready to assist</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="topNewBtn" title="New chat">＋</button>
+        <button class="icon-btn" id="topSettingsBtn" title="Settings">⚙</button>
+      </div>
+    </header>
+
+    <section class="chat-area" id="chatArea">
+      <div class="welcome" id="welcome">
+        <div class="welcome-logo">A</div>
+        <h1>Welcome to <span class="gradient">AXON AI</span></h1>
+        <p>Your intelligent assistant for learning, creativity, coding and everyday questions.</p>
+
+        <div class="suggestions">
+          <button class="suggestion" data-prompt="Explain artificial intelligence in simple words.">
+            <strong>✦ Learn something</strong>
+            Explain artificial intelligence
+          </button>
+          <button class="suggestion" data-prompt="Give me a creative idea for a new mobile app.">
+            <strong>✧ Get creative</strong>
+            Generate a new app idea
+          </button>
+          <button class="suggestion" data-prompt="Help me write a simple HTML website.">
+            <strong>⌘ Coding help</strong>
+            Build a website with code
+          </button>
+          <button class="suggestion" data-prompt="Give me a useful daily study plan.">
+            <strong>◷ Study assistant</strong>
+            Make a study plan
+          </button>
+        </div>
+      </div>
+
+      <div class="messages" id="chatMessages"></div>
+    </section>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <div class="file-info" id="fileInfo"></div>
+        <textarea id="messageInput" rows="1" placeholder="Message AXON AI..."></textarea>
+
+        <div class="composer-bottom">
+          <div class="tools">
+            <button class="tool-btn" id="attachBtn" title="Attach text file">📎</button>
+            <button class="tool-btn" id="voiceBtn" title="Voice input">🎙</button>
+          </div>
+          <button class="send-btn" id="sendBtn">➤</button>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept=".txt,.md,.json,.csv,.html,.css,.js" hidden>
+      <div class="disclaimer">AXON AI can make mistakes. Check important information.</div>
+    </div>
+  </main>
 </div>
 
-<button class="nav-button active" data-action="settings">
-<span class="nav-icon">⚙</span> Settings
-</button>
+<div class="modal-bg" id="settingsModal">
+  <div class="modal">
+    <h2>⚙ AXON AI Settings</h2>
 
-<button class="nav-button" data-action="voice">
-<span class="nav-icon">◖</span> Voice Control
-</button>
+    <label for="apiEndpoint">Backend API endpoint</label>
+    <input id="apiEndpoint" placeholder="/api/chat">
 
-<button class="nav-button" data-action="history">
-<span class="nav-icon">◷</span> History
-</button>
+    <div class="modal-note">
+      Enter your secure backend URL here. Do not put a private AI API key in this HTML file. A backend server is required for real AI responses.
+    </div>
 
-<button class="nav-button" data-action="profile">
-<span class="nav-icon">♙</span> Profile
-</button>
-
-<button class="nav-button" data-action="image">
-<span class="nav-icon">▧</span> Image
-</button>
-
-<button class="nav-button" data-action="video">
-<span class="nav-icon">▶</span> Video
-</button>
-
-<div class="sidebar-bottom">
-
-<div class="pro-card">
-<strong>♛ AXON AI</strong>
-<p>Smarter. Faster. Better.</p>
+    <div class="modal-actions">
+      <button id="closeSettings">Cancel</button>
+      <button class="primary" id="saveSettings">Save Settings</button>
+    </div>
+  </div>
 </div>
 
-</div>
-</aside>
-
-<!-- MAIN -->
-
-<main class="main">
-
-<header class="topbar">
-
-<div class="top-left">
-
-<button class="icon-button" id="menuButton"
-aria-label="Open menu">⋮</button>
-
-<div>
-<div class="top-title">AXON AI</div>
-<small style="color:#91a8ce">
-Your Smart AI Assistant
-</small>
-</div>
-
-</div>
-
-<div class="user-pill">
-<span class="online"></span>
-Welcome <span id="userName">User</span>
-</div>
-
-</header>
-
-<!-- CHAT -->
-
-<div class="chat" id="chat">
-
-<div class="welcome">
-<h1>Welcome to AXON AI</h1>
-<p>Your intelligent assistant is ready.</p>
-</div>
-
-<div class="message-row">
-<div class="avatar">A</div>
-<div class="message-content">
-<div class="bubble bot-bubble">
-Hello! Main AXON AI hoon.
-Aap mujhse text, voice aur supported media
-ke through baat kar sakte hain.
-</div>
-<div class="time">Now</div>
-</div>
-</div>
-
-</div>
-
-<!-- CAMERA -->
-
-<div id="cameraBox" class="hidden">
-
-<h3 id="cameraTitle">Camera Preview</h3>
-
-<video id="camera" autoplay playsinline muted></video>
-
-<button class="close-camera" id="stopCamera">
-Stop Camera
-</button>
-
-</div>
-
-<!-- COMPOSER -->
-
-<div class="composer-area">
-
-<div class="composer">
-
-<button class="icon-button" id="plusButton"
-aria-label="Attachments">＋</button>
-
-<button class="icon-button" id="micButton"
-aria-label="Voice input">🎙</button>
-
-<textarea id="prompt"
-placeholder="Message AXON AI..."
-rows="1"></textarea>
-
-<button class="send-button" id="sendButton"
-aria-label="Send message">➤</button>
-
-<button class="icon-button" id="callButton"
-aria-label="Live call">☎</button>
-
-</div>
-
-<div class="footer-status" id="status">
-● AXON AI Ready
-</div>
-
-</div>
-
-</main>
-</div>
-
-<!-- DRAWER -->
-
-<div id="overlay" class="drawer-overlay hidden"></div>
-
-<aside id="drawer" class="drawer">
-
-<div class="drawer-head">
-<h2 style="color:#20d9ff">AXON AI</h2>
-<button class="drawer-close" id="closeDrawer">✕</button>
-</div>
-
-<button class="nav-button" data-action="settings">⚙ Settings</button>
-<button class="nav-button" data-action="voice">🎙 Voice Control</button>
-<button class="nav-button" data-action="history">◷ History</button>
-<button class="nav-button" data-action="profile">♙ Profile</button>
-<button class="nav-button" data-action="image">▧ Image</button>
-<button class="nav-button" data-action="video">▶ Video</button>
-<button class="nav-button" data-action="theme">☾ Dark Theme</button>
-<button class="nav-button" data-action="new">＋ New Chat</button>
-
-<h3 style="color:#20d9ff;margin-top:25px">History</h3>
-
-<div id="drawerHistory"></div>
-
-<button class="nav-button" data-action="all">
-See All Conversations →
-</button>
-
-</aside>
-
-<!-- SETTINGS -->
-
-<div id="settingsPanel" class="settings-panel hidden">
-
-<div style="display:flex;justify-content:space-between">
-<h2>⚙ Settings</h2>
-<button class="drawer-close" id="closeSettings">✕</button>
-</div>
-
-<div class="setting-row">
-<span>Voice Control</span>
-<button class="toggle" id="voiceToggle"></button>
-</div>
-
-<div class="setting-row">
-<span>Dark Theme</span>
-<button class="toggle on" id="themeToggle"></button>
-</div>
-
-<div class="setting-row">
-<span>Sound Response</span>
-<button class="toggle" id="soundToggle"></button>
-</div>
-
-<div class="setting-row">
-<span>Notifications</span>
-<button class="toggle" id="notifyToggle"></button>
-</div>
-
-<div class="setting-row">
-<span>My Profile</span>
-<button class="drawer-close" id="settingsProfile">Open</button>
-</div>
-
-</div>
-
-<!-- ATTACHMENT MENU -->
-
-<div id="plusMenu" class="popup hidden">
-
-<button class="nav-button" id="photoOption">▧ Photo</button>
-<button class="nav-button" id="cameraOption">📷 Camera</button>
-<button class="nav-button" id="fileOption">📁 Files</button>
-<button class="nav-button" id="videoCallOption">📹 Video Call</button>
-<button class="nav-button" id="recordOption">▣ Screen Record</button>
-<button class="nav-button" id="videoOption">🎬 Select Video</button>
-
-</div>
-
-<input type="file" id="photoInput" accept="image/*" hidden>
-<input type="file" id="fileInput" hidden>
-<input type="file" id="videoInput" accept="video/*" hidden>
+<div class="toast" id="toast"></div>
 
 <script>
+/* AXON AI APPLICATION */
 
-/* AXON AI SETTINGS */
+const $ = id => document.getElementById(id);
 
-const $=id=>document.getElementById(id);
+const STORAGE_KEY = 'axon_ai_chats_v1';
+const SETTINGS_KEY = 'axon_ai_settings_v1';
 
-const API={
-chat:"/api/chat",
-upload:"/api/upload",
-image:"/api/image",
-video:"/api/video",
-live:"/api/live-session"
-};
+let chats = [];
+let activeChatId = null;
+let attachedFile = null;
+let isSending = false;
 
-let history=[];
-let chatId=Date.now();
-let voiceEnabled=false;
-let soundEnabled=false;
-let stream=null;
-let recorder=null;
-let recording=false;
-let chunks=[];
-let recognition=null;
+/* STORAGE */
 
-let userName=localStorage.getItem("axonName")||"User";
-
-/* STATUS */
-
-function status(text){
-$("status").textContent="● "+text;
+function loadChats(){
+  try{
+    chats = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(error){
+    chats = [];
+  }
 }
 
-/* MESSAGE SYSTEM */
-
-function addMessage(text,type){
-
-const row=document.createElement("div");
-
-row.className="message-row "+
-(type==="user"?"user-row":"");
-
-const avatar=document.createElement("div");
-
-avatar.className="avatar";
-avatar.textContent=type==="user"?"♙":"A";
-
-const content=document.createElement("div");
-
-content.className="message-content";
-
-const bubble=document.createElement("div");
-
-bubble.className="bubble "+
-(type==="user"?"user-bubble":"bot-bubble");
-
-bubble.textContent=text;
-
-const time=document.createElement("div");
-
-time.className="time";
-time.textContent=new Date().toLocaleTimeString(
-[] ,{hour:"2-digit",minute:"2-digit"}
-);
-
-content.append(bubble,time);
-
-if(type==="user"){
-row.append(content,avatar);
-}else{
-row.append(avatar,content);
+function saveChats(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(chats));
 }
 
-$("chat").appendChild(row);
+function loadSettings(){
+  try{
+    return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
+  }catch(error){
+    return {};
+  }
+}
 
-$("chat").scrollTop=$("chat").scrollHeight;
+function getActiveChat(){
+  return chats.find(chat => chat.id === activeChatId);
+}
 
+/* TOAST */
+
+function showToast(message){
+  const toast = $('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  setTimeout(()=>{
+    toast.classList.remove('show');
+  },2500);
+}
+
+/* CHAT MANAGEMENT */
+
+function createChat(){
+  const chat = {
+    id:Date.now().toString(),
+    title:'New conversation',
+    messages:[],
+    updatedAt:Date.now()
+  };
+
+  chats.unshift(chat);
+  activeChatId = chat.id;
+
+  saveChats();
+  renderHistory();
+  renderChat();
+
+  $('messageInput').focus();
+}
+
+function ensureChat(){
+  if(!getActiveChat()){
+    createChat();
+  }
+  return getActiveChat();
+}
+
+function updateChatTitle(chat){
+  if(chat.messages.length === 1){
+    const text = chat.messages[0].text;
+    chat.title = text.length > 32
+      ? text.slice(0,32) + '...'
+      : text;
+  }
+
+  chat.updatedAt = Date.now();
+  chats.sort((a,b)=>b.updatedAt-a.updatedAt);
+  saveChats();
+  renderHistory();
 }
 
 /* HISTORY */
 
-function saveHistory(){
+function renderHistory(){
+  const list = $('historyList');
+  list.innerHTML = '';
 
-const list=JSON.parse(
-localStorage.getItem("axonHistory")||"[]"
-);
+  chats.forEach(chat=>{
+    const item = document.createElement('div');
+    item.className =
+      'history-item' +
+      (chat.id === activeChatId ? ' active' : '');
 
-const title=history.find(
-m=>m.role==="user"
-)?.content?.slice(0,35)||"New Conversation";
+    item.textContent = '▤  ' + chat.title;
+    item.title = chat.title;
 
-const updated=list.filter(x=>x.id!==chatId);
+    item.addEventListener('click',()=>{
+      activeChatId = chat.id;
+      renderHistory();
+      renderChat();
 
-updated.unshift({
-id:chatId,
-title,
-messages:history
-});
+      if(window.innerWidth <= 760){
+        $('sidebar').classList.remove('active');
+      }
+    });
 
-localStorage.setItem(
-"axonHistory",
-JSON.stringify(updated.slice(0,50))
-);
-
-loadHistory();
-
+    list.appendChild(item);
+  });
 }
 
-function loadHistory(){
+/* SAFE TEXT FORMATTING */
 
-const list=JSON.parse(
-localStorage.getItem("axonHistory")||"[]"
-);
-
-$("drawerHistory").innerHTML="";
-
-list.slice(0,3).forEach(item=>{
-
-const button=document.createElement("button");
-
-button.className="nav-button";
-button.textContent="◷ "+item.title;
-
-button.onclick=()=>openChat(item);
-
-$("drawerHistory").appendChild(button);
-
-});
-
+function escapeHTML(text){
+  return String(text).replace(/[&<>"']/g,char=>{
+    const map = {
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    };
+    return map[char];
+  });
 }
 
-function openChat(item){
+function formatText(text){
+  let safe = escapeHTML(text);
 
-chatId=item.id;
-history=item.messages||[];
+  safe = safe.replace(
+    /```([\s\S]*?)```/g,
+    '<pre><code>$1</code></pre>'
+  );
 
-$("chat").innerHTML="";
+  safe = safe.replace(
+    /`([^`]+)`/g,
+    '<code>$1</code>'
+  );
 
-history.forEach(m=>{
+  safe = safe.replace(
+    /\*\*(.*?)\*\*/g,
+    '<strong>$1</strong>'
+  );
+
+  safe = safe.replace(/\n/g,'<br>');
+
+  return safe;
+}
+
+/* DISPLAY MESSAGE */
+
+function displayMessage(role,text){
+  const wrapper = document.createElement('div');
+  wrapper.className = 'message ' + role;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = role === 'user' ? 'U' : 'A';
+
+  const content = document.createElement('div');
+  content.className = 'message-content';
+
+  const name = document.createElement('div');
+  name.className = 'message-name';
+  name.textContent = role === 'user' ? 'You' : 'AXON AI';
+
+  const body = document.createElement('div');
+  body.className = 'message-text';
+  body.innerHTML = formatText(text);
+
+  content.appendChild(name);
+  content.appendChild(body);
+
+  if(role === 'ai'){
+    const tools = document.createElement('div');
+    tools.className = 'message-tools';
+
+    const copy = document.createElement('button');
+    copy.textContent = 'Copy';
+    copy.addEventListener('click',()=>{
+      navigator.clipboard.writeText(text)
+        .then(()=>showToast('Copied!'))
+        .catch(()=>showToast('Copy not available'));
+    });
+
+    const read = document.createElement('button');
+    read.textContent = 'Read aloud';
+    read.addEventListener('click',()=>{
+      if(!('speechSynthesis' in window)){
+        showToast('Voice reading is not supported');
+        return;
+      }
+
+      speechSynthesis.cancel();
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = 'en-US';
+      speechSynthesis.speak(speech);
+    });
+
+    tools.appendChild(copy);
+    tools.appendChild(read);
+    content.appendChild(tools);
+  }
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(content);
+
+  $('chatMessages').appendChild(wrapper);
+  $('chatArea').scrollTop = $('chatArea').scrollHeight;
+}
+
+/* RENDER CHAT */
+
+function renderChat(){
+  const chat = getActiveChat();
+
+  $('chatMessages').innerHTML = '';
+  $('welcome').style.display =
+    chat && chat.messages.length ? 'none' : 'block';
+
+  if(!chat) return;
+
+  chat.messages.forEach(message=>{
+    displayMessage(message.role,message.text);
+  });
+}
+
+/* ADD MESSAGE */
+
+function addMessage(role,text){
+  const chat = ensureChat();
+
+  chat.messages.push({
+    role:role,
+    text:text,
+    time:Date.now()
+  });
+
+  updateChatTitle(chat);
+  $('welcome').style.display = 'none';
+
+  displayMessage(role,text);
+}
+
+/* API REQUEST */
+
+async function requestAI(message,fileContent){
+  const settings = loadSettings();
+  const endpoint = settings.endpoint || '/api/chat';
+
+  const chat = getActiveChat();
+
+  const response = await fetch(endpoint,{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      message:message,
+      history:chat.messages,
+      attachment:fileContent || null,
+      systemPrompt:
+        'You are AXON AI, a helpful, friendly and accurate assistant. Explain things clearly.'
+    })
+  });
+
+  if(!response.ok){
+    throw new Error('Server error: ' + response.status);
+  }
+
+  const data = await response.json();
+
+  return data.reply || data.response || data.message ||
+    'I could not generate a response.';
+}
+
+/* SEND MESSAGE */
+
+async function sendMessage(){
+  if(isSending) return;
+
+  const input = $('messageInput');
+  const message = input.value.trim();
+
+  if(!message && !attachedFile) return;
+
+  const fileContent = attachedFile ? attachedFile.content : '';
+
+  const finalMessage = message ||
+    'Please read and help me understand this attached file.';
+
+  ensureChat();
+
+  addMessage(
+    'user',
+    finalMessage +
+    (attachedFile ? '\n\n📎 ' + attachedFile.name : '')
+  );
+
+  input.value = '';
+  input.style.height = '48px';
+
+  attachedFile = null;
+  $('fileInfo').style.display = 'none';
+
+  isSending = true;
+  $('sendBtn').disabled = true;
+
+  const loading = document.createElement('div');
+  loading.className = 'message ai';
+  loading.innerHTML =
+    '<div class="avatar">A</div>' +
+    '<div class="message-content">' +
+    '<div class="message-name">AXON AI</div>' +
+    '<div class="message-text typing">AXON AI is thinking...</div>' +
+    '</div>';
+
+  $('chatMessages').appendChild(loading);
+  $('chatArea').scrollTop = $('chatArea').scrollHeight;
+
+  try{
+    const reply = await requestAI(finalMessage,fileContent);
+
+    loading.remove();
+
+addMessage('ai', reply);
+
+} catch(error) {
+
+loading.remove();
+
 addMessage(
-m.content,
-m.role==="user"?"user":"bot"
+  'ai',
+  'AXON AI server se connect nahi ho pa raha hai. Backend API setup check karo.'
 );
-});
 
-closeDrawer();
+console.error(error);
 
-status("Conversation opened");
+} finally {
+
+isSending = false;
+$('sendBtn').disabled = false;
+
+saveChats();
+
+$('messageInput').focus();
 
 }
+}
+
+/* NEW CHAT */
 
 function newChat(){
+  createChat();
 
-chatId=Date.now();
-history=[];
-
-$("chat").innerHTML="";
-
-addMessage("New conversation started!","bot");
-
-status("New conversation");
-
+  if(window.innerWidth <= 760){
+    $('sidebar').classList.remove('active');
+  }
 }
 
-/* MENU */
+$('newChatBtn').addEventListener('click',newChat);
+$('topNewBtn').addEventListener('click',newChat);
 
-function openDrawer(){
+/* SEND BUTTON */
 
-$("drawer").classList.add("open");
-$("overlay").classList.remove("hidden");
-loadHistory();
+$('sendBtn').addEventListener('click',sendMessage);
 
+$('messageInput').addEventListener('keydown',event=>{
+  if(event.key === 'Enter' && !event.shiftKey){
+    event.preventDefault();
+    sendMessage();
+  }
+});
+
+/* TEXTAREA AUTO HEIGHT */
+
+$('messageInput').addEventListener('input',function(){
+  this.style.height = '48px';
+  this.style.height = Math.min(this.scrollHeight,160) + 'px';
+});
+
+/* SUGGESTIONS */
+
+document.querySelectorAll('.suggestion').forEach(button=>{
+  button.addEventListener('click',()=>{
+    $('messageInput').value = button.dataset.prompt;
+    sendMessage();
+  });
+});
+
+/* FILE ATTACHMENT */
+
+$('attachBtn').addEventListener('click',()=>{
+  $('fileInput').click();
+});
+
+$('fileInput').addEventListener('change',async event=>{
+  const file = event.target.files[0];
+  if(!file) return;
+
+  if(file.size > 1024 * 1024){
+    showToast('File must be smaller than 1 MB');
+    event.target.value = '';
+    return;
+  }
+
+  try{
+    const content = await file.text();
+
+    attachedFile = {
+      name:file.name,
+      content:content
+    };
+
+    $('fileInfo').textContent = '📎 ' + file.name + ' attached';
+    $('fileInfo').style.display = 'block';
+
+    showToast('File attached');
+  }catch(error){
+    showToast('Could not read file');
+  }
+
+  event.target.value = '';
+});
+
+/* VOICE INPUT */
+
+$('voiceBtn').addEventListener('click',()=>{
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    showToast('Voice input is not supported');
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'hi-IN';
+
+  recognition.onstart = ()=>{
+    showToast('Listening...');
+  };
+
+  recognition.onresult = event=>{
+    const spoken = event.results[0][0].transcript;
+
+    $('messageInput').value +=
+      ($('messageInput').value ? ' ' : '') + spoken;
+  };
+
+  recognition.onerror = ()=>{
+    showToast('Voice input error');
+  };
+
+  recognition.start();
+});
+
+/* SIDEBAR */
+
+$('menuBtn').addEventListener('click',()=>{
+  $('sidebar').classList.toggle('active');
+});
+
+/* THEME */
+
+function applyTheme(){
+  const theme = localStorage.getItem('axon_theme') || 'dark';
+
+  document.body.classList.toggle(
+    'light-theme',
+    theme === 'light'
+  );
 }
 
-function closeDrawer(){
+$('themeBtn').addEventListener('click',()=>{
+  const isLight =
+    document.body.classList.toggle('light-theme');
 
-$("drawer").classList.remove("open");
-$("overlay").classList.add("hidden");
+  localStorage.setItem(
+    'axon_theme',
+    isLight ? 'light' : 'dark'
+  );
 
-}
-
-$("menuButton").onclick=openDrawer;
-$("closeDrawer").onclick=closeDrawer;
-$("overlay").onclick=closeDrawer;
+  showToast(isLight ? 'Light theme enabled' : 'Dark theme enabled');
+});
 
 /* SETTINGS */
 
 function openSettings(){
+  const settings = loadSettings();
 
-$("settingsPanel").classList.remove("hidden");
-closeDrawer();
+  $('apiEndpoint').value =
+    settings.endpoint || '/api/chat';
 
+  $('settingsModal').classList.add('show');
 }
 
-$("closeSettings").onclick=()=>{
-$("settingsPanel").classList.add("hidden");
-};
+$('settingsBtn').addEventListener('click',openSettings);
+$('topSettingsBtn').addEventListener('click',openSettings);
 
-$("settingsButton")?.addEventListener("click",openSettings);
-
-/* NAVIGATION */
-
-document.querySelectorAll("[data-action]").forEach(button=>{
-
-button.addEventListener("click",()=>{
-
-const action=button.dataset.action;
-
-closeDrawer();
-
-if(action==="settings")openSettings();
-
-if(action==="voice")toggleVoice();
-
-if(action==="history"){
-openDrawer();
-}
-
-if(action==="profile")profile();
-
-if(action==="image")generateImage();
-
-if(action==="video")generateVideo();
-
-if(action==="theme")toggleTheme();
-
-if(action==="new")newChat();
-
-if(action==="all")showAllHistory();
-
+$('closeSettings').addEventListener('click',()=>{
+  $('settingsModal').classList.remove('show');
 });
 
+$('saveSettings').addEventListener('click',()=>{
+  const endpoint = $('apiEndpoint').value.trim();
+
+  if(!endpoint){
+    showToast('Enter API endpoint');
+    return;
+  }
+
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify({endpoint:endpoint})
+  );
+
+  $('settingsModal').classList.remove('show');
+  showToast('Settings saved');
 });
 
-/* ALL HISTORY */
+/* CLEAR HISTORY */
 
-function showAllHistory(){
+$('clearAllBtn').addEventListener('click',()=>{
+  if(!confirm('Delete all chat history?')) return;
 
-const list=JSON.parse(
-localStorage.getItem("axonHistory")||"[]"
-);
+  chats = [];
+  activeChatId = null;
 
-$("chat").innerHTML="";
+  saveChats();
+  createChat();
 
-if(!list.length){
-addMessage("No saved conversations yet.","bot");
-return;
-}
-
-list.forEach(item=>{
-
-const button=document.createElement("button");
-
-button.className="nav-button";
-button.style.margin="12px 0";
-button.textContent="◷ "+item.title;
-
-button.onclick=()=>openChat(item);
-
-$("chat").appendChild(button);
-
+  showToast('History cleared');
 });
 
+/* START APPLICATION */
+
+function initialize(){
+  loadChats();
+  applyTheme();
+
+  if(chats.length){
+    activeChatId = chats[0].id;
+  }else{
+    createChat();
+  }
+
+  renderHistory();
+  renderChat();
+
+  console.log('AXON AI initialized');
 }
 
-/* PROFILE */
-
-function profile(){
-
-const name=prompt("Enter your profile name:",userName);
-
-if(name&&name.trim()){
-
-userName=name.trim();
-
-localStorage.setItem("axonName",userName);
-
-$("userName").textContent=userName;
-
-status("Profile updated");
-
-}
-
-}
-
-$("settingsProfile").onclick=profile;
-
-$("userName").textContent=userName;
-
-/* THEME */
-
-let dark=true;
-
-function toggleTheme(){
-
-dark=!dark;
-
-const root=document.documentElement;
-
-if(dark){
-
-root.style.setProperty("--bg","#030817");
-root.style.setProperty("--panel","#09142c");
-root.style.setProperty("--panel2","#0c1b38");
-root.style.setProperty("--text","#f4f8ff");
-
-}else{
-
-root.style.setProperty("--bg","#edf4ff");
-root.style.setProperty("--panel","#dce8fa");
-root.style.setProperty("--panel2","#cfddf4");
-root.style.setProperty("--text","#10243a");
-
-}
-
-$("themeToggle").classList.toggle("on",dark);
-
-status(dark?"Dark theme enabled":"Light theme enabled");
-
-}
-
-$("themeToggle").onclick=toggleTheme;
-
-document.querySelectorAll(".toggle").forEach(btn=>{
-
-if(btn.id!=="themeToggle"&&btn.id!=="voiceToggle"){
-
-btn.onclick=()=>{
-btn.classList.toggle("on");
-};
-
-}
-
-});
-
-/* AI VOICE */
-
-function toggleVoice(){
-
-voiceEnabled=!voiceEnabled;
-
-$("voiceToggle").classList.toggle("on",voiceEnabled);
-
-status("Voice Control "+(voiceEnabled?"ON":"OFF"));
-
-if(!voiceEnabled){
-
-stopRecognition();
-
-speechSynthesis.cancel();
-
-}
-
-}
-
-$("voiceToggle").onclick=toggleVoice;
-
-/* SPEECH OUTPUT */
-
-function speak(text){
-
-if(!soundEnabled)return;
-
-const speech=new SpeechSynthesisUtterance(text);
-
-speech.lang="hi-IN";
-
-speechSynthesis.speak(speech);
-
-}
-
-$("soundToggle").onclick=()=>{
-
-soundEnabled=!soundEnabled;
-
-$("soundToggle").classList.toggle("on",soundEnabled);
-
-};
-
-/* MICROPHONE */
-
-function startRecognition(){
-
-const SR=window.SpeechRecognition||
-window.webkitSpeechRecognition;
-
-if(!SR){
-
-status("Speech recognition not supported");
-
-return;
-
-}
-
-recognition=new SR();
-
-recognition.lang="hi-IN";
-
-recognition.onstart=()=>status("Listening...");
-
-recognition.onresult=e=>{
-
-const result=e.results[e.results.length-1];
-
-if(result.isFinal){
-
-$("prompt").value=result[0].transcript;
-
-sendMessage();
-
-}
-
-};
-
-recognition.onerror=()=>{
-status("Microphone permission required");
-};
-
-recognition.start();
-
-}
-
-function stopRecognition(){
-
-if(recognition){
-
-recognition.stop();
-recognition=null;
-
-}
-
-}
-
-$("micButton").onclick=()=>{
-
-if(recognition){
-
-stopRecognition();
-status("Microphone stopped");
-
-}else{
-
-startRecognition();
-
-}
-
-};
-
-/* CHAT API */
-
-async function sendMessage(){
-
-const message=$("prompt").value.trim();
-
-if(!message)return;
-
-$("prompt").value="";
-
-addMessage(message,"user");
-
-history.push({
-role:"user",
-content:message
-});
-
-status("AXON AI is thinking...");
-
-try{
-
-const response=await fetch(API.chat,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-message,
-history
-})
-
-});
-
-if(!response.ok){
-throw Error("Chat API error "+response.status);
-}
-
-const data=await response.json();
-
-const reply=data.reply||
-data.response||
-data.answer;
-
-if(!reply)throw Error("No AI response");
-
-addMessage(reply,"bot");
-
-history.push({
-role:"assistant",
-content:reply
-});
-
-saveHistory();
-
-speak(reply);
-
-status
+initialize();
+</script>
+</body>
+</html>
