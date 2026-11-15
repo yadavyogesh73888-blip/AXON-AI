@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,275 +6,117 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111f">
 <title>AXON AI</title>
-
 <style>
 :root{
---bg:#07111f;
---panel:#10243a;
---panel2:#0c1b2c;
---line:#29445f;
---text:#f2f7ff;
---muted:#91a9c1;
+--bg:#07111f;--panel:#10243a;--panel2:#0c1b2c;
+--line:#29445f;--text:#f2f7ff;--muted:#91a9c1;
 --cyan:#35d5f5;
 }
-
 *{box-sizing:border-box}
-
 body{
-margin:0;
-background:var(--bg);
-color:var(--text);
-font-family:Arial,sans-serif;
-height:100vh;
-overflow:hidden;
+margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif;height:100vh;
 }
-
 button,input,textarea{font:inherit}
 button{cursor:pointer;border:0}
 .hidden{display:none!important}
-
 #splash{
-position:fixed;
-inset:0;
-background:var(--bg);
-display:grid;
-place-items:center;
-z-index:99;
-color:var(--cyan);
-font-size:38px;
+position:fixed;inset:0;background:var(--bg);
+display:grid;place-items:center;
+z-index:99;color:var(--cyan);font-size:38px;
 font-weight:bold;
 }
-
-#app{
-display:flex;
-height:100dvh;
-}
-
+#app{display:flex;height:100vh}
 .sidebar{
-width:270px;
-background:var(--panel2);
+width:270px;background:var(--panel2);
 border-right:1px solid var(--line);
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
-overflow-y:auto;
-flex-shrink:0;
+padding:15px;display:flex;flex-direction:column;
+gap:10px;overflow-y:auto;
 }
-
-.brand{
-font-size:27px;
-color:var(--cyan);
-font-weight:bold;
-padding:12px;
-}
-
+.brand{font-size:27px;color:var(--cyan);
+font-weight:bold;padding:12px}
 .menu{
-background:var(--panel);
-color:white;
+background:var(--panel);color:white;
 border:1px solid var(--line);
-border-radius:13px;
-padding:13px;
-text-align:left;
-width:100%;
+border-radius:13px;padding:13px;
+text-align:left;width:100%;
 }
-
-.menu:hover,.action:hover{
-border-color:var(--cyan);
-}
-
+.menu:hover,.action:hover{border-color:var(--cyan)}
 .settings{
 border:1px solid var(--line);
-border-radius:15px;
-padding:12px;
+border-radius:15px;padding:12px;
 }
-
 .settings h3{color:var(--cyan)}
-
 .history{margin-top:auto}
 .history button{margin-top:7px}
-
-.main{
-flex:1;
-min-width:0;
-display:flex;
-flex-direction:column;
-}
-
+.main{flex:1;min-width:0;display:flex;
+flex-direction:column}
 .topbar{
-padding:17px 22px;
-border-bottom:1px solid var(--line);
-display:flex;
-justify-content:space-between;
+padding:17px 22px;border-bottom:1px solid var(--line);
+display:flex;justify-content:space-between;
 align-items:center;
 }
-
-.topbar strong{
-color:var(--cyan);
-font-size:23px;
-}
-
+.topbar strong{color:var(--cyan);font-size:23px}
 .chat{
-flex:1;
-overflow-y:auto;
-padding:22px;
-width:100%;
-max-width:950px;
-margin:auto;
+flex:1;overflow-y:auto;padding:22px;
+width:100%;max-width:950px;margin:auto;
 }
-
 .message{
-padding:14px 18px;
-border-radius:17px;
-margin:12px 0;
-max-width:85%;
-line-height:1.6;
-white-space:pre-wrap;
+padding:14px 18px;border-radius:17px;
+margin:12px 0;max-width:85%;
+line-height:1.6;white-space:pre-wrap;
 overflow-wrap:anywhere;
 }
-
-.user{
-background:#16425a;
-margin-left:auto;
-}
-
-.bot{
-background:var(--panel);
-border:1px solid var(--line);
-}
-
+.user{background:#16425a;margin-left:auto}
+.bot{background:var(--panel);
+border:1px solid var(--line)}
 .composer{
-width:100%;
-max-width:950px;
-margin:auto;
-padding:12px;
-display:flex;
-gap:8px;
+width:100%;max-width:950px;margin:auto;
+padding:12px;display:flex;gap:8px;
 align-items:center;
 }
-
 .composer textarea{
-flex:1;
-min-width:0;
-resize:none;
-min-height:53px;
-max-height:130px;
-padding:16px;
-border-radius:17px;
-background:var(--panel);
-border:1px solid var(--line);
-color:white;
-outline:none;
+flex:1;min-width:0;resize:none;
+min-height:53px;max-height:130px;
+padding:16px;border-radius:17px;
+background:var(--panel);border:1px solid var(--line);
+color:white;outline:none;
 }
-
 .action{
-background:var(--panel);
-color:var(--cyan);
+background:var(--panel);color:var(--cyan);
 border:1px solid var(--line);
-border-radius:14px;
-padding:14px;
+border-radius:14px;padding:14px;
 font-size:18px;
 }
-
-.status{
-padding:0 15px 10px;
-color:var(--muted);
-font-size:13px;
-}
-
+.status{padding:0 15px 10px;color:var(--muted);
+font-size:13px}
 .popup{
-position:fixed;
-bottom:85px;
-left:15px;
+position:fixed;bottom:85px;left:15px;
 background:var(--panel2);
 border:1px solid var(--line);
-border-radius:16px;
-padding:12px;
-width:200px;
-z-index:40;
-box-shadow:0 10px 35px #0008;
+border-radius:16px;padding:12px;
+width:190px;z-index:20;
 }
-
 .popup button{margin:5px 0}
-
-video{
-width:100%;
-max-height:350px;
-border-radius:15px;
-background:#000;
-}
-
+video{width:100%;max-height:350px;
+border-radius:15px;background:#000}
 #cameraBox{
-position:fixed;
-inset:8%;
-background:var(--panel2);
-z-index:50;
-padding:20px;
-border:1px solid var(--line);
-border-radius:20px;
-overflow:auto;
+position:fixed;inset:10%;
+background:var(--panel2);z-index:30;
+padding:20px;border:1px solid var(--line);
+border-radius:20px;overflow:auto;
 }
-
-#cameraBox button{margin-top:12px}
-
-.preview{
-max-width:100%;
-max-height:300px;
-border-radius:15px;
-margin-top:10px;
-}
-
 @media(max-width:700px){
-
-.sidebar{
-width:75px;
-padding:7px;
-}
-
-.brand{
-font-size:14px;
-padding:8px;
-}
-
-.sidebar .menu{
-font-size:10px;
-padding:12px 3px;
-text-align:center;
-}
-
-.settings,.history{
-display:none;
-}
-
-.settings.mobile-open,
-.history.mobile-open{
-display:block;
-position:fixed;
-left:80px;
-top:65px;
-width:min(260px,70vw);
-max-height:75vh;
-overflow:auto;
-z-index:60;
-background:var(--panel2);
-}
-
-.composer{
-padding:8px;
-gap:5px;
-}
-
-.action{
-padding:12px 9px;
-}
-
-.message{max-width:94%}
-
-.topbar{padding:14px}
+.sidebar{width:75px;padding:7px}
+.brand{font-size:14px;padding:8px}
+.sidebar .menu{font-size:10px;
+padding:12px 3px;text-align:center}
+.settings,.history{display:none}
+.composer{padding:8px;gap:5px}
+.action{padding:12px 9px}
 }
 </style>
 </head>
-
 <body>
 
 <div id="splash">AXON AI</div>
@@ -281,7 +124,6 @@ padding:12px 9px;
 <section id="app" class="hidden">
 
 <aside class="sidebar">
-
 <div class="brand">AXON AI</div>
 
 <button class="menu" id="settingsButton">
@@ -289,149 +131,104 @@ padding:12px 9px;
 </button>
 
 <div id="settings" class="settings hidden">
-
 <h3>Settings</h3>
-
 <button class="menu" id="voiceButton">
 🎙 Voice Control: OFF
 </button>
-
 <button class="menu" id="profileButton">
 👤 Profile
 </button>
-
 <button class="menu" id="imageButton">
 🖼 Image Generator
 </button>
-
 <button class="menu" id="videoButton">
 🎬 Video Generator
 </button>
-
 <button class="menu" id="themeButton">
 🌙 Dark Theme: ON
 </button>
-
 <button class="menu" id="logoutButton">
-Logout / Reset
+Logout
 </button>
-
 </div>
 
-<div class="history" id="history">
-
+<div class="history">
 <h3>History</h3>
-
 <div id="historyList"></div>
-
-<button class="menu" id="seeAll">
-See All →
-</button>
-
-<button class="menu" id="newChat">
-＋ New Chat
-</button>
-
+<button class="menu" id="seeAll">See All →</button>
+<button class="menu" id="newChat">＋ New Chat</button>
 </div>
-
 </aside>
 
 <main class="main">
-
 <header class="topbar">
 <strong>AXON AI</strong>
 <span id="welcome">Your AI Assistant</span>
 </header>
 
 <div class="chat" id="chat">
-
 <div class="message bot">
 Hello! Main AXON AI hoon.
 Aap mujhse text, voice aur supported media
 ke through baat kar sakte hain.
 </div>
-
 </div>
 
 <div id="cameraBox" class="hidden">
-
 <h3 id="cameraTitle">Live Camera</h3>
-
-<video id="camera" autoplay playsinline muted></video>
-
-<button class="action" id="stopCamera">
-Stop Camera
-</button>
-
+<video id="camera" autoplay playsinline></video>
+<button class="action" id="stopCamera">Stop</button>
 </div>
 
 <div class="composer">
-
 <button class="action" id="plusButton">＋</button>
-
-<button class="action" id="micButton">🎙</button>
 
 <textarea id="prompt"
 placeholder="Message AXON AI..."></textarea>
 
 <button class="action" id="sendButton">➤</button>
-
 <button class="action" id="callButton">📞</button>
-
 </div>
 
-<div class="status" id="status">
-AXON AI Ready
-</div>
-
+<div class="status" id="status">AXON AI Ready</div>
 </main>
 </section>
 
 <div id="plusMenu" class="popup hidden">
-
-<button class="menu" id="photoOption">
-🖼 Photo
-</button>
-
-<button class="menu" id="cameraOption">
-📷 Camera
-</button>
-
-<button class="menu" id="fileOption">
-📁 Files
-</button>
-
-<button class="menu" id="videoCallOption">
-📹 Video Call
-</button>
-
-<button class="menu" id="recordOption">
-🎥 Screen Record
-</button>
-
+<button class="menu" id="photoOption">🖼 Photo</button>
+<button class="menu" id="cameraOption">📷 Camera</button>
+<button class="menu" id="fileOption">📁 Files</button>
+<button class="menu" id="videoCallOption">📹 Video Call</button>
+<button class="menu" id="recordOption">🎥 Screen Record</button>
 </div>
 
-<input type="file" id="photoInput"
-accept="image/*" hidden>
-
+<input type="file" id="photoInput" accept="image/*" hidden>
 <input type="file" id="fileInput" hidden>
+<input type="file" id="videoInput" accept="video/*" hidden>
 
-<input type="file" id="videoInput"
-accept="video/*" hidden>
+<script type="module">
 
-<script>
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-/* AXON AI CONFIGURATION */
+import {
+getAuth,onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+/* FIREBASE CONFIG */
+const firebaseConfig={
+apiKey:"YOUR_FIREBASE_API_KEY",
+authDomain:"axon-ai-9ee3b.firebaseapp.com",
+projectId:"axon-ai-9ee3b",
+storageBucket:"YOUR_STORAGE_BUCKET",
+messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
+appId:"YOUR_FIREBASE_APP_ID"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
 
 const $=id=>document.getElementById(id);
-
-const API={
-chat:"/api/chat",
-image:"/api/image",
-video:"/api/video",
-upload:"/api/upload",
-live:"/api/live-session"
-};
 
 let history=[];
 let voiceEnabled=false;
@@ -439,806 +236,336 @@ let stream=null;
 let recorder=null;
 let chunks=[];
 let recording=false;
-let recognition=null;
-let listening=false;
-let chatId=Date.now();
-let userName=localStorage.getItem("axonName")||"User";
 
-/* APPLICATION START */
+const API={
+chat:"/api/chat",
+image:"/api/image",
+video:"/api/video",
+live:"/api/live-session"
+};
 
-function status(message){
-$("status").textContent=message;
-}
+function status(t){$("status").textContent=t}
 
-window.addEventListener("load",()=>{
-setTimeout(()=>{
+onAuthStateChanged(auth,user=>{
 $("splash").classList.add("hidden");
 $("app").classList.remove("hidden");
-},700);
 
-loadHistory();
-updateWelcome();
+if(user){
+$("welcome").textContent="Welcome "+(user.displayName||"User");
+}
 });
 
-function updateWelcome(){
-$("welcome").textContent="Welcome "+userName;
-}
-
-/* CHAT SYSTEM */
-
-function addMessage(message,type){
-
+function addMessage(text,type){
 const div=document.createElement("div");
-
 div.className="message "+type;
-div.textContent=message;
-
+div.textContent=text;
 $("chat").appendChild(div);
-
 $("chat").scrollTop=$("chat").scrollHeight;
-
 }
 
 function saveHistory(){
-
-const title=history.find(x=>x.role==="user")
-?.content?.slice(0,35)||"New Conversation";
-
-const list=JSON.parse(
-localStorage.getItem("axonChats")||"[]"
-);
-
-const filtered=list.filter(x=>x.id!==chatId);
-
-filtered.unshift({
-id:chatId,
-title:title,
+const item={
+title:history[0]?.content?.slice(0,30)||"New Chat",
 messages:history
-});
-
-localStorage.setItem(
-"axonChats",
-JSON.stringify(filtered.slice(0,50))
-);
-
+};
+const list=JSON.parse(localStorage.getItem("axonChats")||"[]");
+const filtered=list.filter(x=>x.id!==chatId);
+filtered.unshift({...item,id:chatId});
+localStorage.setItem("axonChats",JSON.stringify(filtered.slice(0,30)));
 loadHistory();
-
 }
 
+let chatId=Date.now();
+
 function loadHistory(){
-
-const list=JSON.parse(
-localStorage.getItem("axonChats")||"[]"
-);
-
+const list=JSON.parse(localStorage.getItem("axonChats")||"[]");
 $("historyList").innerHTML="";
 
 list.slice(0,3).forEach(item=>{
-
 const b=document.createElement("button");
-
 b.className="menu";
-b.textContent=item.title;
-
+b.textContent=item.title||"Conversation";
 b.onclick=()=>openChat(item);
-
 $("historyList").appendChild(b);
-
 });
-
 }
 
 function openChat(item){
-
 chatId=item.id;
 history=item.messages||[];
-
 $("chat").innerHTML="";
-
-history.forEach(m=>{
-addMessage(
-m.content,
-m.role==="user"?"user":"bot"
-);
-});
-
-status("Conversation opened");
-
+history.forEach(m=>addMessage(
+m.content,m.role==="user"?"user":"bot"
+));
 }
 
 $("seeAll").onclick=()=>{
-
-const list=JSON.parse(
-localStorage.getItem("axonChats")||"[]"
-);
-
+const list=JSON.parse(localStorage.getItem("axonChats")||"[]");
 $("chat").innerHTML="";
-
-list.forEach(item=>{
-
-const b=document.createElement("button");
-
-b.className="menu";
-b.textContent=item.title;
-
-b.onclick=()=>openChat(item);
-
-$("chat").appendChild(b);
-
+list.forEach((item,i)=>{
+addMessage((i+1)+". "+item.title,"bot");
 });
-
 };
 
 $("newChat").onclick=()=>{
-
 chatId=Date.now();
 history=[];
-
 $("chat").innerHTML="";
-
-addMessage(
-"New conversation started! Main aapki kya help kar sakta hoon?",
-"bot"
-);
-
-status("New Chat");
-
+addMessage("New conversation started!","bot");
 };
 
-/* AI CHAT CONNECTION */
-
 async function sendMessage(){
-
 const message=$("prompt").value.trim();
-
 if(!message)return;
 
 $("prompt").value="";
-
 addMessage(message,"user");
-
-history.push({
-role:"user",
-content:message
-});
-
+history.push({role:"user",content:message});
 status("AXON AI Thinking...");
 
 try{
-
 const res=await fetch(API.chat,{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-message:message,
-history:history
-})
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message,history})
 });
 
-if(!res.ok){
-throw Error("AI Server Error "+res.status);
-}
+if(!res.ok)throw Error("API Error "+res.status);
 
 const data=await res.json();
+const reply=data.reply||data.response||data.answer;
 
-const reply=data.reply||
-data.response||
-data.answer;
-
-if(!reply){
-throw Error("AI response missing");
-}
+if(!reply)throw Error("Empty AI response");
 
 addMessage(reply,"bot");
-
-history.push({
-role:"assistant",
-content:reply
-});
-
+history.push({role:"assistant",content:reply});
 saveHistory();
 
 if(voiceEnabled){
-speak(reply);
+const speech=new SpeechSynthesisUtterance(reply);
+speech.lang="hi-IN";
+speechSynthesis.speak(speech);
 }
-
 status("AXON AI Ready");
 
-}catch(error){
-
-addMessage(
-"AI server connect nahi hua. Backend API check karein.",
-"bot"
-);
-
-status(error.message);
-
+}catch(e){
+addMessage("Server connection problem. Backend API check karein.","bot");
+status(e.message);
 }
-
 }
 
 $("sendButton").onclick=sendMessage;
 
 $("prompt").addEventListener("keydown",e=>{
-
 if(e.key==="Enter"&&!e.shiftKey){
-
 e.preventDefault();
-
 sendMessage();
-
 }
-
 });
 
-/* VOICE RESPONSE */
-
-function speak(text){
-
-if(!("speechSynthesis" in window)){
-status("Voice output not supported");
-return;
-}
-
-speechSynthesis.cancel();
-
-const speech=new SpeechSynthesisUtterance(text);
-
-speech.lang="hi-IN";
-speech.rate=1;
-speech.pitch=1;
-
-speechSynthesis.speak(speech);
-
-}
-
-/* VOICE CONTROL */
+$("settingsButton").onclick=()=>{
+$("settings").classList.toggle("hidden");
+};
 
 $("voiceButton").onclick=()=>{
-
 voiceEnabled=!voiceEnabled;
-
 $("voiceButton").textContent=
 "🎙 Voice Control: "+(voiceEnabled?"ON":"OFF");
-
-if(!voiceEnabled){
-speechSynthesis.cancel();
-stopListening();
-}
-
-status(
-voiceEnabled?
-"Voice control enabled":
-"Voice control disabled"
-);
-
-};
-
-function startListening(){
-
-const SR=window.SpeechRecognition||
-window.webkitSpeechRecognition;
-
-if(!SR){
-status("Speech recognition unsupported");
-return;
-}
-
-recognition=new SR();
-
-recognition.lang="hi-IN";
-recognition.continuous=true;
-recognition.interimResults=false;
-
-recognition.onstart=()=>{
-listening=true;
-status("Listening...");
-};
-
-recognition.onresult=e=>{
-
-const result=e.results[e.results.length-1];
-
-if(result.isFinal){
-
-$("prompt").value=result[0].transcript;
-
-if(voiceEnabled){
-sendMessage();
-}
-
-}
-
-};
-
-recognition.onerror=()=>{
-listening=false;
-status("Microphone permission check karein");
-};
-
-recognition.onend=()=>{
-
-listening=false;
-
-if(voiceEnabled){
-status("Voice control paused. Tap microphone to restart.");
-}
-
-};
-
-recognition.start();
-
-}
-
-function stopListening(){
-
-if(recognition){
-recognition.stop();
-recognition=null;
-}
-
-listening=false;
-
-}
-
-$("micButton").onclick=()=>{
-
-if(listening){
-stopListening();
-status("Microphone stopped");
-}else{
-startListening();
-}
-
-};
-
-/* SETTINGS */
-
-$("settingsButton").onclick=()=>{
-
-const panel=$("settings");
-
-panel.classList.toggle("hidden");
-panel.classList.toggle("mobile-open");
-
+status("Voice "+(voiceEnabled?"Enabled":"Disabled"));
 };
 
 $("profileButton").onclick=()=>{
-
-const name=prompt("Enter your AXON AI profile name",userName);
-
-if(name&&name.trim()){
-
-userName=name.trim();
-
-localStorage.setItem("axonName",userName);
-
-updateWelcome();
-
-status("Profile updated");
-
-}
-
+const u=auth.currentUser;
+alert("Name: "+(u?.displayName||"Not set")+
+"\nEmail: "+(u?.email||"Not logged in"));
 };
 
-/* LOGOUT / RESET */
-
-$("logoutButton").onclick=()=>{
-
-if(!confirm("Reset AXON AI local session?"))return;
-
-stopListening();
-
-if(stream){
-stream.getTracks().forEach(t=>t.stop());
-stream=null;
-}
-
-speechSynthesis.cancel();
-
-userName="User";
-
-localStorage.removeItem("axonName");
-
-updateWelcome();
-
-status("Local session reset");
-
-};
-
-/* DARK AND LIGHT THEME */
+$("logoutButton").onclick=()=>signOut(auth);
 
 $("themeButton").onclick=()=>{
+const light=document.body.dataset.theme!=="light";
+document.body.dataset.theme=light?"light":"dark";
 
-const light=
-document.body.dataset.theme!=="light";
+const vars=light?
+["#edf4fa","#dce9f3","#d2e2ef","#10243a"]:
+["#07111f","#10243a","#0c1b2c","#f2f7ff"];
 
-document.body.dataset.theme=
-light?"light":"dark";
-
-const values=light?
-["#edf4fa","#dce9f3","#d2e2ef","#10243a","#91a9c1"]:
-["#07111f","#10243a","#0c1b2c","#f2f7ff","#91a9c1"];
-
-[
-"--bg",
-"--panel",
-"--panel2",
-"--text",
-"--muted"
-].forEach((key,i)=>{
-
-document.documentElement.style.setProperty(
-key,values[i]
-);
-
+["--bg","--panel","--panel2","--text"].forEach((v,i)=>{
+document.documentElement.style.setProperty(v,vars[i]);
 });
 
 $("themeButton").textContent=
 "🌙 Dark Theme: "+(light?"OFF":"ON");
-
 };
-
-/* PLUS MENU */
 
 $("plusButton").onclick=()=>{
-
 $("plusMenu").classList.toggle("hidden");
-
 };
 
-$("photoOption").onclick=()=>{
-$("plusMenu").classList.add("hidden");
-$("photoInput").click();
-};
+$("photoOption").onclick=()=>$("photoInput").click();
+$("fileOption").onclick=()=>$("fileInput").click();
 
-$("fileOption").onclick=()=>{
-$("plusMenu").classList.add("hidden");
-$("fileInput").click();
-};
-
-/* FILE AND PHOTO PREVIEW */
-
-async function handleFile(file){
-
+function selectedFile(file){
 if(!file)return;
-
-addMessage("Selected file: "+file.name,"user");
-
-status("Preparing file...");
-
-const data=new FormData();
-
-data.append("file",file);
-
-try{
-
-const response=await fetch(API.upload,{
-method:"POST",
-body:data
-});
-
-if(!response.ok){
-throw Error("Upload endpoint unavailable");
+addMessage("Selected: "+file.name,"user");
+status("File selected. Upload API required to send it to AI.");
 }
 
-const result=await response.json();
-
-addMessage(
-"File uploaded successfully: "+(result.name||file.name),
-"bot"
-);
-
-status("Upload completed");
-
-}catch(error){
-
-status("File selected locally. Connect /api/upload to send it to AI.");
-
-}
-
-}
-
-$("photoInput").onchange=e=>{
-handleFile(e.target.files[0]);
-e.target.value="";
-};
-
-$("fileInput").onchange=e=>{
-handleFile(e.target.files[0]);
-e.target.value="";
-};
-
-/* CAMERA */
+$("photoInput").onchange=e=>selectedFile(e.target.files[0]);
+$("fileInput").onchange=e=>selectedFile(e.target.files[0]);
 
 async function startCamera(videoCall=false){
-
 try{
-
 stream=await navigator.mediaDevices.getUserMedia({
-video:true,
-audio:true
+video:true,audio:true
 });
 
 $("camera").srcObject=stream;
-
 $("cameraTitle").textContent=
 videoCall?"Video Call Preview":"Camera Preview";
-
 $("cameraBox").classList.remove("hidden");
-
 $("plusMenu").classList.add("hidden");
 
-status("Camera started");
+status(videoCall?
+"Local video preview. Connect WebRTC server for remote calls.":
+"Camera Started");
 
-}catch(error){
-
-status("Camera permission required");
-
+}catch(e){status("Camera/Microphone permission required.");}
 }
 
-}
-
-$("cameraOption").onclick=()=>startCamera(false);
-
+$("cameraOption").onclick=()=>startCamera();
 $("videoCallOption").onclick=()=>startCamera(true);
 
 $("stopCamera").onclick=()=>{
-
-if(stream){
-
-stream.getTracks().forEach(track=>track.stop());
-
+if(stream)stream.getTracks().forEach(t=>t.stop());
 stream=null;
-
-}
-
-$("camera").srcObject=null;
-
 $("cameraBox").classList.add("hidden");
-
 status("Camera stopped");
-
 };
-
-/* LIVE CALL */
 
 $("callButton").onclick=async()=>{
-
-status("Connecting to live session...");
-
 try{
-
-const response=await fetch(API.live,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-user:"AXON AI",
-mode:"voice-video"
-})
-});
-
-if(!response.ok)throw Error("Live API unavailable");
-
+const response=await fetch(API.live,{method:"POST"});
+if(!response.ok)throw Error();
 const data=await response.json();
-
-if(data.url){
-
-window.open(data.url,"_blank");
-
-}else{
-
-status("Live session created. Check backend response.");
-
+if(data.url)window.open(data.url,"_blank");
+else status("Live session response received.");
+}catch(e){
+status("Live calling requires a connected WebRTC backend.");
 }
-
-}catch(error){
-
-status("Remote live call needs WebRTC and live-session backend.");
-
-}
-
 };
 
-/* SCREEN RECORDING */
-
 async function startRecording(){
-
 try{
-
 const screen=await navigator.mediaDevices.getDisplayMedia({
-video:true,
-audio:true
+video:true,audio:true
 });
 
 recorder=new MediaRecorder(screen);
-
 chunks=[];
 
 recorder.ondataavailable=e=>{
-
-if(e.data.size){
-chunks.push(e.data);
-}
-
+if(e.data.size)chunks.push(e.data);
 };
 
 recorder.onstop=()=>{
-
-const blob=new Blob(chunks,{
-type:"video/webm"
-});
-
+const blob=new Blob(chunks,{type:"video/webm"});
 const url=URL.createObjectURL(blob);
-
-const link=document.createElement("a");
-
-link.href=url;
-link.download="AXON-Recording.webm";
-
-link.click();
-
-setTimeout(()=>URL.revokeObjectURL(url),1000);
-
+const a=document.createElement("a");
+a.href=url;
+a.download="AXON-Recording.webm";
+a.click();
+URL.revokeObjectURL(url);
 screen.getTracks().forEach(t=>t.stop());
-
 recording=false;
-
 status("Recording saved");
-
 };
 
 recorder.start();
-
 recording=true;
-
 status("Screen recording started");
 
-}catch(error){
+recorder.onerror=()=>status("Recording error");
 
-status("Screen recording permission required");
-
-}
-
+}catch(e){status("Screen recording permission required.");}
 }
 
 $("recordOption").onclick=()=>{
-
 $("plusMenu").classList.add("hidden");
-
-if(recording){
-
-if(recorder&&recorder.state==="recording"){
-recorder.stop();
-}
-
-}else{
-
-startRecording();
-
-}
-
+if(!recording)startRecording();
+else if(recorder?.state==="recording")recorder.stop();
 };
 
-/* IMAGE GENERATOR */
-
 $("imageButton").onclick=async()=>{
-
-const prompt=window.prompt(
-"Describe your image for AXON AI:"
-);
-
+const prompt=window.prompt("Describe your image:");
 if(!prompt)return;
 
 status("Generating image...");
-
 try{
-
-const response=await fetch(API.image,{
+const r=await fetch(API.image,{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify({prompt})
 });
-
-if(!response.ok)throw Error("Image API error");
-
-const data=await response.json();
-
-if(data.url){
-
+if(!r.ok)throw Error();
+const d=await r.json();
+if(d.url){
 const img=document.createElement("img");
-
-img.src=data.url;
-img.alt="AXON AI generated image";
-img.className="preview";
-
+img.src=d.url;
+img.style.maxWidth="100%";
+img.style.borderRadius="15px";
 $("chat").appendChild(img);
-
-status("Image generated");
-
-}else{
-
-status("Image API response received");
-
-}
-
-}catch(error){
-
-status("Image API connection required");
-
-}
-
+}else status("Image response received.");
+}catch(e){status("Connect Image Generation API.");}
 };
-
-/* VIDEO GENERATOR */
 
 $("videoButton").onclick=async()=>{
-
-const prompt=window.prompt(
-"Describe your video for AXON AI:"
-);
-
+const prompt=window.prompt("Describe your video:");
 if(!prompt)return;
 
-status("Generating video...");
-
+status("Video generation started...");
 try{
-
-const response=await fetch(API.video,{
+const r=await fetch(API.video,{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify({prompt})
 });
-
-if(!response.ok)throw Error("Video API error");
-
-const data=await response.json();
-
-if(data.url){
-
+if(!r.ok)throw Error();
+const d=await r.json();
+if(d.url){
 const video=document.createElement("video");
-
 video.controls=true;
-video.src=data.url;
-
+video.src=d.url;
 $("chat").appendChild(video);
-
-status("Video ready");
-
-}else{
-
-status("Video generation processing");
-
-}
-
-}catch(error){
-
-status("Video API connection required");
-
-}
-
+}else status("Video processing started.");
+}catch(e){status("Connect Video Generation API.");}
 };
 
-/* CLEANUP */
+/* SPEECH RECOGNITION */
 
-window.addEventListener("beforeunload",()=>{
+$("micButton").onclick=()=>{
+const SR=window.SpeechRecognition||
+window.webkitSpeechRecognition;
 
-if(stream){
-stream.getTracks().forEach(t=>t.stop());
+if(!SR){
+status("Speech recognition not supported in this browser.");
+return;
 }
 
-stopListening();
+const recognition=new SR();
+recognition.lang="hi-IN";
+recognition.onstart=()=>status("Listening...");
+recognition.onresult=e=>{
+$("prompt").value=e.results[0][0].transcript;
+if(voiceEnabled)sendMessage();
+};
+recognition.onerror=()=>status("Microphone error");
+recognition.start();
+};
 
-speechSynthesis.cancel();
-
+window.addEventListener("load",()=>{
+loadHistory();
+setTimeout(()=>$("splash").classList.add("hidden"),700);
 });
 
 </script>
