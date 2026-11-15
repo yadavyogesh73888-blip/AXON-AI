@@ -1,428 +1,390 @@
+HTML
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101014">
 <title>AXON AI</title>
 
 <style>
-:root{
---bg:#101014;
---sidebar:#17171c;
---panel:#202027;
---panel2:#292932;
---text:#f4f4f5;
---muted:#a1a1aa;
---border:#34343d;
---accent:#8b7cff;
---accent-hover:#a295ff;
---user:#292943;
---shadow:0 12px 40px #0005;
+:root {
+  --bg:#101014;
+  --side:#17171c;
+  --panel:#202027;
+  --panel2:#2b2b35;
+  --text:#f4f4f5;
+  --muted:#a1a1aa;
+  --border:#363640;
+  --accent:#8b7cff;
+  --user:#30304a;
 }
-*{box-sizing:border-box}
-body{
-margin:0;
-background:var(--bg);
-color:var(--text);
-font-family:Arial,Helvetica,sans-serif;
-height:100dvh;
-overflow:hidden;
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  height:100dvh;
+  overflow:hidden;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, sans-serif;
 }
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-button:focus-visible,input:focus-visible,textarea:focus-visible{
-outline:2px solid var(--accent);
-outline-offset:2px;
+button,input,textarea,select { font:inherit; }
+button { cursor:pointer; }
+button:focus-visible,input:focus-visible,textarea:focus-visible {
+  outline:2px solid var(--accent);
 }
-.app{height:100dvh;display:flex}
-.sidebar{
-width:275px;
-flex-shrink:0;
-background:var(--sidebar);
-display:flex;
-flex-direction:column;
-padding:14px;
-border-right:1px solid var(--border);
-z-index:10;
-transition:left .25s;
+.app { display:flex;height:100dvh; }
+.sidebar {
+  width:270px;
+  flex-shrink:0;
+  background:var(--side);
+  border-right:1px solid var(--border);
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  z-index:20;
 }
-.brand{
-display:flex;
-align-items:center;
-gap:10px;
-padding:8px 5px 20px;
+.brand {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:8px 5px 22px;
 }
-.brand-logo{
-width:38px;height:38px;
-border-radius:12px;
-background:linear-gradient(135deg,#7969ff,#38c9df);
-display:grid;place-items:center;
-font-size:22px;font-weight:bold;
+.logo {
+  width:42px;height:42px;
+  border-radius:13px;
+  display:grid;place-items:center;
+  font-size:23px;font-weight:bold;
+  background:linear-gradient(135deg,#7969ff,#35c7df);
 }
-.brand-name{font-size:19px;font-weight:800;letter-spacing:1px}
-.brand-sub{font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:4px}
-.side-action{
-width:100%;
-border:1px solid var(--border);
-background:transparent;
-color:var(--text);
-padding:12px;
-border-radius:11px;
-text-align:left;
-margin-bottom:9px;
-display:flex;
-align-items:center;
-gap:11px;
+.brand strong {font-size:19px;letter-spacing:1px;}
+.brand small {
+  display:block;color:var(--muted);
+  font-size:9px;letter-spacing:2px;margin-top:4px;
 }
-.side-action:hover,.side-item:hover{background:var(--panel)}
-.side-action.primary{
-background:var(--accent);
-border-color:var(--accent);
-color:white;
+.side-btn {
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:transparent;
+  color:var(--text);
+  text-align:left;
+  margin-bottom:9px;
 }
-.side-label{
-font-size:11px;
-color:var(--muted);
-padding:15px 8px 8px;
-text-transform:uppercase;
-letter-spacing:1px;
+.side-btn:hover {background:var(--panel);}
+.side-btn.primary {
+  background:var(--accent);
+  border-color:var(--accent);
+  color:white;
 }
-.history{flex:1;overflow:auto}
-.side-item{
-padding:11px;
-border-radius:9px;
-font-size:13px;
-color:var(--muted);
-cursor:pointer;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
+.side-label {
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:1px;
+  padding:15px 7px 8px;
 }
-.side-item.active{background:var(--panel2);color:var(--text)}
-.side-footer{border-top:1px solid var(--border);padding-top:10px}
-.profile{
-display:flex;align-items:center;gap:10px;
-padding:10px 5px;
-cursor:pointer;
-border-radius:10px;
+.history {flex:1;overflow:auto;}
+.history-item {
+  padding:11px;
+  border-radius:9px;
+  font-size:13px;
+  color:var(--muted);
+  cursor:pointer;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
 }
-.profile:hover{background:var(--panel)}
-.profile-avatar{
-width:35px;height:35px;
-border-radius:50%;
-background:linear-gradient(135deg,#7161ff,#31b9db);
-display:grid;place-items:center;font-weight:bold;
+.history-item:hover,.history-item.active {
+  background:var(--panel2);
+  color:var(--text);
 }
-.profile-name{font-size:13px;font-weight:bold}
-.profile-desc{font-size:10px;color:var(--muted);margin-top:3px}
-.main{
-flex:1;min-width:0;
-display:flex;flex-direction:column;
-position:relative;
+.profile {
+  border-top:1px solid var(--border);
+  padding:15px 5px 5px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;
 }
-.topbar{
-height:60px;flex-shrink:0;
-display:flex;align-items:center;
-justify-content:space-between;
-padding:0 20px;
-border-bottom:1px solid var(--border);
+.avatar {
+  width:36px;height:36px;
+  border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,#7969ff,#35c7df);
+  font-weight:bold;
 }
-.top-left,.top-actions{display:flex;align-items:center;gap:10px}
-.top-title{font-size:14px;font-weight:700}
-.top-status{font-size:10px;color:#6dd8a4;margin-top:4px}
-.icon-btn{
-height:37px;min-width:37px;
-border:1px solid var(--border);
-border-radius:10px;
-background:var(--panel);
-color:var(--text);
+.profile small {color:var(--muted);}
+.main {
+  flex:1;min-width:0;
+  display:flex;flex-direction:column;
 }
-.icon-btn:hover{border-color:var(--accent)}
-.menu-btn{display:none}
-.page{
-display:none;
-flex:1;
-min-height:0;
-overflow:auto;
+.topbar {
+  height:62px;flex-shrink:0;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  border-bottom:1px solid var(--border);
 }
-.page.active{display:flex;flex-direction:column}
-.chat-page{overflow:hidden}
-.chat-scroll{
-flex:1;overflow:auto;
-padding:25px 18px;
-scroll-behavior:smooth;
+.top-left,.top-actions {
+  display:flex;align-items:center;gap:10px;
 }
-.welcome{
-max-width:740px;
-margin:8vh auto 25px;
-text-align:center;
+.icon-btn {
+  width:38px;height:38px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--panel);
+  color:var(--text);
 }
-.welcome-logo{
-height:72px;width:72px;
-margin:auto;
-display:grid;place-items:center;
-border-radius:23px;
-font-size:35px;font-weight:bold;
-background:linear-gradient(135deg,#7767ff,#32c5df);
-box-shadow:0 10px 40px #7565ff44;
+.icon-btn:hover {border-color:var(--accent);}
+#menuBtn {display:none;}
+.page {
+  display:none;flex:1;min-height:0;
+  overflow:auto;
 }
-.welcome h1{font-size:32px;margin:22px 0 10px}
-.gradient{
-background:linear-gradient(90deg,#a18cff,#54d6e9);
-color:transparent;
-background-clip:text;
+.page.active {display:flex;flex-direction:column;}
+.chat-page {overflow:hidden;}
+.chat-scroll {
+  flex:1;overflow:auto;
+  padding:25px 16px;
 }
-.welcome p{
-color:var(--muted);
-font-size:14px;
-line-height:1.7;
+.welcome {
+  max-width:700px;
+  margin:8vh auto 25px;
+  text-align:center;
 }
-.suggestions{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-top:30px;
+.welcome-logo {
+  width:75px;height:75px;
+  margin:auto;
+  border-radius:24px;
+  display:grid;place-items:center;
+  font-size:36px;font-weight:bold;
+  background:linear-gradient(135deg,#7969ff,#35c7df);
 }
-.suggestion{
-text-align:left;
-padding:15px;
-border:1px solid var(--border);
-border-radius:13px;
-background:var(--panel);
-color:var(--text);
-font-size:12px;
-line-height:1.6;
+.welcome h1 {font-size:31px;margin:20px 0 10px;}
+.gradient {
+  background:linear-gradient(90deg,#a18cff,#54d6e9);
+  color:transparent;
+  background-clip:text;
 }
-.suggestion:hover{border-color:var(--accent)}
-.suggestion strong{display:block;font-size:13px;margin-bottom:5px}
-.messages{max-width:820px;margin:auto}
-.message{
-display:flex;gap:12px;
-margin:24px 0;
-align-items:flex-start;
+.welcome p {
+  color:var(--muted);
+  font-size:14px;line-height:1.7;
 }
-.message.user{flex-direction:row-reverse}
-.avatar{
-width:34px;height:34px;flex-shrink:0;
-border-radius:12px;
-background:linear-gradient(135deg,#7969ff,#34bddd);
-display:grid;place-items:center;
-font-weight:bold;
+.suggestions {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;margin-top:28px;
 }
-.user .avatar{background:#3c3b62}
-.message-content{max-width:85%;min-width:0}
-.message-name{font-size:11px;color:var(--muted);margin:2px 4px 7px}
-.message-text{
-background:var(--panel);
-border:1px solid var(--border);
-border-radius:4px 15px 15px 15px;
-padding:13px 15px;
-font-size:14px;
-line-height:1.75;
-overflow-wrap:anywhere;
+.suggestion {
+  text-align:left;
+  padding:15px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:13px;
+  line-height:1.5;
 }
-.user .message-text{
-background:var(--user);
-border-radius:15px 4px 15px 15px;
+.suggestion:hover {border-color:var(--accent);}
+.suggestion strong {
+  display:block;margin-bottom:5px;
 }
-.message-text pre{
-white-space:pre-wrap;
-overflow:auto;
-background:#09090d;
-padding:12px;border-radius:8px;
+.messages {max-width:820px;margin:auto;}
+.message {
+  display:flex;gap:12px;
+  margin:23px 0;
+  align-items:flex-start;
 }
-.message-text code{color:#b6aaff}
-.message-tools{display:flex;gap:10px;margin:7px 2px}
-.message-tools button{
-background:transparent;border:0;
-color:var(--muted);font-size:11px;
+.message.user {flex-direction:row-reverse;}
+.message-avatar {
+  width:35px;height:35px;
+  flex-shrink:0;border-radius:12px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,#7969ff,#35c7df);
+  font-weight:bold;
 }
-.message-tools button:hover{color:var(--text)}
-.composer-wrap{padding:12px 18px 15px}
-.composer{
-max-width:820px;
-margin:auto;
-padding:11px;
-border:1px solid #484853;
-background:var(--panel);
-border-radius:18px;
-box-shadow:var(--shadow);
+.message.user .message-avatar {background:#41416b;}
+.message-content {max-width:85%;min-width:0;}
+.message-name {
+  color:var(--muted);
+  font-size:11px;margin:2px 4px 7px;
 }
-.composer:focus-within{border-color:var(--accent)}
-#messageInput{
-width:100%;min-height:45px;max-height:150px;
-resize:none;border:0;outline:0;
-background:transparent;color:var(--text);
-padding:8px;font-size:14px;
+.message-text {
+  padding:13px 15px;
+  border:1px solid var(--border);
+  border-radius:4px 15px 15px 15px;
+  background:var(--panel);
+  font-size:14px;line-height:1.7;
+  overflow-wrap:anywhere;
+  white-space:pre-wrap;
 }
-#messageInput::placeholder{color:var(--muted)}
-.composer-bottom{
-display:flex;justify-content:space-between;
-align-items:center;
+.message.user .message-text {
+  background:var(--user);
+  border-radius:15px 4px 15px 15px;
 }
-.tools{display:flex;gap:7px}
-.tool-btn{
-height:34px;min-width:35px;
-padding:0 10px;
-border:0;border-radius:9px;
-background:var(--panel2);color:var(--text);
+.message-tools {margin:7px 3px;}
+.message-tools button {
+  border:0;background:transparent;
+  color:var(--muted);font-size:11px;
 }
-.send-btn{
-height:38px;width:42px;
-border:0;border-radius:11px;
-background:var(--accent);color:white;
-font-size:19px;
+.composer-wrap {padding:12px 16px 15px;}
+.composer {
+  max-width:820px;margin:auto;
+  padding:11px;
+  background:var(--panel);
+  border:1px solid #484853;
+  border-radius:18px;
 }
-.send-btn:disabled{opacity:.4}
-.file-info{display:none;color:var(--accent2);font-size:11px;padding:6px}
-.disclaimer{
-text-align:center;font-size:10px;
-color:var(--muted);margin:10px auto 0;
+.composer:focus-within {border-color:var(--accent);}
+#messageInput {
+  width:100%;min-height:45px;max-height:150px;
+  resize:none;border:0;outline:0;
+  background:transparent;color:var(--text);
+  padding:8px;font-size:14px;
 }
-.typing{color:var(--muted)}
-/* SETTINGS PAGE */
-.settings-page{padding:30px 20px}
-.settings-container{max-width:850px;width:100%;margin:0 auto}
-.settings-heading{font-size:27px;margin-bottom:8px}
-.settings-description{color:var(--muted);font-size:13px;margin-bottom:25px}
-.settings-layout{display:grid;grid-template-columns:190px 1fr;gap:20px}
-.settings-nav{display:flex;flex-direction:column;gap:5px}
-.settings-nav button{
-text-align:left;padding:12px;
-background:transparent;border:0;
-border-radius:9px;color:var(--muted);
+.composer-bottom {
+  display:flex;justify-content:space-between;
+  align-items:center;
 }
-.settings-nav button.active,.settings-nav button:hover{
-background:var(--panel2);color:var(--text);
+.tools {display:flex;gap:7px;}
+.tool-btn {
+  height:36px;min-width:38px;
+  padding:0 10px;border:0;
+  border-radius:9px;
+  background:var(--panel2);
+  color:var(--text);
 }
-.settings-content{
-background:var(--panel);
-border:1px solid var(--border);
-border-radius:14px;padding:20px;
-min-height:300px;
+.send-btn {
+  width:43px;height:39px;
+  border:0;border-radius:11px;
+  background:var(--accent);
+  color:white;font-size:20px;
 }
-.setting-section{display:none}
-.setting-section.active{display:block}
-.setting-section h3{margin:0 0 7px;font-size:17px}
-.setting-intro{font-size:12px;color:var(--muted);margin-bottom:20px}
-.setting-row{
-display:flex;justify-content:space-between;
-align-items:center;gap:15px;
-padding:16px 0;border-top:1px solid var(--border);
+.send-btn:disabled {opacity:.4;}
+.disclaimer {
+  text-align:center;color:var(--muted);
+  font-size:10px;margin:9px auto 0;
 }
-.setting-row strong{font-size:13px}
-.setting-row p{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
-.setting-control{
-background:var(--bg);border:1px solid var(--border);
-color:var(--text);padding:9px;border-radius:8px;
-max-width:160px;
+.file-info {font-size:11px;color:var(--accent);padding:5px;}
+/* EXTRA MENU */
+.menu-panel {
+  display:none;
+  position:absolute;
+  left:18px;top:58px;
+  width:230px;padding:10px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:13px;
+  box-shadow:0 12px 35px #0008;
+  z-index:30;
 }
-.toggle{
-width:43px;height:24px;
-border:0;border-radius:20px;
-background:#50505c;position:relative;
-flex-shrink:0;
+.menu-panel.show {display:block;}
+.menu-option {
+  width:100%;padding:11px;
+  border:0;border-radius:8px;
+  background:transparent;color:var(--text);
+  text-align:left;
 }
-.toggle:after{
-content:"";position:absolute;
-width:18px;height:18px;
-border-radius:50%;background:white;
-top:3px;left:3px;transition:.2s;
+.menu-option:hover {background:var(--panel2);}
+/* SETTINGS AND SEARCH */
+.content-page {padding:28px 18px;}
+.container {max-width:760px;width:100%;margin:auto;}
+.container h1 {font-size:26px;}
+.description {color:var(--muted);font-size:13px;}
+.card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:17px;margin:14px 0;
 }
-.toggle.on{background:var(--accent)}
-.toggle.on:after{left:22px}
-.setting-button{
-border:1px solid var(--border);
-background:var(--panel2);color:var(--text);
-padding:9px 12px;border-radius:8px;
-font-size:12px;
+.setting-row {
+  display:flex;align-items:center;
+  justify-content:space-between;
+  gap:12px;padding:13px 0;
+  border-bottom:1px solid var(--border);
 }
-.setting-button.danger{color:#ff8585;border-color:#8e4141}
-.setting-input{
-width:100%;padding:12px;
-background:var(--bg);color:var(--text);
-border:1px solid var(--border);border-radius:9px;
-margin-top:8px;
+.setting-row:last-child {border:0;}
+.setting-row small {
+  display:block;color:var(--muted);
+  margin-top:5px;
 }
-/* SEARCH PAGE */
-.search-page{padding:30px 20px}
-.search-container{max-width:750px;width:100%;margin:auto}
-.search-box{
-width:100%;padding:14px;
-border:1px solid var(--border);
-border-radius:12px;background:var(--panel);
-color:var(--text);margin:15px 0;
+.setting-control {
+  max-width:150px;padding:9px;
+  background:var(--bg);color:var(--text);
+  border:1px solid var(--border);
+  border-radius:8px;
 }
-.search-result{
-padding:14px;background:var(--panel);
-border:1px solid var(--border);
-border-radius:11px;margin-bottom:9px;
-cursor:pointer;
+.search-input,.profile-input {
+  width:100%;padding:13px;
+  margin:12px 0;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:10px;
 }
-.search-result:hover{border-color:var(--accent)}
-.search-result small{color:var(--muted)}
-/* MODAL */
-.modal-bg{
-position:fixed;inset:0;
-background:#000a;display:none;
-align-items:center;justify-content:center;
-z-index:30;padding:15px;
+.action-btn {
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--panel2);
+  color:var(--text);
 }
-.modal-bg.show{display:flex}
-.modal{
-width:100%;max-width:400px;
-background:var(--panel);
-border:1px solid var(--border);
-padding:22px;border-radius:16px;
-box-shadow:var(--shadow);
+.danger {color:#ff8585;}
+.modal-bg {
+  position:fixed;inset:0;
+  background:#000a;
+  display:none;align-items:center;
+  justify-content:center;z-index:50;
+  padding:15px;
 }
-.modal h2{font-size:19px;margin-bottom:12px}
-.modal p{font-size:13px;color:var(--muted);line-height:1.6}
-.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
-.modal-actions button{
-padding:10px 14px;border-radius:8px;
-border:0;background:var(--panel2);color:var(--text);
+.modal-bg.show {display:flex;}
+.modal {
+  max-width:380px;width:100%;
+  padding:22px;border-radius:15px;
+  background:var(--panel);
+  border:1px solid var(--border);
 }
-.modal-actions .primary{background:var(--accent);color:white}
-.toast{
-position:fixed;bottom:25px;left:50%;
-transform:translateX(-50%);
-padding:12px 18px;border-radius:10px;
-background:#303044;color:white;
-font-size:12px;display:none;z-index:50;
+.modal p {color:var(--muted);font-size:13px;line-height:1.6;}
+.modal-actions {
+  display:flex;justify-content:flex-end;
+  gap:9px;margin-top:20px;
 }
-.toast.show{display:block}
-.light-theme{
---bg:#f6f6f8;--sidebar:#ededf1;
---panel:#ffffff;--panel2:#e9e9ef;
---text:#202027;--muted:#696975;
---border:#d9d9e0;--user:#e9e7ff;
+.toast {
+  position:fixed;bottom:25px;left:50%;
+  transform:translateX(-50%);
+  background:#333348;color:white;
+  padding:12px 17px;border-radius:10px;
+  font-size:12px;z-index:80;
+  display:none;
 }
-.light-theme .message-text{color:#202027}
-.light-theme .topbar{background:#f6f6f8}
-.light-theme .setting-control,.light-theme .setting-input{color:#202027}
-@media(max-width:760px){
-.sidebar{
-position:fixed;top:0;bottom:0;left:-290px;
-height:100dvh;box-shadow:var(--shadow);
+.toast.show {display:block;}
+.light {
+  --bg:#f5f5f8;
+  --side:#ededf1;
+  --panel:#fff;
+  --panel2:#e8e8ef;
+  --text:#202027;
+  --muted:#696975;
+  --border:#d9d9e0;
+  --user:#e9e7ff;
 }
-.sidebar.open{left:0}
-.menu-btn{display:inline-block}
-.topbar{padding:0 12px}
-.chat-scroll{padding:15px 10px}
-.composer-wrap{padding:8px}
-.welcome{margin-top:6vh}
-.welcome h1{font-size:27px}
-.suggestions{gap:8px}
-.suggestion{padding:11px}
-.settings-page{padding:22px 12px}
-.settings-layout{grid-template-columns:1fr}
-.settings-nav{display:grid;grid-template-columns:repeat(2,1fr)}
-.settings-content{padding:15px}
+@media(max-width:760px) {
+  .sidebar {
+    position:fixed;top:0;bottom:0;left:-290px;
+    height:100dvh;transition:left .25s;
+    box-shadow:0 10px 35px #0007;
+  }
+  .sidebar.open {left:0;}
+  #menuBtn {display:block;}
+  .topbar {padding:0 10px;}
+  .chat-scroll {padding:15px 9px;}
+  .composer-wrap {padding:8px;}
+  .welcome {margin-top:6vh;}
+  .welcome h1 {font-size:26px;}
+  .suggestions {gap:8px;}
+  .suggestion {padding:11px;font-size:12px;}
 }
-@media(max-width:380px){
-.suggestions{grid-template-columns:1fr}
+@media(max-width:390px) {
+  .suggestions {grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -432,1083 +394,834 @@ height:100dvh;box-shadow:var(--shadow);
 
 <aside class="sidebar" id="sidebar">
   <div class="brand">
-    <div class="brand-logo">A</div>
+    <div class="logo">A</div>
     <div>
-      <div class="brand-name">AXON AI</div>
-      <div class="brand-sub">SMART ASSISTANT</div>
+      <strong>AXON AI</strong>
+      <small>SMART ASSISTANT</small>
     </div>
   </div>
 
-  <button class="side-action primary" id="newChatBtn">＋ New Chat</button>
-  <button class="side-action" id="searchBtn">⌕ Search Chats</button>
+  <button class="side-btn primary" id="newChatBtn">＋ New Chat</button>
+  <button class="side-btn" id="searchBtn">⌕ Search Chats</button>
 
-  <div class="side-label">Your conversations</div>
+  <div class="side-label">YOUR HISTORY</div>
   <div class="history" id="historyList"></div>
 
-  <div class="side-footer">
-    <button class="side-action" id="settingsBtn">⚙ Settings</button>
-    <div class="profile" id="profileBtn">
-      <div class="profile-avatar" id="profileAvatar">U</div>
-      <div>
-        <div class="profile-name" id="profileName">My Account</div>
-        <div class="profile-desc">Personal workspace</div>
-      </div>
+  <div class="profile" id="profileBtn">
+    <div class="avatar" id="profileAvatar">U</div>
+    <div>
+      <strong id="profileName">My Account</strong><br>
+      <small>Personal workspace</small>
     </div>
   </div>
+  <button class="side-btn" id="settingsBtn">⚙ Settings</button>
 </aside>
 
 <main class="main">
-  <header class="topbar">
-    <div class="top-left">
-      <button class="icon-btn menu-btn" id="menuBtn">☰</button>
-      <div>
-        <div class="top-title" id="pageTitle">AXON AI</div>
-        <div class="top-status" id="pageStatus">● Personal assistant</div>
+<header class="topbar">
+  <div class="top-left">
+    <button class="icon-btn" id="menuBtn">☰</button>
+    <div>
+      <strong id="pageTitle">AXON AI</strong><br>
+      <small style="color:#6dd8a4">● Personal assistant</small>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn" id="headerNewBtn">＋</button>
+    <button class="icon-btn" id="headerSettingsBtn">⚙</button>
+  </div>
+</header>
+
+<section class="page chat-page active" id="chatPage">
+  <div class="chat-scroll" id="chatScroll">
+    <div class="welcome" id="welcome">
+      <div class="welcome-logo">A</div>
+      <h1>Welcome to <span class="gradient">AXON AI</span></h1>
+      <p>Your intelligent workspace. Ask questions, explore ideas, learn and create.</p>
+      <div class="suggestions">
+        <button class="suggestion" data-prompt="Explain artificial intelligence in simple words.">
+          <strong>✦ Learn something</strong>
+          Explain artificial intelligence
+        </button>
+        <button class="suggestion" data-prompt="Give me a creative idea for a mobile app.">
+          <strong>✧ Get creative</strong>
+          Discover a new idea
+        </button>
+        <button class="suggestion" data-prompt="Help me write an HTML website.">
+          <strong>⌘ Coding help</strong>
+          Create a website
+        </button>
+        <button class="suggestion" data-prompt="Help me prepare a simple study plan.">
+          <strong>◷ Study assistant</strong>
+          Organize your learning
+        </button>
       </div>
     </div>
-    <div class="top-actions">
-      <button class="icon-btn" id="headerNewBtn" title="New chat">＋</button>
-      <button class="icon-btn" id="headerSettingsBtn" title="Settings">⚙</button>
-    </div>
-  </header>
+    <div class="messages" id="chatMessages"></div>
+  </div>
 
-  <!-- CHAT PAGE -->
-  <section class="page chat-page active" id="chatPage">
-    <div class="chat-scroll" id="chatScroll">
-      <div class="welcome" id="welcome">
-        <div class="welcome-logo">A</div>
-        <h1>Welcome to <span class="gradient">AXON AI</span></h1>
-        <p>Your intelligent workspace. Ask questions, explore ideas, learn and create.</p>
-
-        <div class="suggestions">
-          <button class="suggestion" data-prompt="Explain artificial intelligence in simple words.">
-            <strong>✦ Learn something</strong>
-            Explain artificial intelligence
-          </button>
-          <button class="suggestion" data-prompt="Give me a creative idea for a mobile app.">
-            <strong>✧ Get creative</strong>
-            Discover a new idea
-          </button>
-          <button class="suggestion" data-prompt="Help me write an HTML website.">
-            <strong>⌘ Coding help</strong>
-            Create a website
-          </button>
-          <button class="suggestion" data-prompt="Help me prepare a simple study plan.">
-            <strong>◷ Study assistant</strong>
-            Organize my learning
-          </button>
+  <div class="composer-wrap">
+    <div class="composer">
+      <div class="file-info" id="fileInfo"></div>
+      <textarea id="messageInput" rows="1" placeholder="Message AXON AI..."></textarea>
+      <div class="composer-bottom">
+        <div class="tools">
+          <button class="tool-btn" id="plusBtn" title="More options">＋</button>
+          <button class="tool-btn" id="attachBtn" title="Attach text file">📎</button>
+          <button class="tool-btn" id="voiceBtn" title="Voice input">🎙</button>
         </div>
-      </div>
-      <div class="messages" id="chatMessages"></div>
-    </div>
-
-    <div class="composer-wrap">
-      <div class="composer">
-        <div class="file-info" id="fileInfo"></div>
-        <textarea id="messageInput" rows="1" placeholder="Message AXON AI..."></textarea>
-        <div class="composer-bottom">
-          <div class="tools">
-            <button class="tool-btn" id="attachBtn" title="Attach text file">＋</button>
-            <button class="tool-btn" id="voiceBtn" title="Voice input">🎙</button>
-            <button class="tool-btn" id="stopVoiceBtn" title="Stop reading">◼</button>
-          </div>
-          <button class="send-btn" id="sendBtn">↑</button>
-        </div>
-      </div>
-      <input type="file" id="fileInput" accept=".txt,.md,.json,.csv,.html,.css,.js" hidden>
-      <div class="disclaimer">AXON AI can make mistakes. Verify important information.</div>
-    </div>
-  </section>
-
-  <!-- SETTINGS PAGE -->
-  <section class="page settings-page" id="settingsPage">
-    <div class="settings-container">
-      <h1 class="settings-heading">Settings</h1>
-      <p class="settings-description">Customize your AXON AI experience.</p>
-
-      <div class="settings-layout">
-        <div class="settings-nav">
-          <button class="active" data-setting="general">⚙ General</button>
-          <button data-setting="appearance">◐ Appearance</button>
-          <button data-setting="personalization">✧ Personalization</button>
-          <button data-setting="data">▤ Data Controls</button>
-          <button data-setting="about">ⓘ About</button>
-        </div>
-
-        <div class="settings-content">
-
-          <div class="setting-section active" id="setting-general">
-            <h3>General</h3>
-            <p class="setting-intro">Basic application preferences.</p>
-
-            <div class="setting-row">
-              <div><strong>Language</strong><p>Interface language</p></div>
-              <select class="setting-control" id="languageSetting">
-                <option value="en">English</option>
-                <option value="hi">Hindi</option>
-              </select>
-            </div>
-
-            <div class="setting-row">
-              <div><strong>Send with Enter</strong><p>Press Enter to send a message</p></div>
-              <button class="toggle on" id="enterToggle" aria-label="Toggle send with Enter"></button>
-            </div>
-
-            <div class="setting-row">
-              <div><strong>Sound effects</strong><p>Application notification sounds</p></div>
-              <button class="toggle" id="soundToggle" aria-label="Toggle sound effects"></button>
-            </div>
-          </div>
-
-          <div class="setting-section" id="setting-appearance">
-            <h3>Appearance</h3>
-            <p class="setting-intro">Choose how AXON AI looks.</p>
-
-            <div class="setting-row">
-              <div><strong>Theme</strong><p>Choose your preferred theme</p></div>
-              <select class="setting-control" id="themeSetting">
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-                <option value="system">System</option>
-              </select>
-            </div>
-
-            <div class="setting-row">
-              <div><strong>Compact layout</strong><p>Reduce chat spacing</p></div>
-              <button class="toggle" id="compactToggle" aria-label="Toggle compact layout"></button>
-            </div>
-          </div>
-
-          <div class="setting-section" id="setting-personalization">
-            <h3>Personalization</h3>
-            <p class="setting-intro">Customize your profile and chat experience.</p>
-
-            <div class="setting-row">
-              <div><strong>Display name</strong><p>Name shown in the application</p></div>
-            </div>
-            <input class="setting-input" id="nameSetting" placeholder="Enter your display name">
-
-            <div class="setting-row">
-              <div><strong>About me</strong><p>Optional profile description</p></div>
-            </div>
-            <input class="setting-input" id="aboutSetting" placeholder="Write a short description">
-
-            <div class="setting-row">
-              <div><strong>Save profile</strong><p>Store your profile on this device</p></div>
-              <button class="setting-button" id="saveProfileBtn">Save profile</button>
-            </div>
-          </div>
-
-          <div class="setting-section" id="setting-data">
-            <h3>Data Controls</h3>
-            <p class="setting-intro">Manage conversations stored on this device.</p>
-
-            <div class="setting-row">
-              <div><strong>Export all chats</strong><p>Download your chat history as a text file</p></div>
-              <button class="setting-button" id="exportAllBtn">Export</button>
-            </div>
-
-            <div class="setting-row">
-              <div><strong>Clear all conversations</strong><p>Delete saved chats from this browser</p></div>
-              <button class="setting-button danger" id="clearAllBtn">Clear</button>
-            </div>
-
-            <div class="setting-row">
-              <div><strong>Reset preferences</strong><p>Restore default application settings</p></div>
-              <button class="setting-button" id="resetSettingsBtn">Reset</button>
-            </div>
-          </div>
-
-          <div class="setting-section" id="setting-about">
-            <h3>About AXON AI</h3>
-            <p class="setting-intro">Application information.</p>
-            <div class="setting-row">
-              <div><strong>Application</strong><p>AXON AI Smart Assistant</p></div>
-            </div>
-            <div class="setting-row">
-              <div><strong>Version</strong><p>1.0.0</p></div>
-            </div>
-            <div class="setting-row">
-              <div><strong>Platform</strong><p>Web application</p></div>
-            </div>
-            <div class="setting-row">
-              <div><strong>Storage</strong><p>Browser local storage</p></div>
-            </div>
-          </div>
-
-        </div>
+        <button class="send-btn" id="sendBtn">↑</button>
       </div>
     </div>
-  </section>
+    <input type="file" id="fileInput" accept=".txt,.md,.json,.csv,.html,.css,.js" hidden>
+    <div class="disclaimer">AXON AI can make mistakes. Verify important information.</div>
+  </div>
+</section>
 
-  <!-- SEARCH PAGE -->
-  <section class="page search-page" id="searchPage">
-    <div class="search-container">
-      <h1>Search conversations</h1>
-      <p class="settings-description">Find a previous conversation.</p>
-      <input class="search-box" id="searchInput" placeholder="Search your chats...">
-      <div id="searchResults"></div>
+<section class="page content-page" id="settingsPage">
+  <div class="container">
+    <h1>Settings</h1>
+    <p class="description">Customize your AXON AI experience.</p>
+    <div class="card">
+      <h3>Appearance</h3>
+      <div class="setting-row">
+        <div>Theme<small>Choose your preferred theme</small></div>
+        <select class="setting-control" id="themeSetting">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <div>Send with Enter<small>Press Enter to send</small></div>
+        <input type="checkbox" id="enterSetting" checked>
+      </div>
     </div>
-  </section>
+    <div class="card">
+      <h3>Personalization</h3>
+      <label>Display name</label>
+      <input class="profile-input" id="nameSetting" placeholder="Your name">
+      <button class="action-btn" id="saveProfileBtn">Save profile</button>
+    </div>
+    <div class="card">
+      <h3>Data controls</h3>
+      <div class="setting-row">
+        <div>Export conversations<small>Download your chat history</small></div>
+        <button class="action-btn" id="exportBtn">Export</button>
+      </div>
+      <div class="setting-row">
+        <div>Delete all conversations<small>Remove saved chats from this browser</small></div>
+        <button class="action-btn danger" id="clearBtn">Clear</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>About AXON AI</h3>
+      <p class="description">AXON AI Smart Assistant · Version 2.0</p>
+      <p class="description">Chat storage: This browser's local storage.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page content-page" id="searchPage">
+  <div class="container">
+    <h1>Search Chats</h1>
+    <p class="description">Find a previous conversation.</p>
+    <input class="search-input" id="searchInput" placeholder="Search your conversations...">
+    <div id="searchResults"></div>
+  </div>
+</section>
 
 </main>
 </div>
 
+<div class="menu-panel" id="menuPanel">
+  <button class="menu-option" data-action="history">◷ Chat History</button>
+  <button class="menu-option" data-action="research">⌕ Deep Research</button>
+  <button class="menu-option" data-action="video">▣ Video</button>
+  <button class="menu-option" data-action="music">♫ Music</button>
+  <button class="menu-option" data-action="photos">▧ Photos</button>
+  <button class="menu-option" data-action="slides">▤ Slides</button>
+  <button class="menu-option" data-action="settings">⚙ Settings</button>
+</div>
+
 <div class="modal-bg" id="confirmModal">
   <div class="modal">
-    <h2 id="modalTitle">Confirm action</h2>
-    <p id="modalMessage">Are you sure?</p>
+    <h3 id="modalTitle">Confirm action</h3>
+    <p id="modalText">Are you sure?</p>
     <div class="modal-actions">
-      <button i
-        d="cancelActionBtn" class="setting-button">
-Cancel
-</button>
+      <button class="action-btn" id="cancelBtn">Cancel</button>
+      <button class="action-btn danger" id="confirmBtn">Confirm</button>
+    </div>
+  </div>
+</div>
 
-<button id="confirmActionBtn" class="setting-button danger">
-Confirm
-</button> 
- <script>
-/* =================================
-   AXON AI - MODAL SYSTEM
-================================= */
+<div class="toast" id="toast"></div>
 
-(function () {
-  "use strict";
+<script>
+"use strict";
 
-  const get = (id) => document.getElementById(id);
+/*
+  GROQ CONNECTION:
+  Is field mein apne secure backend ka URL daalo.
+  Groq API key ko kabhi is HTML file mein mat daalna.
+  Backend endpoint example: https://your-server.example/api/chat
+*/
+const API_ENDPOINT = "";
 
-  const modal = get("confirmModal");
-  const modalTitle = get("modalTitle");
-  const modalMessage = get("modalMessage");
-  const cancelBtn = get("cancelActionBtn");
-  const confirmBtn = get("confirmActionBtn");
+const $ = id => document.getElementById(id);
 
-  let pendingAction = null;
+let chats = [];
+let activeChatId = null;
+let attachedText = "";
+let pendingAction = null;
 
-  function openConfirm(title, message, action) {
-    if (!modal) return;
+function toast(message) {
+  const box = $("toast");
+  box.textContent = message;
+  box.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => box.classList.remove("show"), 2600);
+}
 
-    if (modalTitle) modalTitle.textContent = title;
-    if (modalMessage) modalMessage.textContent = message;
-
-    pendingAction = typeof action === "function"
-      ? action
-      : null;
-
-    modal.classList.add("active");
-    modal.style.display = "flex";
-
-    if (cancelBtn) cancelBtn.focus();
+function saveChats() {
+  try {
+    localStorage.setItem("axon-chats", JSON.stringify(chats));
+  } catch(error) {
+    toast("Storage full. Export or remove old chats.");
   }
+}
 
-  function closeConfirm() {
-    if (!modal) return;
-
-    modal.classList.remove("active");
-    modal.style.display = "none";
-
-    pendingAction = null;
+function loadChats() {
+  try {
+    const data = JSON.parse(localStorage.getItem("axon-chats") || "[]");
+    chats = Array.isArray(data) ? data : [];
+  } catch(error) {
+    chats = [];
   }
+}
 
-  if (cancelBtn) {
-    cancelBtn.addEventListener("click", closeConfirm);
-  }
+function currentChat() {
+  return chats.find(chat => chat.id === activeChatId);
+}
 
-  if (confirmBtn) {
-    confirmBtn.addEventListener("click", function () {
-      const action = pendingAction;
+function createChat() {
+  const chat = {
+    id: Date.now().toString() + Math.random().toString(16).slice(2),
+    title: "New conversation",
+    messages: []
+  };
+  chats.unshift(chat);
+  activeChatId = chat.id;
+  saveChats();
+  renderHistory();
+  renderMessages();
+  showPage("chatPage");
+  closeSidebar();
+  $("messageInput").focus();
+}
 
-      closeConfirm();
+function renderHistory() {
+  const list = $("historyList");
+  list.replaceChildren();
 
-      if (action) {
+  chats.forEach(chat => {
+    const item = document.createElement("div");
+    item.className = "history-item" +
+      (chat.id === activeChatId ? " active" : "");
+    item.textContent = chat.title || "New conversation";
+    item.title = item.textContent;
+    item.addEventListener("click", () => {
+      activeChatId = chat.id;
+      renderHistory();
+      renderMessages();
+      showPage("chatPage");
+      closeSidebar();
+    });
+    list.appendChild(item);
+  });
+}
+
+function renderMessages() {
+  const chat = currentChat();
+  const box = $("chatMessages");
+  box.replaceChildren();
+
+  $("welcome").style.display =
+    chat && chat.messages.length ? "none" : "block";
+
+  if (!chat) return;
+
+  chat.messages.forEach(msg => {
+    const row = document.createElement("div");
+    row.className = "message " + msg.role;
+
+    const avatar = document.createElement("div");
+    avatar.className = "message-avatar";
+    avatar.textContent = msg.role === "user" ? "U" : "A";
+
+    const content = document.createElement("div");
+    content.className = "message-content";
+
+    const name = document.createElement("div");
+    name.className = "message-name";
+    name.textContent = msg.role === "user" ? "You" : "AXON AI";
+
+    const text = document.createElement("div");
+    text.className = "message-text";
+    text.textContent = msg.content;
+
+    content.append(name, text);
+
+    if (msg.role === "assistant") {
+      const tools = document.createElement("div");
+      tools.className = "message-tools";
+      const copy = document.createElement("button");
+      copy.textContent = "Copy response";
+      copy.addEventListener("click", async () => {
         try {
-          action();
-        } catch (error) {
-          console.error("AXON action error:", error);
-          alert("Action complete nahi ho saka.");
+          await navigator.clipboard.writeText(msg.content);
+          toast("Copied!");
+        } catch(error) {
+          toast("Copy unavailable in this browser.");
         }
-      }
-    });
-  }
-
-  if (modal) {
-    modal.addEventListener("click", function (event) {
-      if (event.target === modal) {
-        closeConfirm();
-      }
-    });
-  }
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && modal &&
-        modal.classList.contains("active")) {
-      closeConfirm();
+      });
+      tools.appendChild(copy);
+      content.appendChild(tools);
     }
+
+    row.append(avatar, content);
+    box.appendChild(row);
   });
 
-  /* =================================
-     CLEAR CHAT CONFIRMATION
-  ================================= */
+  $("chatScroll").scrollTop = $("chatScroll").scrollHeight;
+}
 
-  const clearAllBtn = get("clearAllBtn");
+function addMessage(role, content) {
+  const chat = currentChat();
+  if (!chat) return;
 
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener("click", function () {
-      openConfirm(
-        "Clear all conversations?",
-        "Kya aap sach mein apni conversations clear karna chahte hain?",
-        function () {
-          document.dispatchEvent(
-            new CustomEvent("axon:clear-conversations")
-          );
-        }
-      );
-    });
+  chat.messages.push({role, content});
+
+  if (role === "user" && chat.title === "New conversation") {
+    chat.title = content.slice(0, 38) || "New conversation";
   }
 
-  /* =================================
-     RESET SETTINGS CONFIRMATION
-  ================================= */
-
-  const resetBtn = get("resetSettingsBtn");
-
-  if (resetBtn) {
-    resetBtn.addEventListener("click", function () {
-      openConfirm(
-        "Reset preferences?",
-        "Kya aap default preferences restore karna chahte hain?",
-        function () {
-          document.dispatchEvent(
-            new CustomEvent("axon:reset-settings")
-          );
-        }
-      );
-    });
-  }
-
-  /* =================================
-     SEARCH CONVERSATIONS
-  ================================= */
-
-  const searchInput = get("searchInput");
-  const searchResults = get("searchResults");
-
-  if (searchInput && searchResults) {
-    searchInput.addEventListener("input", function () {
-      const query = searchInput.value
-        .trim()
-        .toLowerCase();
-
-      searchResults.replaceChildren();
-
-      if (!query) return;
-
-      /*
-       Existing chat data ko global variable
-       mein available hone par search karega.
-      */
-
-      const chats = Array.isArray(window.chats)
-        ? window.chats
-        : [];
-
-      const matches = chats.filter(function (chat) {
-        const title = String(chat.title || "");
-        const messages = Array.isArray(chat.messages)
-          ? chat.messages
-          : [];
-
-        const messageText = messages.map(function (msg) {
-          return String(msg.content || msg.text || "");
-        }).join(" ");
-
-        return (
-          title.toLowerCase().includes(query) ||
-          messageText.toLowerCase().includes(query)
-        );
-      });
-
-      if (matches.length === 0) {
-        const empty = document.createElement("p");
-        empty.textContent = "No conversations found.";
-        searchResults.appendChild(empty);
-        return;
-      }
-
-      matches.forEach(function (chat) {
-        const item = document.createElement("button");
-
-        item.type = "button";
-        item.className = "search-result-item";
-        item.textContent = chat.title || "New conversation";
-
-        item.addEventListener("click", function () {
-          document.dispatchEvent(
-            new CustomEvent("axon:open-chat", {
-              detail: { chatId: chat.id }
-            })
-          );
-        });
-
-        searchResults.appendChild(item);
-      });
-    });
-  }
-
-  /* =================================
-     SETTINGS PAGE NAVIGATION
-  ================================= */
-
-  function showPage(pageId) {
-    document.querySelectorAll(".page").forEach(function (page) {
-      page.classList.remove("active");
-    });
-
-    const target = get(pageId);
-
-    if (target) {
-      target.classList.add("active");
-    }
-  }
-
-  document.querySelectorAll("[data-page]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      const pageId = button.getAttribute("data-page");
-
-      if (pageId) showPage(pageId);
-    });
-  });
-
-  /* =================================
-     MOBILE SIDEBAR
-  ================================= */
-
-  const sidebar = get("sidebar");
-  const menuButton = get("menuBtn");
-
-  if (sidebar && menuButton) {
-    menuButton.addEventListener("click", function () {
-      sidebar.classList.toggle("open");
-    });
-
-    document.addEventListener("click", function (event) {
-      if (
-        window.innerWidth <= 760 &&
-        sidebar.classList.contains("open") &&
-        !sidebar.contains(event.target) &&
-        !menuButton.contains(event.target)
-      ) {
-        sidebar.classList.remove("open");
-      }
-    });
-  }
-
-  /* =================================
-     THEME SETTINGS
-  ================================= */
-
-  const themeSelect = get("themeSelect");
-
-  function applyTheme(theme) {
-    if (theme === "light") {
-      document.documentElement.dataset.theme = "light";
-    } else {
-      document.documentElement.dataset.theme = "dark";
-    }
-  }
-
-  if (themeSelect) {
-    try {
-      const savedTheme = localStorage.getItem("axon-theme");
-
-      if (savedTheme) {
-        themeSelect.value = savedTheme;
-        applyTheme(savedTheme);
-      }
-    } catch (error) {
-      console.warn("Theme loading unavailable.");
-    }
-
-    themeSelect.addEventListener("change", function () {
-      const theme = themeSelect.value;
-
-      applyTheme(theme);
-
-      try {
-        localStorage.setItem("axon-theme", theme);
-      } catch (error) {
-        console.warn("Theme could not be saved.");
-      }
-    });
-  }
-
-  /* =================================
-     SAFE EXPORT BUTTON
-  ================================= */
-
-  const exportBtn = get("exportChatsBtn");
-
-  if (exportBtn) {
-    exportBtn.addEventListener("click", function () {
-      const chats = Array.isArray(window.chats)
-        ? window.chats
-        : [];
-
-      const data = JSON.stringify(chats, null, 2);
-      const blob = new Blob(
-        [data],
-        { type: "application/json" }
-      );
-
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.download = "axon-conversations.json";
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      URL.revokeObjectURL(url);
-    });
-  }
-
-  /* =================================
-     INITIALIZATION
-  ================================= */
-
-  console.log("AXON AI interface initialized.");
-
-})();     
-    <script>
-/* =================================
-   AXON AI - MODAL SYSTEM
-================================= */
-
-(function () {
-  "use strict";
-
-  const get = (id) => document.getElementById(id);
-
-  const modal = get("confirmModal");
-  const modalTitle = get("modalTitle");
-  const modalMessage = get("modalMessage");
-  const cancelBtn = get("cancelActionBtn");
-  const confirmBtn = get("confirmActionBtn");
-
-  let pendingAction = null;
-
-  function openConfirm(title, message, action) {
-    if (!modal) return;
-
-    if (modalTitle) modalTitle.textContent = title;
-    if (modalMessage) modalMessage.textContent = message;
-
-    pendingAction = typeof action === "function"
-      ? action
-      : null;
-
-    modal.classList.add("active");
-    modal.style.display = "flex";
-
-    if (cancelBtn) cancelBtn.focus();
-  }
-
-  function closeConfirm() {
-    if (!modal) return;
-
-    modal.classList.remove("active");
-    modal.style.display = "none";
-
-    pendingAction = null;
-  }
-
-  if (cancelBtn) {
-    cancelBtn.addEventListener("click", closeConfirm);
-  }
-
-  if (confirmBtn) {
-    confirmBtn.addEventListener("click", function () {
-      const action = pendingAction;
-
-      closeConfirm();
-
-      if (action) {
-        try {
-          action();
-        } catch (error) {
-          console.error("AXON action error:", error);
-          alert("Action complete nahi ho saka.");
-        }
-      }
-    });
-  }
-
-  if (modal) {
-    modal.addEventListener("click", function (event) {
-      if (event.target === modal) {
-        closeConfirm();
-      }
-    });
-  }
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && modal &&
-        modal.classList.contains("active")) {
-      closeConfirm();
-    }
-  });
-
-  /* =================================
-     CLEAR CHAT CONFIRMATION
-  ================================= */
-
-  const clearAllBtn = get("clearAllBtn");
-
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener("click", function () {
-      openConfirm(
-        "Clear all conversations?",
-        "Kya aap sach mein apni conversations clear karna chahte hain?",
-        function () {
-          document.dispatchEvent(
-            new CustomEvent("axon:clear-conversations")
-          );
-        }
-      );
-    });
-  }
-
-  /* =================================
-     RESET SETTINGS CONFIRMATION
-  ================================= */
-
-  const resetBtn = get("resetSettingsBtn");
-
-  if (resetBtn) {
-    resetBtn.addEventListener("click", function () {
-      openConfirm(
-        "Reset preferences?",
-        "Kya aap default preferences restore karna chahte hain?",
-        function () {
-          document.dispatchEvent(
-            new CustomEvent("axon:reset-settings")
-          );
-        }
-      );
-    });
-  }
-
-  /* =================================
-     SEARCH CONVERSATIONS
-  ================================= */
-
-  const searchInput = get("searchInput");
-  const searchResults = get("searchResults");
-
-  if (searchInput && searchResults) {
-    searchInput.addEventListener("input", function () {
-      const query = searchInput.value
-        .trim()
-        .toLowerCase();
-
-      searchResults.replaceChildren();
-
-      if (!query) return;
-
-      /*
-       Existing chat data ko global variable
-       mein available hone par search karega.
-      */
-
-      const chats = Array.isArray(window.chats)
-        ? window.chats
-        : [];
-
-      const matches = chats.filter(function (chat) {
-        const title = String(chat.title || "");
-        const messages = Array.isArray(chat.messages)
-          ? chat.messages
-          : [];
-
-        const messageText = messages.map(function (msg) {
-          return String(msg.content || msg.text || "");
-        }).join(" ");
-
-        return (
-          title.toLowerCase().includes(query) ||
-          messageText.toLowerCase().includes(query)
-        );
-      });
-
-      if (matches.length === 0) {
-        const empty = document.createElement("p");
-        empty.textContent = "No conversations found.";
-        searchResults.appendChild(empty);
-        return;
-      }
-
-      matches.forEach(function (chat) {
-        const item = document.createElement("button");
-
-        item.type = "button";
-        item.className = "search-result-item";
-        item.textContent = chat.title || "New conversation";
-
-        item.addEventListener("click", function () {
-          document.dispatchEvent(
-            new CustomEvent("axon:open-chat", {
-              detail: { chatId: chat.id }
-            })
-          );
-        });
-
-        searchResults.appendChild(item);
-      });
-    });
-  }
-
-  /* =================================
-     SETTINGS PAGE NAVIGATION
-  ================================= */
-
-  function showPage(pageId) {
-    document.querySelectorAll(".page").forEach(function (page) {
-      page.classList.remove("active");
-    });
-
-    const target = get(pageId);
-
-    if (target) {
-      target.classList.add("active");
-    }
-  }
-
-  document.querySelectorAll("[data-page]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      const pageId = button.getAttribute("data-page");
-
-      if (pageId) showPage(pageId);
-    });
-  });
-
-  /* =================================
-     MOBILE SIDEBAR
-  ================================= */
-
-  const sidebar = get("sidebar");
-  const menuButton = get("menuBtn");
-
-  if (sidebar && menuButton) {
-    menuButton.addEventListener("click", function () {
-      sidebar.classList.toggle("open");
-    });
-
-    document.addEventListener("click", function (event) {
-      if (
-        window.innerWidth <= 760 &&
-        sidebar.classList.contains("open") &&
-        !sidebar.contains(event.target) &&
-        !menuButton.contains(event.target)
-      ) {
-        sidebar.classList.remove("open");
-      }
-    });
-  }
-
-  /* =================================
-     THEME SETTINGS
-  ================================= */
-
-  const themeSelect = get("themeSelect");
-
-  function applyTheme(theme) {
-    if (theme === "light") {
-      document.documentElement.dataset.theme = "light";
-    } else {
-      document.documentElement.dataset.theme = "dark";
-    }
-  }
-
-  if (themeSelect) {
-    try {
-      const savedTheme = localStorage.getItem("axon-theme");
-
-      if (savedTheme) {
-        themeSelect.value = savedTheme;
-        applyTheme(savedTheme);
-      }
-    } catch (error) {
-      console.warn("Theme loading unavailable.");
-    }
-
-    themeSelect.addEventListener("change", function () {
-      const theme = themeSelect.value;
-
-      applyTheme(theme);
-
-      try {
-        localStorage.setItem("axon-theme", theme);
-      } catch (error) {
-        console.warn("Theme could not be saved.");
-      }
-    });
-  }
-
-  /* =================================
-     SAFE EXPORT BUTTON
-  ================================= */
-
-  const exportBtn = get("exportChatsBtn");
-
-  if (exportBtn) {
-    exportBtn.addEventListener("click", function () {
-      const chats = Array.isArray(window.chats)
-        ? window.chats
-        : [];
-
-      const data = JSON.stringify(chats, null, 2);
-      const blob = new Blob(
-        [data],
-        { type: "application/json" }
-      );
-
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.download = "axon-conversations.json";
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      URL.revokeObjectURL(url);
-    });
-  }
-
-  /* =================================
-     INITIALIZATION
-  ================================= */
-
-  console.log("AXON AI interface initialized.");
-
-})();
-  <script>
-/* =====================================
-   AXON AI - WORKING CHAT ENHANCEMENTS
-===================================== */
-
-(function () {
-  "use strict";
-
-  const $ = id => document.getElementById(id);
-
+  saveChats();
+  renderHistory();
+  renderMessages();
+}
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  $(id).classList.add("active");
+
+  $("pageTitle").textContent =
+    id === "settingsPage" ? "Settings" :
+    id === "searchPage" ? "Search Chats" : "AXON AI";
+
+  $("menuPanel").classList.remove("show");
+}
+
+function closeSidebar() {
+  $("sidebar").classList.remove("open");
+}
+
+async function sendMessage() {
   const input = $("messageInput");
-  const sendBtn = $("sendBtn");
-  const voiceBtn = $("voiceBtn");
+  const prompt = input.value.trim();
 
-  /* AUTO RESIZE MESSAGE BOX */
+  if (!prompt && !attachedText) return;
 
-  if (input) {
-    input.addEventListener("input", function () {
-      input.style.height = "auto";
-      input.style.height =
-        Math.min(input.scrollHeight, 180) + "px";
-    });
+  if (!currentChat()) createChat();
 
-    input.addEventListener("focus", function () {
-      setTimeout(() => {
-        input.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest"
-        });
-      }, 250);
-    });
+  const fullPrompt = prompt +
+    (attachedText ? "\n\nAttached file content:\n" + attachedText : "");
+
+  input.value = "";
+  input.style.height = "45px";
+
+  const fileContent = attachedText;
+  attachedText = "";
+  $("fileInfo").textContent = "";
+
+  addMessage("user", fullPrompt);
+
+  const send = $("sendBtn");
+  send.disabled = true;
+
+  const typing = document.createElement("div");
+  typing.className = "message";
+  typing.id = "typingIndicator";
+  typing.innerHTML =
+    '<div class="message-avatar">A</div><div class="message-content"><div class="message-text">AXON AI is thinking...</div
+    $("chatMessages").appendChild(typing);
+$("chatScroll").scrollTop = $("chatScroll").scrollHeight;
+
+try {
+  if (!API_ENDPOINT) {
+    throw new Error("Backend not configured");
   }
 
-  /* ENTER TO SEND */
+  const chat = currentChat();
 
-  if (input) {
-    input.addEventListener("keydown", function (event) {
-      if (
-        event.key === "Enter" &&
-        !event.shiftKey &&
-        !event.isComposing
-      ) {
-        event.preventDefault();
+  const response = await fetch(API_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      messages: chat.messages.map(m => ({
+        role: m.role === "assistant" ? "assistant" : "user",
+        content: m.content
+      }))
+    })
+  });
 
-        if (typeof window.sendMessage === "function") {
-          window.sendMessage();
-        } else if (sendBtn) {
-          sendBtn.click();
-        }
-      }
-    });
+  if (!response.ok) {
+    throw new Error("Server error: " + response.status);
   }
 
-  /* VOICE TYPING */
+  const data = await response.json();
 
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+  const reply =
+    data.reply ||
+    data.message ||
+    data.choices?.[0]?.message?.content;
 
-  let recognition = null;
-  let listening = false;
-
-  if (SpeechRecognition && voiceBtn && input) {
-    recognition = new SpeechRecognition();
-
-    recognition.lang = "hi-IN";
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    voiceBtn.addEventListener("click", function () {
-      if (listening) {
-        recognition.stop();
-        return;
-      }
-
-      try {
-        recognition.start();
-      } catch (error) {
-        console.warn("Voice recognition:", error);
-      }
-    });
-
-    recognition.onstart = function () {
-      listening = true;
-      voiceBtn.classList.add("recording");
-      voiceBtn.setAttribute("aria-label", "Stop voice typing");
-    };
-
-    recognition.onresult = function (event) {
-      const transcript =
-        event.results[0][0].transcript;
-
-      input.value +=
-        (input.value ? " " : "") + transcript;
-
-      input.dispatchEvent(
-        new Event("input", { bubbles: true })
-      );
-
-      input.focus();
-    };
-
-    recognition.onerror = function (event) {
-      console.warn("Voice error:", event.error);
-    };
-
-    recognition.onend = function () {
-      listening = false;
-      voiceBtn.classList.remove("recording");
-      voiceBtn.setAttribute("aria-label", "Voice typing");
-    };
-
-  } else if (voiceBtn) {
-    voiceBtn.addEventListener("click", function () {
-      alert("Voice typing is not supported in this browser.");
-    });
+  if (!reply) {
+    throw new Error("Invalid server response");
   }
 
-  /* COPY ASSISTANT MESSAGES */
+  addMessage("assistant", String(reply));
 
-  document.addEventListener("click", async function (event) {
-    const button = event.target.closest(".copy-btn");
+} catch(error) {
+  console.error("AXON AI:", error);
 
-    if (!button) return;
+  const message = !API_ENDPOINT
+    ? "AXON AI ka backend abhi connect nahi hai. Real AI replies ke liye secure Groq backend URL configure karna hoga."
+    : "AXON AI server se connect nahi ho pa raha. Backend URL aur server status check karein.";
 
-    const message =
-      button.closest(".message") ||
-      button.parentElement;
+  addMessage("assistant", message);
 
-    if (!message) return;
+} finally {
+  $("typingIndicator")?.remove();
+  send.disabled = false;
+  input.focus();
+  saveChats();
+}
 
-    const content =
-      message.querySelector(".message-content") ||
-      message;
+/* NEW CHAT AND NAVIGATION */
 
-    const text = content.innerText.trim();
+$("newChatBtn").addEventListener("click", createChat);
+$("headerNewBtn").addEventListener("click", createChat);
+$("sendBtn").addEventListener("click", sendMessage);
 
-    if (!text) return;
+$("menuBtn").addEventListener("click", () => {
+  $("sidebar").classList.toggle("open");
+});
 
+$("settingsBtn").addEventListener("click", () => {
+  showPage("settingsPage");
+});
+
+$("headerSettingsBtn").addEventListener("click", () => {
+  showPage("settingsPage");
+});
+
+$("searchBtn").addEventListener("click", () => {
+  showPage("searchPage");
+  $("searchInput").focus();
+});
+
+$("profileBtn").addEventListener("click", () => {
+  showPage("settingsPage");
+});
+
+$("plusBtn").addEventListener("click", () => {
+  $("menuPanel").classList.toggle("show");
+});
+
+document.addEventListener("click", event => {
+  if (
+    !event.target.closest("#plusBtn") &&
+    !event.target.closest("#menuPanel")
+  ) {
+    $("menuPanel").classList.remove("show");
+  }
+});
+
+/* MENU OPTIONS */
+
+document.querySelectorAll(".menu-option").forEach(button => {
+  button.addEventListener("click", () => {
+    const action = button.dataset.action;
+
+    $("menuPanel").classList.remove("show");
+
+    if (action === "history") {
+      showPage("chatPage");
+      toast("Your chat history is in the sidebar.");
+
+    } else if (action === "settings") {
+      showPage("settingsPage");
+
+    } else {
+      toast(action + " feature needs its own backend service.");
+    }
+  });
+});
+
+/* SUGGESTIONS */
+
+document.querySelectorAll(".suggestion").forEach(button => {
+  button.addEventListener("click", () => {
+    $("messageInput").value = button.dataset.prompt;
+    sendMessage();
+  });
+});
+
+/* MESSAGE INPUT */
+
+$("messageInput").addEventListener("input", event => {
+  const input = event.target;
+
+  input.style.height = "auto";
+  input.style.height =
+    Math.min(input.scrollHeight, 150) + "px";
+});
+
+$("messageInput").addEventListener("keydown", event => {
+  if (
+    event.key === "Enter" &&
+    !event.shiftKey &&
+    $("enterSetting").checked &&
+    !event.isComposing
+  ) {
+    event.preventDefault();
+    sendMessage();
+  }
+});
+
+/* FILE UPLOAD */
+
+$("attachBtn").addEventListener("click", () => {
+  $("fileInput").click();
+});
+
+$("fileInput").addEventListener("change", async event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  if (file.size > 1024 * 1024) {
+    toast("Please select a file smaller than 1 MB.");
+    event.target.value = "";
+    return;
+  }
+
+  try {
+    attachedText = await file.text();
+
+    $("fileInfo").textContent =
+      "Attached: " + file.name;
+
+    toast("File attached.");
+
+  } catch(error) {
+    toast("Could not read this file.");
+  }
+
+  event.target.value = "";
+});
+
+/* VOICE INPUT */
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "hi-IN";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  $("voiceBtn").addEventListener("click", () => {
     try {
-      await navigator.clipboard.writeText(text);
-
-      const oldText = button.textContent;
-      button.textContent = "Copied!";
-
-      setTimeout(() => {
-        button.textContent = oldText;
-      }, 1500);
-
-    } catch (error) {
-      alert("Copy failed. Please select the text manually.");
+      recognition.start();
+    } catch(error) {
+      toast("Voice input is already active.");
     }
   });
 
-  /* KEYBOARD SHORTCUTS */
+  recognition.onresult = event => {
+    const spoken =
+      event.results[0][0].transcript;
 
-  document.addEventListener("keydown", function (event) {
-    if (
-      (event.ctrlKey || event.metaKey) &&
-      event.key.toLowerCase() === "k"
-    ) {
-      event.preventDefault();
+    $("messageInput").value +=
+      ($("messageInput").value ? " " : "") + spoken;
 
-      const search = $("searchInput");
+    $("messageInput").dispatchEvent(
+      new Event("input")
+    );
+  };
 
-      if (search) {
-        search.focus();
-        search.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      }
-    }
+  recognition.onerror = () => {
+    toast("Voice input could not start.");
+  };
 
-    if (
-      (event.ctrlKey || event.metaKey) &&
-      event.key.toLowerCase() === "shift" &&
-      event.key.toLowerCase() === "n"
-    ) {
-      event.preventDefault();
+} else {
 
-      const newChatBtn = $("newChatBtn");
-
-      if (newChatBtn) newChatBtn.click();
-    }
+  $("voiceBtn").addEventListener("click", () => {
+    toast("Voice input is not supported in this browser.");
   });
 
-  /* ACCESSIBILITY */
+}
 
-  document.querySelectorAll("button").forEach(button => {
-    if (!button.getAttribute("aria-label") &&
-        !button.textContent.trim()) {
-      button.setAttribute("aria-label", "AXON AI button");
-    }
-  });
+/* THEME SETTINGS */
 
-  /* CONNECTION STATUS */
+$("themeSetting").addEventListener("change", event => {
 
-  function updateConnection() {
-    const status = $("connectionStatus");
+  document.body.classList.toggle(
+    "light",
+    event.target.value === "light"
+  );
 
-    if (!status) return;
+  localStorage.setItem(
+    "axon-theme",
+    event.target.value
+  );
 
-    status.textContent = navigator.onLine
-      ? "Browser online"
-      : "Browser offline";
+});
+
+try {
+  const theme = localStorage.getItem("axon-theme");
+
+  if (theme === "light") {
+    document.body.classList.add("light");
+    $("themeSetting").value = "light";
   }
 
-  window.addEventListener("online", updateConnection);
-  window.addEventListener("offline", updateConnection);
+} catch(error) {}
 
-  updateConnection();
+/* PROFILE SETTINGS */
 
-  console.log("AXON AI enhancements loaded.");
+function loadProfile() {
+
+  const name =
+    localStorage.getItem("axon-name") || "My Account";
+
+  $("profileName").textContent = name;
+
+  $("profileAvatar").textContent =
+    name.charAt(0).toUpperCase();
+
+  $("nameSetting").value =
+    name === "My Account" ? "" : name;
+
+}
+
+$("saveProfileBtn").addEventListener("click", () => {
+
+  const name =
+    $("nameSetting").value.trim() || "My Account";
+
+  localStorage.setItem("axon-name", name);
+
+  loadProfile();
+
+  toast("Profile saved.");
+
+});
+
+/* EXPORT CHATS */
+
+$("exportBtn").addEventListener("click", () => {
+
+  const blob = new Blob(
+    [JSON.stringify(chats, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "axon-ai-chats.json";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+
+});
+
+/* CONFIRMATION MODAL */
+
+function confirmAction(title, message, action) {
+
+  $("modalTitle").textContent = title;
+  $("modalText").textContent = message;
+
+  pendingAction = action;
+
+  $("confirmModal").classList.add("show");
+
+}
+
+function closeModal() {
+
+  $("confirmModal").classList.remove("show");
+
+  pendingAction = null;
+
+}
+
+$("cancelBtn").addEventListener("click", closeModal);
+
+$("confirmBtn").addEventListener("click", () => {
+
+  const action = pendingAction;
+
+  closeModal();
+
+  if (action) action();
+
+});
+
+$("confirmModal").addEventListener("click", event => {
+
+  if (event.target === $("confirmModal")) {
+    closeModal();
+  }
+
+});
+
+/* CLEAR CHAT HISTORY */
+
+$("clearBtn").addEventListener("click", () => {
+
+  confirmAction(
+    "Clear all conversations?",
+    "This will delete saved conversations from this browser.",
+    () => {
+
+      chats = [];
+      activeChatId = null;
+
+      saveChats();
+      renderHistory();
+      renderMessages();
+      createChat();
+
+      toast("Conversations cleared.");
+
+    }
+  );
+
+});
+
+/* SEARCH CHATS */
+
+$("searchInput").addEventListener("input", event => {
+
+  const query =
+    event.target.value.toLowerCase().trim();
+
+  const results = $("searchResults");
+
+  results.replaceChildren();
+
+  if (!query) return;
+
+  const matches = chats.filter(chat =>
+    chat.title.toLowerCase().includes(query) ||
+    chat.messages.some(message =>
+      message.content.toLowerCase().includes(query)
+    )
+  );
+
+  if (!matches.length) {
+    results.textContent = "No conversations found.";
+    return;
+  }
+
+  matches.forEach(chat => {
+
+    const button = document.createElement("button");
+
+    button.className = "search-input";
+    button.style.textAlign = "left";
+    button.textContent = chat.title;
+
+    button.addEventListener("click", () => {
+
+      activeChatId = chat.id;
+
+      renderHistory();
+      renderMessages();
+
+      showPage("chatPage");
+
+    });
+
+    results.appendChild(button);
+
+  });
+
+});
+
+/* MOBILE SIDEBAR */
+
+document.addEventListener("click", event => {
+
+  if (
+    window.innerWidth <= 760 &&
+    $("sidebar").classList.contains("open") &&
+    !event.target.closest("#sidebar") &&
+    !event.target.closest("#menuBtn")
+  ) {
+    closeSidebar();
+  }
+
+});
+
+/* KEYBOARD SHORTCUT */
+
+document.addEventListener("keydown", event => {
+
+  if (event.key === "Escape") {
+
+    closeModal();
+
+    $("menuPanel").classList.remove("show");
+
+    closeSidebar();
+
+  }
+
+});
+
+/* START AXON AI */
+
+loadChats();
+loadProfile();
+
+if (chats.length) {
+
+  activeChatId = chats[0].id;
+
+} else {
+
+  createChat();
+
+}
+
+renderHistory();
+renderMessages();
+
+console.log("AXON AI loaded successfully.");
 
 })();
 </script>
