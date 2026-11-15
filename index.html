@@ -1,573 +1,1302 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07111f">
+<meta name="theme-color" content="#030817">
 <title>AXON AI</title>
+
 <style>
 :root{
---bg:#07111f;--panel:#10243a;--panel2:#0c1b2c;
---line:#29445f;--text:#f2f7ff;--muted:#91a9c1;
---cyan:#35d5f5;
+--bg:#030817;
+--panel:#09142c;
+--panel2:#0c1b38;
+--line:#153d83;
+--text:#f4f8ff;
+--muted:#91a8ce;
+--blue:#087cff;
+--cyan:#20d9ff;
+--glow:0 0 18px #087cff66;
 }
+
 *{box-sizing:border-box}
+
 body{
-margin:0;background:var(--bg);color:var(--text);
-font-family:Arial,sans-serif;height:100vh;
+margin:0;
+height:100dvh;
+overflow:hidden;
+background:var(--bg);
+color:var(--text);
+font-family:Arial,sans-serif;
 }
+
 button,input,textarea{font:inherit}
-button{cursor:pointer;border:0}
+button{cursor:pointer}
 .hidden{display:none!important}
-#splash{
-position:fixed;inset:0;background:var(--bg);
-display:grid;place-items:center;
-z-index:99;color:var(--cyan);font-size:38px;
-font-weight:bold;
+
+button:focus-visible,
+textarea:focus-visible{
+outline:2px solid var(--cyan);
+outline-offset:3px;
 }
-#app{display:flex;height:100vh}
+
+#app{
+height:100dvh;
+display:flex;
+overflow:hidden;
+}
+
+/* SIDEBAR */
+
 .sidebar{
-width:270px;background:var(--panel2);
+width:225px;
+flex-shrink:0;
+height:100%;
+background:linear-gradient(180deg,#08132c,#03091c);
 border-right:1px solid var(--line);
-padding:15px;display:flex;flex-direction:column;
-gap:10px;overflow-y:auto;
+display:flex;
+flex-direction:column;
+padding:15px 12px;
+gap:9px;
+overflow-y:auto;
+transition:.25s;
+z-index:20;
 }
-.brand{font-size:27px;color:var(--cyan);
-font-weight:bold;padding:12px}
-.menu{
-background:var(--panel);color:white;
-border:1px solid var(--line);
-border-radius:13px;padding:13px;
-text-align:left;width:100%;
+
+.brand{
+text-align:center;
+padding:15px 5px 22px;
 }
-.menu:hover,.action:hover{border-color:var(--cyan)}
-.settings{
-border:1px solid var(--line);
-border-radius:15px;padding:12px;
+
+.brand-logo{
+font-size:35px;
+font-weight:900;
+background:linear-gradient(90deg,#00c8ff,#7655ff);
+background-clip:text;
+-webkit-background-clip:text;
+color:transparent;
 }
-.settings h3{color:var(--cyan)}
-.history{margin-top:auto}
-.history button{margin-top:7px}
-.main{flex:1;min-width:0;display:flex;
-flex-direction:column}
+
+.brand p{
+font-size:12px;
+color:var(--muted);
+margin:5px;
+}
+
+.nav-button{
+width:100%;
+display:flex;
+align-items:center;
+gap:13px;
+padding:13px;
+border:1px solid transparent;
+border-radius:13px;
+background:transparent;
+color:#dceaff;
+text-align:left;
+font-size:14px;
+transition:.2s;
+}
+
+.nav-button:hover{
+background:#102b58;
+border-color:#1469ed;
+box-shadow:var(--glow);
+}
+
+.nav-button.active{
+background:linear-gradient(100deg,#0758dc,#123c92);
+border-color:#27a9ff;
+box-shadow:0 0 18px #087cff88;
+}
+
+.nav-icon{
+font-size:20px;
+width:24px;
+text-align:center;
+}
+
+.sidebar-bottom{
+margin-top:auto;
+padding-top:20px;
+}
+
+.pro-card{
+padding:15px;
+border:1px solid #254e9c;
+border-radius:15px;
+background:linear-gradient(140deg,#102c62,#10113e);
+text-align:center;
+}
+
+.pro-card strong{color:#ffd66c}
+.pro-card p{font-size:11px;color:var(--muted)}
+
+/* MAIN CHAT */
+
+.main{
+flex:1;
+min-width:0;
+height:100%;
+display:flex;
+flex-direction:column;
+position:relative;
+background:
+radial-gradient(ellipse at 85% 30%,#08205255,transparent 45%),
+var(--bg);
+}
+
 .topbar{
-padding:17px 22px;border-bottom:1px solid var(--line);
-display:flex;justify-content:space-between;
+height:76px;
+flex-shrink:0;
+display:flex;
 align-items:center;
+justify-content:space-between;
+padding:0 20px;
+border-bottom:1px solid #153d8355;
+background:#050d20dd;
 }
-.topbar strong{color:var(--cyan);font-size:23px}
+
+.top-left{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.icon-button{
+width:43px;
+height:43px;
+border-radius:14px;
+background:#0c1b3b;
+border:1px solid #2452a0;
+color:var(--cyan);
+font-size:22px;
+display:grid;
+place-items:center;
+transition:.2s;
+}
+
+.icon-button:hover{
+background:#123a7b;
+box-shadow:var(--glow);
+}
+
+.top-title{
+font-weight:bold;
+font-size:22px;
+color:var(--cyan);
+}
+
+.user-pill{
+padding:11px 15px;
+border:1px solid #3158a0;
+border-radius:30px;
+font-size:12px;
+background:#101d40;
+}
+
+.online{
+display:inline-block;
+width:8px;
+height:8px;
+border-radius:50%;
+background:#00ee9a;
+margin-right:6px;
+}
+
+/* CHAT AREA */
+
 .chat{
-flex:1;overflow-y:auto;padding:22px;
-width:100%;max-width:950px;margin:auto;
+flex:1;
+width:100%;
+max-width:1000px;
+margin:auto;
+padding:25px;
+overflow-y:auto;
+scroll-behavior:smooth;
 }
-.message{
-padding:14px 18px;border-radius:17px;
-margin:12px 0;max-width:85%;
-line-height:1.6;white-space:pre-wrap;
+
+.welcome{
+text-align:center;
+margin:35px 0;
+}
+
+.welcome h1{
+font-size:30px;
+color:var(--cyan);
+}
+
+.welcome p{
+color:var(--muted);
+font-size:14px;
+}
+
+.message-row{
+display:flex;
+align-items:flex-start;
+gap:11px;
+margin:20px 0;
+}
+
+.message-row.user-row{
+justify-content:flex-end;
+}
+
+.avatar{
+width:39px;
+height:39px;
+flex-shrink:0;
+border-radius:50%;
+display:grid;
+place-items:center;
+background:#101c54;
+border:1px solid #287cff;
+box-shadow:var(--glow);
+font-size:19px;
+}
+
+.bubble{
+max-width:78%;
+padding:15px 18px;
+border-radius:18px;
+line-height:1.65;
+font-size:15px;
 overflow-wrap:anywhere;
+white-space:pre-wrap;
 }
-.user{background:#16425a;margin-left:auto}
-.bot{background:var(--panel);
-border:1px solid var(--line)}
+
+.bot-bubble{
+background:linear-gradient(140deg,#101f46,#0b1633);
+border:1px solid #1d4388;
+border-top-left-radius:5px;
+}
+
+.user-bubble{
+background:linear-gradient(120deg,#075fe5,#0753ba);
+border:1px solid #328eff;
+border-top-right-radius:5px;
+box-shadow:0 0 17px #087cff55;
+}
+
+.time{
+font-size:10px;
+color:#819ac2;
+margin-top:5px;
+}
+
+.user-row .message-content{text-align:right}
+
+/* COMPOSER */
+
+.composer-area{
+width:100%;
+max-width:1000px;
+margin:auto;
+padding:12px 20px 15px;
+}
+
 .composer{
-width:100%;max-width:950px;margin:auto;
-padding:12px;display:flex;gap:8px;
+display:flex;
 align-items:center;
+gap:9px;
+padding:10px;
+border-radius:24px;
+background:linear-gradient(130deg,#08142f,#0b1c40);
+border:1px solid #1766df;
+box-shadow:0 0 22px #075bce33;
 }
+
 .composer textarea{
-flex:1;min-width:0;resize:none;
-min-height:53px;max-height:130px;
-padding:16px;border-radius:17px;
-background:var(--panel);border:1px solid var(--line);
-color:white;outline:none;
+flex:1;
+min-width:0;
+resize:none;
+height:45px;
+max-height:120px;
+padding:12px;
+border:0;
+outline:0;
+background:transparent;
+color:white;
 }
-.action{
-background:var(--panel);color:var(--cyan);
-border:1px solid var(--line);
-border-radius:14px;padding:14px;
-font-size:18px;
+
+.composer textarea::placeholder{
+color:#8299bd;
 }
-.status{padding:0 15px 10px;color:var(--muted);
-font-size:13px}
+
+.send-button{
+width:49px;
+height:49px;
+border-radius:50%;
+background:linear-gradient(140deg,#00c9ff,#0759ff);
+color:white;
+font-size:22px;
+border:1px solid #5bdfff;
+box-shadow:0 0 16px #087cff88;
+}
+
+.send-button:hover{
+transform:scale(1.06);
+}
+
+.footer-status{
+font-size:11px;
+color:#7791b8;
+padding:10px 5px 0;
+}
+
+/* MENU DRAWER */
+
+.drawer-overlay{
+position:fixed;
+inset:0;
+background:#0009;
+z-index:30;
+}
+
+.drawer{
+position:fixed;
+top:0;
+left:0;
+bottom:0;
+width:min(290px,85vw);
+background:#07132c;
+border-right:1px solid #1d55ae;
+z-index:31;
+padding:18px;
+overflow-y:auto;
+transform:translateX(-105%);
+transition:.25s;
+}
+
+.drawer.open{transform:translateX(0)}
+
+.drawer-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:22px;
+}
+
+.drawer h3{
+color:var(--cyan);
+font-size:17px;
+}
+
+.drawer .nav-button{margin-bottom:5px}
+
+.drawer-close{
+background:#12244a;
+color:white;
+border:1px solid #2857a4;
+border-radius:10px;
+padding:9px 13px;
+}
+
+/* SETTINGS PANEL */
+
+.settings-panel{
+position:fixed;
+top:85px;
+left:50%;
+transform:translateX(-50%);
+width:min(420px,92vw);
+max-height:75vh;
+overflow:auto;
+z-index:45;
+padding:20px;
+background:#091832;
+border:1px solid #2475e7;
+border-radius:20px;
+box-shadow:0 0 35px #006dff55;
+}
+
+.settings-panel h2{color:var(--cyan)}
+
+.setting-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 0;
+border-bottom:1px solid #20375f;
+font-size:14px;
+}
+
+.toggle{
+width:45px;
+height:24px;
+border-radius:20px;
+background:#40506b;
+position:relative;
+border:0;
+}
+
+.toggle:after{
+content:"";
+position:absolute;
+width:18px;
+height:18px;
+left:3px;
+top:3px;
+border-radius:50%;
+background:white;
+transition:.2s;
+}
+
+.toggle.on{background:#087cff}
+.toggle.on:after{left:24px}
+
+/* POPUP MENU */
+
 .popup{
-position:fixed;bottom:85px;left:15px;
-background:var(--panel2);
-border:1px solid var(--line);
-border-radius:16px;padding:12px;
-width:190px;z-index:20;
+position:fixed;
+bottom:100px;
+left:15px;
+width:210px;
+padding:12px;
+background:#091832;
+border:1px solid #2675ec;
+border-radius:17px;
+box-shadow:0 0 25px #006dff66;
+z-index:40;
 }
-.popup button{margin:5px 0}
-video{width:100%;max-height:350px;
-border-radius:15px;background:#000}
+
+.popup button{
+width:100%;
+margin:4px 0;
+}
+
+/* MEDIA */
+
+.media-preview{
+max-width:100%;
+max-height:280px;
+border-radius:15px;
+margin-top:10px;
+}
+
+video{
+max-width:100%;
+max-height:350px;
+border-radius:15px;
+background:black;
+}
+
 #cameraBox{
-position:fixed;inset:10%;
-background:var(--panel2);z-index:30;
-padding:20px;border:1px solid var(--line);
-border-radius:20px;overflow:auto;
+position:fixed;
+inset:8%;
+z-index:60;
+background:#07142d;
+border:1px solid #2675ec;
+border-radius:20px;
+padding:20px;
+overflow:auto;
 }
+
+#cameraBox h3{color:var(--cyan)}
+
+#camera{
+width:100%;
+max-height:65vh;
+object-fit:contain;
+}
+
+.close-camera{
+margin-top:15px;
+background:#c52c50;
+color:white;
+padding:12px 22px;
+border-radius:12px;
+border:0;
+}
+
+/* MOBILE */
+
 @media(max-width:700px){
-.sidebar{width:75px;padding:7px}
-.brand{font-size:14px;padding:8px}
-.sidebar .menu{font-size:10px;
-padding:12px 3px;text-align:center}
-.settings,.history{display:none}
-.composer{padding:8px;gap:5px}
-.action{padding:12px 9px}
+
+.sidebar{
+display:none;
+}
+
+.topbar{
+height:65px;
+padding:0 12px;
+}
+
+.top-title{font-size:19px}
+
+.user-pill{
+font-size:10px;
+padding:9px;
+}
+
+.chat{padding:14px}
+
+.welcome h1{font-size:24px}
+
+.bubble{
+max-width:88%;
+font-size:14px;
+padding:12px;
+}
+
+.composer-area{
+padding:8px 9px 12px;
+}
+
+.composer{
+gap:5px;
+padding:7px;
+}
+
+.icon-button{
+width:39px;
+height:39px;
+}
+
+.send-button{
+width:43px;
+height:43px;
+}
+
+.composer textarea{
+font-size:14px;
+}
+
 }
 </style>
 </head>
+
 <body>
 
-<div id="splash">AXON AI</div>
+<div id="app">
 
-<section id="app" class="hidden">
+<!-- DESKTOP SIDEBAR -->
 
 <aside class="sidebar">
-<div class="brand">AXON AI</div>
 
-<button class="menu" id="settingsButton">
-⚙ Settings
-</button>
-
-<div id="settings" class="settings hidden">
-<h3>Settings</h3>
-<button class="menu" id="voiceButton">
-🎙 Voice Control: OFF
-</button>
-<button class="menu" id="profileButton">
-👤 Profile
-</button>
-<button class="menu" id="imageButton">
-🖼 Image Generator
-</button>
-<button class="menu" id="videoButton">
-🎬 Video Generator
-</button>
-<button class="menu" id="themeButton">
-🌙 Dark Theme: ON
-</button>
-<button class="menu" id="logoutButton">
-Logout
-</button>
+<div class="brand">
+<div class="brand-logo">AXON AI</div>
+<p>Your Smart AI Assistant</p>
 </div>
 
-<div class="history">
-<h3>History</h3>
-<div id="historyList"></div>
-<button class="menu" id="seeAll">See All →</button>
-<button class="menu" id="newChat">＋ New Chat</button>
+<button class="nav-button active" data-action="settings">
+<span class="nav-icon">⚙</span> Settings
+</button>
+
+<button class="nav-button" data-action="voice">
+<span class="nav-icon">◖</span> Voice Control
+</button>
+
+<button class="nav-button" data-action="history">
+<span class="nav-icon">◷</span> History
+</button>
+
+<button class="nav-button" data-action="profile">
+<span class="nav-icon">♙</span> Profile
+</button>
+
+<button class="nav-button" data-action="image">
+<span class="nav-icon">▧</span> Image
+</button>
+
+<button class="nav-button" data-action="video">
+<span class="nav-icon">▶</span> Video
+</button>
+
+<div class="sidebar-bottom">
+
+<div class="pro-card">
+<strong>♛ AXON AI</strong>
+<p>Smarter. Faster. Better.</p>
+</div>
+
 </div>
 </aside>
 
+<!-- MAIN -->
+
 <main class="main">
+
 <header class="topbar">
-<strong>AXON AI</strong>
-<span id="welcome">Your AI Assistant</span>
+
+<div class="top-left">
+
+<button class="icon-button" id="menuButton"
+aria-label="Open menu">⋮</button>
+
+<div>
+<div class="top-title">AXON AI</div>
+<small style="color:#91a8ce">
+Your Smart AI Assistant
+</small>
+</div>
+
+</div>
+
+<div class="user-pill">
+<span class="online"></span>
+Welcome <span id="userName">User</span>
+</div>
+
 </header>
 
+<!-- CHAT -->
+
 <div class="chat" id="chat">
-<div class="message bot">
+
+<div class="welcome">
+<h1>Welcome to AXON AI</h1>
+<p>Your intelligent assistant is ready.</p>
+</div>
+
+<div class="message-row">
+<div class="avatar">A</div>
+<div class="message-content">
+<div class="bubble bot-bubble">
 Hello! Main AXON AI hoon.
 Aap mujhse text, voice aur supported media
 ke through baat kar sakte hain.
 </div>
+<div class="time">Now</div>
 </div>
+</div>
+
+</div>
+
+<!-- CAMERA -->
 
 <div id="cameraBox" class="hidden">
-<h3 id="cameraTitle">Live Camera</h3>
-<video id="camera" autoplay playsinline></video>
-<button class="action" id="stopCamera">Stop</button>
+
+<h3 id="cameraTitle">Camera Preview</h3>
+
+<video id="camera" autoplay playsinline muted></video>
+
+<button class="close-camera" id="stopCamera">
+Stop Camera
+</button>
+
 </div>
+
+<!-- COMPOSER -->
+
+<div class="composer-area">
 
 <div class="composer">
-<button class="action" id="plusButton">＋</button>
+
+<button class="icon-button" id="plusButton"
+aria-label="Attachments">＋</button>
+
+<button class="icon-button" id="micButton"
+aria-label="Voice input">🎙</button>
 
 <textarea id="prompt"
-placeholder="Message AXON AI..."></textarea>
+placeholder="Message AXON AI..."
+rows="1"></textarea>
 
-<button class="action" id="sendButton">➤</button>
-<button class="action" id="callButton">📞</button>
+<button class="send-button" id="sendButton"
+aria-label="Send message">➤</button>
+
+<button class="icon-button" id="callButton"
+aria-label="Live call">☎</button>
+
 </div>
 
-<div class="status" id="status">AXON AI Ready</div>
+<div class="footer-status" id="status">
+● AXON AI Ready
+</div>
+
+</div>
+
 </main>
-</section>
+</div>
+
+<!-- DRAWER -->
+
+<div id="overlay" class="drawer-overlay hidden"></div>
+
+<aside id="drawer" class="drawer">
+
+<div class="drawer-head">
+<h2 style="color:#20d9ff">AXON AI</h2>
+<button class="drawer-close" id="closeDrawer">✕</button>
+</div>
+
+<button class="nav-button" data-action="settings">⚙ Settings</button>
+<button class="nav-button" data-action="voice">🎙 Voice Control</button>
+<button class="nav-button" data-action="history">◷ History</button>
+<button class="nav-button" data-action="profile">♙ Profile</button>
+<button class="nav-button" data-action="image">▧ Image</button>
+<button class="nav-button" data-action="video">▶ Video</button>
+<button class="nav-button" data-action="theme">☾ Dark Theme</button>
+<button class="nav-button" data-action="new">＋ New Chat</button>
+
+<h3 style="color:#20d9ff;margin-top:25px">History</h3>
+
+<div id="drawerHistory"></div>
+
+<button class="nav-button" data-action="all">
+See All Conversations →
+</button>
+
+</aside>
+
+<!-- SETTINGS -->
+
+<div id="settingsPanel" class="settings-panel hidden">
+
+<div style="display:flex;justify-content:space-between">
+<h2>⚙ Settings</h2>
+<button class="drawer-close" id="closeSettings">✕</button>
+</div>
+
+<div class="setting-row">
+<span>Voice Control</span>
+<button class="toggle" id="voiceToggle"></button>
+</div>
+
+<div class="setting-row">
+<span>Dark Theme</span>
+<button class="toggle on" id="themeToggle"></button>
+</div>
+
+<div class="setting-row">
+<span>Sound Response</span>
+<button class="toggle" id="soundToggle"></button>
+</div>
+
+<div class="setting-row">
+<span>Notifications</span>
+<button class="toggle" id="notifyToggle"></button>
+</div>
+
+<div class="setting-row">
+<span>My Profile</span>
+<button class="drawer-close" id="settingsProfile">Open</button>
+</div>
+
+</div>
+
+<!-- ATTACHMENT MENU -->
 
 <div id="plusMenu" class="popup hidden">
-<button class="menu" id="photoOption">🖼 Photo</button>
-<button class="menu" id="cameraOption">📷 Camera</button>
-<button class="menu" id="fileOption">📁 Files</button>
-<button class="menu" id="videoCallOption">📹 Video Call</button>
-<button class="menu" id="recordOption">🎥 Screen Record</button>
+
+<button class="nav-button" id="photoOption">▧ Photo</button>
+<button class="nav-button" id="cameraOption">📷 Camera</button>
+<button class="nav-button" id="fileOption">📁 Files</button>
+<button class="nav-button" id="videoCallOption">📹 Video Call</button>
+<button class="nav-button" id="recordOption">▣ Screen Record</button>
+<button class="nav-button" id="videoOption">🎬 Select Video</button>
+
 </div>
 
 <input type="file" id="photoInput" accept="image/*" hidden>
 <input type="file" id="fileInput" hidden>
 <input type="file" id="videoInput" accept="video/*" hidden>
 
-<script type="module">
+<script>
 
-import {initializeApp}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getAuth,onAuthStateChanged,signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-/* FIREBASE CONFIG */
-const firebaseConfig={
-apiKey:"YOUR_FIREBASE_API_KEY",
-authDomain:"axon-ai-9ee3b.firebaseapp.com",
-projectId:"axon-ai-9ee3b",
-storageBucket:"YOUR_STORAGE_BUCKET",
-messagingSenderId:"YOUR_MESSAGING_SENDER_ID",
-appId:"YOUR_FIREBASE_APP_ID"
-};
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
+/* AXON AI SETTINGS */
 
 const $=id=>document.getElementById(id);
 
-let history=[];
-let voiceEnabled=false;
-let stream=null;
-let recorder=null;
-let chunks=[];
-let recording=false;
-
 const API={
 chat:"/api/chat",
+upload:"/api/upload",
 image:"/api/image",
 video:"/api/video",
 live:"/api/live-session"
 };
 
-function status(t){$("status").textContent=t}
+let history=[];
+let chatId=Date.now();
+let voiceEnabled=false;
+let soundEnabled=false;
+let stream=null;
+let recorder=null;
+let recording=false;
+let chunks=[];
+let recognition=null;
 
-onAuthStateChanged(auth,user=>{
-$("splash").classList.add("hidden");
-$("app").classList.remove("hidden");
+let userName=localStorage.getItem("axonName")||"User";
 
-if(user){
-$("welcome").textContent="Welcome "+(user.displayName||"User");
+/* STATUS */
+
+function status(text){
+$("status").textContent="● "+text;
 }
-});
+
+/* MESSAGE SYSTEM */
 
 function addMessage(text,type){
-const div=document.createElement("div");
-div.className="message "+type;
-div.textContent=text;
-$("chat").appendChild(div);
-$("chat").scrollTop=$("chat").scrollHeight;
+
+const row=document.createElement("div");
+
+row.className="message-row "+
+(type==="user"?"user-row":"");
+
+const avatar=document.createElement("div");
+
+avatar.className="avatar";
+avatar.textContent=type==="user"?"♙":"A";
+
+const content=document.createElement("div");
+
+content.className="message-content";
+
+const bubble=document.createElement("div");
+
+bubble.className="bubble "+
+(type==="user"?"user-bubble":"bot-bubble");
+
+bubble.textContent=text;
+
+const time=document.createElement("div");
+
+time.className="time";
+time.textContent=new Date().toLocaleTimeString(
+[] ,{hour:"2-digit",minute:"2-digit"}
+);
+
+content.append(bubble,time);
+
+if(type==="user"){
+row.append(content,avatar);
+}else{
+row.append(avatar,content);
 }
+
+$("chat").appendChild(row);
+
+$("chat").scrollTop=$("chat").scrollHeight;
+
+}
+
+/* HISTORY */
 
 function saveHistory(){
-const item={
-title:history[0]?.content?.slice(0,30)||"New Chat",
+
+const list=JSON.parse(
+localStorage.getItem("axonHistory")||"[]"
+);
+
+const title=history.find(
+m=>m.role==="user"
+)?.content?.slice(0,35)||"New Conversation";
+
+const updated=list.filter(x=>x.id!==chatId);
+
+updated.unshift({
+id:chatId,
+title,
 messages:history
-};
-const list=JSON.parse(localStorage.getItem("axonChats")||"[]");
-const filtered=list.filter(x=>x.id!==chatId);
-filtered.unshift({...item,id:chatId});
-localStorage.setItem("axonChats",JSON.stringify(filtered.slice(0,30)));
+});
+
+localStorage.setItem(
+"axonHistory",
+JSON.stringify(updated.slice(0,50))
+);
+
 loadHistory();
+
 }
 
-let chatId=Date.now();
-
 function loadHistory(){
-const list=JSON.parse(localStorage.getItem("axonChats")||"[]");
-$("historyList").innerHTML="";
+
+const list=JSON.parse(
+localStorage.getItem("axonHistory")||"[]"
+);
+
+$("drawerHistory").innerHTML="";
 
 list.slice(0,3).forEach(item=>{
-const b=document.createElement("button");
-b.className="menu";
-b.textContent=item.title||"Conversation";
-b.onclick=()=>openChat(item);
-$("historyList").appendChild(b);
+
+const button=document.createElement("button");
+
+button.className="nav-button";
+button.textContent="◷ "+item.title;
+
+button.onclick=()=>openChat(item);
+
+$("drawerHistory").appendChild(button);
+
 });
+
 }
 
 function openChat(item){
+
 chatId=item.id;
 history=item.messages||[];
+
 $("chat").innerHTML="";
-history.forEach(m=>addMessage(
-m.content,m.role==="user"?"user":"bot"
-));
+
+history.forEach(m=>{
+addMessage(
+m.content,
+m.role==="user"?"user":"bot"
+);
+});
+
+closeDrawer();
+
+status("Conversation opened");
+
 }
 
-$("seeAll").onclick=()=>{
-const list=JSON.parse(localStorage.getItem("axonChats")||"[]");
-$("chat").innerHTML="";
-list.forEach((item,i)=>{
-addMessage((i+1)+". "+item.title,"bot");
-});
-};
+function newChat(){
 
-$("newChat").onclick=()=>{
 chatId=Date.now();
 history=[];
+
 $("chat").innerHTML="";
+
 addMessage("New conversation started!","bot");
+
+status("New conversation");
+
+}
+
+/* MENU */
+
+function openDrawer(){
+
+$("drawer").classList.add("open");
+$("overlay").classList.remove("hidden");
+loadHistory();
+
+}
+
+function closeDrawer(){
+
+$("drawer").classList.remove("open");
+$("overlay").classList.add("hidden");
+
+}
+
+$("menuButton").onclick=openDrawer;
+$("closeDrawer").onclick=closeDrawer;
+$("overlay").onclick=closeDrawer;
+
+/* SETTINGS */
+
+function openSettings(){
+
+$("settingsPanel").classList.remove("hidden");
+closeDrawer();
+
+}
+
+$("closeSettings").onclick=()=>{
+$("settingsPanel").classList.add("hidden");
 };
 
-async function sendMessage(){
-const message=$("prompt").value.trim();
-if(!message)return;
+$("settingsButton")?.addEventListener("click",openSettings);
 
-$("prompt").value="";
-addMessage(message,"user");
-history.push({role:"user",content:message});
-status("AXON AI Thinking...");
+/* NAVIGATION */
 
-try{
-const res=await fetch(API.chat,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message,history})
+document.querySelectorAll("[data-action]").forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+const action=button.dataset.action;
+
+closeDrawer();
+
+if(action==="settings")openSettings();
+
+if(action==="voice")toggleVoice();
+
+if(action==="history"){
+openDrawer();
+}
+
+if(action==="profile")profile();
+
+if(action==="image")generateImage();
+
+if(action==="video")generateVideo();
+
+if(action==="theme")toggleTheme();
+
+if(action==="new")newChat();
+
+if(action==="all")showAllHistory();
+
 });
 
-if(!res.ok)throw Error("API Error "+res.status);
-
-const data=await res.json();
-const reply=data.reply||data.response||data.answer;
-
-if(!reply)throw Error("Empty AI response");
-
-addMessage(reply,"bot");
-history.push({role:"assistant",content:reply});
-saveHistory();
-
-if(voiceEnabled){
-const speech=new SpeechSynthesisUtterance(reply);
-speech.lang="hi-IN";
-speechSynthesis.speak(speech);
-}
-status("AXON AI Ready");
-
-}catch(e){
-addMessage("Server connection problem. Backend API check karein.","bot");
-status(e.message);
-}
-}
-
-$("sendButton").onclick=sendMessage;
-
-$("prompt").addEventListener("keydown",e=>{
-if(e.key==="Enter"&&!e.shiftKey){
-e.preventDefault();
-sendMessage();
-}
 });
 
-$("settingsButton").onclick=()=>{
-$("settings").classList.toggle("hidden");
+/* ALL HISTORY */
+
+function showAllHistory(){
+
+const list=JSON.parse(
+localStorage.getItem("axonHistory")||"[]"
+);
+
+$("chat").innerHTML="";
+
+if(!list.length){
+addMessage("No saved conversations yet.","bot");
+return;
+}
+
+list.forEach(item=>{
+
+const button=document.createElement("button");
+
+button.className="nav-button";
+button.style.margin="12px 0";
+button.textContent="◷ "+item.title;
+
+button.onclick=()=>openChat(item);
+
+$("chat").appendChild(button);
+
+});
+
+}
+
+/* PROFILE */
+
+function profile(){
+
+const name=prompt("Enter your profile name:",userName);
+
+if(name&&name.trim()){
+
+userName=name.trim();
+
+localStorage.setItem("axonName",userName);
+
+$("userName").textContent=userName;
+
+status("Profile updated");
+
+}
+
+}
+
+$("settingsProfile").onclick=profile;
+
+$("userName").textContent=userName;
+
+/* THEME */
+
+let dark=true;
+
+function toggleTheme(){
+
+dark=!dark;
+
+const root=document.documentElement;
+
+if(dark){
+
+root.style.setProperty("--bg","#030817");
+root.style.setProperty("--panel","#09142c");
+root.style.setProperty("--panel2","#0c1b38");
+root.style.setProperty("--text","#f4f8ff");
+
+}else{
+
+root.style.setProperty("--bg","#edf4ff");
+root.style.setProperty("--panel","#dce8fa");
+root.style.setProperty("--panel2","#cfddf4");
+root.style.setProperty("--text","#10243a");
+
+}
+
+$("themeToggle").classList.toggle("on",dark);
+
+status(dark?"Dark theme enabled":"Light theme enabled");
+
+}
+
+$("themeToggle").onclick=toggleTheme;
+
+document.querySelectorAll(".toggle").forEach(btn=>{
+
+if(btn.id!=="themeToggle"&&btn.id!=="voiceToggle"){
+
+btn.onclick=()=>{
+btn.classList.toggle("on");
 };
 
-$("voiceButton").onclick=()=>{
+}
+
+});
+
+/* AI VOICE */
+
+function toggleVoice(){
+
 voiceEnabled=!voiceEnabled;
-$("voiceButton").textContent=
-"🎙 Voice Control: "+(voiceEnabled?"ON":"OFF");
-status("Voice "+(voiceEnabled?"Enabled":"Disabled"));
-};
 
-$("profileButton").onclick=()=>{
-const u=auth.currentUser;
-alert("Name: "+(u?.displayName||"Not set")+
-"\nEmail: "+(u?.email||"Not logged in"));
-};
+$("voiceToggle").classList.toggle("on",voiceEnabled);
 
-$("logoutButton").onclick=()=>signOut(auth);
+status("Voice Control "+(voiceEnabled?"ON":"OFF"));
 
-$("themeButton").onclick=()=>{
-const light=document.body.dataset.theme!=="light";
-document.body.dataset.theme=light?"light":"dark";
+if(!voiceEnabled){
 
-const vars=light?
-["#edf4fa","#dce9f3","#d2e2ef","#10243a"]:
-["#07111f","#10243a","#0c1b2c","#f2f7ff"];
+stopRecognition();
 
-["--bg","--panel","--panel2","--text"].forEach((v,i)=>{
-document.documentElement.style.setProperty(v,vars[i]);
-});
+speechSynthesis.cancel();
 
-$("themeButton").textContent=
-"🌙 Dark Theme: "+(light?"OFF":"ON");
-};
-
-$("plusButton").onclick=()=>{
-$("plusMenu").classList.toggle("hidden");
-};
-
-$("photoOption").onclick=()=>$("photoInput").click();
-$("fileOption").onclick=()=>$("fileInput").click();
-
-function selectedFile(file){
-if(!file)return;
-addMessage("Selected: "+file.name,"user");
-status("File selected. Upload API required to send it to AI.");
 }
 
-$("photoInput").onchange=e=>selectedFile(e.target.files[0]);
-$("fileInput").onchange=e=>selectedFile(e.target.files[0]);
-
-async function startCamera(videoCall=false){
-try{
-stream=await navigator.mediaDevices.getUserMedia({
-video:true,audio:true
-});
-
-$("camera").srcObject=stream;
-$("cameraTitle").textContent=
-videoCall?"Video Call Preview":"Camera Preview";
-$("cameraBox").classList.remove("hidden");
-$("plusMenu").classList.add("hidden");
-
-status(videoCall?
-"Local video preview. Connect WebRTC server for remote calls.":
-"Camera Started");
-
-}catch(e){status("Camera/Microphone permission required.");}
 }
 
-$("cameraOption").onclick=()=>startCamera();
-$("videoCallOption").onclick=()=>startCamera(true);
+$("voiceToggle").onclick=toggleVoice;
 
-$("stopCamera").onclick=()=>{
-if(stream)stream.getTracks().forEach(t=>t.stop());
-stream=null;
-$("cameraBox").classList.add("hidden");
-status("Camera stopped");
-};
+/* SPEECH OUTPUT */
 
-$("callButton").onclick=async()=>{
-try{
-const response=await fetch(API.live,{method:"POST"});
-if(!response.ok)throw Error();
-const data=await response.json();
-if(data.url)window.open(data.url,"_blank");
-else status("Live session response received.");
-}catch(e){
-status("Live calling requires a connected WebRTC backend.");
-}
-};
+function speak(text){
 
-async function startRecording(){
-try{
-const screen=await navigator.mediaDevices.getDisplayMedia({
-video:true,audio:true
-});
+if(!soundEnabled)return;
 
-recorder=new MediaRecorder(screen);
-chunks=[];
+const speech=new SpeechSynthesisUtterance(text);
 
-recorder.ondataavailable=e=>{
-if(e.data.size)chunks.push(e.data);
-};
+speech.lang="hi-IN";
 
-recorder.onstop=()=>{
-const blob=new Blob(chunks,{type:"video/webm"});
-const url=URL.createObjectURL(blob);
-const a=document.createElement("a");
-a.href=url;
-a.download="AXON-Recording.webm";
-a.click();
-URL.revokeObjectURL(url);
-screen.getTracks().forEach(t=>t.stop());
-recording=false;
-status("Recording saved");
-};
+speechSynthesis.speak(speech);
 
-recorder.start();
-recording=true;
-status("Screen recording started");
-
-recorder.onerror=()=>status("Recording error");
-
-}catch(e){status("Screen recording permission required.");}
 }
 
-$("recordOption").onclick=()=>{
-$("plusMenu").classList.add("hidden");
-if(!recording)startRecording();
-else if(recorder?.state==="recording")recorder.stop();
+$("soundToggle").onclick=()=>{
+
+soundEnabled=!soundEnabled;
+
+$("soundToggle").classList.toggle("on",soundEnabled);
+
 };
 
-$("imageButton").onclick=async()=>{
-const prompt=window.prompt("Describe your image:");
-if(!prompt)return;
+/* MICROPHONE */
 
-status("Generating image...");
-try{
-const r=await fetch(API.image,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({prompt})
-});
-if(!r.ok)throw Error();
-const d=await r.json();
-if(d.url){
-const img=document.createElement("img");
-img.src=d.url;
-img.style.maxWidth="100%";
-img.style.borderRadius="15px";
-$("chat").appendChild(img);
-}else status("Image response received.");
-}catch(e){status("Connect Image Generation API.");}
-};
+function startRecognition(){
 
-$("videoButton").onclick=async()=>{
-const prompt=window.prompt("Describe your video:");
-if(!prompt)return;
-
-status("Video generation started...");
-try{
-const r=await fetch(API.video,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({prompt})
-});
-if(!r.ok)throw Error();
-const d=await r.json();
-if(d.url){
-const video=document.createElement("video");
-video.controls=true;
-video.src=d.url;
-$("chat").appendChild(video);
-}else status("Video processing started.");
-}catch(e){status("Connect Video Generation API.");}
-};
-
-/* SPEECH RECOGNITION */
-
-$("micButton").onclick=()=>{
 const SR=window.SpeechRecognition||
 window.webkitSpeechRecognition;
 
 if(!SR){
-status("Speech recognition not supported in this browser.");
+
+status("Speech recognition not supported");
+
 return;
+
 }
 
-const recognition=new SR();
+recognition=new SR();
+
 recognition.lang="hi-IN";
+
 recognition.onstart=()=>status("Listening...");
+
 recognition.onresult=e=>{
-$("prompt").value=e.results[0][0].transcript;
-if(voiceEnabled)sendMessage();
-};
-recognition.onerror=()=>status("Microphone error");
-recognition.start();
+
+const result=e.results[e.results.length-1];
+
+if(result.isFinal){
+
+$("prompt").value=result[0].transcript;
+
+sendMessage();
+
+}
+
 };
 
-window.addEventListener("load",()=>{
-loadHistory();
-setTimeout(()=>$("splash").classList.add("hidden"),700);
+recognition.onerror=()=>{
+status("Microphone permission required");
+};
+
+recognition.start();
+
+}
+
+function stopRecognition(){
+
+if(recognition){
+
+recognition.stop();
+recognition=null;
+
+}
+
+}
+
+$("micButton").onclick=()=>{
+
+if(recognition){
+
+stopRecognition();
+status("Microphone stopped");
+
+}else{
+
+startRecognition();
+
+}
+
+};
+
+/* CHAT API */
+
+async function sendMessage(){
+
+const message=$("prompt").value.trim();
+
+if(!message)return;
+
+$("prompt").value="";
+
+addMessage(message,"user");
+
+history.push({
+role:"user",
+content:message
 });
 
-</script>
-</body>
-</html>
+status("AXON AI is thinking...");
+
+try{
+
+const response=await fetch(API.chat,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+message,
+history
+})
+
+});
+
+if(!response.ok){
+throw Error("Chat API error "+response.status);
+}
+
+const data=await response.json();
+
+const reply=data.reply||
+data.response||
+data.answer;
+
+if(!reply)throw Error("No AI response");
+
+addMessage(reply,"bot");
+
+history.push({
+role:"assistant",
+content:reply
+});
+
+saveHistory();
+
+speak(reply);
+
+status
