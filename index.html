@@ -1,3650 +1,421 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b16">
+<meta name="description" content="AXON AI — Intelligence Reimagined">
 <title>AXON AI — Intelligence Reimagined</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --bg:#080b16;
-  --panel:#101526;
-  --panel2:#151c30;
-  --surface:#1b2440;
-  --border:rgba(255,255,255,.09);
-  --text:#f4f6ff;
-  --muted:#8993ad;
-  --primary:#8065ff;
-  --secondary:#21c8ee;
-  --success:#35d6a0;
-  --danger:#ff647c;
-  --radius:18px;
-  --sidebar:270px;
-  --shadow:0 20px 70px rgba(0,0,0,.35);
-}
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  overflow-x:hidden;
-}
-
-button,input{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-  color:inherit;
-}
-
-button:focus-visible,
-input:focus-visible{
-  outline:2px solid var(--secondary);
-  outline-offset:3px;
-}
-
-::selection{
-  background:var(--primary);
-  color:white;
-}
-
-.background-glow{
-  position:fixed;
-  width:420px;
-  height:420px;
-  border-radius:50%;
-  filter:blur(120px);
-  opacity:.14;
-  pointer-events:none;
-  z-index:-1;
-}
-
-.glow-one{
-  top:-180px;
-  left:15%;
-  background:#7657ff;
-}
-
-.glow-two{
-  bottom:-180px;
-  right:5%;
-  background:#00c8ff;
-}
-
-/* COMMON */
-
-.hidden{
-  display:none!important;
-}
-
-.muted{
-  color:var(--muted);
-}
-
-.gradient-text{
-  background:linear-gradient(100deg,#a58aff,#52d9f4);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-.primary-button{
-  border:0;
-  border-radius:12px;
-  padding:13px 20px;
-  color:white;
-  font-weight:700;
-  background:linear-gradient(110deg,#795cff,#4c9fff);
-  box-shadow:0 8px 25px rgba(111,91,255,.25);
-  transition:.25s;
-}
-
-.primary-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 12px 30px rgba(111,91,255,.38);
-}
-
-.secondary-button{
-  background:rgba(255,255,255,.055);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px 17px;
-  transition:.2s;
-}
-
-.secondary-button:hover{
-  background:rgba(255,255,255,.1);
-}
-
-.icon-button{
-  width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:rgba(255,255,255,.04);
-  font-size:18px;
-}
-
-/* SPLASH SCREEN */
-
-#splashScreen{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  background:#080b16;
-  transition:opacity .6s,visibility .6s;
-}
-
-#splashScreen.hide{
-  opacity:0;
-  visibility:hidden;
-}
-
-.splash-logo{
-  width:95px;
-  height:95px;
-  display:grid;
-  place-items:center;
-  border-radius:28px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:36px;
-  font-weight:800;
-  background:linear-gradient(135deg,#795cff,#20c8ed);
-  box-shadow:0 0 65px rgba(111,91,255,.4);
-  animation:logoPulse 2s infinite alternate;
-}
-
-.splash-title{
-  margin-top:24px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:34px;
-  font-weight:800;
-  letter-spacing:5px;
-}
-
-.splash-caption{
-  margin-top:10px;
-  color:var(--muted);
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-}
-
-.splash-loader{
-  width:150px;
-  height:4px;
-  margin-top:38px;
-  background:#202943;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.splash-loader span{
-  display:block;
-  width:40%;
-  height:100%;
-  background:linear-gradient(90deg,#795cff,#20c8ed);
-  animation:loading 1.5s infinite;
-}
-
-@keyframes loading{
-  from{transform:translateX(-120%)}
-  to{transform:translateX(350%)}
-}
-
-@keyframes logoPulse{
-  from{transform:scale(.96)}
-  to{transform:scale(1.04)}
-}
-
-/* AUTH SCREEN */
-
-#authScreen{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:35px 18px;
-  background:
-    radial-gradient(circle at 15% 20%,rgba(117,86,255,.13),transparent 35%),
-    radial-gradient(circle at 85% 85%,rgba(30,195,235,.10),transparent 35%);
-}
-
-.auth-layout{
-  width:min(100%,1000px);
-  display:grid;
-  grid-template-columns:1fr 420px;
-  gap:45px;
-  align-items:center;
-}
-
-.auth-brand{
-  padding:20px;
-}
-
-.brand-mark{
-  width:58px;
-  height:58px;
-  display:grid;
-  place-items:center;
-  border-radius:18px;
-  background:linear-gradient(135deg,#795cff,#20c8ed);
-  font-size:23px;
-  font-weight:800;
-  box-shadow:0 10px 35px rgba(117,86,255,.3);
-}
-
-.brand-name{
-  margin-top:22px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:48px;
-  font-weight:800;
-  letter-spacing:-2px;
-}
-
-.brand-description{
-  max-width:420px;
-  margin-top:18px;
-  line-height:1.8;
-  color:#a5afc8;
-  font-size:15px;
-}
-
-.feature-points{
-  display:grid;
-  gap:16px;
-  margin-top:34px;
-}
-
-.feature-point{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  color:#c5cbe0;
-  font-size:14px;
-}
-
-.feature-point span:first-child{
-  width:36px;
-  height:36px;
-  display:grid;
-  place-items:center;
-  border-radius:11px;
-  background:rgba(128,101,255,.13);
-  color:#a99aff;
-}
-
-.auth-card{
-  padding:34px;
-  border:1px solid var(--border);
-  border-radius:25px;
-  background:rgba(17,23,41,.88);
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(20px);
-}
-
-.auth-heading{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:27px;
-  font-weight:700;
-}
-
-.auth-subheading{
-  margin-top:9px;
-  margin-bottom:26px;
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.6;
-}
-
-.auth-tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  padding:5px;
-  margin-bottom:25px;
-  border-radius:12px;
-  background:#0b1020;
-}
-
-.auth-tab{
-  padding:11px;
-  border:0;
-  border-radius:9px;
-  background:transparent;
-  color:var(--muted);
-  font-weight:600;
-}
-
-.auth-tab.active{
-  color:white;
-  background:#252e49;
-}
-
-.form-group{
-  margin-bottom:17px;
-}
-
-.form-label{
-  display:block;
-  margin-bottom:9px;
-  font-size:12px;
-  font-weight:600;
-  color:#c4cbe0;
-}
-
-.form-input{
-  width:100%;
-  height:49px;
-  padding:0 14px;
-  color:white;
-  background:#0b1020;
-  border:1px solid var(--border);
-  border-radius:11px;
-  transition:.2s;
-}
-
-.form-input:focus{
-  border-color:#8065ff;
-}
-
-.form-input::placeholder{
-  color:#66708a;
-}
-
-.password-wrap{
-  position:relative;
-}
-
-.password-wrap input{
-  padding-right:48px;
-}
-
-.password-toggle{
-  position:absolute;
-  right:12px;
-  top:50%;
-  transform:translateY(-50%);
-  border:0;
-  background:transparent;
-  color:var(--muted);
-}
-
-.form-options{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin:4px 0 22px;
-  font-size:11px;
-  color:var(--muted);
-}
-
-.remember-label{
-  display:flex;
-  gap:7px;
-  align-items:center;
-}
-
-.text-link{
-  color:#a99aff;
-  background:none;
-  border:0;
-  font-size:12px;
-}
-
-.auth-submit{
-  width:100%;
-  min-height:49px;
-}
-
-.auth-divider{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  margin:23px 0;
-  color:#727d98;
-  font-size:11px;
-}
-
-.auth-divider:before,
-.auth-divider:after{
-  content:"";
-  height:1px;
-  flex:1;
-  background:var(--border);
-}
-
-.social-login{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.social-button{
-  padding:12px 8px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  background:rgba(255,255,255,.035);
-  font-size:12px;
-}
-
-.social-button:hover{
-  background:rgba(255,255,255,.08);
-}
-
-.auth-terms{
-  margin-top:23px;
-  text-align:center;
-  color:#76819a;
-  font-size:10px;
-  line-height:1.7;
-}
-
-/* MAIN APPLICATION */
-
-#appScreen{
-  display:none;
-  min-height:100vh;
-}
-
-#appScreen.active{
-  display:block;
-}
-
-.app-layout{
-  display:flex;
-  min-height:100vh;
-}
-
-/* SIDEBAR */
-
+  --bg:#080b16;--panel:#10172a;--panel2:#151f36;--line:#28334f;
+  --text:#f4f6ff;--muted:#929db8;--purple:#8065ff;--cyan:#27c8ed;
+  --green:#39d6a0;--danger:#ff7185;--shadow:0 24px 70px #0007;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.gradient{background:linear-gradient(110deg,#ad8bff,#42d8f0);-webkit-background-clip:text;background-clip:text;color:transparent}
+#splash{
+ position:fixed;inset:0;z-index:100;background:#080b16;display:flex;
+ flex-direction:column;align-items:center;justify-content:center;gap:20px;
+ transition:opacity .45s ease,visibility .45s ease
+}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.logo{
+ width:92px;height:92px;border-radius:28px;display:grid;place-items:center;
+ font-size:42px;font-weight:900;color:white;background:linear-gradient(135deg,var(--purple),var(--cyan));
+ box-shadow:0 0 70px #8065ff55
+}
+#splash h1{font-size:34px;letter-spacing:7px;margin:0}
+#splash p{font-size:11px;letter-spacing:4px;color:var(--muted);margin:0}
+.loader{height:4px;width:170px;background:#202b45;border-radius:20px;overflow:hidden;margin-top:36px}
+.loader i{display:block;height:100%;width:35%;background:linear-gradient(90deg,var(--purple),var(--cyan));animation:loading 1.15s ease-in-out infinite}
+@keyframes loading{from{transform:translateX(-120%)}to{transform:translateX(390%)}}
+#auth{
+ min-height:100vh;display:grid;place-items:center;padding:28px 18px;
+ background:radial-gradient(circle at 12% 15%,#765bff20,transparent 34%),
+ radial-gradient(circle at 88% 88%,#24c9ee18,transparent 34%)
+}
+.auth-wrap{width:min(100%,440px)}
+.brand{text-align:center;margin-bottom:25px}
+.brand .logo{width:65px;height:65px;border-radius:20px;font-size:29px;margin:0 auto}
+.brand h1{font-size:34px;letter-spacing:3px;margin:13px 0 5px}
+.brand p{font-size:13px;color:var(--muted);margin:0}
+.card{background:#11182bf2;border:1px solid var(--line);border-radius:22px;padding:27px;box-shadow:var(--shadow)}
+.card h2{font-size:22px;margin:0 0 7px}
+.sub{font-size:13px;color:var(--muted);margin:0 0 20px}
+label{display:block;font-size:12px;color:#c4cce0;margin:15px 0 8px}
+input,textarea{
+ width:100%;background:#0a1020;border:1px solid var(--line);border-radius:11px;
+ padding:14px;color:var(--text);outline:none
+}
+input:focus,textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #8065ff20}
+.primary{
+ border:0;border-radius:11px;padding:13px 18px;color:white;font-weight:750;
+ background:linear-gradient(110deg,var(--purple),#398fe9);transition:filter .2s,transform .2s
+}
+.primary:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.primary:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.wide{width:100%;margin-top:21px}
+.auth-switch{font-size:13px;text-align:center;color:var(--muted);margin:18px 0 0}
+.text-button{border:0;background:none;color:#a995ff;font-weight:700;padding:4px}
+.note{font-size:11px;color:var(--muted);line-height:1.6;text-align:center;margin:17px 0 0}
+#app{display:none;min-height:100vh}
+#app.active{display:block}
 .sidebar{
-  position:fixed;
-  top:0;
-  left:0;
-  bottom:0;
-  z-index:50;
-  width:var(--sidebar);
-  display:flex;
-  flex-direction:column;
-  padding:22px 15px;
-  background:#0d1221;
-  border-right:1px solid var(--border);
-  transition:transform .3s;
+ position:fixed;inset:0 auto 0 0;width:252px;background:#0d1323;
+ border-right:1px solid var(--line);padding:21px 15px;display:flex;flex-direction:column;z-index:5
 }
-
-.sidebar-brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:3px 8px 25px;
+.sidebrand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:1.3px;margin:0 0 28px 4px}
+.sidebrand .logo{width:43px;height:43px;border-radius:14px;font-size:21px}
+.nav{
+ display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;margin:3px 0;
+ border:0;border-radius:11px;background:transparent;color:#aab4cc;text-align:left
 }
-
-.sidebar-brand .brand-mark{
-  width:43px;
-  height:43px;
-  border-radius:13px;
-  font-size:18px;
-}
-
-.sidebar-brand strong{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:19px;
-  letter-spacing:1px;
-}
-
-.sidebar-brand small{
-  display:block;
-  margin-top:3px;
-  color:var(--muted);
-  font-size:9px;
-  letter-spacing:2px;
-}
-
-.new-chat-button{
-  width:100%;
-  padding:14px;
-  margin-bottom:24px;
-  text-align:left;
-  border:1px solid rgba(145,120,255,.3);
-  border-radius:12px;
-  background:linear-gradient(110deg,rgba(117,87,255,.2),rgba(30,190,230,.08));
-  font-weight:600;
-}
-
-.sidebar-section{
-  margin:12px 10px 9px;
-  color:#65708a;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-}
-
-.nav-list{
-  display:grid;
-  gap:5px;
-}
-
-.nav-item{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  width:100%;
-  padding:12px;
-  border:0;
-  border-radius:10px;
-  background:transparent;
-  color:#a4aec6;
-  text-align:left;
-  font-size:13px;
-  transition:.2s;
-}
-
-.nav-item:hover{
-  color:white;
-  background:rgba(255,255,255,.055);
-}
-
-.nav-item.active{
-  color:white;
-  background:rgba(128,101,255,.17);
-  box-shadow:inset 3px 0 #8b70ff;
-}
-
-.nav-icon{
-  width:20px;
-  text-align:center;
-  font-size:16px;
-}
-
-.nav-badge{
-  margin-left:auto;
-  padding:3px 6px;
-  border-radius:5px;
-  background:rgba(32,200,237,.13);
-  color:#56d9f2;
-  font-size:9px;
-}
-
-.sidebar-spacer{
-  flex:1;
-}
-
-.user-profile{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:13px 8px 5px;
-  border-top:1px solid var(--border);
-}
-
-.user-avatar{
-  width:39px;
-  height:39px;
-  display:grid;
-  place-items:center;
-  border-radius:13px;
-  background:linear-gradient(135deg,#795cff,#20c8ed);
-  font-weight:800;
-}
-
-.user-info{
-  min-width:0;
-  flex:1;
-}
-
-.user-info strong{
-  display:block;
-  font-size:12px;
-}
-
-.user-info small{
-  color:var(--muted);
-  font-size:10px;
-}
-
-/* MAIN CONTENT */
-
-.main-content{
-  width:calc(100% - var(--sidebar));
-  min-height:100vh;
-  margin-left:var(--sidebar);
-}
-
+.nav:hover,.nav.active{background:#8065ff28;color:white}
+.sidebottom{margin-top:auto;padding:15px 8px 4px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.sidebottom button{margin-top:10px;background:none;border:0;color:#b9aaff;padding:5px 0}
+main{margin-left:252px;min-height:100vh}
 .topbar{
-  position:sticky;
-  top:0;
-  z-index:30;
-  height:75px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 30px;
-  border-bottom:1px solid var(--border);
-  background:rgba(8,11,22,.86);
-  backdrop-filter:blur(18px);
+ height:70px;position:sticky;top:0;z-index:3;background:#080b16ed;backdrop-filter:blur(12px);
+ border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px
 }
-
-.topbar-left,
-.topbar-right{
-  display:flex;
-  align-items:center;
-  gap:12px;
+.topbar strong{font-size:16px}
+.status{font-size:11px;color:var(--green)}
+.content{max-width:1100px;margin:auto;padding:35px 28px}
+.welcome{font-size:clamp(28px,4.5vw,44px);line-height:1.15;margin:15px 0 9px}
+.muted{color:var(--muted);line-height:1.7}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:29px 0}
+.tile{padding:19px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#19223b,#101629)}
+.tile .symbol{font-size:20px;color:#b5a3ff}
+.tile b{display:block;margin:10px 0 6px}
+.tile small{font-size:12px;color:var(--muted);line-height:1.55}
+.chatbox{border:1px solid #51478b;border-radius:18px;background:var(--panel);padding:16px;margin-top:23px}
+.messages{display:flex;flex-direction:column;gap:13px;min-height:75px;max-height:54vh;overflow:auto;padding:2px 2px 13px}
+.msg{max-width:88%;padding:12px 15px;border-radius:14px;background:#1a2440;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.msg.user{align-self:flex-end;background:#5140a1}
+.msg.ai{align-self:flex-start}
+.compose{display:flex;gap:10px;align-items:flex-end;border-top:1px solid var(--line);padding-top:13px}
+.compose textarea{min-height:49px;max-height:145px;resize:vertical;line-height:1.45}
+.compose .primary{height:49px;min-width:52px;padding:0 15px}
+.section-title{font-size:24px;margin:0 0 7px}
+.history-list{display:grid;gap:9px;margin-top:20px}
+.history-item{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.history-item button{border:0;background:none;color:#c2b5ff;text-align:left;overflow-wrap:anywhere}
+.settings-card{margin-top:18px}
+#toast{
+ display:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+ z-index:200;background:#202a43;border:1px solid var(--line);border-radius:12px;
+ padding:12px 17px;max-width:calc(100% - 30px);font-size:13px;box-shadow:var(--shadow)
 }
-
-.page-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:17px;
-  font-weight:700;
+@media(max-width:760px){
+ .sidebar{width:72px;padding:17px 8px}
+ .sidebrand{justify-content:center;margin-left:0}
+ .sidebrand span,.nav span,.sidebottom{display:none}
+ .nav{justify-content:center;padding:14px 5px;font-size:19px}
+ main{margin-left:72px}
+ .topbar{padding:0 15px}
+ .content{padding:23px 14px}
+ .tiles{grid-template-columns:1fr 1fr}
+ .card{padding:22px 18px}
 }
-
-.status-pill{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  padding:7px 10px;
-  border:1px solid rgba(53,214,160,.2);
-  border-radius:20px;
-  color:#69ddb5;
-  font-size:10px;
-}
-
-.status-dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#35d6a0;
-  box-shadow:0 0 10px #35d6a0;
-}
-
-.workspace{
-  max-width:1200px;
-  margin:auto;
-  padding:35px;
-}
-
-.welcome-heading{
-  margin-top:45px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(30px,5vw,48px);
-  letter-spacing:-1.8px;
-}
-
-.welcome-description{
-  margin-top:12px;
-  color:var(--muted);
-  line-height:1.7;
-  font-size:14px;
-}
-
-.feature-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
-  margin-top:35px;
-}
-
-.feature-card{
-  min-height:150px;
-  padding:21px;
-  border:1px solid var(--border);
-  border-radius:17px;
-  background:linear-gradient(145deg,rgba(28,37,65,.8),rgba(15,20,36,.8));
-  transition:.25s;
-}
-
-.feature-card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(128,101,255,.5);
-}
-
-.feature-card-icon{
-  width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
-  border-radius:13px;
-  background:rgba(128,101,255,.16);
-  font-size:20px;
-}
-
-.feature-card h3{
-  margin-top:17px;
-  font-size:14px;
-}
-
-.feature-card p{
-  margin-top:7px;
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.6;
-}
-
-/* CHAT COMPOSER FOUNDATION */
-
-.composer{
-  margin-top:35px;
-  padding:17px;
-  border:1px solid rgba(128,101,255,.3);
-  border-radius:19px;
-  background:#11182b;
-  box-shadow:0 15px 45px rgba(0,0,0,.2);
-}
-
-.composer textarea{
-  width:100%;
-  min-height:70px;
-  resize:vertical;
-  border:0;
-  outline:0;
-  color:white;
-  background:transparent;
-  font-size:14px;
-  line-height:1.6;
-}
-
-.composer textarea::placeholder{
-  color:#77829d;
-}
-
-.composer-toolbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding-top:13px;
-  border-top:1px solid var(--border);
-}
-
-.composer-tools{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.tool-button{
-  padding:8px 10px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:rgba(255,255,255,.035);
-  color:#aab4cc;
-  font-size:11px;
-}
-
-.send-button{
-  width:42px;
-  height:42px;
-  border:0;
-  border-radius:12px;
-  background:linear-gradient(135deg,#795cff,#25bfe9);
-  color:white;
-  font-size:18px;
-}
-
-/* MOBILE RESPONSIVE */
-
-.mobile-menu{
-  display:none;
-}
-
-@media(max-width:900px){
-  .auth-layout{
-    grid-template-columns:1fr 390px;
-    gap:20px;
-  }
-
-  .brand-name{
-    font-size:38px;
-  }
-
-  .feature-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-}
-
-@media(max-width:700px){
-  :root{
-    --sidebar:270px;
-  }
-
-  .auth-layout{
-    display:flex;
-    flex-direction:column;
-    width:min(100%,430px);
-  }
-
-  .auth-brand{
-    text-align:center;
-    padding:5px;
-  }
-
-  .auth-brand .brand-mark{
-    margin:auto;
-  }
-
-  .brand-name{
-    font-size:35px;
-  }
-
-  .brand-description{
-    font-size:13px;
-  }
-
-  .feature-points{
-    display:none;
-  }
-
-  .auth-card{
-    width:100%;
-    padding:25px 20px;
-  }
-
-  .sidebar{
-    transform:translateX(-100%);
-  }
-
-  .sidebar.open{
-    transform:translateX(0);
-  }
-
-  .main-content{
-    width:100%;
-    margin-left:0;
-  }
-
-  .topbar{
-    height:65px;
-    padding:0 15px;
-  }
-
-  .mobile-menu{
-    display:grid;
-  }
-
-  .workspace{
-    padding:20px 15px;
-  }
-
-  .welcome-heading{
-    margin-top:25px;
-    font-size:31px;
-  }
-
-  .feature-grid{
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-
-  .feature-card{
-    min-height:135px;
-    padding:15px;
-  }
-
-  .feature-card p{
-    font-size:10px;
-  }
-
-  .composer{
-    padding:13px;
-  }
-
-  .status-pill{
-    display:none;
-  }
-}
-
-@media(max-width:380px){
-  .social-login{
-    grid-template-columns:1fr;
-  }
-
-  .feature-grid{
-    grid-template-columns:1fr;
-  }
-
-  .auth-heading{
-    font-size:23px;
-  }
+@media(max-width:440px){
+ .tiles{grid-template-columns:1fr}
+ .msg{max-width:96%}
+ .topbar .status{display:none}
 }
 </style>
 </head>
-
 <body>
-
-<div class="background-glow glow-one"></div>
-<div class="background-glow glow-two"></div>
-
-<!-- SPLASH SCREEN -->
-
-<div id="splashScreen">
-  <div class="splash-logo">A</div>
-  <div class="splash-title">AXON AI</div>
-  <div class="splash-caption">Intelligence Reimagined</div>
-  <div class="splash-loader"><span></span></div>
+<div id="splash" aria-label="Loading AXON AI">
+ <div class="logo">A</div>
+ <h1>AXON AI</h1>
+ <p>INTELLIGENCE REIMAGINED</p>
+ <div class="loader"><i></i></div>
 </div>
 
-<!-- AUTHENTICATION -->
-
-<section id="authScreen">
-
-  <div class="auth-layout">
-
-    <div class="auth-brand">
-
-      <div class="brand-mark">A</div>
-
-      <div class="brand-name">
-        Meet <span class="gradient-text">AXON AI.</span>
-      </div>
-
-      <p class="brand-description">
-        Your intelligent digital workspace.
-        Create, discover, communicate and explore
-        a new generation of artificial intelligence.
-      </p>
-
-      <div class="feature-points">
-
-        <div class="feature-point">
-          <span>✦</span>
-          <span>Advanced AI conversations</span>
-        </div>
-
-        <div class="feature-point">
-          <span>◉</span>
-          <span>Voice and live interaction</span>
-        </div>
-
-        <div class="feature-point">
-          <span>▣</span>
-          <span>Creative tools and video experiences</span>
-        </div>
-
-        <div class="feature-point">
-          <span>⌘</span>
-          <span>One workspace for your ideas</span>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="auth-card">
-
-      <h1 class="auth-heading">Welcome to AXON</h1>
-
-      <p class="auth-subheading">
-        Sign in to continue to your intelligent workspace.
-      </p>
-
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="loginTab">
-          Sign In
-        </button>
-
-        <button class="auth-tab" id="signupTab">
-          Create Account
-        </button>
-      </div>
-
-      <form id="authForm">
-
-        <div class="form-group">
-          <label class="form-label" for="emailInput">
-            Email Address
-          </label>
-
-          <input
-            class="form-input"
-            id="emailInput"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-          >
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="passwordInput">
-            Password
-          </label>
-
-          <div class="password-wrap">
-
-            <input
-              class="form-input"
-              id="passwordInput"
-              type="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              minlength="8"
-              required
-            >
-
-            <button
-              type="button"
-              class="password-toggle"
-              id="passwordToggle"
-              aria-label="Show password"
-            >◉</button>
-
-          </div>
-        </div>
-
-        <div class="form-options">
-
-          <label class="remember-label">
-            <input type="checkbox" id="rememberMe">
-            Remember me
-          </label>
-
-          <button
-            type="button"
-            class="text-link"
-            id="forgotPassword"
-          >
-            Forgot password?
-          </button>
-
-        </div>
-
-        <button
-          type="submit"
-          class="primary-button auth-submit"
-          id="authSubmit"
-        >
-          Continue to AXON
-        </button>
-
-      </form>
-
-      <div class="auth-divider">OR CONTINUE WITH</div>
-
-      <div class="social-login">
-
-        <button type="button" class="social-button">
-          G &nbsp; Google
-        </button>
-
-        <button type="button" class="social-button">
-          ◈ &nbsp; GitHub
-        </button>
-
-      </div>
-
-      <p class="auth-terms">
-        By continuing, you agree to our Terms of Service
-        and Privacy Policy.
-      </p>
-
-    </div>
-
+<section id="auth">
+ <div class="auth-wrap">
+  <div class="brand">
+   <div class="logo">A</div>
+   <h1>AXON <span class="gradient">AI</span></h1>
+   <p>Your intelligent digital workspace</p>
   </div>
-
+  <div class="card">
+   <h2 id="authTitle">Welcome to AXON</h2>
+   <p class="sub" id="authSubtitle">Sign in to open your AI workspace.</p>
+   <form id="authForm">
+    <label for="email">Email address</label>
+    <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="At least 8 characters" minlength="8" autocomplete="current-password" required>
+    <button class="primary wide" id="authSubmit" type="submit">Continue to AXON</button>
+   </form>
+   <p class="auth-switch"><span id="switchText">New to AXON?</span>
+    <button class="text-button" id="switchMode" type="button">Create account</button>
+   </p>
+   <p class="note">Demo access only: this page stores a local session on this device. It does not create a secure online account.</p>
+  </div>
+ </div>
 </section>
 
-<!-- MAIN APP STRUCTURE -->
-
-<section id="appScreen">
-
-  <div class="app-layout">
-
-    <aside class="sidebar" id="sidebar">
-
-      <div class="sidebar-brand">
-
-        <div class="brand-mark">A</div>
-
-        <div>
-          <strong>AXON AI</strong>
-          <small>INTELLIGENCE HUB</small>
-        </div>
-
-      </div>
-
-      <button class="new-chat-button" id="newChatButton">
-        ＋ &nbsp; New Conversation
-      </button>
-
-      <div class="sidebar-section">Workspace</div>
-
-      <nav class="nav-list">
-
-        <button class="nav-item active">
-          <span class="nav-icon">◈</span>
-          AI Chat
-        </button>
-
-        <button class="nav-item">
-          <span class="nav-icon">⌕</span>
-          Search
-        </button>
-
-        <button class="nav-item">
-          <span class="nav-icon">◉</span>
-          Voice Control
-          <span class="nav-badge">NEW</span>
-        </button>
-
-        <button class="nav-item">
-          <span class="nav-icon">▣</span>
-          Video Call
-          <span class="nav-badge">NEW</span>
-        </button>
-
-        <button class="nav-item">
-          <span class="nav-icon">▷</span>
-          Short Videos
-        </button>
-
-      </nav>
-
-      <div class="sidebar-section">Create</div>
-
-      <nav class="nav-list">
-
-        <button class="nav-item">
-          <span class="nav-icon">✧</span>
-          Image Studio
-        </button>
-
-        <button class="nav-item">
-          <span class="nav-icon">♫</span>
-          Music Studio
-        </button>
-
-        <button class="nav-item">
-          <span class="nav-icon">▤</span>
-          Projects
-        </button>
-
-      </nav>
-
-      <div class="sidebar-section">Personal</div>
-
-      <nav class="nav-li
-        
-<!-- ==========================================
-     AXON AI — PART 2
-     AUTHENTICATION UI + CHAT ENGINE
-     ========================================== -->
-
-<style>
-
-/* CHAT INTERFACE */
-
-.chat-area{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  margin-top:30px;
-  padding-bottom:25px;
-}
-
-.chat-message{
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
-  max-width:850px;
-  animation:messageAppear .25s ease;
-}
-
-@keyframes messageAppear{
-  from{
-    opacity:0;
-    transform:translateY(8px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-.message-avatar{
-  flex-shrink:0;
-  width:36px;
-  height:36px;
-  display:grid;
-  place-items:center;
-  border-radius:12px;
-  background:linear-gradient(135deg,#795cff,#20c8ed);
-  font-size:13px;
-  font-weight:800;
-}
-
-.message-content{
-  min-width:0;
-  flex:1;
-  padding:13px 16px;
-  border:1px solid var(--border);
-  border-radius:5px 15px 15px 15px;
-  background:rgba(255,255,255,.035);
-  color:#e8ebf8;
-  font-size:13px;
-  line-height:1.8;
-  overflow-wrap:anywhere;
-  white-space:pre-wrap;
-}
-
-.chat-message.user-message{
-  margin-left:auto;
-  flex-direction:row-reverse;
-}
-
-.user-message .message-content{
-  border-radius:15px 5px 15px 15px;
-  background:rgba(128,101,255,.15);
-  border-color:rgba(128,101,255,.2);
-}
-
-.message-time{
-  margin-top:7px;
-  color:#75809a;
-  font-size:9px;
-}
-
-.typing-indicator{
-  display:flex;
-  gap:5px;
-  padding:8px 0;
-}
-
-.typing-indicator span{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#a18bff;
-  animation:typingBounce .7s infinite alternate;
-}
-
-.typing-indicator span:nth-child(2){
-  animation-delay:.15s;
-}
-
-.typing-indicator span:nth-child(3){
-  animation-delay:.3s;
-}
-
-@keyframes typingBounce{
-  to{
-    transform:translateY(-5px);
-    opacity:.4;
-  }
-}
-
-.chat-empty{
-  padding:25px;
-  color:var(--muted);
-  text-align:center;
-  font-size:12px;
-}
-
-.chat-history-list{
-  display:grid;
-  gap:6px;
-  max-height:230px;
-  overflow-y:auto;
-}
-
-.history-item{
-  width:100%;
-  padding:10px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  text-align:left;
-  border:1px solid transparent;
-  border-radius:9px;
-  background:transparent;
-  color:#aab4cc;
-  font-size:11px;
-}
-
-.history-item:hover{
-  background:rgba(255,255,255,.06);
-}
-
-.history-item.active{
-  border-color:rgba(128,101,255,.25);
-  background:rgba(128,101,255,.1);
-  color:white;
-}
-
-.chat-actions{
-  display:flex;
-  gap:7px;
-  margin-top:10px;
-}
-
-.chat-actions button{
-  padding:6px 9px;
-  border:1px solid var(--border);
-  border-radius:7px;
-  background:transparent;
-  color:var(--muted);
-  font-size:10px;
-}
-
-.chat-actions button:hover{
-  color:white;
-  background:rgba(255,255,255,.07);
-}
-
-.composer textarea{
-  display:block;
-  min-height:65px;
-  max-height:220px;
-  overflow-y:auto;
-}
-
-.composer.drag-over{
-  border-color:var(--secondary);
-  background:rgba(32,200,237,.08);
-}
-
-.attachment-preview{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  margin-bottom:12px;
-  padding:9px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  color:#c5cce0;
-  font-size:11px;
-}
-
-.attachment-preview button{
-  margin-left:auto;
-  border:0;
-  background:none;
-  color:var(--danger);
-}
-
-.voice-active{
-  color:#ff758b!important;
-  border-color:rgba(255,100,124,.5)!important;
-  animation:voicePulse 1s infinite alternate;
-}
-
-@keyframes voicePulse{
-  to{
-    box-shadow:0 0 15px rgba(255,100,124,.3);
-  }
-}
-
-.toast-container{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  z-index:2000;
-  display:grid;
-  gap:9px;
-}
-
-.axon-toast{
-  max-width:320px;
-  padding:13px 17px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:#182139;
-  color:white;
-  box-shadow:var(--shadow);
-  font-size:12px;
-  animation:messageAppear .2s ease;
-}
-
-.axon-toast.error{
-  border-color:rgba(255,100,124,.35);
-}
-
-.axon-toast.success{
-  border-color:rgba(53,214,160,.35);
-}
-
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  z-index:500;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  background:rgba(0,0,0,.7);
-  backdrop-filter:blur(8px);
-}
-
-.modal-overlay.open{
-  display:flex;
-}
-
-.modal-card{
-  width:min(100%,440px);
-  padding:25px;
-  border:1px solid var(--border);
-  border-radius:20px;
-  background:#121a2d;
-  box-shadow:var(--shadow);
-}
-
-.modal-card h2{
-  margin-bottom:10px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:21px;
-}
-
-.modal-card p{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.7;
-}
-
-.modal-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-  margin-top:22px;
-}
-
-@media(max-width:700px){
-  .chat-message{
-    max-width:100%;
-  }
-
-  .toast-container{
-    right:12px;
-    bottom:12px;
-    left:12px;
-  }
-
-  .axon-toast{
-    max-width:none;
-  }
-}
-
-</style>
-
-<!-- TOAST NOTIFICATIONS -->
-
-<div class="toast-container" id="toastContainer"></div>
-
-<!-- GENERAL MODAL -->
-
-<div class="modal-overlay" id="generalModal">
-  <div class="modal-card">
-    <h2 id="modalTitle">AXON AI</h2>
-    <p id="modalDescription"></p>
-    <div class="modal-actions">
-      <button class="secondary-button" id="modalCancel">
-        Close
-      </button>
-      <button class="primary-button" id="modalConfirm">
-        Continue
-      </button>
-    </div>
+<section id="app">
+ <aside class="sidebar">
+  <div class="sidebrand"><div class="logo">A</div><span>AXON AI</span></div>
+  <button class="nav active" data-page="home">✦ <span>Home</span></button>
+  <button class="nav" data-page="chat">＋ <span>New Chat</span></button>
+  <button class="nav" data-page="history">◷ <span>Chat History</span></button>
+  <button class="nav" data-page="settings">⚙ <span>Settings</span></button>
+  <div class="sidebottom">
+   Signed in locally<br><span id="userEmail"></span><br>
+   <button id="logout">↪ Sign out</button>
   </div>
-</div>
-
-<!-- FILE INPUT -->
-
-<input
-  type="file"
-  id="fileInput"
-  hidden
-  multiple
-  accept="image/*,.pdf,.txt,.doc,.docx,.csv"
->
+ </aside>
+ <main>
+  <header class="topbar">
+   <strong id="pageTitle">Workspace</strong>
+   <span class="status">● SYSTEM READY</span>
+  </header>
+  <div class="content" id="workspace"></div>
+ </main>
+</section>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-
-/* ==========================================
-   AXON AI — APPLICATION ENGINE
-   ========================================== */
-
 "use strict";
+const $ = (selector) => document.querySelector(selector);
+const state = {email:"", chats:[], activeId:null, busy:false, signup:false, page:"home"};
+const STORAGE_KEY = "axon_ai_chats_v2";
+const SESSION_KEY = "axon_ai_demo_session_v2";
 
-/* CONFIGURATION */
-
-const AXON_CONFIG = {
-  apiEndpoint:"/api/chat",
-  storageKey:"axon_ai_chats_v2",
-  sessionKey:"axon_demo_session",
-  maxMessageLength:4000,
-  requestTimeout:35000
-};
-
-/* SELECTOR HELPER */
-
-const $ = selector => document.querySelector(selector);
-
-const $$ = selector =>
-  Array.from(document.querySelectorAll(selector));
-
-/* APPLICATION STATE */
-
-const AXON = {
-  mode:"login",
-  chats:[],
-  activeChat:null,
-  isSending:false,
-  isListening:false,
-  selectedFiles:[],
-  currentModalAction:null,
-  recognition:null
-};
-
-/* TOAST SYSTEM */
-
-function showToast(message,type="normal"){
-  const container=$("#toastContainer");
-
-  if(!container) return;
-
-  const toast=document.createElement("div");
-
-  toast.className="axon-toast "+type;
-  toast.textContent=message;
-
-  container.appendChild(toast);
-
-  setTimeout(()=>{
-    toast.style.opacity="0";
-    toast.style.transform="translateY(8px)";
-
-    setTimeout(()=>toast.remove(),250);
-
-  },3200);
+function showToast(message){
+ const box = $("#toast");
+ box.textContent = message;
+ box.style.display = "block";
+ clearTimeout(showToast.timer);
+ showToast.timer = setTimeout(()=>{box.style.display="none";},2800);
 }
-
-/* SAFE TEXT HELPER */
-
-function safeText(value){
-  return String(value ?? "");
-}
-
-/* DATE HELPER */
-
-function getTime(){
-  return new Date().toLocaleTimeString([],{
-    hour:"2-digit",
-    minute:"2-digit"
-  });
-}
-
-/* SPLASH SCREEN */
-
-window.addEventListener("load",()=>{
-  setTimeout(()=>{
-    const splash=$("#splashScreen");
-
-    if(splash){
-      splash.classList.add("hide");
-
-      setTimeout(()=>{
-        splash.remove();
-      },700);
-    }
-
-  },1100);
-});
-
-/* AUTHENTICATION MODE */
-
-function setAuthMode(mode){
-  AXON.mode=mode;
-
-  const login=mode==="login";
-
-  $("#loginTab").classList.toggle("active",login);
-  $("#signupTab").classList.toggle("active",!login);
-
-  $("#authSubmit").textContent=
-    login ? "Continue to AXON" : "Create My Account";
-
-  $("#passwordInput").autocomplete=
-    login ? "current-password" : "new-password";
-
-  $(".auth-subheading").textContent=
-    login
-    ? "Sign in to continue to your intelligent workspace."
-    : "Create your AXON workspace experience.";
-}
-
-$("#loginTab").addEventListener("click",()=>{
-  setAuthMode("login");
-});
-
-$("#signupTab").addEventListener("click",()=>{
-  setAuthMode("signup");
-});
-
-/* PASSWORD VISIBILITY */
-
-$("#passwordToggle").addEventListener("click",()=>{
-  const field=$("#passwordInput");
-
-  const visible=field.type==="password";
-
-  field.type=visible ? "text" : "password";
-
-  $("#passwordToggle").textContent=
-    visible ? "◎" : "◉";
-});
-
-/* DEMO LOGIN ENTRY */
-
-function enterWorkspace(email){
-  const auth=$("#authScreen");
-  const app=$("#appScreen");
-
-  if(auth) auth.classList.add("hidden");
-
-  if(app) app.classList.add("active");
-
-  const displayName=
-    email.split("@")[0] || "AXON User";
-
-  const name=displayName.slice(0,18);
-
-  $(".user-info strong").textContent=name;
-
-  $(".user-avatar").textContent=
-    name.charAt(0).toUpperCase();
-
-  localStorage.setItem(
-    AXON_CONFIG.sessionKey,
-    JSON.stringify({
-      email:email,
-      name:name,
-      demo:true
-    })
-  );
-
-  loadChats();
-
-  if(!AXON.activeChat){
-    createNewChat();
-  }
-
-  showToast("Welcome to AXON AI!","success");
-}
-
-/*
-  NOTE:
-  This is a local demo entry, not secure authentication.
-  Real signup/login needs a backend authentication service.
-*/
-
-$("#authForm").addEventListener("submit",event=>{
-  event.preventDefault();
-
-  const email=$("#emailInput").value.trim();
-  const password=$("#passwordInput").value;
-
-  if(!email || !password){
-    showToast("Please complete all required fields.","error");
-    return;
-  }
-
-  if(password.length<8){
-    showToast("Password must contain at least 8 characters.","error");
-    return;
-  }
-
-  if(!$("#authForm").checkValidity()){
-    $("#authForm").reportValidity();
-    return;
-  }
-
-  enterWorkspace(email);
-});
-
-/* FORGOT PASSWORD */
-
-$("#forgotPassword").addEventListener("click",()=>{
-  showToast(
-    "Password recovery requires a connected authentication backend."
-  );
-});
-
-/* LOCAL CHAT STORAGE */
-
-function saveChats(){
-  try{
-    localStorage.setItem(
-      AXON_CONFIG.storageKey,
-      JSON.stringify(AXON.chats)
-    );
-  }catch(error){
-    showToast("Unable to save chat history.","error");
-  }
-}
-
+function escapeText(value){return String(value ?? "");}
 function loadChats(){
-  try{
-    const stored=localStorage.getItem(
-      AXON_CONFIG.storageKey
-    );
-
-    AXON.chats=stored ? JSON.parse(stored) : [];
-
-    if(!Array.isArray(AXON.chats)){
-      AXON.chats=[];
-    }
-
-  }catch(error){
-    AXON.chats=[];
-  }
-
-  renderHistory();
+ try{
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  state.chats = Array.isArray(saved) ? saved : [];
+ }catch(error){state.chats=[];}
 }
-
-/* CHAT CREATION */
-
-function createNewChat(){
-  const chat={
-    id:"chat_"+Date.now()+"_"+Math.random()
-      .toString(36).slice(2,8),
-
-    title:"New Conversation",
-
-    messages:[],
-
-    createdAt:Date.now(),
-
-    updatedAt:Date.now()
-  };
-
-  AXON.chats.unshift(chat);
-
-  AXON.activeChat=chat.id;
-
-  saveChats();
-
-  renderHistory();
-  renderMessages();
-
-  $("#messageInput").focus();
-
-  return chat;
+function saveChats(){
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state.chats));}
+ catch(error){showToast("Chat history could not be saved on this device.");}
 }
-
-/* ACTIVE CHAT */
-
-function getActiveChat(){
-  return AXON.chats.find(
-    chat=>chat.id===AXON.activeChat
-  );
+function currentChat(){
+ let chat = state.chats.find(item=>item.id===state.activeId);
+ if(!chat){
+  chat={id:String(Date.now())+Math.random().toString(16).slice(2),title:"New conversation",messages:[],updated:Date.now()};
+  state.chats.unshift(chat);state.activeId=chat.id;saveChats();
+ }
+ return chat;
 }
-
-/* CHAT HISTORY */
-
+function startNewChat(){
+ const chat={id:String(Date.now())+Math.random().toString(16).slice(2),title:"New conversation",messages:[],updated:Date.now()};
+ state.chats.unshift(chat);state.activeId=chat.id;saveChats();openPage("chat");
+}
+function addMessage(role,text){
+ const chat=currentChat();
+ chat.messages.push({role,text:escapeText(text),time:Date.now()});
+ if(chat.title==="New conversation" && role==="user")chat.title=text.slice(0,42);
+ chat.updated=Date.now();saveChats();renderChat();
+}
+function renderChat(){
+ const chat=currentChat();
+ const host=$("#messages");
+ if(!host)return;
+ host.innerHTML="";
+ if(!chat.messages.length){
+  const welcome=document.createElement("div");
+  welcome.className="msg ai";welcome.textContent="Hello! I am AXON AI. Ask me anything to get started.";
+  host.appendChild(welcome);
+ }else{
+  chat.messages.forEach(item=>{
+   const bubble=document.createElement("div");
+   bubble.className="msg "+(item.role==="user"?"user":"ai");
+   bubble.textContent=item.text;
+   host.appendChild(bubble);
+  });
+ }
+ host.scrollTop=host.scrollHeight;
+}
+function renderHome(){
+ $("#pageTitle").textContent="Workspace";
+ $("#workspace").innerHTML=`
+  <h1 class="welcome">Hello, <span class="gradient">welcome to AXON.</span></h1>
+  <p class="muted">Your AI workspace is ready. Ask a question and let’s get started.</p>
+  <div class="tiles">
+   <div class="tile"><div class="symbol">✦</div><b>AI Assistant</b><small>Ask questions, learn new things and explore ideas.</small></div>
+   <div class="tile"><div class="symbol">◷</div><b>Chat History</b><small>Return to conversations saved on this device.</small></div>
+   <div class="tile"><div class="symbol">⌘</div><b>Simple Workspace</b><small>A clean, responsive interface for everyday tasks.</small></div>
+  </div>
+  <button class="primary" id="homeStart">＋ Start a new chat</button>`;
+ $("#homeStart").addEventListener("click",startNewChat);
+}
+function renderChatPage(){
+ $("#pageTitle").textContent="AI Chat";
+ $("#workspace").innerHTML=`
+  <h2 class="section-title">Chat with <span class="gradient">AXON AI</span></h2>
+  <p class="muted">Messages are sent to your AXON backend at <code>/api/chat</code>.</p>
+  <div class="chatbox">
+   <div class="messages" id="messages"></div>
+   <div class="compose">
+    <textarea id="messageInput" rows="1" maxlength="4000" placeholder="Message AXON AI… (Enter to send, Shift+Enter for a new line)"></textarea>
+    <button class="primary" id="sendButton" type="button" aria-label="Send message">➤</button>
+   </div>
+  </div>`;
+ renderChat();
+ $("#sendButton").addEventListener("click",sendMessage);
+ $("#messageInput").addEventListener("keydown",event=>{
+  if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendMessage();}
+ });
+}
 function renderHistory(){
-  const section=$(".sidebar-section");
-
-  if(!section) return;
-
-  let history=$("#chatHistoryArea");
-
-  if(!history){
-    history=document.createElement("div");
-
-    history.id="chatHistoryArea";
-
-    const spacer=$(".sidebar-spacer");
-
-    section.parentNode.insertBefore(
-      history,
-      spacer
-    );
-  }
-
-  history.innerHTML="";
-
-  const heading=document.createElement("div");
-
-  heading.className="sidebar-section";
-  heading.textContent="Recent Chats";
-
-  history.appendChild(heading);
-
-  const list=document.createElement("div");
-
-  list.className="chat-history-list";
-
-  AXON.chats.slice(0,12).forEach(chat=>{
-    const button=document.createElement("button");
-
-    button.className="history-item";
-
-    if(chat.id===AXON.activeChat){
-      button.classList.add("active");
-    }
-
-    button.textContent=chat.title || "New Conversation";
-
-    button.addEventListener("click",()=>{
-      AXON.activeChat=chat.id;
-
-      renderHistory();
-      renderMessages();
-
-      closeMobileSidebar();
-    });
-
-    list.appendChild(button);
-  });
-
-  history.appendChild(list);
+ $("#pageTitle").textContent="Chat History";
+ const list=state.chats.map(chat=>`
+  <div class="history-item">
+   <button type="button" data-chat-id="${chat.id}">${escapeText(chat.title||"Conversation")}</button>
+   <small class="muted">${new Date(chat.updated||Date.now()).toLocaleDateString()}</small>
+  </div>`).join("");
+ $("#workspace").innerHTML=`<h2 class="section-title">Your conversations</h2>
+  <p class="muted">Saved locally in this browser.</p>
+  <div class="history-list">${list||'<p class="muted">No conversations yet. Start a new chat.</p>'}</div>`;
+ $("#workspace").querySelectorAll("[data-chat-id]").forEach(button=>{
+  button.addEventListener("click",()=>{state.activeId=button.dataset.chatId;openPage("chat");});
+ });
 }
-
-/* CHAT MESSAGE RENDERING */
-
-function renderMessages(){
-  const workspace=$(".workspace");
-
-  if(!workspace) return;
-
-  let chatArea=$("#chatArea");
-
-  if(!chatArea){
-    chatArea=document.createElement("div");
-
-    chatArea.id="chatArea";
-    chatArea.className="chat-area";
-
-    const composer=$(".composer");
-
-    workspace.insertBefore(
-      chatArea,
-      composer
-    );
-  }
-
-  chatArea.innerHTML="";
-
-  const chat=getActiveChat();
-
-  if(!chat || !chat.messages.length){
-    const empty=document.createElement("div");
-
-    empty.className="chat-empty";
-
-    empty.textContent=
-      "Start a conversation with AXON AI.";
-
-    chatArea.appendChild(empty);
-
-    return;
-  }
-
-  chat.messages.forEach(message=>{
-    const row=document.createElement("div");
-
-    row.className=
-      "chat-message "+
-      (message.role==="user" ? "user-message" : "");
-
-    const avatar=document.createElement("div");
-
-    avatar.className="message-avatar";
-
-    avatar.textContent=
-      message.role==="user" ? "U" : "A";
-
-    const body=document.createElement("div");
-
-    body.className="message-content";
-
-    body.textContent=message.content;
-
-    const time=document.createElement("div");
-
-    time.className="message-time";
-
-    time.textContent=message.time || "";
-
-    body.appendChild(time);
-
-    row.appendChild(avatar);
-    row.appendChild(body);
-
-    chatArea.appendChild(row);
-  });
-
-  chatArea.scrollTop=chatArea.scrollHeight;
+function renderSettings(){
+ $("#pageTitle").textContent="Settings";
+ $("#workspace").innerHTML=`
+  <h2 class="section-title">Settings</h2>
+  <div class="card settings-card">
+   <b>Account</b><p class="muted">${escapeText(state.email)}</p>
+   <p class="muted">This is a local demo session. For real accounts, connect a secure authentication provider on the server.</p>
+  </div>
+  <div class="card settings-card">
+   <b>Chat data</b><p class="muted">Your saved conversations are stored in this browser's local storage.</p>
+   <button class="primary" id="exportChats">Export chat history</button>
+   <button class="text-button" id="clearChats">Clear chat history</button>
+  </div>
+  <div class="card settings-card">
+   <b>Backend status</b><p class="muted" id="healthStatus">Checking server…</p>
+   <button class="primary" id="checkHealth">Check connection</button>
+  </div>`;
+ $("#exportChats").addEventListener("click",exportChats);
+ $("#clearChats").addEventListener("click",()=>{
+  if(!confirm("Clear all saved conversations from this browser?"))return;
+  state.chats=[];state.activeId=null;saveChats();showToast("Chat history cleared.");renderSettings();
+ });
+ $("#checkHealth").addEventListener("click",checkHealth);
+ checkHealth();
 }
-
-/* ADD MESSAGE */
-
-function addMessage(role,content){
-  const chat=getActiveChat();
-
-  if(!chat) return;
-
-  const message={
-    role:role,
-    content:safeText(content),
-    time:getTime()
-  };
-
-  chat.messages.push(message);
-
-  if(chat.messages.length===1){
-    chat.title=
-      content.slice(0,35) ||
-      "New Conversation";
-  }
-
-  chat.updatedAt=Date.now();
-
-  saveChats();
-
-  renderMessages();
-  renderHistory();
+function openPage(page){
+ state.page=page;
+ document.querySelectorAll(".nav").forEach(button=>button.classList.toggle("active",button.dataset.page===page));
+ if(page==="home")renderHome();
+ else if(page==="chat")renderChatPage();
+ else if(page==="history")renderHistory();
+ else renderSettings();
 }
-
-/* TYPING INDICATOR */
-
-function showTyping(){
-  const area=$("#chatArea");
-
-  if(!area) return;
-
-  const row=document.createElement("div");
-
-  row.id="typingIndicator";
-  row.className="chat-message";
-
-  row.innerHTML=`
-    <div class="message-avatar">A</div>
-    <div class="message-content">
-      <div class="typing-indicator">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      AXON is thinking...
-    </div>
-  `;
-
-  area.appendChild(row);
-
-  area.scrollTop=area.scrollHeight;
-}
-
-function hideTyping(){
-  const typing=$("#typingIndicator");
-
-  if(typing) typing.remove();
-}
-
-/* AI API CONNECTION */
-
-async function requestAI(message){
-  const controller=new AbortController();
-
-  const timeout=setTimeout(
-    ()=>controller.abort(),
-    AXON_CONFIG.requestTimeout
-  );
-
-  try{
-    const response=await fetch(
-      AXON_CONFIG.apiEndpoint,
-      {
-        method:"POST",
-
-        headers:{
-          "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-          message:message
-        }),
-
-        signal:controller.signal
-      }
-    );
-
-    const data=await response.json();
-
-    if(!response.ok){
-      throw new Error(
-        data.error || "AI server request failed."
-      );
-    }
-
-    const reply=
-      data.reply ||
-      data.response ||
-      data.message;
-
-    if(typeof reply!=="string" || !reply.trim()){
-      throw new Error("AI server returned an empty response.");
-    }
-
-    return reply;
-
-  }finally{
-    clearTimeout(timeout);
-  }
-}
-
-/* SEND MESSAGE */
-
 async function sendMessage(){
-  if(AXON.isSending) return;
-
-  const input=$("#messageInput");
-
-  const message=input.value.trim();
-
-  if(!message && !AXON.selectedFiles.length){
-    showToast("Write a message first.");
-    return;
-  }
-
-  if(!message){
-    showToast("Add a message about your attachment.");
-    return;
-  }
-
-  if(message.length>AXON_CONFIG.maxMessageLength){
-    showToast("Your message is too long.","error");
-    return;
-  }
-
-  if(!getActiveChat()){
-    createNewChat();
-  }
-
-  input.value="";
-
-  addMessage("user",message);
-
-  AXON.isSending=true;
-
-  $("#sendBtn").disabled=true;
-
-  showTyping();
-
-  try{
-    const reply=await requestAI(message);
-
-    hideTyping();
-
-    addMessage("assistant",reply);
-
-  }catch(error){
-
-    hideTyping();
-
-    const messageText=
-      error.name==="AbortError"
-      ? "AXON AI request timed out. Please try again."
-      : "AXON AI server se connect nahi ho pa raha. Backend aur API settings check karo.";
-
-    addMessage("assistant",messageText);
-
-    console.error("AXON AI:",error);
-
-  }finally{
-
-    AXON.isSending=false;
-
-    $("#sendBtn").disabled=false;
-
-    input.focus();
-  }
-}
-
-/* COMPOSER SEND BUTTON */
-
-const composerToolbar=$(".composer-toolbar");
-
-if(composerToolbar){
-  const sendButton=composerToolbar.querySelector(
-    ".send-button"
-  );
-
-  if(sendButton){
-    sendButton.id="sendBtn";
-
-    sendButton.addEventListener(
-      "click",
-      sendMessage
-    );
-  }
-}
-
-/* ENTER TO SEND */
-
-$("#messageInput").addEventListener("keydown",event=>{
-  if(
-    event.key==="Enter" &&
-    !event.shiftKey &&
-    window.innerWidth>500
-  ){
-    event.preventDefault();
-
-    sendMessage();
-  }
-});
-
-/* NEW CHAT BUTTON */
-
-$("#newChatButton").addEventListener("click",()=>{
-  createNewChat();
-
-  closeMobileSidebar();
-
-  showToast("New conversation created.","success");
-});
-
-/* MOBILE SIDEBAR */
-
-function closeMobileSidebar(){
-  $("#sidebar").classList.remove("open");
-}
-
-$("#mobileMenu").addEventListener("click",()=>{
-  $("#sidebar").classList.toggle("open");
-});
-
-/* CLOSE SIDEBAR OUTSIDE */
-
-document.addEventListener("click",event=>{
-  const sidebar=$("#sidebar");
-  const menu=$("#mobileMenu");
-
-  if(
-    window.innerWidth<=700 &&
-    sidebar.classList.contains("open") &&
-    !sidebar.contains(event.target) &&
-    !menu.contains(event.target)
-  ){
-    closeMobileSidebar();
-  }
-});
-
-/* VOICE INPUT */
-
-function setupVoiceRecognition(){
-  const SpeechRecognition=
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  if(!SpeechRecognition){
-    showToast(
-      "Voice input is not supported in this browser.",
-      "error"
-    );
-
-    return null;
-  }
-
-  const recognition=new SpeechRecognition();
-
-  recognition.lang="en-IN";
-  recognition.continuous=false;
-  recognition.interimResults=true;
-
-  recognition.onstart=()=>{
-    AXON.isListening=true;
-
-    const button=$("#voiceButton");
-
-    if(button){
-      button.classList.add("voice-active");
-    }
-
-    showToast("Listening...");
-  };
-
-  recognition.onresult=event=>{
-    let transcript="";
-
-    for(
-      let i=event.resultIndex;
-      i<event.results.length;
-      i++
-    ){
-      transcript+=event.results[i][0].transcript;
-    }
-
-    $("#messageInput").value=transcript;
-  };
-
-  recognition.onerror=event=>{
-    showToast(
-      "Voice input error: "+event.error,
-      "error"
-    );
-  };
-
-  recognition.onend=()=>{
-    AXON.isListening=false;
-
-    const button=$("#voiceButton");
-
-    if(button){
-      button.classList.remove("voice-active");
-    }
-  };
-
-  return recognition;
-}
-
-/* CREATE VOICE BUTTON */
-
-const voiceButton=$$(".tool-button").find(
-  button=>button.textContent.includes("Voice")
-);
-
-if(voiceButton){
-  voiceButton.id="voiceButton";
-
-  voiceButton.addEventListener("click",()=>{
-    if(!AXON.recognition){
-      AXON.recognition=setupVoiceRecognition();
-    }
-
-    if(!AXON.recognition) return;
-
-    if(AXON.isListening){
-      AXON.recognition.stop();
-    }else{
-      try{
-        AXON.recognition.start();
-      }catch(error){
-        showToast("Voice control is already active.");
-      }
-    }
+ const input=$("#messageInput");
+ const button=$("#sendButton");
+ if(!input||state.busy)return;
+ const message=input.value.trim();
+ if(!message)return;
+ if(message.length>4000){showToast("Message is too long.");return;}
+ input.value="";
+ addMessage("user",message);
+ state.busy=true;button.disabled=true;
+ const waiting=document.createElement("div");
+ waiting.className="msg ai";waiting.textContent="AXON is thinking…";
+ $("#messages").appendChild(waiting);
+ try{
+  const response=await fetch("/api/chat",{
+   method:"POST",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({message})
   });
+  let data={};
+  try{data=await response.json();}catch(error){}
+  if(!response.ok)throw new Error(data.reply||"Server returned HTTP "+response.status);
+  waiting.remove();
+  addMessage("assistant",data.reply||"No AI response was received.");
+ }catch(error){
+  waiting.remove();
+  addMessage("assistant","Connection problem: "+error.message+" Please check your Render server and GROQ_API_KEY settings.");
+ }finally{
+  state.busy=false;
+  const currentButton=$("#sendButton");
+  if(currentButton)currentButton.disabled=false;
+  const currentInput=$("#messageInput");
+  if(currentInput)currentInput.focus();
+ }
 }
-
-/* FILE ATTACHMENT */
-
-const attachButton=$$(".tool-button").find(
-  button=>button.textContent.includes("Attach")
-);
-
-if(attachButton){
-  attachButton.id="attachButton";
-
-  attachButton.addEventListener("click",()=>{
-    $("#fileInput").click();
-  });
-}
-
-/* FILE SELECTION */
-
-$("#fileInput").addEventListener("change",event=>{
-  const files=Array.from(event.target.files || []);
-
-  if(!files.length) return;
-
-  AXON.selectedFiles=files;
-
-  let preview=$("#attachmentPreview");
-
-  if(!preview){
-    preview=document.createElement("div");
-
-    preview.id="attachmentPreview";
-    preview.className="attachment-preview";
-
-    $(".composer").insertBefore(
-      preview,
-      $(".composer textarea")
-    );
-  }
-
-  preview.textContent=
-    files.map(file=>file.name).join(", ");
-
-  const remove=document.createElement("button");
-
-  remove.textContent="Remove";
-
-  remove.addEventListener("click",()=>{
-    AXON.selectedFiles=[];
-
-    $("#fileInput").value="";
-
-    preview.re
-    
-<!-- =========================================
-     AXON AI — PART 3
-     VIDEO FEED / VIDEO CALL / IMAGE STUDIO
-     SETTINGS / SEARCH
-========================================= -->
-
-<style>
-.extra-view{
-  min-height:calc(100vh - 75px);
-  padding:25px;
-}
-.view-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:25px;
-}
-.view-header h2{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:25px;
-}
-.back-button{
-  padding:10px 15px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#151d32;
-}
-.video-layout{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 280px;
-  gap:22px;
-}
-.video-feed{
-  display:grid;
-  justify-items:center;
-  gap:20px;
-}
-.video-card{
-  position:relative;
-  width:min(100%,420px);
-  height:650px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  border-radius:20px;
-  background:#05070d;
-}
-.video-card video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  background:#05070d;
-}
-.video-overlay{
-  position:absolute;
-  inset:auto 0 0;
-  padding:25px 18px;
-  background:linear-gradient(transparent,rgba(0,0,0,.9));
-  pointer-events:none;
-}
-.video-overlay h3{
-  font-size:16px;
-  margin-bottom:8px;
-}
-.video-overlay p{
-  color:#d1d6e6;
-  font-size:12px;
-}
-.video-actions{
-  position:absolute;
-  right:14px;
-  bottom:100px;
-  display:grid;
-  gap:15px;
-}
-.video-action{
-  width:43px;
-  height:43px;
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:50%;
-  background:rgba(0,0,0,.5);
-  color:white;
-}
-.video-side{
-  padding:20px;
-  border:1px solid var(--border);
-  border-radius:17px;
-  background:var(--panel);
-  height:max-content;
-}
-.video-side h3{
-  margin-bottom:12px;
-  font-size:15px;
-}
-.video-side p{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.7;
-}
-.upload-button{
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  width:100%;
-  margin-top:15px;
-  padding:13px;
-  border:1px dashed rgba(128,101,255,.5);
-  border-radius:11px;
-  background:rgba(128,101,255,.1);
-  color:#c4b8ff;
-  font-size:12px;
-}
-.call-panel{
-  max-width:850px;
-  margin:auto;
-  padding:25px;
-  border:1px solid var(--border);
-  border-radius:20px;
-  background:var(--panel);
-}
-.call-stage{
-  position:relative;
-  height:420px;
-  overflow:hidden;
-  border-radius:15px;
-  background:#05070d;
-}
-.call-stage video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.call-status{
-  position:absolute;
-  top:15px;
-  left:15px;
-  padding:8px 12px;
-  border-radius:20px;
-  background:rgba(0,0,0,.6);
-  color:#ddd;
-  font-size:11px;
-}
-.call-controls{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-top:20px;
-}
-.call-control{
-  min-width:100px;
-  padding:13px 17px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:#202943;
-  font-size:12px;
-}
-.call-control.danger{
-  background:#b82d4b;
-  border-color:#b82d4b;
-}
-.image-studio{
-  max-width:850px;
-  margin:auto;
-}
-.studio-box{
-  padding:25px;
-  border:1px solid var(--border);
-  border-radius:18px;
-  background:var(--panel);
-}
-.studio-upload{
-  display:grid;
-  place-items:center;
-  min-height:220px;
-  padding:20px;
-  border:2px dashed rgba(128,101,255,.35);
-  border-radius:15px;
-  text-align:center;
-  background:rgba(128,101,255,.05);
-}
-.studio-upload strong{
-  display:block;
-  margin:10px 0;
-}
-.studio-upload p{
-  color:var(--muted);
-  font-size:12px;
-}
-.image-preview{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-top:20px;
-}
-.image-preview img{
-  width:140px;
-  height:140px;
-  object-fit:cover;
-  border-radius:12px;
-  border:1px solid var(--border);
-}
-.settings-list{
-  display:grid;
-  gap:12px;
-  max-width:700px;
-}
-.setting-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  padding:17px;
-  border:1px solid var(--border);
-  border-radius:13px;
-  background:var(--panel);
-}
-.setting-row strong{
-  display:block;
-  font-size:13px;
-}
-.setting-row small{
-  display:block;
-  margin-top:5px;
-  color:var(--muted);
-  font-size:11px;
-}
-.setting-row button{
-  padding:9px 13px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:#202943;
-  font-size:11px;
-}
-.search-box{
-  width:100%;
-  max-width:600px;
-  padding:15px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--panel);
-  color:white;
-}
-.search-results{
-  display:grid;
-  gap:9px;
-  max-width:600px;
-  margin-top:20px;
-}
-.search-result{
-  padding:14px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  background:var(--panel);
-  text-align:left;
-  font-size:12px;
-}
-body.light-mode{
-  --bg:#f1f3fa;
-  --panel:#ffffff;
-  --panel2:#e8ecf6;
-  --surface:#e1e6f2;
-  --border:rgba(20,30,60,.12);
-  --text:#18213a;
-  --muted:#68738b;
-}
-body.light-mode .topbar{
-  background:rgba(245,247,252,.9);
-}
-body.light-mode .sidebar{
-  background:#e9edf7;
-}
-body.light-mode .nav-item{
-  color:#46516b;
-}
-body.light-mode .auth-card,
-body.light-mode .studio-box,
-body.light-mode .call-panel,
-body.light-mode .video-side,
-body.light-mode .setting-row{
-  background:#fff;
-}
-body.light-mode .form-input{
-  background:#f1f3f9;
-  color:#172039;
-}
-@media(max-width:850px){
-  .video-layout{
-    grid-template-columns:1fr;
-  }
-  .video-side{
-    order:-1;
-  }
-}
-@media(max-width:600px){
-  .extra-view{
-    padding:16px 12px;
-  }
-  .video-card{
-    height:570px;
-  }
-  .call-stage{
-    height:300px;
-  }
-  .call-panel{
-    padding:12px;
-  }
-  .call-control{
-    min-width:85px;
-    padding:11px;
-  }
-}
-</style>
-
-<!-- VIDEO UPLOAD INPUT -->
-<input type="file" id="videoUploadInput"
-accept="video/*" hidden>
-
-<!-- IMAGE UPLOAD INPUT -->
-<input type="file" id="studioImageInput"
-accept="image/*" multiple hidden>
-
-<script>
-/* AXON EXTENDED VIEWS */
-
-const workspace=$(".workspace");
-const mainContent=$(".main-content");
-
-let homeMarkup=workspace.innerHTML;
-let activeObjectURLs=[];
-let localCameraStream=null;
-let cameraEnabled=false;
-let microphoneEnabled=false;
-
-/* VIEW SWITCHER */
-
-function showExtraView(title,content){
-  let view=$("#extraView");
-
-  if(!view){
-    view=document.createElement("section");
-    view.id="extraView";
-    view.className="extra-view";
-    mainContent.appendChild(view);
-  }
-
-  workspace.style.display="none";
-  view.style.display="block";
-
-  view.innerHTML=`
-    <div class="view-header">
-      <h2>${title}</h2>
-      <button class="back-button" id="backHome">
-        ← Back
-      </button>
-    </div>
-    <div id="extraViewContent">${content}</div>
-  `;
-
-  $("#backHome").addEventListener("click",()=>{
-    view.style.display="none";
-    workspace.style.display="block";
-    stopCamera();
-  });
-
-  closeMobileSidebar();
-}
-
-function clearExtraView(){
-  const view=$("#extraView");
-
-  if(view){
-    view.remove();
-  }
-
-  workspace.style.display="block";
-  stopCamera();
-}
-
-/* VIDEO FEED */
-
-function openVideoFeed(){
-  showExtraView("AXON Discover",`
-    <div class="video-layout">
-      <div class="video-feed" id="videoFeed">
-        <div class="video-card">
-          <div style="
-            height:100%;
-            display:grid;
-            place-items:center;
-            color:#8792aa;
-            text-align:center;
-            padding:20px;">
-            <div>
-              <div style="font-size:45px">▷</div>
-              <h3>No videos yet</h3>
-              <p style="font-size:12px;margin-top:8px">
-                Upload a video from your device to preview it here.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <aside class="video-side">
-        <h3>AXON Video Studio</h3>
-        <p>
-          Create your own short-video collection.
-          Select a video from your device to preview it.
-          Uploaded videos are not publicly published.
-        </p>
-        <button class="upload-button" id="uploadVideo">
-          ＋ Upload Video
-        </button>
-      </aside>
-    </div>
-  `);
-
-  $("#uploadVideo").addEventListener("click",()=>{
-    $("#videoUploadInput").click();
-  });
-}
-
-/* VIDEO PREVIEW */
-
-$("#videoUploadInput").addEventListener("change",event=>{
-  const file=event.target.files[0];
-
-  if(!file) return;
-
-  if(!file.type.startsWith("video/")){
-    showToast("Please select a video file.","error");
-    return;
-  }
-
-  const url=URL.createObjectURL(file);
-
-  activeObjectURLs.push(url);
-
-  const feed=$("#videoFeed");
-
-  if(!feed) return;
-
-  feed.innerHTML=`
-    <div class="video-card">
-      <video src="${url}" controls playsinline></video>
-      <div class="video-overlay">
-        <h3>${escapeHTML(file.name)}</h3>
-        <p>Your local video preview</p>
-      </div>
-    </div>
-  `;
-
-  showToast("Video preview ready.","success");
-
-  event.target.value="";
-});
-
-/* HTML ESCAPING */
-
-function escapeHTML(value){
-  return String(value).replace(/[&<>"']/g,char=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
-  })[char]);
-}
-
-/* VIDEO CALL INTERFACE */
-
-function openVideoCall(){
-  showExtraView("AXON Live Call",`
-    <div class="call-panel">
-      <div class="call-stage">
-        <video
-          id="localCameraPreview"
-          autoplay
-          muted
-          playsinline>
-        </video>
-        <div class="call-status" id="callStatus">
-          Camera is off
-        </div>
-      </div>
-      <div class="call-controls">
-        <button class="call-control" id="cameraToggle">
-          ◉ Camera On
-        </button>
-        <button class="call-control" id="micToggle">
-          🎙 Mic On
-        </button>
-        <button class="call-control danger" id="endCall">
-          ✕ End
-        </button>
-      </div>
-      <p style="
-        color:var(--muted);
-        font-size:12px;
-        line-height:1.7;
-        margin-top:20px;
-        text-align:center;">
-        Camera preview only. Connecting another person
-        requires a real-time calling and signaling backend.
-      </p>
-    </div>
-  `);
-
-  $("#cameraToggle").addEventListener("click",toggleCamera);
-
-  $("#micToggle").addEventListener("click",toggleMicrophone);
-
-  $("#endCall").addEventListener("click",()=>{
-    stopCamera();
-    showToast("Camera and microphone stopped.");
-  });
-}
-
-/* CAMERA ACCESS */
-
-async function toggleCamera(){
-  if(cameraEnabled){
-    stopCamera();
-    return;
-  }
-
-  if(!navigator.mediaDevices?.getUserMedia){
-    showToast("Camera access is unavailable in this browser.","error");
-    return;
-  }
-
-  try{
-    localCameraStream=await navigator.mediaDevices.getUserMedia({
-      video:true,
-      audio:true
-    });
-
-    const preview=$("#localCameraPreview");
-
-    if(!preview){
-      stopCamera();
-      return;
-    }
-
-    preview.srcObject=localCameraStream;
-
-    cameraEnabled=true;
-    microphoneEnabled=true;
-
-    $("#cameraToggle").textContent="◉ Camera Off";
-    $("#micToggle").textContent="🎙 Mic Off";
-
-    $("#callStatus").textContent="Local camera preview active";
-
-    showToast("Camera preview started.","success");
-
-  }catch(error){
-    showToast("Camera permission was not granted.","error");
-  }
-}
-
-/* MICROPHONE CONTROL */
-
-function toggleMicrophone(){
-  if(!localCameraStream){
-    showToast("Turn on the camera preview first.");
-    return;
-  }
-
-  microphoneEnabled=!microphoneEnabled;
-
-  localCameraStream.getAudioTracks().forEach(track=>{
-    track.enabled=microphoneEnabled;
-  });
-
-  $("#micToggle").textContent=
-    microphoneEnabled ? "🎙 Mic Off" : "🎙 Mic On";
-
-  showToast(
-    microphoneEnabled ? "Microphone enabled." : "Microphone muted."
-  );
-}
-
-/* STOP MEDIA */
-
-function stopCamera(){
-  if(localCameraStream){
-    localCameraStream.getTracks().forEach(track=>{
-      track.stop();
-    });
-  }
-
-  localCameraStream=null;
-  cameraEnabled=false;
-  microphoneEnabled=false;
-}
-
-/* IMAGE STUDIO */
-
-function openImageStudio(){
-  showExtraView("AXON Image Studio",`
-    <div class="image-studio">
-      <div class="studio-box">
-        <div class="studio-upload">
-          <div>
-            <div style="font-size:40px">✧</div>
-            <strong>Upload your images</strong>
-            <p>Select images to preview in your studio.</p>
-            <button class="primary-button"
-              id="chooseStudioImages">
-              Choose Images
-            </button>
-          </div>
-        </div>
-        <div class="image-preview" id="imagePreview"></div>
-        <p style="
-          margin-top:20px;
-          color:var(--muted);
-          font-size:11px;
-          line-height:1.7;">
-          Image generation requires a connected image-generation
-          service. This module currently provides local image previews.
-        </p>
-      </div>
-    </div>
-  `);
-
-  $("#chooseStudioImages").addEventListener("click",()=>{
-    $("#studioImageInput").click();
-  });
-}
-
-/* IMAGE PREVIEW */
-
-$("#studioImageInput").addEventListener("change",event=>{
-  const files=Array.from(event.target.files || []);
-
-  const preview=$("#imagePreview");
-
-  if(!preview) return;
-
-  files.forEach(file=>{
-    if(!file.type.startsWith("image/")) return;
-
-    const url=URL.createObjectURL(file);
-
-    activeObjectURLs.push(url);
-
-    const image=document.createElement("img");
-
-    image.src=url;
-    image.alt="Uploaded image preview";
-
-    preview.appendChild(image);
-  });
-
-  showToast("Image preview updated.","success");
-
-  event.target.value="";
-});
-
-/* SETTINGS */
-
-function openSettings(){
-  showExtraView("Settings",`
-    <div class="settings-list">
-      <div class="setting-row">
-        <div>
-          <strong>Appearance</strong>
-          <small>Switch between dark and light mode.</small>
-        </div>
-        <button id="themeToggle">Switch Theme</button>
-      </div>
-      <div class="setting-row">
-        <div>
-          <strong>Chat History</strong>
-          <small>Saved conversations on this device.</small>
-        </div>
-        <button id="clearHistory">Clear Chats</button>
-      </div>
-      <div class="setting-row">
-        <div>
-          <strong>Account Session</strong>
-          <small>Exit the current demo workspace.</small>
-        </div>
-        <button id="logoutButton">Log Out</button>
-      </div>
-    </div>
-  `);
-
-  $("#themeToggle").addEventListener("click",()=>{
-    document.body.classList.toggle("light-mode");
-
-    localStorage.setItem(
-      "axon_theme",
-      document.body.classList.contains("light-mode")
-        ? "light"
-        : "dark"
-    );
-
-    showToast("Appearance updated.","success");
-  });
-
-  $("#clearHistory").addEventListener("click",()=>{
-    openModal(
-      "Clear chat history?",
-      "This will remove saved conversations from this device.",
-      ()=>{
-        AXON.chats=[];
-        AXON.activeChat=null;
-        saveChats();
-        createNewChat();
-        renderHistory();
-        showToast("Chat history cleared.","success");
-      }
-    );
-  });
-
-  $("#logoutButton").addEventListener("click",()=>{
-    openModal(
-      "Log out of AXON?",
-      "Your locally saved chat history will remain on this device.",
-      ()=>{
-        stopCamera();
-
-        localStorage.removeItem(
-          AXON_CONFIG.sessionKey
-        );
-
-        $("#appScreen").classList.remove("active");
-        $("#authScreen").classList.remove("hidden");
-
-        showToast("You have logged out.");
-      }
-    );
-  });
-}
-
-/* SEARCH */
-
-function openSearch(){
-  showExtraView("Search Conversations",`
-    <input
-      class="search-box"
-      id="chatSearchInput"
-      placeholder="Search your conversations..."
-    >
-    <div class="search-results" id="searchResults"></div>
-  `);
-
-  $("#chatSearchInput").addEventListener("input",event=>{
-    const query=event.target.value.toLowerCase();
-
-    const results=$("#searchResults");
-
-    results.innerHTML="";
-
-    AXON.chats
-      .filter(chat=>{
-        return chat.title.toLowerCase().includes(query) ||
-          chat.messages.some(message=>
-            message.content.toLowerCase().includes(query)
-          );
-      })
-      .forEach(chat=>{
-        const button=document.createElement("button");
-
-        button.className="search-result";
-        button.textContent=chat.title;
-
-        button.addEventListener("click",()=>{
-          AXON.activeChat=chat.id;
-
-          clearExtraView();
-          renderHistory();
-          renderMessages();
-        });
-
-        results.appendChild(button);
-      });
-  });
-}
-
-/* NAVIGATION OVERRIDE */
-
-document.addEventListener("click",event=>{
-  const button=event.target.closest(".nav-item");
-
-  if(!button) return;
-
-  const label=button.textContent.trim();
-
-  if(label.includes("Short Videos")){
-    openVideoFeed();
-  }
-
-  if(label.includes("Video Call")){
-    openVideoCall();
-  }
-
-  if(label.includes("Image Studio")){
-    openImageStudio();
-  }
-
-  if(label.includes("Settings")){
-    openSettings();
-  }
-
-  if(label.includes("Search")){
-    openSearch();
-  }
-},true);
-
-/* FEATURE CARD INTERACTIONS */
-
-document.addEventListener("click",event=>{
-  const card=event.target.closest(".feature-card");
-
-  if(!card) return;
-
-  const title=card.querySelector("h3")?.textContent || "";
-
-  if(title==="Voice Control"){
-    const voice=$("#voiceButton");
-
-    if(voice) voice.click();
-  }
-
-  if(title==="Live Video"){
-    openVideoCall();
-  }
-
-  if(title==="Short Videos"){
-    openVideoFeed();
-  }
-
-  if(title==="Image Studio"){
-    openImageStudio();
-  }
-
-  if(title==="AI Assistant"){
-    $("#messageInput").focus();
-  }
-});
-
-/* RESTORE THEME */
-
-if(localStorage.getItem("axon_theme")==="light"){
-  document.body.classList.add("light-mode");
-}
-
-/* CLEAN UP TEMPORARY MEDIA */
-
-window.addEventListener("beforeunload",()=>{
-  stopCamera();
-
-  activeObjectURLs.forEach(url=>{
-    URL.revokeObjectURL(url);
-  });
-});
-
-/* PART 3 COMPLETE */
-
-</script>
-
-<!-- PART 4 WILL CONTINUE HERE -->
-  HTML
-
-<!-- ==========================================
-     AXON AI — PART 4 FINAL CHAPTER
-     FINAL UTILITIES + AI VOICE + EXPORT
-========================================== -->
-
-<style>
-.final-tools{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:12px;
-}
-.final-tool{
-  padding:8px 11px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:rgba(255,255,255,.04);
-  color:var(--muted);
-  font-size:11px;
-}
-.final-tool:hover{
-  color:white;
-  background:rgba(128,101,255,.15);
-}
-.message-copy{
-  display:inline-block;
-  margin-top:9px;
-  padding:5px 9px;
-  border:1px solid var(--border);
-  border-radius:7px;
-  background:transparent;
-  color:var(--muted);
-  font-size:10px;
-}
-.message-copy:hover{
-  color:white;
-}
-.connection-indicator{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:18px;
-  color:var(--muted);
-  font-size:11px;
-}
-.connection-indicator span{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#e6ad45;
-}
-.connection-indicator.online span{
-  background:#35d6a0;
-}
-.connection-indicator.offline span{
-  background:#ff647c;
-}
-.final-footer{
-  padding:25px 10px;
-  color:var(--muted);
-  text-align:center;
-  font-size:10px;
-  line-height:1.8;
-}
-</style>
-
-<script>
-/* ==========================================
-   FINAL APPLICATION FEATURES
-========================================== */
-
-/* AI VOICE REPLY */
-
-let axonSpeechEnabled=false;
-
-function speakAXON(text){
-  if(!("speechSynthesis" in window)){
-    showToast("Voice output is not supported.");
-    return;
-  }
-
-  window.speechSynthesis.cancel();
-
-  const speech=new SpeechSynthesisUtterance(
-    String(text).slice(0,4000)
-  );
-
-  speech.lang="en-IN";
-  speech.rate=1;
-  speech.pitch=1;
-
-  window.speechSynthesis.speak(speech);
-}
-
-/* SPEECH BUTTON */
-
-function toggleSpeech(){
-  axonSpeechEnabled=!axonSpeechEnabled;
-
-  showToast(
-    axonSpeechEnabled
-      ? "AI voice replies enabled."
-      : "AI voice replies disabled.",
-    "success"
-  );
-}
-
-/* ADD VOICE SETTING */
-
-const voiceSettingsButton=document.createElement("button");
-
-voiceSettingsButton.className="final-tool";
-voiceSettingsButton.textContent="🔊 AI Voice Replies";
-voiceSettingsButton.addEventListener("click",toggleSpeech);
-
-/* ATTACH VOICE CONTROL TO CHAT TOOLBAR */
-
-const composerTools=$(".composer-tools");
-
-if(composerTools){
-  composerTools.appendChild(voiceSettingsButton);
-}
-
-/* ENHANCED MESSAGE DISPLAY */
-
-const originalAddMessage=addMessage;
-
-addMessage=function(role,content){
-  originalAddMessage(role,content);
-
-  if(role==="assistant" && axonSpeechEnabled){
-    speakAXON(content);
-  }
-
-  const area=$("#chatArea");
-
-  if(!area) return;
-
-  const rows=area.querySelectorAll(".chat-message");
-
-  const last=rows[rows.length-1];
-
-  if(!last || role!=="assistant") return;
-
-  const body=last.querySelector(".message-content");
-
-  if(!body) return;
-
-  const copyButton=document.createElement("button");
-
-  copyButton.className="message-copy";
-  copyButton.textContent="Copy response";
-
-  copyButton.addEventListener("click",async()=>{
-    try{
-      await navigator.clipboard.writeText(content);
-      showToast("Response copied.","success");
-    }catch(error){
-      showToast("Clipboard permission unavailable.","error");
-    }
-  });
-
-  body.appendChild(copyButton);
-};
-
-/* EXPORT CHAT HISTORY */
-
 function exportChats(){
-  if(!AXON.chats.length){
-    showToast("There are no chats to export.");
-    return;
-  }
-
-  const data=AXON.chats.map(chat=>{
-    return {
-      title:chat.title,
-      messages:chat.messages,
-      createdAt:new Date(chat.createdAt).toISOString()
-    };
-  });
-
-  const blob=new Blob(
-    [JSON.stringify(data,null,2)],
-    {type:"application/json"}
-  );
-
-  const url=URL.createObjectURL(blob);
-
-  const link=document.createElement("a");
-
-  link.href=url;
-  link.download="axon-chat-history.json";
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  URL.revokeObjectURL(url);
-
-  showToast("Chat history exported.","success");
+ const blob=new Blob([JSON.stringify(state.chats,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+ link.href=url;link.download="axon-ai-chat-history.json";link.click();
+ URL.revokeObjectURL(url);
 }
-
-/* EXPORT BUTTON */
-
-const exportButton=document.createElement("button");
-
-exportButton.className="final-tool";
-exportButton.textContent="↓ Export Chats";
-exportButton.addEventListener("click",exportChats);
-
-/* ADD EXPORT TO SETTINGS */
-
-const originalOpenSettings=openSettings;
-
-openSettings=function(){
-  originalOpenSettings();
-
-  const list=$(".settings-list");
-
-  if(!list) return;
-
-  const row=document.createElement("div");
-
-  row.className="setting-row";
-
-  const info=document.createElement("div");
-
-  info.innerHTML=`
-    <strong>Export Conversations</strong>
-    <small>Download your chat history as a JSON file.</small>
-  `;
-
-  row.appendChild(info);
-  row.appendChild(exportButton);
-
-  list.appendChild(row);
-
-  const connection=document.createElement("div");
-
-  connection.className="connection-indicator";
-  connection.id="axonConnectionStatus";
-
-  connection.innerHTML="<span></span> Checking server...";
-
-  list.appendChild(connection);
-
-  checkServerConnection();
-};
-
-/* BACKEND HEALTH CHECK */
-
-async function checkServerConnection(){
-  const status=$("#axonConnectionStatus");
-
-  if(!status) return;
-
-  try{
-    const response=await fetch("/health",{
-      method:"GET",
-      cache:"no-store"
-    });
-
-    if(!response.ok){
-      throw new Error("Server unavailable");
-    }
-
-    status.className="connection-indicator online";
-    status.textContent="Server connection available";
-
-  }catch(error){
-
-    status.className="connection-indicator offline";
-    status.textContent="Server connection unavailable";
-  }
+async function checkHealth(){
+ const status=$("#healthStatus");
+ if(status)status.textContent="Checking server…";
+ try{
+  const response=await fetch("/health",{cache:"no-store"});
+  if(!response.ok)throw new Error("HTTP "+response.status);
+  const data=await response.json();
+  if(status)status.textContent="Server: "+(data.status||"online")+" · "+(data.service||"AXON AI");
+ }catch(error){if(status)status.textContent="Server check failed: "+error.message;}
 }
-
-/* SEARCH CHAT SHORTCUT */
-
-function focusChatSearch(){
-  openSearch();
-
-  setTimeout(()=>{
-    $("#chatSearchInput")?.focus();
-  },50);
+function enterApp(email){
+ state.email=email;
+ $("#auth").classList.add("hidden");
+ $("#app").classList.add("active");
+ $("#userEmail").textContent=email;
+ loadChats();
+ if(!state.chats.length)startNewChat();
+ else{state.activeId=state.chats[0].id;openPage("home");}
 }
-
-/* CLEAR INPUT AFTER CHAT CREATION */
-
-const originalCreateNewChat=createNewChat;
-
-createNewChat=function(){
-  const chat=originalCreateNewChat();
-
-  const input=$("#messageInput");
-
-  if(input) input.value="";
-
-  AXON.selectedFiles=[];
-
-  const preview=$("#attachmentPreview");
-
-  if(preview) preview.remove();
-
-  return chat;
-};
-
-/* BETTER EMPTY MESSAGE */
-
-function showWelcomeMessage(){
-  const chat=getActiveChat();
-
-  if(!chat || chat.messages.length) return;
-
-  renderMessages();
-}
-
-/* STOP VOICE WHEN LEAVING */
-
-function stopAXONSpeech(){
-  if("speechSynthesis" in window){
-    window.speechSynthesis.cancel();
-  }
-
-  if(AXON.recognition && AXON.isListening){
-    AXON.recognition.stop();
-  }
-}
-
-/* IMPROVE LOGOUT */
-
-const previousLogoutButtons=()=>{
-  return $$("#logoutButton");
-};
-
-/* SAFE FILE VALIDATION */
-
-function validateAttachment(file){
-  const maxSize=15*1024*1024;
-
-  if(file.size>maxSize){
-    showToast("File must be smaller than 15 MB.","error");
-    return false;
-  }
-
-  return true;
-}
-
-/* CHECK SELECTED FILES */
-
-const fileInput=$("#fileInput");
-
-if(fileInput){
-  fileInput.addEventListener("change",event=>{
-    const files=Array.from(event.target.files || []);
-
-    const accepted=files.filter(validateAttachment);
-
-    if(accepted.length!==files.length){
-      AXON.selectedFiles=accepted;
-    }
-  });
-}
-
-/* CHAT SHORTCUTS */
-
-document.addEventListener("keydown",event=>{
-  if(
-    (event.ctrlKey || event.metaKey) &&
-    event.key.toLowerCase()==="k"
-  ){
-    event.preventDefault();
-    focusChatSearch();
-  }
-
-  if(event.key==="Escape"){
-    closeMobileSidebar();
-    stopAXONSpeech();
-  }
+$("#authForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ const email=$("#email").value.trim();
+ const password=$("#password").value;
+ if(!$("#email").checkValidity()||password.length<8){showToast("Enter a valid email and a password with at least 8 characters.");return;}
+ try{localStorage.setItem(SESSION_KEY,email);}catch(error){}
+ enterApp(email);
 });
-
-/* NAVIGATION FINAL FIX */
-
-document.addEventListener("click",event=>{
-  const button=event.target.closest(".nav-item");
-
-  if(!button) return;
-
-  const label=button.textContent.trim();
-
-  if(
-    label.includes("Short Videos") ||
-    label.includes("Video Call") ||
-    label.includes("Image Studio") ||
-    label.includes("Settings") ||
-    label.includes("Search")
-  ){
-    event.stopImmediatePropagation();
-  }
-
-},true);
-
-/* CLEANUP ON PAGE EXIT */
-
-window.addEventListener("pagehide",()=>{
-  stopCamera();
-  stopAXONSpeech();
+$("#switchMode").addEventListener("click",()=>{
+ state.signup=!state.signup;
+ $("#authTitle").textContent=state.signup?"Create your AXON demo profile":"Welcome to AXON";
+ $("#authSubtitle").textContent=state.signup?"Enter your details to open the workspace.":"Sign in to open your AI workspace.";
+ $("#authSubmit").textContent=state.signup?"Create demo profile":"Continue to AXON";
+ $("#switchText").textContent=state.signup?"Already have a demo profile?":"New to AXON?";
+ $("#switchMode").textContent=state.signup?"Sign in":"Create account";
+ $("#password").autocomplete=state.signup?"new-password":"current-password";
 });
-
-/* FINAL INITIALIZATION */
-
-(function finalInitialization(){
-
-  const savedTheme=localStorage.getItem("axon_theme");
-
-  if(savedTheme==="light"){
-    document.body.classList.add("light-mode");
-  }
-
-  if(AXON.chats.length){
-    renderHistory();
-  }
-
-  console.log("AXON AI interface initialized.");
-
-})();
-
-/* ==========================================
-   AXON AI — END OF FINAL CHAPTER
-========================================== */
+document.querySelectorAll(".nav").forEach(button=>button.addEventListener("click",()=>openPage(button.dataset.page)));
+$("#logout").addEventListener("click",()=>{
+ try{localStorage.removeItem(SESSION_KEY);}catch(error){}
+ $("#app").classList.remove("active");$("#auth").classList.remove("hidden");
+ $("#password").value="";showToast("Signed out of this local demo.");
+});
+function finishSplash(){
+ const splash=$("#splash");
+ if(!splash)return;
+ splash.classList.add("hide");
+ setTimeout(()=>splash.remove(),500);
+}
+window.addEventListener("load",()=>setTimeout(finishSplash,950));
+setTimeout(finishSplash,2500);
 </script>
-
-<footer class="final-footer">
-  <strong class="gradient-text">AXON AI</strong>
-  <p>Intelligence Reimagined</p>
-  <p>Personal AI Workspace</p>
-</footer>
-
 </body>
-      </html>
-        
+  </html>
+  
