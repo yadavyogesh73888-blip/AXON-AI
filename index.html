@@ -2691,5 +2691,3279 @@ id="axonConnectionDot">
       const tools = document.createElement("div");  
   
       tools.className = "ax-message-tools";  
-  
     
+  <!-- ==========================================  
+     AXON AI - PART 5  
+     THREE DOT MENU + ADVANCED CONTROLS  
+========================================== -->  <style>  
+/* TOP LEFT MENU */  
+  
+.ax-menu-wrapper {  
+  position: relative;  
+  display: flex;  
+  align-items: center;  
+}  
+  
+.ax-menu-trigger {  
+  width: 39px;  
+  height: 39px;  
+  display: flex;  
+  flex-direction: column;  
+  align-items: center;  
+  justify-content: center;  
+  gap: 3px;  
+  border: 1px solid #293753;  
+  border-radius: 11px;  
+  background: #111a2b;  
+  cursor: pointer;  
+}  
+  
+.ax-menu-trigger span {  
+  width: 4px;  
+  height: 4px;  
+  border-radius: 50%;  
+  background: #dce6ff;  
+}  
+  
+.ax-menu-trigger:hover {  
+  background: #1b2945;  
+  border-color: #6583ff;  
+}  
+  
+/* DROPDOWN */  
+  
+.ax-menu-dropdown {  
+  position: absolute;  
+  z-index: 300;  
+  top: 49px;  
+  left: 0;  
+  width: 255px;  
+  padding: 9px;  
+  border: 1px solid #293753;  
+  border-radius: 15px;  
+  background: #111a2c;  
+  box-shadow: 0 18px 55px #0009;  
+  display: none;  
+  animation: axMenuAppear .18s ease;  
+}  
+  
+.ax-menu-dropdown.open {  
+  display: block;  
+}  
+  
+@keyframes axMenuAppear {  
+  from {  
+    opacity: 0;  
+    transform: translateY(-7px);  
+  }  
+  to {  
+    opacity: 1;  
+    transform: translateY(0);  
+  }  
+}  
+  
+.ax-menu-heading {  
+  padding: 11px 12px;  
+  color: #7786a6;  
+  font-size: 10px;  
+  font-weight: 800;  
+  letter-spacing: 1.5px;  
+}  
+  
+.ax-menu-item {  
+  width: 100%;  
+  display: flex;  
+  align-items: center;  
+  gap: 12px;  
+  padding: 11px 12px;  
+  border: 0;  
+  border-radius: 9px;  
+  background: transparent;  
+  color: #d4def3;  
+  text-align: left;  
+  font-size: 12px;  
+  cursor: pointer;  
+}  
+  
+.ax-menu-item:hover {  
+  background: #1b2945;  
+}  
+  
+.ax-menu-item .ax-menu-icon {  
+  width: 20px;  
+  text-align: center;  
+  font-size: 16px;  
+}  
+  
+.ax-menu-separator {  
+  height: 1px;  
+  margin: 7px 3px;  
+  background: #29344b;  
+}  
+  
+/* MODAL OVERLAY */  
+  
+.ax-panel-overlay {  
+  position: fixed;  
+  inset: 0;  
+  z-index: 400;  
+  display: none;  
+  align-items: center;  
+  justify-content: center;  
+  padding: 15px;  
+  background: rgba(0,0,0,.68);  
+  backdrop-filter: blur(7px);  
+}  
+  
+.ax-panel-overlay.open {  
+  display: flex;  
+}  
+  
+.ax-panel {  
+  width: 100%;  
+  max-width: 480px;  
+  max-height: 85vh;  
+  overflow-y: auto;  
+  border: 1px solid #34415f;  
+  border-radius: 20px;  
+  background: #10182a;  
+  color: white;  
+  box-shadow: 0 25px 90px #000a;  
+  animation: axPanelIn .2s ease;  
+}  
+  
+@keyframes axPanelIn {  
+  from {  
+    opacity: 0;  
+    transform: translateY(12px) scale(.98);  
+  }  
+  to {  
+    opacity: 1;  
+    transform: translateY(0) scale(1);  
+  }  
+}  
+  
+.ax-panel-header {  
+  position: sticky;  
+  top: 0;  
+  z-index: 2;  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  padding: 19px 20px;  
+  border-bottom: 1px solid #293650;  
+  background: #10182a;  
+}  
+  
+.ax-panel-header h2 {  
+  font-size: 17px;  
+}  
+  
+.ax-panel-close {  
+  width: 32px;  
+  height: 32px;  
+  border: 1px solid #34415f;  
+  border-radius: 9px;  
+  background: #19243a;  
+  color: white;  
+  font-size: 18px;  
+  cursor: pointer;  
+}  
+  
+.ax-panel-body {  
+  padding: 20px;  
+}  
+  
+/* SETTINGS */  
+  
+.ax-setting-group {  
+  margin-bottom: 22px;  
+}  
+  
+.ax-setting-title {  
+  margin-bottom: 11px;  
+  color: #8090b1;  
+  font-size: 10px;  
+  font-weight: 800;  
+  letter-spacing: 1.3px;  
+}  
+  
+.ax-setting-row {  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  gap: 12px;  
+  padding: 13px 0;  
+  border-bottom: 1px solid #26324b;  
+}  
+  
+.ax-setting-info strong {  
+  display: block;  
+  font-size: 12px;  
+}  
+  
+.ax-setting-info small {  
+  display: block;  
+  margin-top: 5px;  
+  color: #8592ad;  
+  font-size: 10px;  
+}  
+  
+.ax-setting-select {  
+  max-width: 130px;  
+  padding: 8px;  
+  border: 1px solid #354362;  
+  border-radius: 8px;  
+  background: #17223a;  
+  color: white;  
+  font-size: 11px;  
+}  
+  
+.ax-switch {  
+  position: relative;  
+  width: 42px;  
+  height: 23px;  
+  flex-shrink: 0;  
+}  
+  
+.ax-switch input {  
+  opacity: 0;  
+  width: 0;  
+  height: 0;  
+}  
+  
+.ax-switch-slider {  
+  position: absolute;  
+  inset: 0;  
+  border-radius: 20px;  
+  background: #36415a;  
+  cursor: pointer;  
+  transition: .2s;  
+}  
+  
+.ax-switch-slider::before {  
+  content: "";  
+  position: absolute;  
+  width: 17px;  
+  height: 17px;  
+  left: 3px;  
+  top: 3px;  
+  border-radius: 50%;  
+  background: white;  
+  transition: .2s;  
+}  
+  
+.ax-switch input:checked + .ax-switch-slider {  
+  background: #5879f5;  
+}  
+  
+.ax-switch input:checked + .ax-switch-slider::before {  
+  transform: translateX(19px);  
+}  
+  
+/* HISTORY SEARCH */  
+  
+.ax-history-search {  
+  width: 100%;  
+  height: 43px;  
+  margin-bottom: 15px;  
+  padding: 0 13px;  
+  border: 1px solid #33415e;  
+  border-radius: 10px;  
+  outline: none;  
+  background: #0b1221;  
+  color: white;  
+  font-size: 12px;  
+}  
+  
+.ax-history-search:focus {  
+  border-color: #6784ff;  
+}  
+  
+.ax-panel-history-item {  
+  width: 100%;  
+  display: block;  
+  padding: 13px;  
+  margin-bottom: 7px;  
+  border: 1px solid #293650;  
+  border-radius: 10px;  
+  background: #151f33;  
+  color: #d8e1f5;  
+  text-align: left;  
+  font-size: 12px;  
+  cursor: pointer;  
+}  
+  
+.ax-panel-history-item:hover {  
+  border-color: #6482ff;  
+}  
+  
+/* VOICE PANEL */  
+  
+.ax-voice-status {  
+  padding: 23px 15px;  
+  border: 1px solid #304168;  
+  border-radius: 15px;  
+  background: #15213b;  
+  text-align: center;  
+}  
+  
+.ax-voice-circle {  
+  width: 76px;  
+  height: 76px;  
+  display: grid;  
+  place-items: center;  
+  margin: 0 auto 15px;  
+  border-radius: 50%;  
+  background: #304b9a;  
+  box-shadow: 0 0 30px #5578ff35;  
+  font-size: 29px;  
+}  
+  
+.ax-voice-circle.listening {  
+  animation: axVoicePulse 1s infinite alternate;  
+}  
+  
+@keyframes axVoicePulse {  
+  from {  
+    box-shadow: 0 0 10px #5578ff33;  
+    transform: scale(1);  
+  }  
+  to {  
+    box-shadow: 0 0 35px #5578ff99;  
+    transform: scale(1.07);  
+  }  
+}  
+  
+.ax-voice-status h3 {  
+  font-size: 15px;  
+  margin-bottom: 7px;  
+}  
+  
+.ax-voice-status p {  
+  color: #9aa8c5;  
+  font-size: 11px;  
+  line-height: 1.6;  
+}  
+  
+.ax-voice-action {  
+  width: 100%;  
+  height: 46px;  
+  margin-top: 15px;  
+  border: 0;  
+  border-radius: 10px;  
+  background: linear-gradient(110deg,#4168ef,#6b83ff);  
+  color: white;  
+  font-size: 12px;  
+  font-weight: 750;  
+  cursor: pointer;  
+}  
+  
+/* PROFILE */  
+  
+.ax-profile-large {  
+  text-align: center;  
+  padding: 12px;  
+}  
+  
+.ax-profile-large .ax-avatar {  
+  width: 75px;  
+  height: 75px;  
+  margin: 0 auto 15px;  
+  font-size: 26px;  
+}  
+  
+.ax-profile-large h3 {  
+  font-size: 17px;  
+}  
+  
+.ax-profile-large p {  
+  margin-top: 7px;  
+  color: #8b99b6;  
+  font-size: 11px;  
+}  
+  
+/* LIGHT THEME */  
+  
+.axon-chat.ax-light {  
+  background: #f2f5fb;  
+  color: #172039;  
+}  
+  
+.axon-chat.ax-light .ax-chat-sidebar,  
+.axon-chat.ax-light .ax-chat-header {  
+  background: #ffffff;  
+  border-color: #dce2ef;  
+}  
+  
+.axon-chat.ax-light .ax-chat-title,  
+.axon-chat.ax-light .ax-profile-info strong {  
+  color: #172039;  
+}  
+  
+.axon-chat.ax-light .ax-chat-messages {  
+  background: #f2f5fb;  
+}  
+  
+.axon-chat.ax-light .ax-message-bubble {  
+  background: #ffffff;  
+  color: #172039;  
+  border-color: #dce2ef;  
+}  
+  
+.axon-chat.ax-light .ax-composer {  
+  background: #ffffff;  
+  border-color: #dce2ef;  
+}  
+  
+.axon-chat.ax-light .ax-composer textarea {  
+  color: #172039;  
+}  
+  
+.axon-chat.ax-light .ax-suggestion {  
+  background: #ffffff;  
+  color: #172039;  
+  border-color: #dce2ef;  
+}  
+  
+.axon-chat.ax-light .ax-history-item {  
+  color: #45516c;  
+}  
+  
+.axon-chat.ax-light .ax-history-item.active {  
+  background: #e9efff;  
+}  
+  
+@media(max-width:480px) {  
+  .ax-menu-dropdown {  
+    width: min(255px, calc(100vw - 30px));  
+  }  
+  
+  .ax-panel {  
+    max-height: 88vh;  
+    border-radius: 17px;  
+  }  
+}  
+</style>  <!-- THREE DOT MENU -->  <script>  
+(() => {  
+  
+  const $ = id => document.getElementById(id);  
+  
+  const chat = $("axonChat");  
+  
+  if (!chat) return;  
+  
+  /* ADD THREE DOT BUTTON */  
+  
+  const headerLeft =  
+    chat.querySelector(".ax-header-left");  
+  
+  if (!headerLeft) return;  
+  
+  if (!$("axMenuWrapper")) {  
+  
+    const wrapper = document.createElement("div");  
+  
+    wrapper.className = "ax-menu-wrapper";  
+  
+    wrapper.id = "axMenuWrapper";  
+  
+    wrapper.innerHTML = `  
+      <button  
+        class="ax-menu-trigger"  
+        id="axMenuTrigger"  
+        type="button"  
+        aria-label="Open menu"  
+        aria-expanded="false">  
+        <span></span>  
+        <span></span>  
+        <span></span>  
+      </button>  
+  
+      <div class="ax-menu-dropdown" id="axMenuDropdown">  
+  
+        <div class="ax-menu-heading">AXON AI MENU</div>  
+  
+        <button class="ax-menu-item" data-action="new">  
+          <span class="ax-menu-icon">＋</span>  
+          New Chat  
+        </button>  
+  
+        <button class="ax-menu-item" data-action="history">  
+          <span class="ax-menu-icon">◷</span>  
+          Chat History  
+        </button>  
+  
+        <button class="ax-menu-item" data-action="search">  
+          <span class="ax-menu-icon">⌕</span>  
+          Search Conversations  
+        </button>  
+  
+        <div class="ax-menu-separator"></div>  
+  
+        <button class="ax-menu-item" data-action="voice">  
+          <span class="ax-menu-icon">◉</span>  
+          Voice Control  
+        </button>  
+  
+        <button class="ax-menu-item" data-action="settings">  
+          <span class="ax-menu-icon">⚙</span>  
+          Settings  
+        </button>  
+  
+        <button class="ax-menu-item" data-action="profile">  
+          <span class="ax-menu-icon">♙</span>  
+          Profile  
+        </button>  
+  
+        <div class="ax-menu-separator"></div>  
+  
+        <button class="ax-menu-item" data-action="theme">  
+          <span class="ax-menu-icon">◐</span>  
+          Change Theme  
+        </button>  
+  
+        <button class="ax-menu-item" data-action="language">  
+          <span class="ax-menu-icon">文</span>  
+          Language  
+        </button>  
+  
+        <button class="ax-menu-item" data-action="help">  
+          <span class="ax-menu-icon">?</span>  
+          Help & About  
+        </button>  
+  
+        <button class="ax-menu-item" data-action="clear">  
+          <span class="ax-menu-icon">⌫</span>  
+          Clear Current Chat  
+        </button>  
+  
+      </div>  
+    `;  
+  
+    headerLeft.insertBefore(  
+      wrapper,  
+      headerLeft.firstChild  
+    );  
+  
+  }  
+  
+  /* ADD PANEL */  
+  
+  if (!$("axControlPanel")) {  
+  
+    const panel = document.createElement("div");  
+  
+    panel.className = "ax-panel-overlay";  
+  
+    panel.id = "axControlPanel";  
+  
+    panel.innerHTML = `  
+      <div class="ax-panel">  
+  
+        <div class="ax-panel-header">  
+  
+          <h2 id="axPanelTitle">Settings</h2>  
+  
+          <button  
+            class="ax-panel-close"  
+            id="axPanelClose"  
+            type="button">  
+            ×  
+          </button>  
+  
+        </div>  
+  
+        <div class="ax-panel-body" id="axPanelBody"></div>  
+  
+      </div>  
+    `;  
+  
+    document.body.appendChild(panel);  
+  
+  }  
+  
+  const dropdown = $("axMenuDropdown");  
+  
+  const trigger = $("axMenuTrigger");  
+  
+  const overlay = $("axControlPanel");  
+  
+  const panelTitle = $("axPanelTitle");  
+  
+  const panelBody = $("axPanelBody");  
+  
+  function closeMenu() {  
+  
+    dropdown.classList.remove("open");  
+  
+    trigger.setAttribute("aria-expanded", "false");  
+  
+  }  
+  
+  function openPanel(title, html) {  
+  
+    closeMenu();  
+  
+    panelTitle.textContent = title;  
+  
+    panelBody.innerHTML = html;  
+  
+    overlay.classList.add("open");  
+  
+  }  
+  
+  function closePanel() {  
+  
+    overlay.classList.remove("open");  
+  
+  }  
+  
+  trigger.addEventListener("click", event => {  
+  
+    event.stopPropagation();  
+  
+    const opened = dropdown.classList.toggle("open");  
+  
+    trigger.setAttribute(  
+      "aria-expanded",  
+      String(opened)  
+    );  
+  
+  });  
+  
+  document.addEventListener("click", event => {  
+  
+    if (!event.target.closest("#axMenuWrapper")) {  
+      closeMenu();  
+    }  
+  
+  });  
+  
+  $("axPanelClose").addEventListener(  
+    "click",  
+    closePanel  
+  );  
+  
+  overlay.addEventListener("click", event => {  
+  
+    if (event.target === overlay) {  
+      closePanel();  
+    }  
+  
+  });  
+  
+  document.addEventListener("keydown", event => {  
+  
+    if (event.key === "Escape") {  
+  
+      closeMenu();  
+  
+      closePanel();  
+  
+    }  
+  
+  });  
+  
+  /* SETTINGS */  
+  
+  function showSettings() {  
+  
+    openPanel("Settings", `  
+  
+      <div class="ax-setting-group">  
+  
+        <div class="ax-setting-title">APPEARANCE</div>  
+  
+        <div class="ax-setting-row">  
+  
+          <div class="ax-setting-info">  
+            <strong>Dark Theme</strong>  
+            <small>Use the dark AXON interface.</small>  
+          </div>  
+  
+          <label class="ax-switch">  
+            <input  
+              type="checkbox"  
+              id="axDarkToggle"  
+              checked>  
+            <span class="ax-switch-slider"></span>  
+          </label>  
+  
+        </div>  
+  
+      </div>  
+  
+      <div class="ax-setting-group">  
+  
+        <div class="ax-setting-title">VOICE</div>  
+  
+        <div class="ax-setting-row">  
+  
+          <div class="ax-setting-info">  
+            <strong>Voice Input</strong>  
+            <small>Use speech recognition to write messages.</small>  
+          </div>  
+  
+          <label class="ax-switch">  
+            <input  
+              type="checkbox"  
+              id="axVoiceSetting"  
+              checked>  
+            <span class="ax-switch-slider"></span>  
+          </label>  
+  
+        </div>  
+  
+      </div>  
+  
+      <div class="ax-setting-group">  
+  
+        <div class="ax-setting-title">LANGUAGE</div>  
+  
+        <div class="ax-setting-row">  
+  
+          <div class="ax-setting-info">  
+            <strong>Speech Language</strong>  
+            <small>Choose your voice recognition language.</small>  
+          </div>  
+  
+          <select class="ax-setting-select" id="axSpeechLanguage">  
+            <option value="hi-IN">Hindi</option>  
+            <option value="en-US">English</option>  
+            <option value="en-IN">Indian English</option>  
+          </select>  
+  
+        </div>  
+  
+      </div>  
+  
+      <div class="ax-setting-group">  
+  
+        <div class="ax-setting-title">PRIVACY</div>  
+  
+        <div class="ax-setting-row">  
+  
+          <div class="ax-setting-info">  
+            <strong>Local Chat History</strong>  
+            <small>Save conversations in this browser.</small>  
+          </div>  
+  
+          <span style="color:#67d9a4;font-size:11px">  
+            Enabled  
+          </span>  
+  
+        </div>  
+  
+      </div>  
+  
+    `);  
+  
+    const darkToggle = $("axDarkToggle");  
+  
+    const voiceToggle = $("axVoiceSetting");  
+  
+    const language = $("axSpeechLanguage");  
+  
+    darkToggle.checked =  
+      !chat.classList.contains("ax-light");  
+  
+    voiceToggle.checked =  
+      localStorage.getItem("axon_voice_enabled") !== "false";  
+  
+    language.value =  
+      localStorage.getItem("axon_speech_language") || "hi-IN";  
+  
+    darkToggle.addEventListener("change", () => {  
+  
+      setTheme(darkToggle.checked ? "dark" : "light");  
+  
+    });  
+  
+    voiceToggle.addEventListener("change", () => {  
+  
+      localStorage.setItem(  
+        "axon_voice_enabled",  
+        String(voiceToggle.checked)  
+      );  
+  
+    });  
+  
+    language.addEventListener("change", () => {  
+  
+      localStorage.setItem(  
+        "axon_speech_language",  
+        language.value  
+      );  
+  
+    });  
+  
+  }  
+  
+  /* THEME */  
+  
+  function setTheme(theme) {  
+  
+    chat.classList.toggle(  
+      "ax-light",  
+      theme === "light"  
+    );  
+  
+    localStorage.setItem("axon_theme", theme);  
+  
+  }  
+  
+  const savedTheme =  
+    localStorage.getItem("axon_theme");  
+  
+  if (savedTheme === "light") {  
+    setTheme("light");  
+  }  
+  
+  /* HISTORY */  
+  
+  function showHistory(searchMode = false) {  
+  
+    const chats = JSON.parse(  
+      localStorage.getItem("axon_ai_chat_history_v1") || "[]"  
+    );  
+  
+    openPanel(  
+      searchMode ? "Search Conversations" : "Chat History",  
+      `  
+        <input  
+          class="ax-history-search"  
+          id="axHistorySearch"  
+          type="search"  
+          placeholder="Search your conversations...">  
+  
+        <div id="axPanelHistoryList"></div>  
+      `  
+    );  
+  
+    const input = $("axHistorySearch");  
+  
+    const list = $("axPanelHistoryList");  
+  
+    function render(filter = "") {  
+  
+      list.innerHTML = "";  
+  
+      const filtered = chats.filter(item => {  
+  
+        const title = item.title || "";  
+  
+        const messages = (item.messages || [])  
+          .map(message => message.content)  
+          .join(" ");  
+  
+        return (  
+          title + " " + messages  
+        ).toLowerCase().includes(filter.toLowerCase());  
+  
+      });  
+  
+      if (!filtered.length) {  
+  
+        const empty = document.createElement("p");  
+  
+        empty.textContent = "No conversations found.";  
+  
+        empty.style.cssText =  
+          "color:#8794b0;font-size:12px;padding:15px;";  
+  
+        list.appendChild(empty);  
+  
+        return;  
+  
+      }  
+  
+      filtered.forEach(item => {  
+  
+        const button = document.createElement("button");  
+  
+        button.className = "ax-panel-history-item";  
+  
+        button.textContent = item.title || "New Conversation";  
+  
+        button.addEventListener("click", () => {  
+  
+          if (typeof window.openAXONChat === "function") {  
+            window.openAXONChat();  
+          }  
+  
+          const current = window.axonSelectChat;  
+  
+          if (typeof current === "function") {  
+            current(item.id);  
+          }  
+  
+          closePanel();  
+  
+        });  
+  
+        list.appendChild(button);  
+  
+      });  
+  
+    }  
+  
+    input.addEventListener("input", () => {  
+  
+      render(input.value);  
+  
+    });  
+  
+    render();  
+  
+  }  
+  
+  /* VOICE CONTROL */  
+  
+  function showVoice() {  
+  
+    openPanel("Voice Control", `  
+  
+      <div class="ax-voice-status">  
+  
+        <div class="ax-voice-circle" id="axVoiceCircle">  
+          ◉  
+        </div>  
+  
+        <h3 id="axVoiceTitle">Voice Control Ready</h3>  
+  
+        <p id="axVoiceDescription">  
+          Tap the button below and speak.  
+          Your speech will appear in the chat input.  
+        </p>  
+  
+        <button  
+          class="ax-voice-action"  
+          id="axVoiceStart">  
+          Start Voice Input  
+        </button>  
+  
+      </div>  
+  
+      <p style="margin-top:14px;color:#7f8da9;font-size:10px;line-height:1.7">  
+        Voice recognition depends on browser support and microphone permission.  
+        This feature converts speech into text; it does not automatically  
+        create a live voice conversation.  
+      </p>  
+  
+    `);  
+  
+    const SpeechRecognition =  
+      window.SpeechRecognition ||  
+      window.webkitSpeechRecognition;  
+  
+    const button = $("axVoiceStart");  
+  
+    const circle = $("axVoiceCircle");  
+  
+    const title = $("axVoiceTitle");  
+  
+    const description = $("axVoiceDescription");  
+  
+    if (!SpeechRecognition) {  
+  
+      button.disabled = true;  
+  
+      button.textContent = "Not Supported";  
+  
+      description.textContent = "Your speech will appear in the chat input.";
+      overlay.addEventListener("click", event => {
+    if (event.target === overlay) {
+        closePanel();
+    }
+});
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        closeMenu();
+        closePanel();
+    }
+});
+
+}<!-- =====================================  
+ AXON AI - PART 6  
+ PROFESSIONAL ATTACHMENT MENU  
+===================================== -->  <style>  
+.ax-attach-wrap {  
+  position: relative;  
+  display: inline-flex;  
+  align-items: center;  
+}  
+  
+.ax-attach-main {  
+  width: 38px;  
+  height: 38px;  
+  border: 1px solid #354466;  
+  border-radius: 11px;  
+  background: #1a2540;  
+  color: #a9c2ff;  
+  font-size: 25px;  
+  cursor: pointer;  
+  transition: .2s;  
+}  
+  
+.ax-attach-main:hover,  
+.ax-attach-main.active {  
+  background: #2c4278;  
+  border-color: #6687ff;  
+  transform: rotate(45deg);  
+}  
+  
+.ax-attach-menu {  
+  position: absolute;  
+  bottom: 49px;  
+  left: 0;  
+  z-index: 500;  
+  width: 220px;  
+  padding: 9px;  
+  display: none;  
+  border: 1px solid #344362;  
+  border-radius: 15px;  
+  background: #111a2d;  
+  box-shadow: 0 18px 45px #0009;  
+  animation: axAttachIn .18s ease;  
+}  
+  
+.ax-attach-menu.open {  
+  display: block;  
+}  
+  
+@keyframes axAttachIn {  
+  from {  
+    opacity: 0;  
+    transform: translateY(8px);  
+  }  
+  to {  
+    opacity: 1;  
+    transform: translateY(0);  
+  }  
+}  
+  
+.ax-attach-heading {  
+  padding: 9px 10px;  
+  color: #8090b0;  
+  font-size: 10px;  
+  font-weight: 800;  
+  letter-spacing: 1.3px;  
+}  
+  
+.ax-attach-option {  
+  width: 100%;  
+  display: flex;  
+  align-items: center;  
+  gap: 12px;  
+  padding: 12px 10px;  
+  border: none;  
+  border-radius: 9px;  
+  background: transparent;  
+  color: #e0e8fa;  
+  text-align: left;  
+  cursor: pointer;  
+}  
+  
+.ax-attach-option:hover {  
+  background: #202e4b;  
+}  
+  
+.ax-attach-icon {  
+  width: 34px;  
+  height: 34px;  
+  display: grid;  
+  place-items: center;  
+  border: 1px solid #35466b;  
+  border-radius: 10px;  
+  background: #1b2945;  
+  font-size: 17px;  
+}  
+  
+.ax-attach-text strong {  
+  display: block;  
+  font-size: 12px;  
+}  
+  
+.ax-attach-text small {  
+  display: block;  
+  margin-top: 4px;  
+  color: #8291ad;  
+  font-size: 9px;  
+}  
+  
+.ax-selected-file {  
+  display: none;  
+  max-width: 100%;  
+  overflow: hidden;  
+  padding: 7px 10px;  
+  margin: 7px 0;  
+  border: 1px solid #344b78;  
+  border-radius: 8px;  
+  background: #182747;  
+  color: #b9ceff;  
+  font-size: 10px;  
+  text-overflow: ellipsis;  
+}  
+  
+.ax-selected-file.show {  
+  display: block;  
+}  
+  
+.ax-camera-modal {  
+  position: fixed;  
+  inset: 0;  
+  z-index: 900;  
+  display: none;  
+  align-items: center;  
+  justify-content: center;  
+  padding: 15px;  
+  background: #000c;  
+}  
+  
+.ax-camera-modal.open {  
+  display: flex;  
+}  
+  
+.ax-camera-box {  
+  width: 100%;  
+  max-width: 480px;  
+  padding: 16px;  
+  border: 1px solid #3a4c70;  
+  border-radius: 17px;  
+  background: #10192b;  
+  color: white;  
+}  
+  
+.ax-camera-box video {  
+  width: 100%;  
+  max-height: 55vh;  
+  border-radius: 11px;  
+  background: #05080e;  
+}  
+  
+.ax-camera-actions {  
+  display: flex;  
+  gap: 9px;  
+  margin-top: 13px;  
+}  
+  
+.ax-camera-actions button {  
+  flex: 1;  
+  min-height: 42px;  
+  border: 0;  
+  border-radius: 9px;  
+  background: #365bd4;  
+  color: white;  
+  font-weight: 700;  
+  cursor: pointer;  
+}  
+  
+.ax-camera-actions button:last-child {  
+  background: #29344b;  
+}  
+  
+@media(max-width:480px) {  
+  .ax-attach-menu {  
+    width: 210px;  
+  }  
+}  
+</style>  <script>  
+(() => {  
+  "use strict";  
+  
+  const $ = id => document.getElementById(id);  
+  
+  const composerTools =  
+    document.querySelector(".ax-composer-tools");  
+  
+  if (!composerTools || $("axAttachWrap")) return;  
+  
+  /* REPLACE OLD ATTACHMENT BUTTON */  
+  
+  const oldButton = $("axAttachButton");  
+  
+  if (oldButton) oldButton.remove();  
+  
+  const wrap = document.createElement("div");  
+  
+  wrap.className = "ax-attach-wrap";  
+  wrap.id = "axAttachWrap";  
+  
+  wrap.innerHTML = `  
+    <button  
+      type="button"  
+      class="ax-attach-main"  
+      id="axAttachMain"  
+      aria-label="Open attachments"  
+      aria-expanded="false">+</button>  
+  
+    <div class="ax-attach-menu" id="axAttachMenu">  
+  
+      <div class="ax-attach-heading">  
+        ADD TO YOUR MESSAGE  
+      </div>  
+  
+      <button class="ax-attach-option" data-type="files">  
+        <span class="ax-attach-icon">📁</span>  
+        <span class="ax-attach-text">  
+          <strong>Files</strong>  
+          <small>Documents and other files</small>  
+        </span>  
+      </button>  
+  
+      <button class="ax-attach-option" data-type="photo">  
+        <span class="ax-attach-icon">🖼️</span>  
+        <span class="ax-attach-text">  
+          <strong>Photo</strong>  
+          <small>Choose an image from gallery</small>  
+        </span>  
+      </button>  
+  
+      <button class="ax-attach-option" data-type="video">  
+        <span class="ax-attach-icon">🎬</span>  
+        <span class="ax-attach-text">  
+          <strong>Video</strong>  
+          <small>Choose a video</small>  
+        </span>  
+      </button>  
+  
+      <button class="ax-attach-option" data-type="camera">  
+        <span class="ax-attach-icon">📷</span>  
+        <span class="ax-attach-text">  
+          <strong>Camera</strong>  
+          <small>Take a new photo</small>  
+        </span>  
+      </button>  
+  
+    </div>  
+  `;  
+  
+  composerTools.insertBefore(  
+    wrap,  
+    composerTools.firstChild  
+  );  
+  
+  /* FILE INPUTS */  
+  
+  function makeInput(id, accept, capture) {  
+  
+    const input = document.createElement("input");  
+  
+    input.type = "file";  
+    input.id = id;  
+    input.accept = accept;  
+    input.hidden = true;  
+  
+    if (capture) {  
+      input.setAttribute("capture", capture);  
+    }  
+  
+    document.body.appendChild(input);  
+  
+    return input;  
+  
+  }  
+  
+  const filesInput = makeInput(  
+    "axFilesPicker",  
+    "*/*"  
+  );  
+  
+  const photoInput = makeInput(  
+    "axPhotoPicker",  
+    "image/*"  
+  );  
+  
+  const videoInput = makeInput(  
+    "axVideoPicker",  
+    "video/*"  
+  );  
+  
+  const cameraInput = makeInput(  
+    "axCameraFallback",  
+    "image/*",  
+    "environment"  
+  );  
+  
+  /* SELECTED FILE DISPLAY */  
+  
+  const selected = document.createElement("div");  
+  
+  selected.id = "axSelectedAttachment";  
+  
+  selected.className = "ax-selected-file";  
+  
+  const composer = document.querySelector(".ax-composer");  
+  
+  composer.insertBefore(  
+    selected,  
+    composer.querySelector(".ax-composer-bottom")  
+  );  
+  
+  let attachment = null;  
+  
+  function showSelectedFile(file) {  
+  
+    attachment = file;  
+  
+    selected.textContent =  
+      "📎 " + file.name + " · " +  
+      Math.ceil(file.size / 1024) + " KB";  
+  
+    selected.classList.add("show");  
+  
+    wrap.querySelector(".ax-attach-menu")  
+      .classList.remove("open");  
+  
+    wrap.querySelector(".ax-attach-main")  
+      .classList.remove("active");  
+  
+  }  
+  
+  filesInput.addEventListener("change", () => {  
+  
+    if (filesInput.files[0]) {  
+      showSelectedFile(filesInput.files[0]);  
+    }  
+  
+  });  
+  
+  photoInput.addEventListener("change", () => {  
+  
+    if (photoInput.files[0]) {  
+      showSelectedFile(photoInput.files[0]);  
+    }  
+  
+  });  
+  
+  videoInput.addEventListener("change", () => {  
+  
+    if (videoInput.files[0]) {  
+      showSelectedFile(videoInput.files[0]);  
+    }  
+  
+  });  
+  
+  cameraInput.addEventListener("change", () => {  
+  
+    if (cameraInput.files[0]) {  
+      showSelectedFile(cameraInput.files[0]);  
+    }  
+  
+  });  
+  
+  /* MENU OPEN / CLOSE */  
+  
+  const menu = $("axAttachMenu");  
+  
+  const mainButton = $("axAttachMain");  
+  
+  mainButton.addEventListener("click", event => {  
+  
+    event.stopPropagation();  
+  
+    const open = menu.classList.toggle("open");  
+  
+    mainButton.classList.toggle("active", open);  
+  
+    mainButton.setAttribute(  
+      "aria-expanded",  
+      String(open)  
+    );  
+  
+  });  
+  
+  document.addEventListener("click", event => {  
+  
+    if (!wrap.contains(event.target)) {  
+  
+      menu.classList.remove("open");  
+  
+      mainButton.classList.remove("active");  
+  
+      mainButton.setAttribute(  
+        "aria-expanded",  
+        "false"  
+      );  
+  
+    }  
+  
+  });  
+  
+  /* CAMERA MODAL */  
+  
+  const cameraModal = document.createElement("div");  
+  
+  cameraModal.className = "ax-camera-modal";  
+  
+  cameraModal.id = "axCameraModal";  
+  
+  cameraModal.innerHTML = `  
+    <div class="ax-camera-box">  
+  
+      <h3 style="margin-bottom:12px;font-size:16px">  
+        AXON Camera  
+      </h3>  
+  
+      <video  
+        id="axCameraVideo"  
+        autoplay  
+        playsinline  
+        muted>  
+      </video>  
+  
+      <div class="ax-camera-actions">  
+  
+        <button type="button" id="axTakePhoto">  
+          Take Photo  
+        </button>  
+  
+        <button type="button" id="axCloseCamera">  
+          Close  
+        </button>  
+  
+      </div>  
+  
+      <p id="axCameraStatus"  
+        style="margin-top:10px;color:#91a0bd;font-size:10px">  
+        Allow camera permission to continue.  
+      </p>  
+  
+    </div>  
+  `;  
+  
+  document.body.appendChild(cameraModal);  
+  
+  let cameraStream = null;  
+  
+  async function openCamera() {  
+  
+    menu.classList.remove("open");  
+  
+    cameraModal.classList.add("open");  
+  
+    const video = $("axCameraVideo");  
+  
+    const status = $("axCameraStatus");  
+  
+    try {  
+  
+      if (!navigator.mediaDevices?.getUserMedia) {  
+        throw new Error("Camera API unavailable");  
+      }  
+  
+      cameraStream =  
+        await navigator.mediaDevices.getUserMedia({  
+          video: {  
+            facingMode: "environment"  
+          },  
+          audio: false  
+        });  
+  
+      video.srcObject = cameraStream;  
+  
+      status.textContent = "Camera ready.";  
+  
+    } catch (error) {  
+  
+      status.textContent =  
+        "Camera unavailable. You can choose a photo from your gallery instead.";  
+  
+      cameraModal.classList.remove("open");  
+  
+      cameraInput.click();  
+  
+    }  
+  
+  }  
+  
+  function closeCamera() {  
+  
+    if (cameraStream) {  
+  
+      cameraStream.getTracks().forEach(track => {  
+        track.stop();  
+      });  
+  
+      cameraStream = null;  
+  
+    }  
+  
+    $("axCameraVideo").srcObject = null;  
+  
+    cameraModal.classList.remove("open");  
+  
+  }  
+  
+  $("axCloseCamera").addEventListener(  
+    "click",  
+    closeCamera  
+  );  
+  
+  cameraModal.addEventListener("click", event => {  
+  
+    if (event.target === cameraModal) {  
+      closeCamera();  
+    }  
+  
+  });  
+  
+  $("axTakePhoto").addEventListener("click", () => {  
+  
+    const video = $("axCameraVideo");  
+  
+    if (!video.videoWidth) {  
+  
+      $("axCameraStatus").textContent =  
+        "Camera is not ready yet.";  
+  
+      return;  
+  
+    }  
+  
+    const canvas = document.createElement("canvas");  
+  
+    canvas.width = video.videoWidth;  
+  
+    canvas.height = video.videoHeight;  
+  
+    canvas.getContext("2d").drawImage(  
+      video,  
+      0,  
+      0,  
+      canvas.width,  
+      canvas.height  
+    );  
+  
+    canvas.toBlob(blob => {  
+  
+      if (!blob) return;  
+  
+      const photo = new File(  
+        [blob],  
+        "axon-photo-" + Date.now() + ".jpg",  
+        { type: "image/jpeg" }  
+      );  
+  
+      showSelectedFile(photo);  
+  
+      closeCamera();  
+  
+    }, "image/jpeg", .9);  
+  
+  });  
+  
+  /* MENU OPTIONS */  
+  
+  menu.addEventListener("click", event => {  
+  
+    const option = event.target.closest("[data-type]");  
+  
+    if (!option) return;  
+  
+    switch (option.dataset.type) {  
+  
+      case "files":  
+        filesInput.click();  
+        break;  
+  
+      case "photo":  
+        photoInput.click();  
+        break;  
+  
+      case "video":  
+        videoInput.click();  
+        break;  
+  
+      case "camera":  
+        openCamera();  
+        break;  
+  
+    }  
+  
+  });  
+  
+  /* CONNECT ATTACHMENT TO MESSAGE */  
+  
+  const sendButton = $("axSendButton");  
+  
+  const messageInput = $("axMessageInput");  
+  
+  if (sendButton && messageInput) {  
+  
+    sendButton.addEventListener("click", () => {  
+  
+      if (attachment) {  
+  
+        const file = attachment;  
+  
+        const currentText = messageInput.value.trim();  
+  
+        const notice =  
+          currentText  
+            ? currentText + "\n\n"  
+            : "";  
+  
+        messageInput.value =  
+          notice + "[Selected attachment: " + file.name + "]";  
+  
+        selected.textContent =  
+          "Attachment selected: " + file.name +  
+          ". Note: file content is not yet uploaded to the AI server.";  
+  
+      }  
+  
+    }, true);  
+  
+  }  
+  
+  /* CLEAR SELECTION AFTER MANUAL CLEAR */  
+  
+  selected.addEventListener("dblclick", () => {  
+  
+    attachment = null;  
+  
+    filesInput.value = "";  
+    photoInput.value = "";  
+    videoInput.value = "";  
+    cameraInput.value = "";  
+  
+    selected.textContent = "";  
+  
+    selected.classList.remove("show");  
+  
+  });  
+  
+})();  
+</script>  <!-- PART 6 END -->
+  <!-- =================================  
+ AXON AI - PART 7  
+ SEND + LIVE CHAT BUTTONS  
+================================= -->  <style>  
+.ax-part7-actions {  
+  display: flex;  
+  align-items: center;  
+  justify-content: flex-end;  
+  gap: 9px;  
+  flex-shrink: 0;  
+}  
+  
+.ax-p7-send,  
+.ax-p7-live {  
+  min-height: 39px;  
+  padding: 0 15px;  
+  border-radius: 11px;  
+  border: 1px solid transparent;  
+  display: inline-flex;  
+  align-items: center;  
+  justify-content: center;  
+  gap: 7px;  
+  font-size: 11px;  
+  font-weight: 800;  
+  cursor: pointer;  
+  transition: .2s;  
+  white-space: nowrap;  
+}  
+  
+.ax-p7-send {  
+  color: white;  
+  background: linear-gradient(135deg,#477cff,#7655ed);  
+  box-shadow: 0 5px 17px #416fff35;  
+}  
+  
+.ax-p7-send:hover {  
+  transform: translateY(-2px);  
+  box-shadow: 0 7px 20px #416fff55;  
+}  
+  
+.ax-p7-live {  
+  color: #a9caff;  
+  background: #172746;  
+  border-color: #354e78;  
+}  
+  
+.ax-p7-live:hover {  
+  background: #233c66;  
+  border-color: #638aff;  
+}  
+  
+.ax-p7-live.active {  
+  color: white;  
+  background: #a52d45;  
+  border-color: #ff637c;  
+  animation: axLivePulse 1.5s infinite;  
+}  
+  
+.ax-p7-live-dot {  
+  width: 7px;  
+  height: 7px;  
+  border-radius: 50%;  
+  background: #45e6a1;  
+}  
+  
+.ax-p7-live.active .ax-p7-live-dot {  
+  background: white;  
+}  
+  
+@keyframes axLivePulse {  
+  50% {  
+    box-shadow: 0 0 0 6px #ff536522;  
+  }  
+}  
+  
+@media(max-width:480px) {  
+  .ax-part7-actions {  
+    gap: 6px;  
+  }  
+  
+  .ax-p7-send,  
+  .ax-p7-live {  
+    min-height: 36px;  
+    padding: 0 10px;  
+    font-size: 10px;  
+  }  
+}  
+</style>  <script>  
+(() => {  
+  "use strict";  
+  
+  const oldSend = document.getElementById("sendBtn");  
+  const bottom = document.querySelector(".ax-composer-bottom");  
+  
+  if (!bottom || document.getElementById("axPart7Actions")) {  
+    return;  
+  }  
+  
+  const actions = document.createElement("div");  
+  
+  actions.className = "ax-part7-actions";  
+  actions.id = "axPart7Actions";  
+  
+  actions.innerHTML = `  
+    <button  
+      type="button"  
+      class="ax-p7-live"  
+      id="axPart7Live">  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Live Chat</span>  
+    </button>  
+  
+    <button  
+      type="button"  
+      class="ax-p7-send"  
+      id="axPart7Send">  
+      <span>Send</span>  
+      <span>➤</span>  
+    </button>  
+  `;  
+  
+  if (oldSend) {  
+    oldSend.style.display = "none";  
+  }  
+  
+  bottom.appendChild(actions);  
+  
+  /* SEND BUTTON */  
+  
+  document.getElementById("axPart7Send")  
+    .addEventListener("click", () => {  
+  
+      const originalSend =  
+        document.getElementById("sendBtn");  
+  
+      if (originalSend) {  
+        originalSend.click();  
+      } else {  
+        const input =  
+          document.getElementById("messageInput");  
+  
+        if (input && input.value.trim()) {  
+          alert("AXON Send button connection is missing.");  
+        }  
+      }  
+  
+    });  
+  
+  /* LIVE CHAT */  
+  
+  const liveButton =  
+    document.getElementById("axPart7Live");  
+  
+  const input =  
+    document.getElementById("messageInput");  
+  
+  const SpeechRecognition =  
+    window.SpeechRecognition ||  
+    window.webkitSpeechRecognition;  
+  
+  let recognition = null;  
+  let liveActive = false;  
+  
+  function speak(text) {  
+  
+    if (!("speechSynthesis" in window)) return;  
+  
+    window.speechSynthesis.cancel();  
+  
+    const speech = new SpeechSynthesisUtterance(text);  
+  
+    speech.lang = "hi-IN";  
+    speech.rate = 1;  
+    speech.pitch = 1;  
+  
+    window.speechSynthesis.speak(speech);  
+  
+  }  
+  
+  function stopLive() {  
+  
+    liveActive = false;  
+  
+    if (recognition) {  
+      recognition.stop();  
+      recognition = null;  
+    }  
+  
+    if ("speechSynthesis" in window) {  
+      window.speechSynthesis.cancel();  
+    }  
+  
+    liveButton.classList.remove("active");  
+  
+    liveButton.innerHTML = `  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Live Chat</span>  
+    `;  
+  
+  }  
+  
+  function startLive() {  
+  
+    if (!SpeechRecognition) {  
+      alert(  
+        "Live voice input is not supported by this browser. Try a supported browser."  
+      );  
+      return;  
+    }  
+  
+    liveActive = true;  
+  
+    liveButton.classList.add("active");  
+  
+    liveButton.innerHTML = `  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Stop Live</span>  
+    `;  
+  
+    recognition = new SpeechRecognition();  
+  
+    recognition.lang = "hi-IN";  
+    recognition.continuous = false;  
+    recognition.interimResults = false;  
+  
+    recognition.onresult = event => {  
+  
+      const transcript =  
+        event.results[0][0].transcript;  
+  
+      if (input) {  
+        input.value = transcript;  
+        input.dispatchEvent(  
+          new Event("input", { bubbles: true })  
+        );  
+      }  
+  
+      /* Existing Send function */  
+  
+      const send =  
+        document.getElementById("sendBtn");  
+  
+      if (send && transcript.trim()) {  
+        send.click();  
+      }  
+  
+    };  
+  
+    recognition.onerror = () => {  
+      if (liveActive) stopLive();  
+    };  
+  
+    recognition.onend = () => {  
+  
+      if (!liveActive) return;  
+  
+      recognition = null;  
+  
+      /* Wait briefly before another listening session */  
+      setTimeout(() => {  
+  
+        if (!liveActive) return;  
+  
+        try {  
+          startListeningAgain();  
+        } catch (error) {  
+          stopLive();  
+        }  
+  
+      }, 800);  
+  
+    };  
+  
+    try {  
+      recognition.start();  
+    } catch (error) {  
+      stopLive();  
+    }  
+  
+  }  
+  
+  function startListeningAgain() {  
+  
+    if (!liveActive || recognition) return;  
+  
+    recognition = new SpeechRecognition();  
+  
+    recognition.lang = "hi-IN";  
+    recognition.continuous = false;  
+    recognition.interimResults = false;  
+  
+    recognition.onresult = event => {  
+  
+      const transcript =  
+        event.results[0][0].transcript;  
+  
+      if (input) {  
+        input.value = transcript;  
+        input.dispatchEvent(  
+          new Event("input", { bubbles: true })  
+        );  
+      }  
+  
+      const send =  
+        document.getElementById("sendBtn");  
+  
+      if (send && transcript.trim()) {  
+        send.click();  
+      }  
+  
+    };  
+  
+    recognition.onerror = () => {  
+      if (liveActive) stopLive();  
+    };  
+  
+    recognition.onend = () => {  
+  
+      recognition = null;  
+  
+      if (liveActive) {  
+        setTimeout(startListeningAgain, 800);  
+      }  
+  
+    };  
+  
+    recognition.start();  
+  
+  }  
+  
+  liveButton.addEventListener("click", () => {  
+  
+    if (liveActive) {  
+      stopLive();  
+    } else {  
+      startLive();  
+    }  
+  
+  });  
+  
+  window.axonStopLiveChat = stopLive;  
+  
+})();  
+</script>  <!-- PART 7 END -->
+  <!-- =================================  
+ AXON AI - PART 7  
+ SEND + LIVE CHAT BUTTONS  
+================================= -->  <style>  
+.ax-part7-actions {  
+  display: flex;  
+  align-items: center;  
+  justify-content: flex-end;  
+  gap: 9px;  
+  flex-shrink: 0;  
+}  
+  
+.ax-p7-send,  
+.ax-p7-live {  
+  min-height: 39px;  
+  padding: 0 15px;  
+  border-radius: 11px;  
+  border: 1px solid transparent;  
+  display: inline-flex;  
+  align-items: center;  
+  justify-content: center;  
+  gap: 7px;  
+  font-size: 11px;  
+  font-weight: 800;  
+  cursor: pointer;  
+  transition: .2s;  
+  white-space: nowrap;  
+}  
+  
+.ax-p7-send {  
+  color: white;  
+  background: linear-gradient(135deg,#477cff,#7655ed);  
+  box-shadow: 0 5px 17px #416fff35;  
+}  
+  
+.ax-p7-send:hover {  
+  transform: translateY(-2px);  
+  box-shadow: 0 7px 20px #416fff55;  
+}  
+  
+.ax-p7-live {  
+  color: #a9caff;  
+  background: #172746;  
+  border-color: #354e78;  
+}  
+  
+.ax-p7-live:hover {  
+  background: #233c66;  
+  border-color: #638aff;  
+}  
+  
+.ax-p7-live.active {  
+  color: white;  
+  background: #a52d45;  
+  border-color: #ff637c;  
+  animation: axLivePulse 1.5s infinite;  
+}  
+  
+.ax-p7-live-dot {  
+  width: 7px;  
+  height: 7px;  
+  border-radius: 50%;  
+  background: #45e6a1;  
+}  
+  
+.ax-p7-live.active .ax-p7-live-dot {  
+  background: white;  
+}  
+  
+@keyframes axLivePulse {  
+  50% {  
+    box-shadow: 0 0 0 6px #ff536522;  
+  }  
+}  
+  
+@media(max-width:480px) {  
+  .ax-part7-actions {  
+    gap: 6px;  
+  }  
+  
+  .ax-p7-send,  
+  .ax-p7-live {  
+    min-height: 36px;  
+    padding: 0 10px;  
+    font-size: 10px;  
+  }  
+}  
+</style>  <script>  
+(() => {  
+  "use strict";  
+  
+  const oldSend = document.getElementById("sendBtn");  
+  const bottom = document.querySelector(".ax-composer-bottom");  
+  
+  if (!bottom || document.getElementById("axPart7Actions")) {  
+    return;  
+  }  
+  
+  const actions = document.createElement("div");  
+  
+  actions.className = "ax-part7-actions";  
+  actions.id = "axPart7Actions";  
+  
+  actions.innerHTML = `  
+    <button  
+      type="button"  
+      class="ax-p7-live"  
+      id="axPart7Live">  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Live Chat</span>  
+    </button>  
+  
+    <button  
+      type="button"  
+      class="ax-p7-send"  
+      id="axPart7Send">  
+      <span>Send</span>  
+      <span>➤</span>  
+    </button>  
+  `;  
+  
+  if (oldSend) {  
+    oldSend.style.display = "none";  
+  }  
+  
+  bottom.appendChild(actions);  
+  
+  /* SEND BUTTON */  
+  
+  document.getElementById("axPart7Send")  
+    .addEventListener("click", () => {  
+  
+      const originalSend =  
+        document.getElementById("sendBtn");  
+  
+      if (originalSend) {  
+        originalSend.click();  
+      } else {  
+        const input =  
+          document.getElementById("messageInput");  
+  
+        if (input && input.value.trim()) {  
+          alert("AXON Send button connection is missing.");  
+        }  
+      }  
+  
+    });  
+  
+  /* LIVE CHAT */  
+  
+  const liveButton =  
+    document.getElementById("axPart7Live");  
+  
+  const input =  
+    document.getElementById("messageInput");  
+  
+  const SpeechRecognition =  
+    window.SpeechRecognition ||  
+    window.webkitSpeechRecognition;  
+  
+  let recognition = null;  
+  let liveActive = false;  
+  
+  function speak(text) {  
+  
+    if (!("speechSynthesis" in window)) return;  
+  
+    window.speechSynthesis.cancel();  
+  
+    const speech = new SpeechSynthesisUtterance(text);  
+  
+    speech.lang = "hi-IN";  
+    speech.rate = 1;  
+    speech.pitch = 1;  
+  
+    window.speechSynthesis.speak(speech);  
+  
+  }  
+  
+  function stopLive() {  
+  
+    liveActive = false;  
+  
+    if (recognition) {  
+      recognition.stop();  
+      recognition = null;  
+    }  
+  
+    if ("speechSynthesis" in window) {  
+      window.speechSynthesis.cancel();  
+    }  
+  
+    liveButton.classList.remove("active");  
+  
+    liveButton.innerHTML = `  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Live Chat</span>  
+    `;  
+  
+  }  
+  
+  function startLive() {  
+  
+    if (!SpeechRecognition) {  
+      alert(  
+        "Live voice input is not supported by this browser. Try a supported browser."  
+      );  
+      return;  
+    }  
+  
+    liveActive = true;  
+  
+    liveButton.classList.add("active");  
+  
+    liveButton.innerHTML = `  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Stop Live</span>  
+    `;  
+  
+    recognition = new SpeechRecognition();  
+  
+    recognition.lang = "hi-IN";  
+    recognition.continuous = false;  
+    recognition.interimResults = false;  
+  
+    recognition.onresult = event => {  
+  
+      const transcript =  
+        event.results[0][0].transcript;  
+  
+      if (input) {  
+        input.value = transcript;  
+        input.dispatchEvent(  
+          new Event("input", { bubbles: true })  
+        );  
+      }  
+  
+      /* Existing Send function */  
+  
+      const send =  
+        document.getElementById("sendBtn");  
+  
+      if (send && transcript.trim()) {  
+        send.click();  
+      }  
+  
+    };  
+  
+    recognition.onerror = () => {  
+      if (liveActive) stopLive();  
+    };  
+  
+    recognition.onend = () => {  
+  
+      if (!liveActive) return;  
+  
+      recognition = null;  
+  
+      /* Wait briefly before another listening session */  
+      setTimeout(() => {  
+  
+        if (!liveActive) return;  
+  
+        try {  
+          startListeningAgain();  
+        } catch (error) {  
+          stopLive();  
+        }  
+  
+      }, 800);  
+  
+    };  
+  
+    try {  
+      recognition.start();  
+    } catch (error) {  
+      stopLive();  
+    }  
+  
+  }  
+  
+  function startListeningAgain() {  
+  
+    if (!liveActive || recognition) return;  
+  
+    recognition = new SpeechRecognition();  
+  
+    recognition.lang = "hi-IN";  
+    recognition.continuous = false;  
+    recognition.interimResults = false;  
+  
+    recognition.onresult = event => {  
+  
+      const transcript =  
+        event.results[0][0].transcript;  
+  
+      if (input) {  
+        input.value = transcript;  
+        input.dispatchEvent(  
+          new Event("input", { bubbles: true })  
+        );  
+      }  
+  
+      const send =  
+        document.getElementById("sendBtn");  
+  
+      if (send && transcript.trim()) {  
+        send.click();  
+      }  
+  
+    };  
+  
+    recognition.onerror = () => {  
+      if (liveActive) stopLive();  
+    };  
+  
+    recognition.onend = () => {  
+  
+      recognition = null;  
+  
+      if (liveActive) {  
+        setTimeout(startListeningAgain, 800);  
+      }  
+  
+    };  
+  
+    recognition.start();  
+  
+  }  
+  
+  liveButton.addEventListener("click", () => {  
+  
+    if (liveActive) {  
+      stopLive();  
+    } else {  
+      startLive();  
+    }  
+  
+  });  
+  
+  window.axonStopLiveChat = stopLive;  
+  
+}<!-- =================================  
+ AXON AI - PART 7  
+ SEND + LIVE CHAT BUTTONS  
+================================= -->  <style>  
+.ax-part7-actions {  
+  display: flex;  
+  align-items: center;  
+  justify-content: flex-end;  
+  gap: 9px;  
+  flex-shrink: 0;  
+}  
+  
+.ax-p7-send,  
+.ax-p7-live {  
+  min-height: 39px;  
+  padding: 0 15px;  
+  border-radius: 11px;  
+  border: 1px solid transparent;  
+  display: inline-flex;  
+  align-items: center;  
+  justify-content: center;  
+  gap: 7px;  
+  font-size: 11px;  
+  font-weight: 800;  
+  cursor: pointer;  
+  transition: .2s;  
+  white-space: nowrap;  
+}  
+  
+.ax-p7-send {  
+  color: white;  
+  background: linear-gradient(135deg,#477cff,#7655ed);  
+  box-shadow: 0 5px 17px #416fff35;  
+}  
+  
+.ax-p7-send:hover {  
+  transform: translateY(-2px);  
+  box-shadow: 0 7px 20px #416fff55;  
+}  
+  
+.ax-p7-live {  
+  color: #a9caff;  
+  background: #172746;  
+  border-color: #354e78;  
+}  
+  
+.ax-p7-live:hover {  
+  background: #233c66;  
+  border-color: #638aff;  
+}  
+  
+.ax-p7-live.active {  
+  color: white;  
+  background: #a52d45;  
+  border-color: #ff637c;  
+  animation: axLivePulse 1.5s infinite;  
+}  
+  
+.ax-p7-live-dot {  
+  width: 7px;  
+  height: 7px;  
+  border-radius: 50%;  
+  background: #45e6a1;  
+}  
+  
+.ax-p7-live.active .ax-p7-live-dot {  
+  background: white;  
+}  
+  
+@keyframes axLivePulse {  
+  50% {  
+    box-shadow: 0 0 0 6px #ff536522;  
+  }  
+}  
+  
+@media(max-width:480px) {  
+  .ax-part7-actions {  
+    gap: 6px;  
+  }  
+  
+  .ax-p7-send,  
+  .ax-p7-live {  
+    min-height: 36px;  
+    padding: 0 10px;  
+    font-size: 10px;  
+  }  
+}  
+</style>  <script>  
+(() => {  
+  "use strict";  
+  
+  const oldSend = document.getElementById("sendBtn");  
+  const bottom = document.querySelector(".ax-composer-bottom");  
+  
+  if (!bottom || document.getElementById("axPart7Actions")) {  
+    return;  
+  }  
+  
+  const actions = document.createElement("div");  
+  
+  actions.className = "ax-part7-actions";  
+  actions.id = "axPart7Actions";  
+  
+  actions.innerHTML = `  
+    <button  
+      type="button"  
+      class="ax-p7-live"  
+      id="axPart7Live">  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Live Chat</span>  
+    </button>  
+  
+    <button  
+      type="button"  
+      class="ax-p7-send"  
+      id="axPart7Send">  
+      <span>Send</span>  
+      <span>➤</span>  
+    </button>  
+  `;  
+  
+  if (oldSend) {  
+    oldSend.style.display = "none";  
+  }  
+  
+  bottom.appendChild(actions);  
+  
+  /* SEND BUTTON */  
+  
+  document.getElementById("axPart7Send")  
+    .addEventListener("click", () => {  
+  
+      const originalSend =  
+        document.getElementById("sendBtn");  
+  
+      if (originalSend) {  
+        originalSend.click();  
+      } else {  
+        const input =  
+          document.getElementById("messageInput");  
+  
+        if (input && input.value.trim()) {  
+          alert("AXON Send button connection is missing.");  
+        }  
+      }  
+  
+    });  
+  
+  /* LIVE CHAT */  
+  
+  const liveButton =  
+    document.getElementById("axPart7Live");  
+  
+  const input =  
+    document.getElementById("messageInput");  
+  
+  const SpeechRecognition =  
+    window.SpeechRecognition ||  
+    window.webkitSpeechRecognition;  
+  
+  let recognition = null;  
+  let liveActive = false;  
+  
+  function speak(text) {  
+  
+    if (!("speechSynthesis" in window)) return;  
+  
+    window.speechSynthesis.cancel();  
+  
+    const speech = new SpeechSynthesisUtterance(text);  
+  
+    speech.lang = "hi-IN";  
+    speech.rate = 1;  
+    speech.pitch = 1;  
+  
+    window.speechSynthesis.speak(speech);  
+  
+  }  
+  
+  function stopLive() {  
+  
+    liveActive = false;  
+  
+    if (recognition) {  
+      recognition.stop();  
+      recognition = null;  
+    }  
+  
+    if ("speechSynthesis" in window) {  
+      window.speechSynthesis.cancel();  
+    }  
+  
+    liveButton.classList.remove("active");  
+  
+    liveButton.innerHTML = `  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Live Chat</span>  
+    `;  
+  
+  }  
+  
+  function startLive() {  
+  
+    if (!SpeechRecognition) {  
+      alert(  
+        "Live voice input is not supported by this browser. Try a supported browser."  
+      );  
+      return;  
+    }  
+  
+    liveActive = true;  
+  
+    liveButton.classList.add("active");  
+  
+    liveButton.innerHTML = `  
+      <span class="ax-p7-live-dot"></span>  
+      <span>Stop Live</span>  
+    `;  
+  
+    recognition = new SpeechRecognition();  
+  
+    recognition.lang = "hi-IN";  
+    recognition.continuous = false;  
+    recognition.interimResults = false;  
+  
+    recognition.onresult = event => {  
+  
+      const transcript =  
+        event.results[0][0].transcript;  
+  
+      if (input) {  
+        input.value = transcript;  
+        input.dispatchEvent(  
+          new Event("input", { bubbles: true })  
+        );  
+      }  
+  
+      /* Existing Send function */  
+  
+      const send =  
+        document.getElementById("sendBtn");  
+  
+      if (send && transcript.trim()) {  
+        send.click();  
+      }  
+  
+    };  
+  
+    recognition.onerror = () => {  
+      if (liveActive) stopLive();  
+    };  
+  
+    recognition.onend = () => {  
+  
+      if (!liveActive) return;  
+  
+      recognition = null;  
+  
+      /* Wait briefly before another listening session */  
+      setTimeout(() => {  
+  
+        if (!liveActive) return;  
+  
+        try {  
+          startListeningAgain();  
+        } catch (error) {  
+          stopLive();  
+        }  
+  
+      }, 800);  
+  
+    };  
+  
+    try {  
+      recognition.start();  
+    } catch (error) {  
+      stopLive();  
+    }  
+  
+  }  
+  
+  function startListeningAgain() {  
+  
+    if (!liveActive || recognition) return;  
+  
+    recognition = new SpeechRecognition();  
+  
+    recognition.lang = "hi-IN";  
+    recognition.continuous = false;  
+    recognition.interimResults = false;  
+  
+    recognition.onresult = event => {  
+  
+      const transcript =  
+        event.results[0][0].transcript;  
+  
+      if (input) {  
+        input.value = transcript;  
+        input.dispatchEvent(  
+          new Event("input", { bubbles: true })  
+        );  
+      }  
+  
+      const send =  
+        document.getElementById("sendBtn");  
+  
+      if (send && transcript.trim()) {  
+        send.click();  
+      }  
+  
+    };  
+  
+    recognition.onerror = () => {  
+      if (liveActive) stopLive();  
+    };  
+  
+    recognition.onend = () => {  
+  
+      recognition = null;  
+  
+      if (liveActive) {  
+        setTimeout(startListeningAgain, 800);  
+      }  
+  
+    };  
+  
+    recognition.start();  
+  
+  }  
+  
+  liveButton.addEventListener("click", () => {  
+  
+    if (liveActive) {  
+      stopLive();  
+    } else {  
+      startLive();  
+    }  
+  
+  });  
+  
+  window.axonStopLiveChat = stopLive;  
+  
+})();  
+</script>  <!-- PART 7 END -- 
+  HTML
+
+<!-- ==================================  
+ AXON AI - PART 8  
+ TOP RIGHT NEW PAGE BUTTON  
+================================== -->  <style>  
+.ax-new-page-button {  
+  position: absolute;  
+  top: 50%;  
+  right: 14px;  
+  transform: translateY(-50%);  
+  width: 39px;  
+  height: 39px;  
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
+  border: 1px solid #354665;  
+  border-radius: 11px;  
+  background: #17233a;  
+  color: #b9ceff;  
+  cursor: pointer;  
+  transition: .22s ease;  
+  z-index: 30;  
+}  
+  
+.ax-new-page-button:hover {  
+  background: #263c66;  
+  color: #ffffff;  
+  border-color: #7298ff;  
+  box-shadow: 0 0 18px #507aff30;  
+  transform: translateY(-50%) scale(1.06);  
+}  
+  
+.ax-new-page-button svg {  
+  width: 19px;  
+  height: 19px;  
+}  
+  
+.ax-new-page-button:active {  
+  transform: translateY(-50%) scale(.94);  
+}  
+  
+.ax-new-page-button::after {  
+  content: "New Chat";  
+  position: absolute;  
+  top: 45px;  
+  right: 0;  
+  padding: 6px 9px;  
+  border-radius: 6px;  
+  background: #10192b;  
+  border: 1px solid #354665;  
+  color: #dce7ff;  
+  font-size: 10px;  
+  white-space: nowrap;  
+  opacity: 0;  
+  pointer-events: none;  
+  transition: .2s;  
+}  
+  
+.ax-new-page-button:hover::after {  
+  opacity: 1;  
+}  
+  
+.ax-header {  
+  position: relative;  
+  padding-right: 62px !important;  
+}  
+  
+@media(max-width:480px) {  
+  .ax-new-page-button {  
+    right: 10px;  
+    width: 36px;  
+    height: 36px;  
+  }  
+}  
+</style>  <script>  
+(() => {  
+  "use strict";  
+  
+  const header = document.querySelector(  
+    "#axonChat .ax-header"  
+  );  
+  
+  if (!header || document.getElementById("axNewPageButton")) {  
+    return;  
+  }  
+  
+  const button = document.createElement("button");  
+  
+  button.type = "button";  
+  button.id = "axNewPageButton";  
+  button.className = "ax-new-page-button";  
+  button.title = "Start a new chat";  
+  button.setAttribute("aria-label", "New Chat");  
+  
+  button.innerHTML = `  
+    <svg viewBox="0 0 24 24"  
+      fill="none"  
+      stroke="currentColor"  
+      stroke-width="1.8"  
+      stroke-linecap="round"  
+      stroke-linejoin="round">  
+  
+      <path d="M12 20h9"/>  
+  
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/>  
+  
+      <path d="M14 6l4 4"/>  
+  
+    </svg>  
+  `;  
+  
+  header.appendChild(button);  
+  
+  button.addEventListener("click", () => {  
+  
+    /* Use the existing AXON New Chat button */  
+  
+    const candidates = [  
+      "#newChatBtn",  
+      "#newChatButton",  
+      "#new-chat-btn"  
+    ];  
+  
+    for (const selector of candidates) {  
+  
+      const existing = document.querySelector(selector);  
+  
+      if (existing && existing !== button) {  
+        existing.click();  
+        return;  
+      }  
+  
+    }  
+  
+    const allButtons = [  
+      ...document.querySelectorAll("button")  
+    ];  
+  
+    const existingNewChat = allButtons.find(item => {  
+  
+      if (item === button) return false;  
+  
+      const text = (  
+        item.innerText ||  
+        item.getAttribute("aria-label") ||  
+        item.title ||  
+        ""  
+      ).trim();  
+  
+      return /^new\s*chat$/i.test(text);  
+  
+    });  
+  
+    if (existingNewChat) {  
+      existingNewChat.click();  
+      return;  
+    }  
+  
+    if (typeof window.axonCreateNewChat === "function") {  
+      window.axonCreateNewChat();  
+      return;  
+    }  
+  
+    alert(  
+      "New Chat action is not connected. Check the Part 4 New Chat button."  
+    );  
+  
+  });  
+  
+})();  
+</script>  <!-- PART 8 END -->
+  <!-- =====================================  
+ AXON AI - PART 9  
+ WORKING VOICE CONTROL  
+===================================== -->  <style>  
+.ax-vc-panel {  
+  position: fixed;  
+  right: 16px;  
+  bottom: 90px;  
+  z-index: 1000;  
+  width: min(340px, calc(100vw - 32px));  
+  padding: 19px;  
+  display: none;  
+  border: 1px solid #354b75;  
+  border-radius: 19px;  
+  background: #111b30;  
+  color: #eaf0ff;  
+  box-shadow: 0 20px 60px #0009;  
+}  
+  
+.ax-vc-panel.open {  
+  display: block;  
+  animation: axVcIn .2s ease;  
+}  
+  
+@keyframes axVcIn {  
+  from { opacity: 0; transform: translateY(10px); }  
+  to { opacity: 1; transform: translateY(0); }  
+}  
+  
+.ax-vc-head {  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  margin-bottom: 17px;  
+}  
+  
+.ax-vc-head strong {  
+  font-size: 14px;  
+}  
+  
+.ax-vc-close {  
+  width: 30px;  
+  height: 30px;  
+  border: 1px solid #394b6d;  
+  border-radius: 8px;  
+  background: #1c2941;  
+  color: white;  
+  cursor: pointer;  
+}  
+  
+.ax-vc-mic {  
+  width: 76px;  
+  height: 76px;  
+  display: grid;  
+  place-items: center;  
+  margin: 15px auto;  
+  border: 1px solid #668aff;  
+  border-radius: 50%;  
+  background: #253c70;  
+  color: white;  
+  font-size: 30px;  
+  cursor: pointer;  
+  transition: .2s;  
+}  
+  
+.ax-vc-mic.listening {  
+  background: #a52d45;  
+  border-color: #ff7188;  
+  animation: axVcPulse 1.3s infinite;  
+}  
+  
+@keyframes axVcPulse {  
+  50% { box-shadow: 0 0 0 12px #ff617722; }  
+}  
+  
+.ax-vc-status {  
+  min-height: 18px;  
+  text-align: center;  
+  color: #9eb4df;  
+  font-size: 11px;  
+}  
+  
+.ax-vc-result {  
+  min-height: 65px;  
+  max-height: 110px;  
+  overflow: auto;  
+  margin-top: 13px;  
+  padding: 11px;  
+  border: 1px solid #304362;  
+  border-radius: 10px;  
+  background: #0c1527;  
+  color: #dce7ff;  
+  font-size: 12px;  
+  line-height: 1.6;  
+  overflow-wrap: anywhere;  
+}  
+  
+.ax-vc-controls {  
+  display: flex;  
+  gap: 8px;  
+  margin-top: 13px;  
+}  
+  
+.ax-vc-controls button {  
+  flex: 1;  
+  min-height: 38px;  
+  border: 0;  
+  border-radius: 9px;  
+  background: #355bd0;  
+  color: white;  
+  font-size: 11px;  
+  font-weight: 700;  
+  cursor: pointer;  
+}  
+  
+.ax-vc-controls button:last-child {  
+  background: #29364d;  
+}  
+  
+.ax-vc-language {  
+  width: 100%;  
+  margin-top: 13px;  
+  padding: 10px;  
+  border: 1px solid #354967;  
+  border-radius: 9px;  
+  background: #17243b;  
+  color: white;  
+}  
+  
+.ax-vc-speak {  
+  display: flex;  
+  align-items: center;  
+  gap: 9px;  
+  margin-top: 13px;  
+  color: #b9c9e6;  
+  font-size: 11px;  
+}  
+  
+.ax-vc-speak input {  
+  accent-color: #668aff;  
+}  
+</style>  <div class="ax-vc-panel" id="axVoicePanel">    <div class="ax-vc-head">  
+    <strong>🎙 AXON Voice Control</strong>  
+    <button class="ax-vc-close" id="axVcClose">✕</button>  
+  </div>  <button class="ax-vc-mic" id="axVcMic"  
+aria-label="Start voice recognition">
+🎙
+</button>
+
+  <div class="ax-vc-status" id="axVcStatus">  
+    Tap microphone to speak  
+  </div>    <div class="ax-vc-result" id="axVcResult">  
+    Your recognized speech will appear here...  
+  </div>    <select class="ax-vc-language" id="axVcLanguage">  
+    <option value="hi-IN">Hindi</option>  
+    <option value="en-IN">English (India)</option>  
+    <option value="en-US">English (US)</option>  
+  </select>    <label class="ax-vc-speak">  
+    <input type="checkbox" id="axVcSpeak">  
+    Speak AI replies aloud  
+  </label>    <div class="ax-vc-controls">  
+    <button id="axVcSend">Send Message</button>  
+    <button id="axVcStop">Stop Voice</button>  
+  </div>  </div>  <script>  
+(() => {  
+  "use strict";  
+  
+  const $ = id => document.getElementById(id);  
+  
+  const panel = $("axVoicePanel");  
+  const mic = $("axVcMic");  
+  const status = $("axVcStatus");  
+  const result = $("axVcResult");  
+  
+  const Recognition =  
+    window.SpeechRecognition ||  
+    window.webkitSpeechRecognition;  
+  
+  let recognition = null;  
+  let listening = false;  
+  let recognizedText = "";  
+  let lastSpokenReply = "";  
+  
+  function openPanel() {  
+    panel.classList.add("open");  
+    status.textContent = "Tap microphone to speak";  
+  }  
+  
+  function stopRecognition() {  
+    listening = false;  
+  
+    if (recognition) {  
+      const current = recognition;  
+      recognition = null;  
+  
+      try {  
+        current.stop();  
+      } catch (_) {}  
+    }  
+  
+    mic.classList.remove("listening");  
+    mic.textContent = "🎙";  
+  }  
+  
+  function closePanel() {  
+    stopRecognition();  
+    panel.classList.remove("open");  
+  }  
+  
+  function startRecognition() {  
+  
+    if (!Recognition) {  
+      status.textContent =  
+        "Voice recognition is not supported in this browser.";  
+      return;  
+    }  
+  
+    stopRecognition();  
+  
+    recognizedText = "";  
+    result.textContent = "Listening...";  
+  
+    recognition = new Recognition();  
+  
+    recognition.lang = $("axVcLanguage").value;  
+    recognition.continuous = false;  
+    recognition.interimResults = true;  
+  
+    recognition.onstart = () => {  
+      listening = true;  
+      mic.classList.add("listening");  
+      mic.textContent = "⏹";  
+      status.textContent = "Listening... Speak now";  
+    };  
+  
+    recognition.onresult = event => {  
+  
+      let finalText = "";  
+      let interimText = "";  
+  
+      for (  
+        let i = event.resultIndex;  
+        i < event.results.length;  
+        i++  
+      ) {  
+        const text = event.results[i][0].transcript;  
+  
+        if (event.results[i].isFinal) {  
+          finalText += text;  
+        } else {  
+          interimText += text;  
+        }  
+      }  
+  
+      if (finalText) {  
+        recognizedText += finalText;  
+      }  
+  
+      result.textContent =  
+        (recognizedText + " " + interimText).trim() ||  
+        "Listening...";  
+    };  
+  
+    recognition.onerror = event => {  
+      status.textContent =  
+        "Microphone error: " + event.error;  
+  
+      stopRecognition();  
+    };  
+  
+    recognition.onend = () => {  
+      listening = false;  
+      recognition = null;  
+  
+      mic.classList.remove("listening");  
+      mic.textContent = "🎙";  
+  
+      status.textContent = recognizedText.trim()  
+        ? "Speech recognized. Press Send Message."  
+        : "Tap microphone to try again.";  
+    };  
+  
+    try {  
+      recognition.start();  
+    } catch (error) {  
+      status.textContent = "Could not start microphone.";  
+      stopRecognition();  
+    }  
+  }  
+  
+  function sendRecognizedMessage() {  
+  
+    const text = recognizedText.trim();  
+  
+    if (!text) {  
+      status.textContent = "Please speak a message first.";  
+      return;  
+    }  
+  
+    const input = $("messageInput");  
+    const sendButton = $("sendBtn");  
+  
+    if (!input || !sendButton) {  
+      status.textContent = "Chat input connection not found.";  
+      return;  
+    }  
+  
+    input.value = text;  
+  
+    input.dispatchEvent(  
+      new Event("input", { bubbles: true })  
+    );  
+  
+    closePanel();  
+  
+    sendButton.click();  
+  
+    recognizedText = "";  
+  }  
+  
+  function speakReply(text) {  
+  
+    if (!$("axVcSpeak").checked) return;  
+  
+    if (!("speechSynthesis" in window)) return;  
+  
+    if (!text || text === lastSpokenReply) return;  
+  
+    lastSpokenReply = text;  
+  
+    window.speechSynthesis.cancel();  
+  
+    const speech = new SpeechSynthesisUtterance(text);  
+  
+    speech.lang = $("axVcLanguage").value;  
+    speech.rate = 1;  
+  
+    window.speechSynthesis.speak(speech);  
+  }  
+  
+  /* BUTTON EVENTS */  
+  
+  mic.addEventListener("click", () => {  
+    if (listening) {  
+      stopRecognition();  
+    } else {  
+      startRecognition();  
+    }  
+  });  
+  
+  $("axVcClose").addEventListener("click", closePanel);  
+  
+  $("axVcStop").addEventListener("click", () => {  
+    stopRecognition();  
+  
+    if ("speechSynthesis" in window) {  
+      window.speechSynthesis.cancel();  
+    }  
+  
+    status.textContent = "Voice stopped.";  
+  });  
+  
+  $("axVcSend").addEventListener(  
+    "click",  
+    sendRecognizedMessage  
+  );  
+  
+  /* OPEN FROM PART 5 VOICE CONTROL MENU */  
+  
+  document.addEventListener("click", event => {  
+  
+    const button = event.target.closest("button");  
+  
+    if (!button) return;  
+  
+    const label = (  
+      button.innerText ||  
+      button.getAttribute("aria-label") ||  
+      ""  
+    ).trim().toLowerCase();  
+  
+    if (  
+      label === "voice control" ||  
+      label.includes("voice control")  
+    ) {  
+      openPanel();  
+    }  
+  
+  }, true);  
+  
+  /* OPTIONAL AI REPLY SPEECH */  
+  
+  const messageArea =  
+    document.getElementById("axonMessages");  
+  
+  if (messageArea) {  
+  
+    const observer = new MutationObserver(() => {  
+  
+      if (!$("axVcSpeak").checked) return;  
+  
+      const messages = messageArea.querySelectorAll(  
+        ".ax-message.ai, .axon-message.ai, [data-role='ai']"  
+      );  
+  
+      const last = messages[messages.length - 1];  
+  
+      if (last) {  
+        speakReply(last.innerText.trim());  
+      }  
+  
+    });  
+  
+    observer.observe(messageArea, {  
+      childList: true,  
+      subtree: true  
+    });  
+  
+  }  
+  
+  /* PUBLIC CONTROLS */  
+  
+  window.axonOpenVoiceControl = openPanel;  
+  window.axonCloseVoiceControl = closePanel;  
+  
+})();  
+</script>  <!-- PART 9 END -->
