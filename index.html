@@ -5965,5 +5965,1010 @@ aria-label="Start voice recognition">
   window.axonOpenVoiceControl = openPanel;  
   window.axonCloseVoiceControl = closePanel;  
   
-})();  
-</script>  <!-- PART 9 END -->
+}HTML
+
+<!-- =========================================
+ AXON AI - PART 10
+ BUTTON INTEGRATION & FUNCTIONALITY
+========================================= -->
+
+<style>
+.ax-p10-notice {
+  position: fixed;
+  z-index: 99999;
+  left: 50%;
+  bottom: 25px;
+  transform: translateX(-50%) translateY(20px);
+  max-width: calc(100vw - 30px);
+  padding: 12px 17px;
+  border: 1px solid #405b8d;
+  border-radius: 11px;
+  background: #14213a;
+  color: #eaf1ff;
+  font: 12px Arial,sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s;
+  box-shadow: 0 10px 35px #0008;
+}
+
+.ax-p10-notice.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.ax-p10-notice.error {
+  border-color: #bd5369;
+}
+
+.ax-p10-notice.success {
+  border-color: #37a77b;
+}
+
+.ax-p10-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: #42d99c;
+}
+</style>
+
+<div class="ax-p10-notice" id="axP10Notice"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  let noticeTimer;
+
+  function notify(message, type = "success") {
+
+    const box = $("axP10Notice");
+
+    if (!box) return;
+
+    box.className = "ax-p10-notice " + type + " show";
+
+    box.textContent = message;
+
+    clearTimeout(noticeTimer);
+
+    noticeTimer = setTimeout(() => {
+      box.classList.remove("show");
+    }, 2600);
+
+  }
+
+  /* SAFE CLICK */
+
+  function clickExisting(selectors) {
+
+    for (const selector of selectors) {
+
+      const element = document.querySelector(selector);
+
+      if (element) {
+        element.click();
+        return true;
+      }
+
+    }
+
+    return false;
+
+  }
+
+  /* NEW CHAT */
+
+  function newChat() {
+
+    const done = clickExisting([
+      "#newChatBtn",
+      "#newChatButton",
+      "#new-chat-btn"
+    ]);
+
+    if (done) return;
+
+    const buttons = [...document.querySelectorAll("button")];
+
+    const target = buttons.find(button => {
+
+      const label = (
+        button.innerText ||
+        button.getAttribute("aria-label") ||
+        button.title ||
+        ""
+      ).trim().toLowerCase();
+
+      return label === "new chat";
+
+    });
+
+    if (target) {
+      target.click();
+      return;
+    }
+
+    notify(
+      "New Chat button connection not found. Check Part 4.",
+      "error"
+    );
+
+  }
+
+  /* OPEN ATTACHMENTS */
+
+  function openAttachments() {
+
+    const button = $("axAttachMain");
+
+    if (!button) {
+      notify("Attachment menu not found.", "error");
+      return;
+    }
+
+    const menu = $("axAttachMenu");
+
+    if (menu && !menu.classList.contains("open")) {
+      button.click();
+    }
+
+  }
+
+  /* OPEN VOICE */
+
+  function openVoice() {
+
+    if (typeof window.axonOpenVoiceControl === "function") {
+      window.axonOpenVoiceControl();
+      return;
+    }
+
+    const panel = $("axVoicePanel");
+
+    if (panel) {
+      panel.classList.add("open");
+      return;
+    }
+
+    notify("Voice Control is not installed.", "error");
+
+  }
+
+  /* GLOBAL BUTTON INTEGRATION */
+
+  document.addEventListener("click", event => {
+
+    const button = event.target.closest("button");
+
+    if (!button) return;
+
+    if (
+      button.id === "axNewPageButton" ||
+      button.id === "axPart7NewPage"
+    ) {
+      event.preventDefault();
+      newChat();
+      return;
+    }
+
+    if (button.id === "axPart7Live") {
+      return;
+    }
+
+    if (button.id === "axPart7Send") {
+      return;
+    }
+
+    if (button.id === "axAttachMain") {
+      return;
+    }
+
+    if (button.id === "axVcMic") {
+      return;
+    }
+
+    if (button.id === "axVcSend") {
+      return;
+    }
+
+    if (button.id === "axVcStop") {
+      return;
+    }
+
+    if (button.id === "axVcClose") {
+      return;
+    }
+
+    const label = (
+      button.innerText ||
+      button.getAttribute("aria-label") ||
+      button.title ||
+      ""
+    ).trim().toLowerCase();
+
+    if (label === "new chat") {
+      return;
+    }
+
+    if (label === "voice control") {
+      openVoice();
+      return;
+    }
+
+    if (
+      label === "attachments" ||
+      label === "add attachment"
+    ) {
+      openAttachments();
+      return;
+    }
+
+  }, false);
+
+  /* KEYBOARD SHORTCUTS */
+
+  document.addEventListener("keydown", event => {
+
+    if (event.key === "Escape") {
+
+      const voice = $("axVoicePanel");
+
+      if (voice && voice.classList.contains("open")) {
+        if (typeof window.axonCloseVoiceControl === "function") {
+          window.axonCloseVoiceControl();
+        } else {
+          voice.classList.remove("open");
+        }
+      }
+
+      const attach = $("axAttachMenu");
+
+      if (attach) {
+        attach.classList.remove("open");
+      }
+
+      const modal = $("axCameraModal");
+
+      if (modal && modal.classList.contains("open")) {
+        $("axCloseCamera")?.click();
+      }
+
+    }
+
+    /* Ctrl + Shift + O = New Chat */
+
+    if (
+      event.ctrlKey &&
+      event.shiftKey &&
+      event.key.toLowerCase() === "o"
+    ) {
+      event.preventDefault();
+      newChat();
+    }
+
+  });
+
+  /* CHECK IMPORTANT BUTTON CONNECTIONS */
+
+  window.axonButtonStatus = function() {
+
+    const checks = [
+      ["Send", $("sendBtn")],
+      ["Message Input", $("messageInput")],
+      ["New Chat", $("newChatBtn") ||
+        $("newChatButton") ||
+        $("new-chat-btn")],
+      ["Attachment Menu", $("axAttachMain")],
+      ["Voice Panel", $("axVoicePanel")],
+      ["Live Chat", $("axPart7Live")],
+      ["New Page", $("axNewPageButton")],
+      ["Settings Menu", $("axMenuPanel") ||
+        $("axSettingsPanel")]
+    ];
+
+    console.table(
+      checks.map(([name, element]) => ({
+        Button: name,
+        Status: element ? "Found" : "Not Found"
+      }))
+    );
+
+    return checks.map(([name, element]) => ({
+      name,
+      workingConnection: Boolean(element)
+    }));
+
+  };
+
+  /* GLOBAL ERROR NOTICE */
+
+  window.addEventListener("unhandledrejection", event => {
+
+    console.error("AXON async error:", event.reason);
+
+    notify(
+      "An action failed. Check the browser console.",
+      "error"
+    );
+
+  });
+
+  console.info("AXON AI Part 10 loaded.");
+
+})();
+</script>
+
+<!-- PART 10 END -->
+  
+<!-- ==========================================
+ AXON AI - PART 11
+ PROFESSIONAL PROFILE & ACCOUNT SETTINGS
+========================================== -->
+
+<style>
+.ax-account-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background: rgba(2,7,18,.78);
+  backdrop-filter: blur(9px);
+}
+
+.ax-account-overlay.open {
+  display: flex;
+}
+
+.ax-account-card {
+  width: 100%;
+  max-width: 430px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 22px;
+  border: 1px solid #35496d;
+  border-radius: 20px;
+  background: #111b30;
+  color: #edf3ff;
+  box-shadow: 0 25px 80px #0009;
+}
+
+.ax-account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.ax-account-header h2 {
+  font-size: 17px;
+  margin: 0;
+}
+
+.ax-account-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #3b4d6b;
+  border-radius: 9px;
+  background: #202d45;
+  color: white;
+  cursor: pointer;
+}
+
+.ax-account-avatar-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 23px;
+}
+
+.ax-account-avatar {
+  width: 83px;
+  height: 83px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 3px solid #648aff;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#416be5,#8954d9);
+  color: white;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.ax-account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ax-account-photo-btn {
+  margin-top: 10px;
+  border: none;
+  background: transparent;
+  color: #91b4ff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ax-account-field {
+  margin-bottom: 14px;
+}
+
+.ax-account-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: #91a5c8;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ax-account-field input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  outline: none;
+  border: 1px solid #344665;
+  border-radius: 10px;
+  background: #0c1527;
+  color: white;
+  font-size: 12px;
+}
+
+.ax-account-field input:focus {
+  border-color: #648aff;
+}
+
+.ax-account-section {
+  margin-top: 22px;
+  padding-top: 17px;
+  border-top: 1px solid #2a3b57;
+}
+
+.ax-account-section h3 {
+  margin: 0 0 13px;
+  font-size: 12px;
+  color: #a9c5ff;
+}
+
+.ax-account-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #263751;
+}
+
+.ax-account-setting strong {
+  display: block;
+  font-size: 12px;
+}
+
+.ax-account-setting small {
+  display: block;
+  margin-top: 4px;
+  color: #8495b2;
+  font-size: 10px;
+}
+
+.ax-account-setting input {
+  width: 18px;
+  height: 18px;
+  accent-color: #648aff;
+}
+
+.ax-account-setting select {
+  max-width: 125px;
+  padding: 8px;
+  border: 1px solid #344665;
+  border-radius: 8px;
+  background: #17243b;
+  color: white;
+  font-size: 10px;
+}
+
+.ax-account-save {
+  width: 100%;
+  height: 43px;
+  margin-top: 20px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg,#477cff,#7954e8);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ax-account-logout {
+  width: 100%;
+  height: 42px;
+  margin-top: 10px;
+  border: 1px solid #814050;
+  border-radius: 10px;
+  background: #39202e;
+  color: #ff9eae;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ax-account-note {
+  margin-top: 13px;
+  color: #8091ad;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: center;
+}
+</style>
+
+<!-- ACCOUNT PANEL -->
+
+<div class="ax-account-overlay" id="axAccountOverlay">
+
+  <div class="ax-account-card">
+
+    <div class="ax-account-header">
+      <h2>AXON Account</h2>
+      <button class="ax-account-close"
+        id="axAccountClose">✕</button>
+    </div>
+
+    <div class="ax-account-avatar-area">
+
+      <div class="ax-account-avatar" id="axAccountAvatar">
+        A
+      </div>
+
+      <button class="ax-account-photo-btn"
+        id="axAccountPhotoBtn">
+        Change Profile Photo
+      </button>
+
+      <input type="file"
+        id="axAccountPhotoInput"
+        accept="image/*"
+        hidden>
+
+    </div>
+
+    <div class="ax-account-field">
+      <label for="axAccountName">DISPLAY NAME</label>
+      <input id="axAccountName"
+        type="text"
+        maxlength="50"
+        placeholder="Enter your name">
+    </div>
+
+    <div class="ax-account-field">
+      <label for="axAccountEmail">EMAIL ADDRESS</label>
+      <input id="axAccountEmail"
+        type="email"
+        maxlength="120"
+        placeholder="Enter your email">
+    </div>
+
+    <div class="ax-account-section">
+
+      <h3>ACCOUNT SETTINGS</h3>
+
+      <div class="ax-account-setting">
+        <div>
+          <strong>Dark Theme</strong>
+          <small>Use the dark AXON interface</small>
+        </div>
+        <input type="checkbox" id="axAccountDark">
+      </div>
+
+      <div class="ax-account-setting">
+        <div>
+          <strong>Voice Control</strong>
+          <small>Enable voice features</small>
+        </div>
+        <input type="checkbox" id="axAccountVoice">
+      </div>
+
+      <div class="ax-account-setting">
+        <div>
+          <strong>Voice Language</strong>
+          <small>Choose speech recognition language</small>
+        </div>
+        <select id="axAccountLanguage">
+          <option value="hi-IN">Hindi</option>
+          <option value="en-IN">English India</option>
+          <option value="en-US">English US</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button class="ax-account-save" id="axAccountSave">
+      SAVE CHANGES
+    </button>
+
+    <button class="ax-account-logout" id="axAccountLogout">
+      ⇥ LOG OUT
+    </button>
+
+    <p class="ax-account-note">
+      Profile and preferences are saved on this device.
+      This is a local profile, not verified server authentication.
+    </p>
+
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  const overlay = $("axAccountOverlay");
+
+  const STORAGE = "axon_account_profile_v1";
+
+  function getProfile() {
+    try {
+      return JSON.parse(
+        localStorage.getItem(STORAGE) || "{}"
+      );
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function saveProfile(data) {
+    localStorage.setItem(STORAGE, JSON.stringify(data));
+  }
+
+  function showAvatar(photo, name) {
+
+    const avatar = $("axAccountAvatar");
+
+    if (photo) {
+      avatar.innerHTML = "";
+
+      const img = document.createElement("img");
+      img.src = photo;
+      img.alt = "Profile photo";
+
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent =
+        (name || "A").trim().charAt(0).toUpperCase();
+    }
+
+  }
+
+  function loadProfile() {
+
+    const profile = getProfile();
+
+    $("axAccountName").value = profile.name || "";
+    $("axAccountEmail").value = profile.email || "";
+
+    $("axAccountDark").checked =
+      localStorage.getItem("axon_theme") !== "light";
+
+    $("axAccountVoice").checked =
+      localStorage.getItem("axon_voice_enabled") !== "false";
+
+    $("axAccountLanguage").value =
+      localStorage.getItem("axon_speech_language") || "hi-IN";
+
+    showAvatar(profile.photo || "", profile.name || "A");
+
+  }
+
+  function openAccount() {
+    loadProfile();
+    overlay.classList.add("open");
+  }
+
+  function closeAccount() {
+    overlay.classList.remove("open");
+  }
+
+  /* OPEN AND CLOSE */
+
+  $("axAccountClose").addEventListener(
+    "click",
+    closeAccount
+  );
+
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) closeAccount();
+  });
+
+  /* PHOTO UPLOAD */
+
+  $("axAccountPhotoBtn").addEventListener("click", () => {
+    $("axAccountPhotoInput").click();
+  });
+
+  $("axAccountPhotoInput").addEventListener("change", event => {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image.");
+      return;
+    }
+
+    if (file.size > 3 * 1024 * 1024) {
+      alert("Please select an image smaller than 3 MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      const profile = getProfile();
+
+      profile.photo = reader.result;
+
+      try {
+        saveProfile(profile);
+        showAvatar(profile.photo, profile.name);
+      } catch (_) {
+        alert("Photo could not be saved. Try a smaller image.");
+      }
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+  /* SAVE PROFILE AND SETTINGS */
+
+  $("axAccountSave").addEventListener("click", () => {
+
+    const name = $("axAccountName").value.trim();
+    const email = $("axAccountEmail").value.trim();
+
+    if (!name) {
+      alert("Please enter your display name.");
+      return;
+    }
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    const old = getProfile();
+
+    const profile = {
+      ...old,
+      name,
+      email
+    };
+
+    try {
+      saveProfile(profile);
+
+      localStorage.setItem(
+        "axon_theme",
+        $("axAccountDark").checked ? "dark" : "light"
+      );
+
+      localStorage.setItem(
+        "axon_voice_enabled",
+        String($("axAccountVoice").checked)
+      );
+
+      localStorage.setItem(
+        "axon_speech_language",
+        $("axAccountLanguage").value
+      );
+
+      const chat = $("axonChat");
+
+      if (chat) {
+        chat.classList.toggle(
+          "ax-light",
+          !$("axAccountDark").checked
+        );
+      }
+
+      showAvatar(profile.photo || "", name);
+
+      alert("Profile and settings saved successfully.");
+
+    } catch (_) {
+      alert("Could not save settings on this device.");
+    }
+
+  });
+
+  /* LOG OUT */
+
+  $("axAccountLogout").addEventListener("click", () => {
+
+    const confirmed = confirm(
+      "Log out of AXON AI? Your saved chat history will remain on this device."
+    );
+
+    if (!confirmed) return;
+
+    closeAccount();
+
+    if (typeof window.axonStopLiveChat === "function") {
+      window.axonStopLiveChat();
+    }
+
+    if (typeof window.axonCloseVoiceControl === "function") {
+      window.axonCloseVoiceControl();
+    }
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    if (typeof window.openAXONLogin === "function") {
+      window.openAXONLogin();
+    } else {
+      const chat = $("axonChat");
+      const auth = $("authScreen");
+
+      if (chat) chat.style.display = "none";
+      if (auth) auth.style.display = "flex";
+    }
+
+  });
+
+  /* CONNECT PART 5 PROFILE AND SETTINGS MENU */
+
+  document.addEventListener("click", event => {
+
+    const button = event.target.closest("button");
+
+    if (!button) return;
+
+    const label = (
+      button.innerText ||
+      button.getAttribute("aria-label") ||
+      button.title ||
+      ""
+    ).trim().toLowerCase();
+
+    if (label === "profile" || label === "account") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openAccount();
+    }
+
+    if (label === "settings" || label === "account settings") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openAccount();
+    }
+
+  }, true);
+
+  /* PUBLIC FUNCTIONS */
+
+  window.axonOpenAccount = openAccount;
+  window.axonCloseAccount = closeAccount;
+
+})();
+</script>
+
+<!-- PART 11 END -->
+        
+/* PART 12 CONNECTION PATCH
+   Add inside the existing PART 4 IIFE,
+   immediately before its final })();
+*/
+
+window.axonSelectChat = function(id) {
+
+  const chat = chats.find(item => item.id === id);
+
+  if (!chat) return false;
+
+  currentChatId = chat.id;
+
+  renderHistory();
+  renderMessages();
+
+  return true;
+};
+
+window.axonCreateNewChat = function() {
+
+  createChat();
+
+  renderHistory();
+  renderMessages();
+
+};
+
+window.axonManageChats = {
+
+  getAll: function() {
+    return chats.map(chat => ({
+      id: chat.id,
+      title: chat.title || chat.name || "New Chat",
+      messages: Array.isArray(chat.messages)
+        ? chat.messages
+        : [],
+      current: chat.id === currentChatId
+    }));
+  },
+
+  rename: function(id, newTitle) {
+
+    const chat = chats.find(item => item.id === id);
+
+    if (!chat) return false;
+
+    chat.title = newTitle;
+    chat.name = newTitle;
+
+    saveChats();
+    renderHistory();
+
+    return true;
+  },
+
+  delete: function(id) {
+
+    const index = chats.findIndex(item => item.id === id);
+
+    if (index === -1) return false;
+
+    chats.splice(index, 1);
+
+    if (currentChatId === id) {
+
+      currentChatId = null;
+
+      if (chats.length) {
+        currentChatId = chats[0].id;
+      } else {
+        createChat();
+      }
+
+    }
+
+    saveChats();
+    renderHistory();
+    renderMessages();
+
+    return true;
+  },
+
+  clearAll: function() {
+
+    chats.length = 0;
+    currentChatId = null;
+
+    createChat();
+
+    saveChats();
+    renderHistory();
+    renderMessages();
+
+    return true;
+<!-- AXON AI - FINAL PART COMPLETE -->
+
+</script>
+
+</body>
+</html>
