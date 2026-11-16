@@ -382,10 +382,37 @@ body {
       clearInterval(interval);  
       loadingText.textContent = "Experience Ready";  
     }  
-  }, <!-- =====================================  
-     AXON AI - PART 2  
-     PROFESSIONAL LOGIN / SIGNUP SCREEN  
-===================================== -->  <style>  
+  }
+(() => {
+  const loadingText = document.getElementById("loadingText");
+  const splash = document.querySelector(".splash");
+  const authScreen = document.getElementById("authScreen");
+
+  const messages = [
+    "Initializing Experience",
+    "Preparing Interface",
+    "Almost Ready",
+    "Experience Ready"
+  ];
+
+  let index = 0;
+
+  const interval = setInterval(() => {
+    index++;
+
+    if (index < messages.length) {
+      loadingText.textContent = messages[index];
+    } else {
+      clearInterval(interval);
+
+      setTimeout(() => {
+        splash.style.display = "none";
+        authScreen.classList.add("active");
+      }, 500);
+    }
+  }, 1000);
+})();
+                               
 /* AUTH SCREEN */  
   
 .auth-screen {  
