@@ -65,13 +65,11 @@
 
   .hidden { display: none !important; }
 
-  /* Custom Scrollbar */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 10px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
 
-  /* SVG Icon Helper */
   .icon {
     width: 18px;
     height: 18px;
@@ -83,7 +81,7 @@
     flex-shrink: 0;
   }
 
-  /* ================= SPLASH SCREEN ================= */
+  /* SPLASH */
   #splash {
     position: fixed;
     inset: 0;
@@ -159,7 +157,7 @@
     to { transform: translateX(250%); }
   }
 
-  /* ================= AUTH SCREEN ================= */
+  /* AUTH */
   #auth {
     min-height: 100vh;
     display: none;
@@ -184,7 +182,7 @@
 
   .brand {
     text-align: center;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 
   .brand-badge {
@@ -210,6 +208,46 @@
     font-size: 13px;
   }
 
+  /* GOOGLE SIGN-IN BUTTON */
+  .google-btn {
+    width: 100%;
+    padding: 13px 16px;
+    background: #ffffff;
+    color: #0f172a;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  }
+
+  .google-btn:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
   .tabs {
     display: flex;
     gap: 6px;
@@ -217,7 +255,7 @@
     padding: 5px;
     border-radius: 14px;
     border: 1px solid var(--border);
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
 
   .tabs button {
@@ -243,7 +281,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .field { margin-bottom: 18px; }
+  .field { margin-bottom: 16px; }
 
   .field label {
     display: block;
@@ -311,7 +349,7 @@
     color: #f87171;
   }
 
-  /* ================= MAIN APP ================= */
+  /* MAIN APP */
   #app {
     display: none;
     min-height: 100vh;
@@ -319,7 +357,6 @@
 
   #app.active { display: flex; }
 
-  /* SIDEBAR */
   .sidebar {
     width: 280px;
     background: var(--bg-sidebar);
@@ -483,11 +520,17 @@
     place-items: center;
     font-weight: 700;
     font-size: 14px;
+    overflow: hidden;
+    flex-shrink: 0;
   }
 
-  .user-meta {
-    overflow: hidden;
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
+
+  .user-meta { overflow: hidden; }
 
   #profileName {
     font-size: 13px;
@@ -534,7 +577,7 @@
     color: #fca5a5;
   }
 
-  /* MAIN CHAT AREA */
+  /* MAIN CHAT */
   .main {
     flex: 1;
     min-width: 0;
@@ -607,7 +650,6 @@
     color: #fff;
   }
 
-  /* MESSAGES FEED */
   #messages {
     flex: 1;
     width: 100%;
@@ -618,7 +660,6 @@
     flex-direction: column;
   }
 
-  /* WELCOME HERO */
   .welcome {
     margin: auto 0;
     text-align: center;
@@ -677,17 +718,9 @@
     transform: translateY(-2px);
   }
 
-  .suggestion-card strong {
-    font-size: 13px;
-    color: #e2e8f0;
-  }
+  .suggestion-card strong { font-size: 13px; color: #e2e8f0; }
+  .suggestion-card span { font-size: 12px; color: var(--text-muted); }
 
-  .suggestion-card span {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  /* MESSAGE BUBBLES */
   .message-row {
     display: flex;
     gap: 14px;
@@ -695,9 +728,7 @@
     animation: fadeIn 0.25s ease;
   }
 
-  .message-row.user {
-    flex-direction: row-reverse;
-  }
+  .message-row.user { flex-direction: row-reverse; }
 
   .msg-avatar {
     width: 34px;
@@ -707,6 +738,13 @@
     place-items: center;
     flex-shrink: 0;
     margin-top: 2px;
+    overflow: hidden;
+  }
+
+  .msg-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .message-row.ai .msg-avatar {
@@ -769,7 +807,7 @@
     color: #fff;
   }
 
-  /* COMPOSER DOCK */
+  /* COMPOSER */
   .composer {
     position: fixed;
     bottom: 0;
@@ -797,9 +835,7 @@
     transition: border-color 0.2s;
   }
 
-  .composer-box:focus-within {
-    border-color: var(--primary);
-  }
+  .composer-box:focus-within { border-color: var(--primary); }
 
   #attachmentInfo {
     display: inline-flex;
@@ -876,10 +912,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  .tool-group {
-    display: flex;
-    gap: 6px;
-  }
+  .tool-group { display: flex; gap: 6px; }
 
   .tool-btn {
     padding: 5px 10px;
@@ -901,12 +934,8 @@
     background: rgba(239, 68, 68, 0.15);
   }
 
-  .hint-text {
-    font-size: 11px;
-    color: #64748b;
-  }
+  .hint-text { font-size: 11px; color: #64748b; }
 
-  /* PLUS POPOVER MENU */
   #plusMenu {
     position: absolute;
     bottom: 95px;
@@ -925,7 +954,7 @@
 
   #plusMenu button {
     padding: 10px 12px;
-    text-align: left;
+    -align: left;
     border-radius: 9px;
     font-size: 13px;
     display: flex;
@@ -941,7 +970,6 @@
 
   #fileInput { display: none; }
 
-  /* MODAL */
   .overlay {
     position: fixed;
     inset: 0;
@@ -960,30 +988,16 @@
     width: 100%;
     max-width: 400px;
     padding: 26px;
-        background: #0f172a;
+    background: #0f172a;
     border: 1px solid var(--border);
     border-radius: 20px;
     box-shadow: var(--shadow-lg);
   }
 
-  .modal h3 {
-    font-size: 18px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .modal p {
-    color: var(--text-muted);
-    font-size: 13.5px;
-    line-height: 1.65;
-    white-space: pre-line;
-  }
-
+  .modal h3 { font-size: 18px; margin-bottom: 12px; }
+  .modal p { color: var(--text-muted); font-size: 13.5px; line-height: 1.65; white-space: pre-line; }
   .modal button { margin-top: 20px; }
 
-  /* TOAST NOTIFICATION */
   #toast {
     position: fixed;
     top: 20px;
@@ -1004,7 +1018,6 @@
 
   .mobile-menu { display: none; }
 
-  /* RESPONSIVE */
   @media (max-width: 768px) {
     .sidebar {
       position: fixed;
@@ -1026,10 +1039,9 @@
 </head>
 <body>
 
-  <!-- TOAST -->
   <div id="toast"></div>
 
-  <!-- SPLASH SCREEN -->
+  <!-- SPLASH -->
   <div id="splash">
     <div class="logo-box">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1041,7 +1053,7 @@
     <div class="loader"></div>
   </div>
 
-  <!-- AUTHENTICATION SCREEN -->
+  <!-- AUTH -->
   <section id="auth">
     <div class="auth-card">
       <div class="brand">
@@ -1053,6 +1065,19 @@
         <h1>AXON AI</h1>
         <p>Sign in to access your intelligent workspace</p>
       </div>
+
+      <!-- SIGN IN WITH GOOGLE -->
+      <button type="button" class="google-btn" id="googleSignInBtn">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        <span>Sign in with Google</span>
+      </button>
+
+      <div class="divider">or continue with email</div>
 
       <div class="tabs">
         <button id="loginTab" class="active" type="button">Login</button>
@@ -1249,9 +1274,35 @@
     </div>
   </div>
 
-<script>
-(() => {
-  "use strict";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    signOut, 
+    onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  let fbAuth = null;
+  let googleProvider = null;
+
+  try {
+    const fbApp = initializeApp(firebaseConfig);
+    fbAuth = getAuth(fbApp);
+    googleProvider = new GoogleAuthProvider();
+  } catch (err) {
+    console.warn("Firebase config pending:", err);
+  }
 
   const $ = id => document.getElementById(id);
   const splash = $("splash");
@@ -1270,7 +1321,6 @@
   let stopped = false;
   let toastTimer = null;
 
-  /* TOAST NOTIFICATION */
   function showToast(msg) {
     const toast = $("toast");
     toast.textContent = msg;
@@ -1279,7 +1329,6 @@
     toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
   }
 
-  /* STORAGE */
   const readJSON = (key, fallback) => {
     try {
       return JSON.parse(localStorage.getItem(key)) ?? fallback;
@@ -1300,7 +1349,31 @@
     localStorage.setItem(userKey(currentUser.email), JSON.stringify(chats));
   }
 
-  /* PASSWORD HASHING */
+  $("googleSignInBtn").onclick = async () => {
+    if (!fbAuth || firebaseConfig.apiKey === "YOUR_API_KEY") {
+      authMessage.textContent = "Please add your Firebase config keys in the code first.";
+      return;
+    }
+
+    try {
+      authMessage.textContent = "";
+      const result = await signInWithPopup(fbAuth, googleProvider);
+      const user = result.user;
+
+      currentUser = {
+        name: user.displayName || "Google User",
+        email: user.email,
+        photo: user.photoURL || null
+      };
+
+      sessionStorage.setItem("axon_session", JSON.stringify(currentUser));
+      openApp();
+      showToast("Signed in with Google as " + currentUser.name);
+    } catch (error) {
+      authMessage.textContent = error.message || "Google Sign-In failed.";
+    }
+  };
+
   async function hashPassword(password, salt) {
     const encoder = new TextEncoder();
     const key = await crypto.subtle.importKey(
@@ -1317,7 +1390,6 @@
       .map(b => b.toString(16).padStart(2, "0")).join("");
   }
 
-  /* AUTH TABS */
   function showLogin() {
     $("loginTab").classList.add("active");
     $("signupTab").classList.remove("active");
@@ -1337,7 +1409,6 @@
   $("loginTab").onclick = showLogin;
   $("signupTab").onclick = showSignup;
 
-  /* SIGNUP */
   $("signupForm").addEventListener("submit", async event => {
     event.preventDefault();
     const name = $("signupName").value.trim();
@@ -1361,7 +1432,7 @@
       accounts.push({ name, email, salt, passwordHash });
       saveAccounts(accounts);
 
-      currentUser = { name, email };
+      currentUser = { name, email, photo: null };
       sessionStorage.setItem("axon_session", JSON.stringify(currentUser));
       $("signupForm").reset();
       openApp();
@@ -1371,7 +1442,6 @@
     }
   });
 
-  /* LOGIN */
   $("loginForm").addEventListener("submit", async event => {
     event.preventDefault();
     const email = $("loginEmail").value.trim().toLowerCase();
@@ -1390,7 +1460,7 @@
         return;
       }
 
-      currentUser = { name: account.name, email: account.email };
+      currentUser = { name: account.name, email: account.email, photo: null };
       sessionStorage.setItem("axon_session", JSON.stringify(currentUser));
       $("loginForm").reset();
       openApp();
@@ -1400,18 +1470,23 @@
     }
   });
 
-  /* OPEN APP */
   function openApp() {
     auth.classList.remove("active");
     splash.style.display = "none";
     app.classList.add("active");
 
     $("profileName").textContent = currentUser.name;
-    $("userAvatar").textContent = currentUser.name.charAt(0).toUpperCase();
+    const avatarEl = $("userAvatar");
+    if (currentUser.photo) {
+      avatarEl.innerHTML = `<img src="${currentUser.photo}" alt="Avatar">`;
+    } else {
+      avatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
+    }
+
     loadChats();
 
     if (chats.length > 0) {
-      currentChatId = chats[0].id;
+      0].id;
       renderHistory();
       renderMessages();
     } else {
@@ -1419,8 +1494,10 @@
     }
   }
 
-  /* LOGOUT */
-  function logout() {
+  async function logout() {
+    if (fbAuth) {
+      try { await signOut(fbAuth); } catch {}
+    }
     sessionStorage.removeItem("axon_session");
     currentUser = null;
     currentChatId = null;
@@ -1436,7 +1513,6 @@
   $("sideLogout").onclick = logout;
   $("headerLogout").onclick = logout;
 
-  /* SPLASH */
   function startSplash() {
     const steps = [
       "Initializing Neural Interface...",
@@ -1457,7 +1533,6 @@
     }, 550);
   }
 
-  /* CHAT MANAGEMENT */
   function newChat() {
     currentChatId = crypto.randomUUID();
     chats.unshift({
@@ -1518,7 +1593,7 @@
       delBtn.className = "del-chat-btn";
       delBtn.title = "Delete chat";
       delBtn.innerHTML = `<svg class="icon" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>`;
-       deleteChat(chat.id, e);
+      delBtn.onclick = e => deleteChat(chat.id, e);
 
       row.append(button, delBtn);
       list.appendChild(row);
@@ -1580,7 +1655,11 @@
     const avatar = document.createElement("div");
     avatar.className = "msg-avatar";
     if (role === "user") {
-      avatar.textContent = currentUser ? currentUser.name.charAt(0).toUpperCase() : "U";
+      if (currentUser && currentUser.photo) {
+        avatar.innerHTML = `<img src="${currentUser.photo}" alt="U">`;
+      } else {
+        avatar.textContent = currentUser ? currentUser.name.charAt(0).toUpperCase() : "U";
+      }
     } else {
       avatar.innerHTML = `<svg class="icon" style="width:17px;height:17px" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`;
     }
@@ -1637,7 +1716,6 @@
     return box;
   }
 
-  /* BUTTONS & EVENTS */
   $("sideNewChat").onclick = newChat;
   $("headerNewChat").onclick = newChat;
   $("menuBtn").onclick = () => $("sidebar").classList.toggle("open");
@@ -1659,10 +1737,9 @@
   };
 
   $("settingsBtn").onclick = () => {
-    showModal("System Settings", "Model: AXON Core Pro 2.0\nStorage: Encrypted Browser LocalStorage\nVoice Input: Hindi / English (hi-IN)");
+    showModal("System Settings", "Model: AXON Core Pro 2.0\nAuth: Firebase Google + Email\nVoice Input: Hindi / English (hi-IN)");
   };
 
-  /* MODAL */
   function showModal(title, text) {
     $("modalTitle").textContent = title;
     $("modalText").textContent = text;
@@ -1674,7 +1751,6 @@
     if (e.target === $("modal")) $("modal").classList.remove("active");
   };
 
-  /* COPY */
   async function copyText(text) {
     try {
       await navigator.clipboard.writeText(text);
@@ -1684,7 +1760,6 @@
     }
   }
 
-  /* EXPORT */
   $("exportBtn").onclick = () => {
     const chat = currentChat();
     if (!chat || !chat.messages.length) {
@@ -1706,7 +1781,6 @@
     showToast("Chat exported as .txt");
   };
 
-  /* FILE ATTACHMENT */
   $("plusBtn").onclick = e => {
     e.stopPropagation();
     $("plusMenu").classList.toggle("hidden");
@@ -1738,7 +1812,6 @@
     $("plusMenu").classList.add("hidden");
   };
 
-  /* AI BACKEND CONNECTOR */
   async function getAIResponse(prompt, signal) {
     if (signal && signal.aborted) {
       throw new DOMException("Stopped", "AbortError");
@@ -1748,7 +1821,6 @@
     return "AXON AI Core is online and ready. Connect your `/api/chat` backend endpoint inside `getAIResponse()` to receive live AI responses.";
   }
 
-  /* STOP GENERATION */
   function stopGeneration() {
     stopped = true;
     if (controller) {
@@ -1759,7 +1831,6 @@
     $("sendBtn").classList.remove("hidden");
   }
 
-  /* SEND PROMPT */
   async function sendPrompt(prompt) {
     if (!prompt.trim()) return;
     stopped = false;
@@ -1801,7 +1872,6 @@
     }
   }
 
-  /* AUTO-RESIZE TEXTAREA */
   function autoResizeInput() {
     chatInput.style.height = "auto";
     chatInput.style.height = Math.min(chatInput.scrollHeight, 150) + "px";
@@ -1809,7 +1879,6 @@
 
   chatInput.addEventListener("input", autoResizeInput);
 
-  /* CHAT FORM SUBMIT */
   $("chatForm").addEventListener("submit", async event => {
     event.preventDefault();
     let prompt = chatInput.value.trim();
@@ -1830,7 +1899,6 @@
 
   $("stopBtn").onclick = stopGeneration;
 
-  /* REGENERATE */
   async function regenerateReply(index) {
     const chat = currentChat();
     if (!chat || index < 0 || index >= chat.messages.length) return;
@@ -1846,7 +1914,6 @@
     await sendPrompt(prompt);
   }
 
-  /* VOICE RECOGNITION */
   $("voiceBtn").onclick = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -1886,7 +1953,6 @@
     recognition.start();
   };
 
-  /* ENTER TO SEND */
   chatInput.addEventListener("keydown", event => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -1894,7 +1960,6 @@
     }
   });
 
-  /* OUTSIDE CLICKS */
   document.addEventListener("click", event => {
     const sidebar = $("sidebar");
     if (
@@ -1911,25 +1976,37 @@
     }
   });
 
-  /* SESSION RESTORE */
   function restoreSession() {
     const session = readJSON("axon_session", null);
     if (session && typeof session.name === "string" && typeof session.email === "string") {
-      const account = getAccounts().find(item => item.email === session.email);
-      if (account) {
-        currentUser = { name: account.name, email: account.email };
-        openApp();
-        return true;
-      }
+      currentUser = {
+        name: session.name,
+        email: session.email,
+        photo: session.photo || null
+      };
+      openApp();
+      return true;
     }
     return false;
   }
 
-  /* INIT */
+  if (fbAuth) {
+    onAuthStateChanged(fbAuth, user => {
+      if (user && !currentUser) {
+        currentUser = {
+          name: user.displayName || "Google User",
+          email: user.email,
+          photo: user.photoURL || null
+        };
+        sessionStorage.setItem("axon_session", JSON.stringify(currentUser));
+        openApp();
+      }
+    });
+  }
+
   if (!restoreSession()) {
     startSplash();
   }
-})();
 </script>
 </body>
 </html>
