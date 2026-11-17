@@ -208,7 +208,6 @@
     font-size: 13px;
   }
 
-  /* GOOGLE SIGN-IN BUTTON */
   .google-btn {
     width: 100%;
     padding: 13px 16px;
@@ -1123,7 +1122,6 @@
 
       <div class="divider">or continue with google</div>
 
-      <!-- SIGN IN WITH GOOGLE (Moved to Bottom) -->
       <button type="button" class="google-btn" id="googleSignInBtn">
         <svg width="18" height="18" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -1285,13 +1283,15 @@
     onAuthStateChanged 
   } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
+  // FIXED FIREBASE CONFIGURATION
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyA-YnGuAr8BdGt8xbo0Eq06lijQEPoeTC8",
+    authDomain: "axon-ai-9ee3b.firebaseapp.com",
+    projectId: "axon-ai-9ee3b",
+    storageBucket: "axon-ai-9ee3b.firebasestorage.app",
+    messagingSenderId: "304665322304",
+    appId: "1:304665322304:web:b409df4442f3cf018710a5",
+    measurementId: "G-NBP2KRZWSG"
   };
 
   let fbAuth = null;
@@ -1302,7 +1302,7 @@
     fbAuth = getAuth(fbApp);
     googleProvider = new GoogleAuthProvider();
   } catch (err) {
-    console.warn("Firebase config pending:", err);
+    console.warn("Firebase initialization error:", err);
   }
 
   const $ = id => document.getElementById(id);
@@ -1351,8 +1351,8 @@
   }
 
   $("googleSignInBtn").onclick = async () => {
-    if (!fbAuth || firebaseConfig.apiKey === "YOUR_API_KEY") {
-      authMessage.textContent = "Please add your Firebase config keys in the code first.";
+    if (!fbAuth) {
+      authMessage.textContent = "Firebase is not initialized properly.";
       return;
     }
 
@@ -1371,6 +1371,7 @@
       openApp();
       showToast("Signed in with Google as " + currentUser.name);
     } catch (error) {
+      console.error(error);
       authMessage.textContent = error.message || "Google Sign-In failed.";
     }
   };
