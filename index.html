@@ -1,761 +1,898 @@
+HTML
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080b14">
-  <title>AXON AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>AXON AI</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080b14;--panel:#111a2b;--panel2:#17243a;--border:#263650;--blue:#347ef0;--text:#fff;--muted:#98a9c2}
+body{min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer;color:inherit}
+button:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}
 
-    body {
-      min-height: 100vh;
-      background: #080b14;
-      color: #fff;
-      font-family: Arial, sans-serif;
-    }
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column}
+.logo{width:85px;height:85px;border:2px solid #4d8dff;border-radius:25px;display:grid;place-items:center;color:#66a3ff;font-size:40px;font-weight:bold;box-shadow:0 0 40px #2878ff55}
+#splash h1{margin-top:22px;letter-spacing:5px;font-size:30px}
+#splash p{margin-top:12px;color:var(--muted)}
+.loader{width:160px;height:4px;background:#26344d;border-radius:20px;margin-top:30px;overflow:hidden}
+.loader:after{content:"";display:block;width:40%;height:100%;background:#438cff;animation:load 1s infinite}
+@keyframes load{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
 
-    button, input {
-      font: inherit;
-    }
+/* AUTH */
+#auth{min-height:100vh;display:none;align-items:center;justify-content:center;padding:20px}
+#auth.active{display:flex}
+.auth-card{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:30px;box-shadow:0 15px 60px #0008}
+.brand{text-align:center;margin-bottom:25px}
+.brand h1{color:#65a2ff;letter-spacing:3px;font-size:30px}
+.brand p{color:var(--muted);margin-top:8px;font-size:13px}
+.tabs{display:flex;gap:8px;background:#080f1d;padding:5px;border-radius:12px;margin-bottom:25px}
+.tabs button{flex:1;padding:12px;border:0;background:transparent;border-radius:9px;color:var(--muted)}
+.tabs button.active{background:var(--blue);color:white}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.field{margin-bottom:17px}
+.field label{display:block;margin-bottom:8px;color:#c5d1e5;font-size:13px}
+.field input{width:100%;padding:14px;background:#091222;border:1px solid #30415e;border-radius:10px;color:white;outline:none}
+.field input:focus{border-color:#438cff}
+.primary{width:100%;padding:14px;background:var(--blue);border:0;border-radius:10px;font-weight:bold}
+.primary:hover{background:#2468d4}
+.auth-message{text-align:center;min-height:20px;margin-top:14px;font-size:13px;color:#ff8e8e}
 
-    button {
-      cursor: pointer;
-    }
+/* APP */
+#app{display:none;min-height:100vh}
+#app.active{display:flex}
+.sidebar{width:260px;background:#0d1523;border-right:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
+.side-brand{font-size:22px;letter-spacing:2px;color:#65a2ff;padding:12px 5px}
+.side-btn,.history-item{width:100%;padding:12px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;text-align:left}
+.history-list{flex:1;overflow:auto}
+.history-item{margin-bottom:8px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side-bottom{border-top:1px solid var(--border);padding-top:12px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
+.header{height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:#101827;border-bottom:1px solid var(--border)}
+.header h2{color:#65a2ff;letter-spacing:2px;font-size:20px}
+.header-actions{display:flex;gap:8px}
+.small-btn,.tool-btn{padding:9px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:9px}
+#messages{flex:1;width:100%;max-width:900px;margin:auto;padding:25px 18px 150px}
+.welcome{text-align:center;margin-top:100px}
+.welcome h1{font-size:30px}
+.welcome p{color:var(--muted);margin-top:12px}
+.message{max-width:88%;margin:17px 0;padding:14px 16px;border-radius:15px;line-height:1.65;overflow-wrap:anywhere;white-space:pre-wrap}
+.message.user{margin-left:auto;background:#245db5}
+.message.ai{border:1px solid var(--border);background:var(--panel)}
+.message-actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.message-actions button{padding:6px 9px;border:1px solid var(--border);border-radius:7px;background:#17243a;font-size:11px}
+.message pre{background:#080f1d;padding:12px;border-radius:9px;overflow:auto;margin:10px 0}
+.message code{font-family:monospace}
+.message a{color:#80b5ff}
+.composer{position:fixed;bottom:0;left:260px;right:0;background:#0c1422;border-top:1px solid var(--border);padding:13px}
+.composer-inner{max-width:900px;margin:auto}
+.composer-row{display:flex;gap:9px;align-items:center}
+#chatInput{flex:1;min-width:0;resize:none;max-height:120px;padding:14px;background:#111c2e;border:1px solid #30415e;border-radius:12px;color:white;outline:none}
+.send-btn{padding:14px 19px;background:var(--blue);border:0;border-radius:11px;font-weight:bold}
+.composer-tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.tool-btn{font-size:12px;color:#c5d1e5}
+#plusMenu{position:absolute;bottom:105px;left:20px;background:#17243a;border:1px solid var(--border);padding:10px;border-radius:12px;display:flex;flex-direction:column;gap:8px;z-index:100}
+#plusMenu button{padding:10px 15px;text-align:left;border:0;border-radius:7px;background:#263650}
+#fileInput{display:none}
+#attachmentInfo{font-size:12px;color:#80b5ff;margin-top:6px}
+#typing{color:var(--muted);font-size:13px;margin:10px}
+.overlay{position:fixed;inset:0;background:#000a;z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.active{display:flex}
+.modal{width:100%;max-width:380px;padding:25px;background:var(--panel);border:1px solid var(--border);border-radius:17px}
+.modal h3{margin-bottom:15px}
+.modal p{color:var(--muted);font-size:13px;line-height:1.6}
+.modal button{margin-top:15px}
+#profileName{font-size:13px;color:var(--muted);padding:8px}
+.mobile-menu{display:none}
 
-    .splash {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #080b14;
-    }
-
-    .splash-logo {
-      width: 85px;
-      height: 85px;
-      display: grid;
-      place-items: center;
-      border: 2px solid #4d8dff;
-      border-radius: 25px;
-      color: #66a3ff;
-      font-size: 38px;
-      font-weight: bold;
-      box-shadow: 0 0 35px #2878ff55;
-    }
-
-    .splash h1 {
-      margin-top: 20px;
-      font-size: 30px;
-      letter-spacing: 5px;
-    }
-
-    .splash p {
-      margin-top: 12px;
-      color: #8d9bb5;
-      font-size: 13px;
-    }
-
-    .loader {
-      width: 160px;
-      height: 4px;
-      margin-top: 30px;
-      overflow: hidden;
-      border-radius: 10px;
-      background: #202b40;
-    }
-
-    .loader::after {
-      content: "";
-      display: block;
-      width: 45%;
-      height: 100%;
-      background: #438cff;
-      animation: loading 1.2s infinite ease-in-out;
-    }
-
-    @keyframes loading {
-      from { transform: translateX(-100%); }
-      to { transform: translateX(250%); }
-    }
-
-    .auth-screen {
-      display: none;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .auth-screen.active {
-      display: flex;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 420px;
-      padding: 32px;
-      border: 1px solid #26344d;
-      border-radius: 22px;
-      background: #111a2b;
-      box-shadow: 0 15px 60px #0008;
-    }
-
-    .auth-brand {
-      margin-bottom: 25px;
-      text-align: center;
-    }
-
-    .auth-brand h1 {
-      color: #65a2ff;
-      font-size: 30px;
-      letter-spacing: 3px;
-    }
-
-    .auth-brand p {
-      margin-top: 8px;
-      color: #9baac2;
-      font-size: 13px;
-    }
-
-    .auth-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 25px;
-      padding: 5px;
-      border-radius: 12px;
-      background: #080f1d;
-    }
-
-    .auth-tabs button {
-      flex: 1;
-      padding: 11px;
-      border: 0;
-      border-radius: 9px;
-      background: transparent;
-      color: #9baac2;
-    }
-
-    .auth-tabs button.active {
-      background: #286de0;
-      color: #fff;
-    }
-
-    .auth-form {
-      display: none;
-    }
-
-    .auth-form.active {
-      display: block;
-    }
-
-    .field {
-      margin-bottom: 17px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 8px;
-      color: #c5d1e5;
-      font-size: 13px;
-    }
-
-    .field input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #30415e;
-      border-radius: 10px;
-      outline: none;
-      background: #091222;
-      color: #fff;
-    }
-
-    .field input:focus {
-      border-color: #438cff;
-    }
-
-    .primary-btn {
-      width: 100%;
-      padding: 14px;
-      border: 0;
-      border-radius: 10px;
-      background: #347ef0;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    .primary-btn:hover {
-      background: #2468d4;
-    }
-
-    .auth-message {
-      min-height: 20px;
-      margin-top: 15px;
-      color: #ff8e8e;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    .chat-screen {
-      display: none;
-      min-height: 100vh;
-      flex-direction: column;
-    }
-
-    .chat-screen.active {
-      display: flex;
-    }
-
-    .chat-header {
-      height: 65px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 18px;
-      border-bottom: 1px solid #26344d;
-      background: #101827;
-    }
-
-    .chat-header h2 {
-      color: #65a2ff;
-      letter-spacing: 2px;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .header-actions button,
-    .icon-btn {
-      padding: 9px 12px;
-      border: 1px solid #30415e;
-      border-radius: 9px;
-      background: #17243a;
-      color: #fff;
-    }
-
-    .chat-messages {
-      flex: 1;
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 25px 18px 120px;
-    }
-
-    .welcome {
-      margin-top: 80px;
-      text-align: center;
-    }
-
-    .welcome h1 {
-      font-size: 30px;
-    }
-
-    .welcome p {
-      margin-top: 12px;
-      color: #9baac2;
-    }
-
-    .message {
-      max-width: 85%;
-      margin: 15px 0;
-      padding: 14px 16px;
-      border-radius: 15px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
-    }
-
-    .message.user {
-      margin-left: auto;
-      background: #245db5;
-    }
-
-    .message.ai {
-      margin-right: auto;
-      border: 1px solid #26344d;
-      background: #111c2e;
-    }
-
-    .chat-input-area {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      padding: 15px;
-      border-top: 1px solid #26344d;
-      background: #0c1422;
-    }
-
-    .chat-input-row {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .chat-input-row input {
-      flex: 1;
-      min-width: 0;
-      padding: 15px;
-      border: 1px solid #30415e;
-      border-radius: 12px;
-      outline: none;
-      background: #111c2e;
-      color: #fff;
-    }
-
-    .send-btn {
-      padding: 0 22px;
-      border: 0;
-      border-radius: 12px;
-      background: #347ef0;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    .chat-tools {
-      display: flex;
-      gap: 8px;
-      max-width: 900px;
-      margin: 10px auto 0;
-    }
-
-    .chat-tools button {
-      padding: 8px 12px;
-      border: 1px solid #30415e;
-      border-radius: 8px;
-      background: #17243a;
-      color: #c5d1e5;
-      font-size: 12px;
-    }
-
-    @media (max-width: 500px) {
-      .auth-card {
-        padding: 23px;
-      }
-
-      .chat-header {
-        padding: 0 12px;
-      }
-
-      .chat-header h2 {
-        font-size: 19px;
-      }
-
-      .message {
-        max-width: 95%;
-      }
-    }
-  </style>
+@media(max-width:700px){
+ .sidebar{display:none;position:fixed;z-index:200;left:0;top:0;bottom:0;width:270px}
+ .sidebar.open{display:flex}
+ .composer{left:0;padding:10px}
+ .header{padding:0 10px}
+ .header h2{font-size:17px}
+ .welcome{margin-top:70px}
+ .message{max-width:95%}
+ .mobile-menu{display:inline-block}
+ .small-btn{padding:8px}
+ .auth-card{padding:23px}
+}
+</style>
 </head>
 
 <body>
 
-  <!-- SPLASH SCREEN -->
-  <main class="splash" id="splashScreen">
-    <div class="splash-logo">A</div>
-    <h1>AXON AI</h1>
-    <p id="loadingText">Initializing Experience</p>
-    <div class="loader"></div>
+<!-- SPLASH -->
+<div id="splash">
+ <div class="logo">A</div>
+ <h1>AXON AI</h1>
+ <p id="splashText">Initializing Experience</p>
+ <div class="loader"></div>
+</div>
+
+<!-- AUTH -->
+<section id="auth">
+ <div class="auth-card">
+  <div class="brand">
+   <h1>AXON AI</h1>
+   <p>Your intelligent AI assistant</p>
+  </div>
+
+  <div class="tabs">
+   <button id="loginTab" class="active">Login</button>
+   <button id="signupTab">Sign Up</button>
+  </div>
+
+  <form id="loginForm" class="auth-form active">
+   <div class="field">
+    <label>Email</label>
+    <input id="loginEmail" type="email" required autocomplete="email" placeholder="Enter email">
+   </div>
+   <div class="field">
+    <label>Password</label>
+    <input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Enter password">
+   </div>
+   <button class="primary" type="submit">Login</button>
+  </form>
+
+  <form id="signupForm" class="auth-form">
+   <div class="field">
+    <label>Full Name</label>
+    <input id="signupName" required maxlength="60" placeholder="Enter your name">
+   </div>
+   <div class="field">
+    <label>Email</label>
+    <input id="signupEmail" type="email" required autocomplete="email" placeholder="Enter email">
+   </div>
+   <div class="field">
+    <label>Password (minimum 8 characters)</label>
+    <input id="signupPassword" type="password" minlength="8" required autocomplete="new-password" placeholder="Create password">
+   </div>
+   <button class="primary" type="submit">Create Account</button>
+  </form>
+  <p id="authMessage" class="auth-message"></p>
+ </div>
+</section>
+
+<!-- APPLICATION -->
+<div id="app">
+
+ <aside class="sidebar" id="sidebar">
+  <div class="side-brand">AXON AI</div>
+  <button class="side-btn" id="sideNewChat">＋ New Chat</button>
+  <button class="side-btn" id="searchChats">⌕ Search Chats</button>
+  <input id="historySearch" placeholder="Search history..." style="display:none;padding:10px;background:#091222;color:white;border:1px solid #30415e;border-radius:8px">
+  <div class="history-list" id="historyList"></div>
+  <div class="side-bottom">
+   <div id="profileName"></div>
+   <button class="side-btn" id="profileBtn">My Profile</button>
+   <button class="side-btn" id="settingsBtn">Settings</button>
+   <button class="side-btn" id="sideLogout">Logout</button>
+  </div>
+ </aside>
+
+ <main class="main">
+  <header class="header">
+   <div style="display:flex;align-items:center;gap:10px">
+    <button class="small-btn mobile-menu" id="menuBtn">☰</button>
+    <h2>AXON AI</h2>
+   </div>
+   <div class="header-actions">
+    <button class="small-btn" id="headerNewChat">＋</button>
+    <button class="small-btn" id="headerLogout">Logout</button>
+   </div>
+  </header>
+
+  <main id="messages">
+   <div class="welcome" id="welcome">
+    <h1>How can I help you?</h1>
+    <p>Start a conversation with AXON AI</p>
+   </div>
   </main>
 
-  <!-- LOGIN / SIGNUP -->
-  <section class="auth-screen" id="authScreen">
-    <div class="auth-card">
-
-      <div class="auth-brand">
-        <h1>AXON AI</h1>
-        <p>Your intelligent AI assistant</p>
-      </div>
-
-      <div class="auth-tabs">
-        <button class="active" id="loginTab" type="button">Login</button>
-        <button id="signupTab" type="button">Sign Up</button>
-      </div>
-
-      <form class="auth-form active" id="loginForm">
-        <div class="field">
-          <label for="loginEmail">Email</label>
-          <input id="loginEmail" type="email" required placeholder="Enter your email">
-        </div>
-
-        <div class="field">
-          <label for="loginPassword">Password</label>
-          <input id="loginPassword" type="password" required placeholder="Enter password">
-        </div>
-
-        <button class="primary-btn" type="submit">Login</button>
-      </form>
-
-      <form class="auth-form" id="signupForm">
-        <div class="field">
-          <label for="signupName">Full Name</label>
-          <input id="signupName" type="text" required placeholder="Enter your name">
-        </div>
-
-        <div class="field">
-          <label for="signupEmail">Email</label>
-          <input id="signupEmail" type="email" required placeholder="Enter your email">
-        </div>
-
-        <div class="field">
-          <label for="signupPassword">Password</label>
-          <input id="signupPassword" type="password" minlength="8" required placeholder="At least 8 characters">
-        </div>
-
-        <button class="primary-btn" type="submit">Create Account</button>
-      </form>
-
-      <p class="auth-message" id="authMessage"></p>
+  <div class="composer">
+   <div class="composer-inner">
+    <div id="attachmentInfo"></div>
+    <form id="chatForm" class="composer-row">
+     <button type="button" class="tool-btn" id="plusBtn">＋</button>
+     <textarea id="chatInput" rows="1" placeholder="Message AXON AI..." required></textarea>
+     <button type="submit" class="send-btn" id="sendBtn">Send</button>
+     <button type="button" class="send-btn hidden" id="stopBtn">Stop</button>
+    </form>
+    <div class="composer-tools">
+     <button class="tool-btn" id="voiceBtn">🎙 Voice</button>
+     <button class="tool-btn" id="clearBtn">Clear Chat</button>
+     <button class="tool-btn" id="exportBtn">Export Chat</button>
     </div>
-  </section>
+   </div>
+   <div id="plusMenu" class="hidden">
+    <button id="photoBtn">▧ Add Photo</button>
+    <button id="uploadBtn">▤ Upload File</button>
+    <button id="closePlus">Close</button>
+   </div>
+   <input id="fileInput" type="file" accept="image/*,.pdf,.txt,.doc,.docx,.csv">
+  </div>
+ </main>
+</div>
 
-  <!-- MAIN CHAT -->
-  <section class="chat-screen" id="chatScreen">
+<!-- MODAL -->
+<div class="overlay" id="modal">
+ <div class="modal">
+  <h3 id="modalTitle">AXON AI</h3>
+  <p id="modalText"></p>
+  <button class="primary" id="modalClose">Close</button>
+ </div>
+</div>
 
-    <header class="chat-header">
-      <h2>AXON AI</h2>
-      <div class="header-actions">
-        <button id="newChatBtn" type="button">New Chat</button>
-        <button id="logoutBtn" type="button">Logout</button>
-      </div>
-    </header>
+<script>
+(() => {
+"use strict";
 
-    <main class="chat-messages" id="chatMessages">
-      <div class="welcome" id="welcomeMessage">
-        <h1>How can I help you?</h1>
-        <p>Start a conversation with AXON AI</p>
-      </div>
-    </main>
+/* ELEMENTS */
+const $ = id => document.getElementById(id);
+const splash = $("splash");
+const auth = $("auth");
+const app = $("app");
+const messages = $("messages");
+const chatInput = $("chatInput");
+const authMessage = $("authMessage");
 
-    <div class="chat-input-area">
-      <form class="chat-input-row" id="chatForm">
-        <input id="chatInput" type="text" autocomplete="off" placeholder="Message AXON AI..." required>
-        <button class="send-btn" type="submit">Send</button>
-      </form>
+let currentUser = null;
+let currentChatId = null;
+let chats = [];
+let selectedFile = null;
+let controller = null;
+let recognition = null;
+let stopped = false;
 
-      <div class="chat-tools">
-        <button id="voiceBtn" type="button">Voice Input</button>
-        <button id="clearBtn" type="button">Clear Chat</button>
-      </div>
-    </div>
+/* STORAGE */
+const readJSON = (key, fallback) => {
+ try {
+  return JSON.parse(localStorage.getItem(key)) ?? fallback;
+ } catch {
+  return fallback;
+ }
+};
 
-  </section>
+function getAccounts() {
+ return readJSON("axon_accounts", []);
+}
 
-  <script>
-    (() => {
-      "use strict";
+function saveAccounts(accounts) {
+ localStorage.setItem("axon_accounts", JSON.stringify(accounts));
+}
 
-      const splash = document.getElementById("splashScreen");
-      const loadingText = document.getElementById("loadingText");
-      const authScreen = document.getElementById("authScreen");
-      const chatScreen = document.getElementById("chatScreen");
+function userKey(name) {
+ return "axon_chats_" + name;
+}
 
-      const messages = [
-        "Initializing Experience",
-        "Preparing Interface",
-        "Almost Ready",
-        "Experience Ready"
-      ];
+function loadChats() {
+ chats = readJSON(userKey(currentUser.email), []);
+}
 
-      let index = 0;
+function saveChats() {
+ localStorage.setItem(userKey(currentUser.email), JSON.stringify(chats));
+}
 
-      const splashInterval = setInterval(() => {
-        index++;
-        loadingText.textContent = messages[index] || "Experience Ready";
+/* PASSWORD HASHING - LOCAL DEMO ONLY */
+async function hashPassword(password, salt) {
+ const encoder = new TextEncoder();
+ const key = await crypto.subtle.importKey(
+  "raw", encoder.encode(password), "PBKDF2", false, ["deriveBits"]
+ );
+ const bits = await crypto.subtle.deriveBits({
+  name:"PBKDF2",
+  salt:encoder.encode(salt),
+  iterations:150000,
+  hash:"SHA-256"
+ }, key, 256);
 
-        if (index >= messages.length - 1) {
-          clearInterval(splashInterval);
+ return Array.from(new Uint8Array(bits))
+  .map(b=>b.toString(16).padStart(2,"0")).join("");
+}
 
-          setTimeout(() => {
-            splash.style.display = "none";
-            authScreen.classList.add("active");
-          }, 500);
-        }
-      }, 900);
+/* AUTH TABS */
+function showLogin() {
+ $("loginTab").classList.add("active");
+ $("signupTab").classList.remove("active");
+ $("loginForm").classList.add("active");
+ $("signupForm").classList.remove("active");
+ authMessage.textContent = "";
+}
 
-      const loginTab = document.getElementById("loginTab");
-      const signupTab = document.getElementById("signupTab");
-      const loginForm = document.getElementById("loginForm");
-      const signupForm = document.getElementById("signupForm");
-      const authMessage = document.getElementById("authMessage");
+function showSignup() {
+ $("signupTab").classList.add("active");
+ $("loginTab").classList.remove("active");
+ $("signupForm").classList.add("active");
+ $("loginForm").classList.remove("active");
+ authMessage.textContent = "";
+}
 
-      function showLogin() {
-        loginTab.classList.add("active");
-        signupTab.classList.remove("active");
-        loginForm.classList.add("active");
-        signupForm.classList.remove("active");
-        authMessage.textContent = "";
-      }
+$("loginTab").onclick = showLogin;
+$("signupTab").onclick = showSignup;
 
-      function showSignup() {
-        signupTab.classList.add("active");
-        loginTab.classList.remove("active");
-        signupForm.classList.add("active");
-        loginForm.classList.remove("active");
-        authMessage.textContent = "";
-      }
+/* ACCOUNT CREATION */
+$("signupForm").addEventListener("submit", async event => {
+ event.preventDefault();
 
-      loginTab.addEventListener("click", showLogin);
-      signupTab.addEventListener("click", showSignup);
+ const name = $("signupName").value.trim();
+ const email = $("signupEmail").value.trim().toLowerCase();
+ const password = $("signupPassword").value;
 
-      function getAccounts() {
-        try {
-          return JSON.parse(localStorage.getItem("axon_accounts") || "[]");
-        } catch {
-          return [];
-        }
-      }
+ authMessage.style.color = "#ff8e8e";
 
-      function saveAccounts(accounts) {
-        localStorage.setItem("axon_accounts", JSON.stringify(accounts));
-      }
+ if (!name || !email || password.length < 8) {
+  authMessage.textContent = "Enter valid details. Password must have 8 characters.";
+  return;
+ }
 
-      function openChat(name) {
-        authScreen.classList.remove("active");
-        chatScreen.classList.add("active");
-        document.getElementById("welcomeMessage").querySelector("p").textContent =
-          "Welcome, " + name + ". Start a conversation with AXON AI.";
-      }
+ const accounts = getAccounts();
 
-      
-signupForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+ if (accounts.some(a=>a.email===email)) {
+  authMessage.textContent = "This email is already registered.";
+  return;
+ }
 
-  const name = document.getElementById("signupName").value.trim();
-  const email = document.getElementById("signupEmail").value.trim().toLowerCase();
-  const password = document.getElementById("signupPassword").value;
+ try {
+  const salt = crypto.randomUUID();
+  const passwordHash = await hashPassword(password, salt);
 
-  authMessage.style.color = "#ff8e8e";
+  accounts.push({
+   name,
+   email,
+   salt,
+   passwordHash
+  });
 
-  if (!name || !email || password.length < 8) {
-    authMessage.textContent =
-      "Please enter valid details. Password must be at least 8 characters.";
-    return;
-  }
+  saveAccounts(accounts);
 
-  const accounts = getAccounts();
+  currentUser = {name,email};
+  sessionStorage.setItem("axon_session", JSON.stringify(currentUser));
 
-  if (accounts.some(account => account.email === email)) {
-    authMessage.textContent =
-      "An account with this email already exists.";
-    return;
-  }
+  $("signupForm").reset();
+  openApp();
 
-  try {
-    accounts.push({
-      name: name,
-      email: email,
-      password: password
-    });
-
-    saveAccounts(accounts);
-
-    sessionStorage.setItem("axon_logged_in", "true");
-    sessionStorage.setItem("axon_user_name", name);
-
-    signupForm.reset();
-    loginForm.reset();
-
-    authMessage.textContent = "";
-
-    openChat(name);
-
-  } catch (error) {
-    authMessage.style.color = "#ff8e8e";
-    authMessage.textContent =
-      "Account creation failed. Please try again.";
-  }
+ } catch(error) {
+  authMessage.textContent = "Account creation failed. Try again.";
+ }
 });
-      
 
-        const name = document.getElementById("signupName").value.trim();
-        const email = document.getElementById("signupEmail").value.trim().toLowerCase();
-        const password = document.getElementById("signupPassword").value;
+/* LOGIN */
+$("loginForm").addEventListener("submit", async event => {
+ event.preventDefault();
 
-        if (!name || !email || password.length < 8) {
-          authMessage.textContent = "Please enter valid details. Password must be at least 8 characters.";
-          return;
-        }
+ const email = $("loginEmail").value.trim().toLowerCase();
+ const password = $("loginPassword").value;
 
-        const accounts = getAccounts();
+ const account = getAccounts().find(a=>a.email===email);
 
-        if (accounts.some(account => account.email === email)) {
-          authMessage.textContent = "An account with this email already exists.";
-          return;
-        }
+ if (!account) {
+  authMessage.textContent = "Incorrect email or password.";
+  return;
+ }
 
-        /*
-          Demo-only local account storage.
-          This is not secure authentication.
-          Use a trusted backend with password hashing and sessions
-          before deploying a real account system.
-        */
+ try {
+  const hash = await hashPassword(password, account.salt);
 
-        accounts.push({ name, email, password });
-        saveAccounts(accounts);
+  if (hash !== account.passwordHash) {
+   authMessage.textContent = "Incorrect email or password.";
+   return;
+  }
 
-        authMessage.style.color = "#7ee6a3";
-        authMessage.textContent = "Account created. You can now log in.";
+  currentUser = {name:account.name,email:account.email};
+  sessionStorage.setItem("axon_session",JSON.stringify(currentUser));
 
-        signupForm.reset();
-        showLogin();
-      });
+  $("loginForm").reset();
+  openApp();
 
-      loginForm.addEventListener("submit", (event) => {
-        event.preventDefault();
+ } catch(error) {
+  authMessage.textContent = "Login failed. Please try again.";
+ }
+});
 
-        const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-        const password = document.getElementById("loginPassword").value;
+/* OPEN APP */
+function openApp() {
+ auth.classList.remove("active");
+ splash.style.display = "none";
+ app.classList.add("active");
 
-        const accounts = getAccounts();
-        const account = accounts.find(item =>
-          item.email === email && item.password === password
-        );
+ $("profileName").textContent = currentUser.name;
+ loadChats();
+ renderHistory();
 
-        if (!account) {
-          authMessage.style.color = "#ff8e8e";
-          authMessage.textContent = "Incorrect email or password.";
-          return;
-        }
+ if (!currentChatId) newChat();
+}
 
-        sessionStorage.setItem("axon_logged_in", "true");
-        sessionStorage.setItem("axon_user_name", account.name);
+/* LOGOUT */
+function logout() {
+ sessionStorage.removeItem("axon_session");
+ currentUser = null;
+ currentChatId = null;
+ chats = [];
+ stopGeneration();
 
-        authMessage.textContent = "";
-        openChat(account.name);
-      });
+ app.classList.remove("active");
+ auth.classList.add("active");
+ showLogin();
+ $("sidebar").classList.remove("open");
+}
 
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        sessionStorage.removeItem("axon_logged_in");
-        sessionStorage.removeItem("axon_user_name");
+$("sideLogout").onclick = logout;
+$("headerLogout").onclick = logout;
 
-        chatScreen.classList.remove("active");
-        authScreen.classList.add("active");
-        showLogin();
-      });
+/* SPLASH */
+function startSplash() {
+ const steps = [
+  "Initializing Experience",
+  "Preparing Interface",
+  "Loading AXON AI",
+  "Experience Ready"
+ ];
 
-      const chatForm = document.getElementById("chatForm");
-      const chatInput = document.getElementById("chatInput");
-      const chatMessages = document.getElementById("chatMessages");
+ let i = 0;
 
-      function addMessage(text, type) {
-        const welcome = document.getElementById("welcomeMessage");
-        if (welcome) welcome.style.display = "none";
+ const timer = setInterval(()=>{
+  $("splashText").textContent = steps[i++];
+  if(i>=steps.length) {
+   clearInterval(timer);
+   setTimeout(()=>{
+    splash.style.display="none";
+    auth.classList.add("active");
+   },400);
+  }
+ },600);
+}
 
-        const message = document.createElement("div");
-        message.className = "message " + type;
-        message.textContent = text;
+/* CHAT MANAGEMENT */
+function newChat() {
+ currentChatId = crypto.randomUUID();
 
-        chatMessages.appendChild(message);
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth"
-        });
+ chats.unshift({
+  id:currentChatId,
+  title:"New Chat",
+  messages:[],
+  updated:Date.now()
+ });
 
-        return message;
-      }
+ saveChats();
+ renderHistory();
+ renderMessages();
+ chatInput.focus();
+}
 
-      async function getAIResponse(prompt) {
-        /*
-          Connect your own AI backend here.
-          Do not place private API keys in frontend JavaScript.
-        */
-        return "AXON AI is ready. Connect an AI backend to enable intelligent replies.";
-      }
+function selectChat(id) {
+ const chat = chats.find(c=>c.id===id);
+ if(!chat) return;
 
-      chatForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
+ currentChatId=id;
+ renderHistory();
+ renderMessages();
+ $("sidebar").classList.remove("open");
+}
 
-        const prompt = chatInput.value.trim();
-        if (!prompt) return;
+function currentChat() {
+ return chats.find(c=>c.id===currentChatId);
+}
 
-        addMessage(prompt, "user");
-        chatInput.value = "";
+function renderHistory() {
+ const list = $("historyList");
+ list.innerHTML = "";
 
-        const replyElement = addMessage("Thinking...", "ai");
+ const query = $("historySearch").value.toLowerCase();
 
-        try {
-          const response = await getAIResponse(prompt);
-          replyElement.textContent = response;
-        } catch {
-          replyElement.textContent = "Something went wrong. Please try again.";
-        }
-      });
+ chats.filter(c=>c.title.toLowerCase().includes(query)).forEach(chat=>{
+  const button = document.createElement("button");
+  button.className="history-item";
+  button.textContent=chat.title;
+  button.onclick=()=>selectChat(chat.id);
+  list.appendChild(button);
+ });
+}
 
-      document.getElementById("newChatBtn").addEventListener("click", () => {
-        chatMessages.innerHTML = `
-          <div class="welcome" id="welcomeMessage">
-            <h1>How can I help you?</h1>
-            <p>Start a conversation with AXON AI</p>
-          </div>
-        `;
-      });
+function renderMessages() {
+ messages.innerHTML="";
 
-      document.getElementById("clearBtn").addEventListener("click", () => {
-        chatMessages.innerHTML = `
-          <div class="welcome" id="welcomeMessage">
-            <h1>How can I help you?</h1>
-            <p>Start a conversation with AXON AI</p>
-          </div>
-        `;
-      });
+ const chat=currentChat();
 
-      const voiceBtn = document.getElementById("voiceBtn");
+ if(!chat || !chat.messages.length) {
+  const welcome=document.createElement("div");
+  welcome.className="welcome";
+  welcome.innerHTML="<h1>How can I help you?</h1><p>Start a conversation with AXON AI</p>";
+  messages.appendChild(welcome);
+  return;
+ }
 
-      voiceBtn.addEventListener("click", () => {
-        const SpeechRecognition =
-          window.SpeechRecognition || window.webkitSpeechRecognition;
+ chat.messages.forEach((item,index)=> {
+  addMessageElement(item.text,item.role,index);
+ });
+}
 
-        if (!SpeechRecognition) {
-          alert("Voice input is not supported in this browser.");
-          return;
-        }
+function addMessageElement(text,role,index) {
+ const box=document.createElement("div");
+ box.className="message "+(role==="user"?"user":"ai");
 
-        const recognition = new SpeechRecognition();
-        recognition.lang = "hi-IN";
-        recognition.interimResults = false;
+ const content=document.createElement("div");
+ content.textContent=text;
+ box.appendChild(content);
 
-        voiceBtn.textContent = "Listening...";
+ if(role==="ai") {
+  const actions=document.createElement("div");
+  actions.className="message-actions";
 
-        recognition.onresult = (event) => {
-          chatInput.value = event.results[0][0].transcript;
-          chatInput.focus();
-        };
+  const copy=document.createElement("button");
+  copy.textContent="Copy";
+  copy.onclick=()=>copyText(text);
 
-        recognition.onerror = () => {
-          alert("Voice recognition could not complete. Please try again.");
-        };
+  const regenerate=document.createElement("button");
+  regenerate.textContent="Regenerate";
+  regenerate.onclick=()=>regenerateReply(index);
 
-        recognition.onend = () => {
-          voiceBtn.textContent = "Voice Input";
-        };
+  actions.append(copy,regenerate);
+  box.appendChild(actions);
+ }
 
-        recognition.start();
-      });
+ messages.appendChild(box);
+ return box;
+}
 
-      const savedLogin = sessionStorage.getItem("axon_logged_in");
-      const savedName = sessionStorage.getItem("axon_user_name");
+function addMessage(text,role) {
+ const chat=currentChat();
+ if(!chat) return;
 
-      if (savedLogin === "true" && savedName) {
-        clearInterval(splashInterval);
-        splash.style.display = "none";
-        openChat(savedName);
-      }
+ chat.messages.push({text,role});
+ chat.updated=Date.now();
 
-    })();
-  </script>
+ if(role==="user" && chat.title==="New Chat") {
+  chat.title=text.slice(0,35);
+ }
+
+ saveChats();
+ renderHistory();
+
+ const box=addMessageElement(text,role,chat.messages.length-1);
+ window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+ return box;
+}
+
+/* BUTTONS */
+$("sideNewChat").onclick=newChat;
+$("headerNewChat").onclick=newChat;
+
+$("menuBtn").onclick=()=>{
+ $("sidebar").classList.toggle("open");
+};
+
+$("searchChats").onclick=()=>{
+ const input=$("historySearch");
+ input.style.display=input.style.display==="none"?"block":"none";
+ input.focus();
+};
+
+$("historySearch").oninput=renderHistory;
+
+$("clearBtn").onclick=()=>{
+ const chat=currentChat();
+ if(!chat) return;
+ chat.messages=[];
+ saveChats();
+ renderMessages();
+};
+
+$("profileBtn").onclick=()=>{
+ showModal("My Profile","Name: "+currentUser.name+"\nEmail: "+currentUser.email);
+};
+
+$("settingsBtn").onclick=()=>{
+ showModal("Settings","AXON AI interface settings. Your chats are stored in this browser.");
+};
+
+/* MODAL */
+function showModal(title,text) {
+ $("modalTitle").textContent=title;
+ $("modalText").textContent=text;
+ $("modal").classList.add("active");
+}
+
+$("modalClose").onclick=()=>$("modal").classList.remove("active");
+$("modal").onclick=e=>{
+ if(e.target===$("modal")) $("modal").classList.remove("active");
+};
+
+/* COPY */
+async function copyText(text) {
+ try {
+  await navigator.clipboard.writeText(text);
+  showModal("Copied","Text copied successfully.");
+ } catch {
+  showModal("Copy","Clipboard access is unavailable in this browser.");
+ }
+}
+
+/* EXPORT */
+$("exportBtn").onclick=()=>{
+ const chat=currentChat();
+ if(!chat) return;
+
+ const content=chat.messages.map(m=>
+  (m.role==="user"?"You":"AXON AI")+":\n"+m.text
+ ).join("\n\n");
+
+ const blob=new Blob([content],{type:"text/plain"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="axon-chat.txt";
+ a.click();
+ URL.revokeObjectURL(url);
+};
+
+/* FILE UPLOAD */
+$("plusBtn").onclick=()=>$("plusMenu").classList.toggle("hidden");
+$("closePlus").onclick=()=>$("plusMenu").classList.add("hidden");
+$("photoBtn").onclick=()=>{
+ $("fileInput").accept="image/*";
+ $("fileInput").click();
+};
+$("uploadBtn").onclick=()=>{
+ $("fileInput").accept=".pdf,.txt,.doc,.docx,.csv";
+ $("fileInput").click();
+};
+
+$("fileInput").onchange=event=>{
+ selectedFile=event.target.files[0];
+ $("attachmentInfo").textContent=selectedFile?
+  "Attached: "+selectedFile.name:"";
+     $("plusMenu").classList.remove("active");
+  };
+
+  /* REMOVE ATTACHMENT */
+  $("removeAttachment").onclick = () => {
+    selectedFile = null;
+    $("fileInput").value = "";
+    $("attachmentInfo").textContent = "";
+  };
+
+  /* FILE INPUT RESET */
+  $("fileInput").addEventListener("click", () => {
+    $("fileInput").value = "";
+  });
+
+  $("plusMenu").classList.add("hidden");
+};
+
+/* FILE ATTACHMENT */
+$("fileInput").onchange = event => {
+ selectedFile = event.target.files[0] || null;
+
+ $("attachmentInfo").textContent = selectedFile
+  ? "Attached: " + selectedFile.name
+  : "";
+
+ $("plusMenu").classList.add("hidden");
+};
+
+/* AI RESPONSE */
+async function getAIResponse(prompt, signal) {
+ if (signal && signal.aborted) {
+  throw new DOMException("Stopped", "AbortError");
+ }
+
+ return "AXON AI is ready. Connect your AI backend API to enable real AI responses.";
+}
+
+/* STOP GENERATION */
+function stopGeneration() {
+ stopped = true;
+
+ if (controller) {
+  controller.abort();
+  controller = null;
+ }
+
+ $("stopBtn").classList.add("hidden");
+ $("sendBtn").classList.remove("hidden");
+}
+
+/* SEND MESSAGE */
+async function sendPrompt(prompt) {
+ if (!prompt.trim()) return;
+
+ stopped = false;
+
+ addMessage(prompt, "user");
+
+ const replyBox = addMessage("Thinking...", "ai");
+
+ $("sendBtn").classList.add("hidden");
+ $("stopBtn").classList.remove("hidden");
+
+ controller = new AbortController();
+
+ try {
+  const response = await getAIResponse(prompt, controller.signal);
+
+  if (!stopped) {
+   const chat = currentChat();
+
+   if (chat) {
+    const lastMessage = chat.messages[chat.messages.length - 1];
+
+    if (lastMessage && lastMessage.role === "ai") {
+     lastMessage.text = response;
+     saveChats();
+    }
+   }
+
+   replyBox.querySelector("div").textContent = response;
+  }
+
+ } catch(error) {
+  if (error.name === "AbortError") {
+   replyBox.querySelector("div").textContent = "Generation stopped.";
+  } else {
+   replyBox.querySelector("div").textContent =
+    "Something went wrong. Please try again.";
+  }
+
+ } finally {
+  controller = null;
+  stopped = false;
+
+  $("stopBtn").classList.add("hidden");
+  $("sendBtn").classList.remove("hidden");
+ }
+}
+
+/* CHAT FORM */
+$("chatForm").addEventListener("submit", async event => {
+ event.preventDefault();
+
+ let prompt = chatInput.value.trim();
+
+ if (selectedFile) {
+  prompt += "\n[Attached file: " + selectedFile.name + "]";
+ }
+
+ if (!prompt) return;
+
+ chatInput.value = "";
+
+ selectedFile = null;
+ $("attachmentInfo").textContent = "";
+ $("fileInput").value = "";
+
+ await sendPrompt(prompt);
+});
+
+/* STOP BUTTON */
+$("stopBtn").onclick = stopGeneration;
+
+/* REGENERATE RESPONSE */
+async function regenerateReply(index) {
+ const chat = currentChat();
+
+ if (!chat || index < 0 || index >= chat.messages.length) return;
+
+ const previousMessage = chat.messages[index - 1];
+
+ if (!previousMessage || previousMessage.role !== "user") return;
+
+ const prompt = previousMessage.text;
+
+ chat.messages.splice(index);
+
+ saveChats();
+ renderMessages();
+
+ await sendPrompt(prompt);
+}
+
+/* VOICE CONTROL */
+$("voiceBtn").onclick = () => {
+ const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+ if (!SpeechRecognition) {
+  showModal(
+   "Voice Not Supported",
+   "Your browser does not support voice recognition."
+  );
+  return;
+ }
+
+ if (recognition) {
+  recognition.stop();
+ }
+
+ recognition = new SpeechRecognition();
+ recognition.lang = "hi-IN";
+ recognition.interimResults = false;
+ recognition.continuous = false;
+
+ $("voiceBtn").textContent = "Listening...";
+
+ recognition.onresult = event => {
+  chatInput.value = event.results[0][0].transcript;
+  chatInput.focus();
+ };
+
+ recognition.onerror = () => {
+  showModal("Voice Error", "Voice recognition failed. Please try again.");
+ };
+
+ recognition.onend = () => {
+  $("voiceBtn").textContent = "🎙 Voice";
+  recognition = null;
+ };
+
+ recognition.start();
+};
+
+/* ENTER TO SEND */
+chatInput.addEventListener("keydown", event => {
+ if (event.key === "Enter" && !event.shiftKey) {
+  event.preventDefault();
+  $("chatForm").requestSubmit();
+ }
+});
+
+/* MOBILE MENU */
+document.addEventListener("click", event => {
+ const sidebar = $("sidebar");
+
+ if (
+  window.innerWidth <= 700 &&
+  sidebar.classList.contains("open") &&
+  !sidebar.contains(event.target) &&
+  event.target !== $("menuBtn")
+ ) {
+  sidebar.classList.remove("open");
+ }
+});
+
+/* SESSION RESTORE */
+function restoreSession() {
+ const session = readJSON("axon_session", null);
+
+ if (
+  session &&
+  typeof session.name === "string" &&
+  typeof session.email === "string"
+ ) {
+  const account = getAccounts().find(
+   item => item.email === session.email
+  );
+
+  if (account) {
+   currentUser = {
+    name: account.name,
+    email: account.email
+   };
+
+   openApp();
+   return true;
+  }
+ }
+
+ return false;
+}
+
+/* INITIALIZE */
+if (!restoreSession()) {
+ startSplash();
+}
+
+})();
+</script>
 
 </body>
 </html>
