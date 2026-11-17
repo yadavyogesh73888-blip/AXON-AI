@@ -529,8 +529,56 @@
           "Welcome, " + name + ". Start a conversation with AXON AI.";
       }
 
-      signupForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
+      
+signupForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim().toLowerCase();
+  const password = document.getElementById("signupPassword").value;
+
+  authMessage.style.color = "#ff8e8e";
+
+  if (!name || !email || password.length < 8) {
+    authMessage.textContent =
+      "Please enter valid details. Password must be at least 8 characters.";
+    return;
+  }
+
+  const accounts = getAccounts();
+
+  if (accounts.some(account => account.email === email)) {
+    authMessage.textContent =
+      "An account with this email already exists.";
+    return;
+  }
+
+  try {
+    accounts.push({
+      name: name,
+      email: email,
+      password: password
+    });
+
+    saveAccounts(accounts);
+
+    sessionStorage.setItem("axon_logged_in", "true");
+    sessionStorage.setItem("axon_user_name", name);
+
+    signupForm.reset();
+    loginForm.reset();
+
+    authMessage.textContent = "";
+
+    openChat(name);
+
+  } catch (error) {
+    authMessage.style.color = "#ff8e8e";
+    authMessage.textContent =
+      "Account creation failed. Please try again.";
+  }
+});
+      
 
         const name = document.getElementById("signupName").value.trim();
         const email = document.getElementById("signupEmail").value.trim().toLowerCase();
