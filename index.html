@@ -1815,12 +1815,24 @@
   };
 
   async function getAIResponse(prompt, signal) {
-    if (signal && signal.aborted) {
-      throw new DOMException("Stopped", "AbortError");
-    }
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: prompt
+    }),
+    signal
+  });
 
-    await new Promise(resolve => setTimeout(resolve, 700));
-    return "AXON AI Core is online and ready. Connect your `/api/chat` backend endpoint inside `getAIResponse()` to receive live AI responses.";
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.reply || "AI connection failed");
+  }
+
+  return data.reply || "कोई जवाब नहीं मिला।";
   }
 
   function stopGeneration() {
