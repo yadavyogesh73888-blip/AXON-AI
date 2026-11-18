@@ -24,10 +24,63 @@
       margin: 0;
       padding: 0;
       height: 100%;
+      width: 100%;
+      max-width: 100vw;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-primary);
       color: #f1f5f9;
       overflow: hidden;
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+      touch-action: pan-y;
+    }
+    html.light-theme body {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    html.light-theme .mesh-bg {
+      background-image:
+        radial-gradient(at 15% 20%, rgba(34, 211, 238, 0.14) 0px, transparent 50%),
+        radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.14) 0px, transparent 50%);
+    }
+    html.light-theme #app-screen,
+    html.light-theme #view-chat,
+    html.light-theme #view-apps,
+    html.light-theme #view-settings {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    html.light-theme header,
+    html.light-theme aside {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    html.light-theme .glass-panel {
+      background: rgba(255, 255, 255, 0.88);
+      border-color: rgba(148, 163, 184, 0.35);
+      color: #0f172a;
+    }
+    html.light-theme .text-white { color: #0f172a !important; }
+    html.light-theme .text-slate-200,
+    html.light-theme .text-slate-300 { color: #334155 !important; }
+    html.light-theme .text-slate-400 { color: #64748b !important; }
+    html.light-theme .bg-slate-900\/80,
+    html.light-theme .bg-slate-900\/90,
+    html.light-theme .bg-slate-900\/75,
+    html.light-theme .bg-slate-900\/60,
+    html.light-theme .bg-slate-900 {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    html.light-theme #btn-send,
+    html.light-theme #btn-auth-submit,
+    html.light-theme #btn-camera-capture,
+    html.light-theme #btn-end-call,
+    html.light-theme #btn-confirm-ok,
+    html.light-theme #btn-launch-yt-ext {
+      color: #ffffff !important;
     }
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
@@ -260,7 +313,7 @@
         </button>
         <button id="nav-apps" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
           <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-          App Hub &amp; YouTube
+          App Hub
         </button>
         <button id="nav-settings" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
           <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -419,7 +472,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 class="text-xl font-bold text-white">App Hub &amp; Voice Launcher</h3>
-              <p class="text-sm text-slate-400">Say <span class="text-cyan-300">"Open YouTube"</span> or <span class="text-cyan-300">"Scroll the video"</span> while Voice Control is active.</p>
+              <p class="text-sm text-slate-400">Say <span class="text-cyan-300">"Open Instagram"</span>, <span class="text-cyan-300">"Open WhatsApp"</span>, <span class="text-cyan-300">"Open YouTube"</span>, or <span class="text-cyan-300">"Scroll the video"</span>.</p>
             </div>
             <button id="btn-launch-yt-ext" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
@@ -427,7 +480,11 @@
             </button>
           </div>
 
+          <!-- Quick App Launcher Grid -->
+          <div id="app-launcher-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3"></div>
+
           <!-- Simulated YouTube Video Feed for Voice Scroll Testing -->
+          <h4 class="text-sm font-semibold text-slate-300 pt-2">Video Feed (Voice Scroll Ready)</h4>
           <div id="yt-feed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Populated by JS -->
           </div>
@@ -522,26 +579,36 @@
             </div>
           </div>
 
-          <!-- 3. SERVER CONNECTION CONFIG (server.js) -->
-          <div class="glass-panel rounded-2xl p-5 space-y-3">
-            <div class="flex items-center justify-between">
+          <!-- 3. APPEARANCE & PERSONALIZATION -->
+          <div class="glass-panel rounded-2xl p-5 space-y-4">
+            <div class="flex items-start justify-between gap-4">
               <div>
-                <h4 class="text-base font-semibold text-white">Node.js Backend Connection</h4>
-                <p class="text-xs text-slate-400 mt-0.5">Connects to your <code class="text-cyan-300">server.js</code> endpoint when hosted on your server, with automatic built-in AI fallback.</p>
+                <h4 class="text-base font-semibold text-white">Appearance &amp; Display</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Customize Dark/Light theme, text size, and chat behavior.</p>
               </div>
-              <span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">Auto Fallback</span>
+              <div class="flex items-center gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800">
+                <button id="btn-theme-dark" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition">Dark</button>
+                <button id="btn-theme-light" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">Light</button>
+              </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
               <div>
-                <label for="setting-api-mode" class="block text-xs text-slate-400 mb-1">Response Engine</label>
-                <select id="setting-api-mode" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
-                  <option value="auto">Auto (Server API + Built-in Fallback)</option>
-                  <option value="local">Built-in AXON Engine Only</option>
+                <label for="setting-font-size" class="block text-xs text-slate-400 mb-1">Chat Text Size</label>
+                <select id="setting-font-size" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
+                  <option value="sm">Compact (Small)</option>
+                  <option value="md" selected>Standard (Medium)</option>
+                  <option value="lg">Comfortable (Large)</option>
                 </select>
               </div>
-              <div>
-                <label for="setting-api-endpoint" class="block text-xs text-slate-400 mb-1">API Route</label>
-                <input id="setting-api-endpoint" type="text" value="/api/chat" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400" />
+              <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div>
+                  <p class="text-xs font-medium text-slate-200">Auto-Scroll Chat</p>
+                  <p class="text-[11px] text-slate-400">Jump to newest message</p>
+                </div>
+                <button id="toggle-autoscroll" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
+                  <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
+                </button>
               </div>
             </div>
           </div>
@@ -660,6 +727,37 @@
     </div>
   </div>
 
+  <!-- ==================== GOOGLE ACCOUNT PICKER MODAL ==================== -->
+  <div id="google-picker-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel rounded-3xl p-6 shadow-2xl animate-fade-up space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <svg class="w-6 h-6" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
+          <div>
+            <h3 class="text-base font-bold text-white">Choose a Google Account</h3>
+            <p class="text-[11px] text-slate-400">Select an account to continue to AXON AI</p>
+          </div>
+        </div>
+        <button id="btn-close-google-picker" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div id="google-accounts-list" class="space-y-2 max-h-56 overflow-y-auto">
+        <!-- Populated dynamically -->
+      </div>
+
+      <form id="google-add-account-form" class="pt-3 border-t border-slate-800 space-y-2.5">
+        <p class="text-xs font-semibold text-slate-300">Use another Gmail / Email</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input id="google-custom-name" type="text" placeholder="Your Name" class="px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+          <input id="google-custom-email" type="email" placeholder="yourname@gmail.com" class="px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+        </div>
+        <button type="submit" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-cyan-300 transition">Add &amp; Sign In</button>
+      </form>
+    </div>
+  </div>
+
   <!-- ==================== TOAST NOTIFICATION ==================== -->
   <div id="toast" class="hidden fixed top-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl glass-panel border border-cyan-400/30 text-xs sm:text-sm font-medium text-white shadow-2xl animate-fade-up"></div>
 
@@ -669,6 +767,27 @@
       'use strict';
 
       const STORAGE_KEY = 'axon_ai_workspace_v1';
+
+      const APP_DIRECTORY = [
+        { name: 'YouTube', aliases: ['youtube', 'यूट्यूब'], url: 'https://www.youtube.com', color: 'from-rose-500 to-red-600', icon: '▶' },
+        { name: 'Instagram', aliases: ['instagram', 'insta', 'इंस्टाग्राम'], url: 'https://www.instagram.com', color: 'from-pink-500 via-rose-500 to-amber-500', icon: '📷' },
+        { name: 'WhatsApp', aliases: ['whatsapp', 'व्हाट्सएप'], url: 'https://web.whatsapp.com', color: 'from-emerald-500 to-green-600', icon: '💬' },
+        { name: 'Facebook', aliases: ['facebook', 'fb', 'फेसबुक'], url: 'https://www.facebook.com', color: 'from-blue-600 to-indigo-600', icon: '📘' },
+        { name: 'X / Twitter', aliases: ['twitter', 'x ', 'x.com', 'ट्विटर'], url: 'https://x.com', color: 'from-slate-700 to-slate-900', icon: '𝕏' },
+        { name: 'Google', aliases: ['google', 'गूगल'], url: 'https://www.google.com', color: 'from-blue-500 to-cyan-500', icon: '🔍' },
+        { name: 'Gmail', aliases: ['gmail', 'email', 'mail', 'जीमेल'], url: 'https://mail.google.com', color: 'from-red-500 to-amber-500', icon: '✉️' },
+        { name: 'Google Maps', aliases: ['maps', 'map', 'मैप्स'], url: 'https://maps.google.com', color: 'from-emerald-500 to-teal-600', icon: '📍' },
+        { name: 'Spotify', aliases: ['spotify', 'स्पॉटीफाई', 'music'], url: 'https://open.spotify.com', color: 'from-green-500 to-emerald-600', icon: '🎵' },
+        { name: 'Netflix', aliases: ['netflix', 'नेटफ्लिक्स'], url: 'https://www.netflix.com', color: 'from-red-600 to-rose-700', icon: '🎬' },
+        { name: 'GitHub', aliases: ['github', 'गिटहब'], url: 'https://github.com', color: 'from-slate-600 to-slate-800', icon: '💻' },
+        { name: 'Amazon', aliases: ['amazon', 'अमेज़न'], url: 'https://www.amazon.in', color: 'from-amber-500 to-orange-600', icon: '🛒' }
+      ];
+
+      const DEFAULT_GOOGLE_ACCOUNTS = [
+        { name: 'Aarav Sharma', email: 'aarav.sharma@gmail.com' },
+        { name: 'Priya Verma', email: 'priya.verma98@gmail.com' },
+        { name: 'AXON Workspace', email: 'workspace.axon@gmail.com' }
+      ];
 
       const YT_SAMPLE_VIDEOS = [
         { id: 'v1', title: 'Building Autonomous AI Agents in 2026', channel: 'AXON Labs', views: '142K views', duration: '14:22', color: 'from-cyan-600/30 to-indigo-700/40' },
@@ -684,10 +803,14 @@
         authMode: 'signin',
         activeView: 'chat',
         deepThink: false,
+        googleAccounts: [...DEFAULT_GOOGLE_ACCOUNTS],
         settings: {
           voiceControl: false,
           voiceTTS: true,
           saveHistory: true,
+          theme: 'dark',
+          fontSize: 'md',
+          autoScroll: true,
           apiMode: 'auto',
           apiEndpoint: '/api/chat'
         },
@@ -712,6 +835,7 @@
         try {
           const payload = {
             user: state.user,
+            googleAccounts: state.googleAccounts,
             settings: state.settings,
             chats: state.settings.saveHistory ? state.chats : [],
             activeChatId: state.activeChatId
@@ -726,6 +850,7 @@
           if (!raw) return;
           const parsed = JSON.parse(raw);
           if (parsed.user) state.user = parsed.user;
+          if (Array.isArray(parsed.googleAccounts) && parsed.googleAccounts.length) state.googleAccounts = parsed.googleAccounts;
           if (parsed.settings) state.settings = { ...state.settings, ...parsed.settings };
           if (Array.isArray(parsed.chats)) state.chats = parsed.chats;
           if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
@@ -1033,8 +1158,9 @@
           ? 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition'
           : 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition';
         $('voice-hud').classList.toggle('hidden', !state.settings.voiceControl);
-        $('setting-api-mode').value = state.settings.apiMode;
-        $('setting-api-endpoint').value = state.settings.apiEndpoint;
+        setSwitchUI($('toggle-autoscroll'), state.settings.autoScroll, 'bg-cyan-500', true);
+        $('setting-font-size').value = state.settings.fontSize;
+        applyAppearance();
       }
 
       function setSwitchUI(btn, on, activeBg, small = false) {
@@ -1084,7 +1210,46 @@
         }).join('');
       }
 
+      function applyAppearance() {
+        const isLight = state.settings.theme === 'light';
+        document.documentElement.classList.toggle('light-theme', isLight);
+        $('btn-theme-dark').className = !isLight
+          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition'
+          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-900 transition';
+        $('btn-theme-light').className = isLight
+          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-white transition'
+          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition';
+        const msgBox = $('chat-messages');
+        msgBox.classList.remove('text-xs', 'text-sm', 'text-base');
+        msgBox.classList.add(state.settings.fontSize === 'sm' ? 'text-xs' : state.settings.fontSize === 'lg' ? 'text-base' : 'text-sm');
+      }
+
+      function renderGoogleAccounts() {
+        const list = $('google-accounts-list');
+        list.innerHTML = state.googleAccounts.map(acc => {
+          const initials = acc.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'G';
+          return `
+            <button type="button" class="google-acc-item w-full flex items-center gap-3 p-3 rounded-2xl bg-slate-900/75 hover:bg-slate-800 border border-slate-800 hover:border-cyan-400/40 text-left transition" data-name="${escapeHtml(acc.name)}" data-email="${escapeHtml(acc.email)}">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-xs font-bold text-white shrink-0">${initials}</div>
+              <div class="min-w-0 flex-1">
+                <p class="text-xs sm:text-sm font-semibold text-white truncate">${escapeHtml(acc.name)}</p>
+                <p class="text-[11px] text-slate-400 truncate">${escapeHtml(acc.email)}</p>
+              </div>
+              <span class="text-[11px] text-cyan-400 font-medium">Sign in →</span>
+            </button>
+          `;
+        }).join('');
+      }
+
       function renderAppHub() {
+        const launcher = $('app-launcher-grid');
+        launcher.innerHTML = APP_DIRECTORY.map(app => `
+          <button type="button" class="launch-app-btn glass-panel rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:border-cyan-400/40 transition group" data-url="${app.url}" data-name="${app.name}">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${app.color} flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition">${app.icon}</div>
+            <span class="text-xs font-semibold text-white">${app.name}</span>
+          </button>
+        `).join('');
+
         const grid = $('yt-feed-grid');
         grid.innerHTML = YT_SAMPLE_VIDEOS.map(v => `
           <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 hover:border-rose-500/40 transition group">
@@ -1453,13 +1618,15 @@
         const lower = cmd.toLowerCase();
         $('voice-hud-transcript').textContent = `"${cmd}"`;
 
-        if (lower.includes('youtube') || lower.includes('यूट्यूब')) {
-          switchView('apps');
-          $('voice-hud-action').textContent = 'Action: Opened YouTube & App Hub';
-          showToast('Opening YouTube...');
-          try { window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer'); } catch (e) { /* ignore */ }
-          if (state.settings.voiceTTS) speakText('Opening YouTube');
-          return;
+        for (const app of APP_DIRECTORY) {
+          if (app.aliases.some(alias => lower.includes(alias))) {
+            if (app.name === 'YouTube') switchView('apps');
+            $('voice-hud-action').textContent = `Action: Opened ${app.name}`;
+            showToast(`Opening ${app.name}...`);
+            try { window.open(app.url, '_blank', 'noopener,noreferrer'); } catch (e) { /* ignore */ }
+            if (state.settings.voiceTTS) speakText(`Opening ${app.name}`);
+            return;
+          }
         }
         if (lower.includes('scroll down') || lower.includes('scroll the video') || lower.includes('scroll video') || lower.includes('नीचे')) {
           const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
@@ -1529,7 +1696,33 @@
           }
           completeLogin(state.authMode === 'signup' ? name : email.split('@')[0], email);
         });
-        $('btn-google-login').addEventListener('click', () => completeLogin('Alex Morgan', 'alex.morgan@gmail.com'));
+        $('btn-google-login').addEventListener('click', () => {
+          renderGoogleAccounts();
+          $('google-picker-modal').classList.remove('hidden');
+        });
+        $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
+        $('google-accounts-list').addEventListener('click', (e) => {
+          const item = e.target.closest('.google-acc-item');
+          if (!item) return;
+          $('google-picker-modal').classList.add('hidden');
+          completeLogin(item.dataset.name, item.dataset.email);
+        });
+        $('google-add-account-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = $('google-custom-email').value.trim();
+          const name = $('google-custom-name').value.trim() || email.split('@')[0];
+          if (!email || !email.includes('@')) {
+            showToast('Please enter a valid Gmail or email address.');
+            return;
+          }
+          if (!state.googleAccounts.some(a => a.email.toLowerCase() === email.toLowerCase())) {
+            state.googleAccounts.unshift({ name, email });
+          }
+          $('google-custom-email').value = '';
+          $('google-custom-name').value = '';
+          $('google-picker-modal').classList.add('hidden');
+          completeLogin(name, email);
+        });
         $('btn-guest-login').addEventListener('click', () => completeLogin('AXON Demo User', 'demo@axon.ai'));
 
         // Sidebar & Nav
@@ -1710,14 +1903,32 @@
           showToast('All chat history cleared.');
         });
 
-        // API Config & App Hub
-        $('setting-api-mode').addEventListener('change', (e) => {
-          state.settings.apiMode = e.target.value;
+        // Appearance & App Hub
+        $('btn-theme-dark').addEventListener('click', () => {
+          state.settings.theme = 'dark';
           saveState();
+          applyAppearance();
         });
-        $('setting-api-endpoint').addEventListener('change', (e) => {
-          state.settings.apiEndpoint = e.target.value.trim() || '/api/chat';
+        $('btn-theme-light').addEventListener('click', () => {
+          state.settings.theme = 'light';
           saveState();
+          applyAppearance();
+        });
+        $('setting-font-size').addEventListener('change', (e) => {
+          state.settings.fontSize = e.target.value;
+          saveState();
+          applyAppearance();
+        });
+        $('toggle-autoscroll').addEventListener('click', () => {
+          state.settings.autoScroll = !state.settings.autoScroll;
+          saveState();
+          renderToggles();
+        });
+        $('app-launcher-grid').addEventListener('click', (e) => {
+          const btn = e.target.closest('.launch-app-btn');
+          if (!btn) return;
+          showToast(`Opening ${btn.dataset.name}...`);
+          window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
         });
         $('btn-launch-yt-ext').addEventListener('click', () => {
           window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer');
