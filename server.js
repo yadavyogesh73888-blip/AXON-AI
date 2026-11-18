@@ -1,25 +1,60 @@
+
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const { rateLimit } = require("express-rate-limit");
 const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
+// Render Proxy Configuration
+app.set("trust proxy", 1);
+
+// Security Headers
+// CSP is disabled temporarily to avoid breaking existing frontend scripts.
+app.use(helmet({
+  contentSecurityPolicy: false
+}));
+
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: "32kb" }));
 
-// Homepage Route
+// Chat Rate Limiter
+const chatLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    reply: "Too many requests. Please wait a minute and try again."
+  }
+});
+
+// Groq Health Check Rate Limiter
+const healthLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    status: "failed",
+    message: "Too many health checks. Please try again later."
+  }
+});
+
+// Homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Splash Screen Image Route
+// Splash Screen Image
 app.get("/IMG_20261114_073941.png", (req, res) => {
   res.sendFile(path.join(__dirname, "IMG_20261114_073941.png"));
 });
 
-// Basic Server Health Check
+// Server Health Check
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -28,7 +63,7 @@ app.get("/health", (req, res) => {
 });
 
 // Groq API Health Check
-app.get("/api/health", async (req, res) => {
+app.get("/api/health", healthLimiter, async (req, res) => {
   const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey || !apiKey.trim()) {
@@ -36,7 +71,7 @@ app.get("/api/health", async (req, res) => {
       status: "failed",
       server: "online",
       ai_api: "not_configured",
-      message: "GROQ_API_KEY is missing in environment variables."
+      message: "GROQ_API_KEY is missing."
     });
   }
 
@@ -67,6 +102,8 @@ app.get("/api/health", async (req, res) => {
     );
 
     const responseText = await response.text();
+    clearTimeout(timeout);
+
     let data = {};
     try {
       data = JSON.parse(responseText);
@@ -74,12 +111,9 @@ app.get("/api/health", async (req, res) => {
       data = {};
     }
 
-    clearTimeout(timeout);
-
     if (!response.ok) {
       console.error("GROQ HEALTH ERROR:", {
-        status: response.status,
-        details: responseText.slice(0, 1000)
+        status: response.status
       });
 
       return res.status(502).json({
@@ -89,9 +123,9 @@ app.get("/api/health", async (req, res) => {
         http_status: response.status,
         message:
           response.status === 401 || response.status === 403
-            ? "API authentication failed. Check your API key."
+            ? "API authentication failed."
             : response.status === 404
-            ? "Model or API endpoint not found. Check GROQ_MODEL."
+            ? "Model or API endpoint not found."
             : response.status === 429
             ? "API rate limit reached."
             : "Groq API request failed."
@@ -132,7 +166,7 @@ app.get("/api/health", async (req, res) => {
 });
 
 // AI Chat Route
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat", chatLimiter, async (req, res) => {
   const message = req.body?.message;
 
   if (typeof message !== "string" || !message.trim()) {
@@ -158,7 +192,7 @@ app.post("/api/chat", async (req, res) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 30000);
 
-  // Exact Best Friend Tone and Creator Rules (Unchanged)
+  // Original Creator Rules - Preserved
   const systemPrompt = `
 You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur izzat dene wale best friend ki tarah). 
 - Always reply in the exact same language and script the user uses (Hinglish/Hindi/English).
@@ -211,8 +245,7 @@ You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur 
 
     if (!response.ok) {
       console.error("GROQ API ERROR:", {
-        status: response.status,
-        details: responseText.slice(0, 1000)
+        status: response.status
       });
 
       return res.status(502).json({
@@ -243,5 +276,5 @@ You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur 
 
 // Start Server
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("AXON-AI server running smoothly on port " + PORT);
+  console.log("AXON-AI Secure Server running on port " + PORT);
 });
