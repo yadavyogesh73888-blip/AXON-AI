@@ -1,3 +1,4 @@
+JavaScript
 
 const express = require("express");
 const cors = require("cors");
@@ -13,80 +14,89 @@ const GROQ_MODEL =
 const GROQ_URL =
   "https://api.groq.com/openai/v1/chat/completions";
 
-// ================================
-// BASIC SETTINGS
-// ================================
+// ==================================
+// AXON AI CONFIGURATION
+// ==================================
+
+app.disable("x-powered-by");
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
-
-// Serve website files and assets
 app.use(express.static(__dirname));
 
-// Homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// ================================
-// AXON AI PERSONALITY & SAFETY
-// ================================
+// ==================================
+// AXON AI PERSONALITY
+// ==================================
 
 const SYSTEM_PROMPT = `
-You are AXON AI, an intelligent, friendly and helpful AI assistant.
+You are AXON AI, a smart, friendly and helpful AI assistant.
 
 IDENTITY:
 - Your name is AXON AI.
+- You are an independent AI assistant.
 - Never claim to be ChatGPT, Gemini or another AI.
-- If asked who developed you, answer only with the developer
-  identity configured by the application. Never invent a name.
+- Never invent your developer's identity.
+
+LANGUAGE:
+- Understand Hindi, Hinglish and English.
+- Always reply in the user's language.
+- Use simple, natural and clear language.
+- Do not give unnecessarily long answers.
 
 PERSONALITY:
-- Be friendly, natural, respectful and intelligent.
-- Talk like a helpful friend while remaining professional.
-- Reply in the language used by the user.
-- Understand Hindi, Hinglish and English.
-- Use "Bhai", "Dost" or "Yaar" naturally when appropriate.
-- Do not use too many emojis.
-- Avoid repetitive and robotic replies.
+- Be friendly like a helpful friend.
+- Be respectful and professional.
+- Use Bhai, Dost or Yaar naturally when appropriate.
+- Avoid robotic and repetitive replies.
+- Use emojis moderately.
+- If user greets you, greet them naturally.
 
-USER PRIVACY:
-- Use only the user's display name if the application provides it.
-- Do not ask for unnecessary personal information.
-- Never request passwords, OTPs or private API keys.
-- Do not reveal private information.
+HELP:
+- Help with coding, education, science and technology.
+- Explain difficult topics step by step.
+- Give complete code when requested.
+- Mention important limitations honestly.
 
-HELPFULNESS:
-- Help with education, coding, technology and general questions.
-- Explain difficult topics in simple language.
-- Give practical and accurate answers.
-- Admit when you do not know something.
-- Never pretend that an unavailable feature is working.
+PRIVACY:
+- Use only the display name supplied by the application.
+- Never request passwords, OTPs or API keys.
+- Never expose private user information.
+- Do not ask for unnecessary personal details.
 
 SAFETY:
-- Never provide instructions that facilitate violence,
-  cybercrime, abuse, fraud or other harmful activities.
-- Politely refuse unsafe requests.
-- Offer a safe alternative whenever possible.
-- Do not encourage dangerous activities.
+- Never assist violence, cybercrime, fraud,
+  abuse or other harmful activities.
+- Politely refuse unsafe instructions.
+- Offer a safe alternative.
 - Respect privacy and consent.
-- Ask for confirmation before important external actions.
+- Do not perform external actions without authorization.
 
-CAPABILITIES:
-- Only claim to see images, understand videos, edit images,
-  browse websites or perform external actions when the required
-  tools are actually connected and their results are available.
-- Never pretend to have opened or checked a website.
-- Never invent search results or actions.
+TOOLS:
+- Do not claim to browse websites unless browsing results
+  are actually provided.
+- Do not claim to see images unless image data is provided.
+- Do not claim to understand videos unless video analysis
+  results are provided.
+- Do not claim to edit images unless an image editing
+  tool has actually completed the task.
+- Never fabricate tool results.
+
+HONESTY:
+- If you cannot do something, explain why.
+- Never pretend an operation succeeded when it did not.
 `;
 
-// ================================
-// GROQ API HELPER
-// ================================
+// ==================================
+// GROQ AI REQUEST
+// ==================================
 
-async function askGroq(messages, maxTokens = 800) {
+async function askGroq(messages, maxTokens = 1000) {
   if (!GROQ_API_KEY) {
-    throw new Error("GROQ_API_KEY is missing in Render Environment.");
+    throw new Error("GROQ_API_KEY is missing in Render.");
   }
 
   const controller = new AbortController();
@@ -114,16 +124,17 @@ async function askGroq(messages, maxTokens = 800) {
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      const apiMessage =
-        data.error?.message || `Groq API error: ${response.status}`;
-
-      throw new Error(apiMessage);
+      throw new Error(
+        data.error?.message ||
+        `Groq API error: ${response.status}`
+      );
     }
 
-    const reply = data.choices?.[0]?.message?.content;
+    const reply =
+      data.choices?.[0]?.message?.content;
 
     if (!reply || typeof reply !== "string") {
-      throw new Error("Groq returned an empty response.");
+      throw new Error("Empty AI response received.");
     }
 
     return reply.trim();
@@ -133,21 +144,21 @@ async function askGroq(messages, maxTokens = 800) {
   }
 }
 
-// ================================
+// ==================================
 // SERVER HEALTH
-// ================================
+// ==================================
 
 app.get("/health", (req, res) => {
   res.json({
     status: "online",
     server: "AXON AI",
-    message: "Server is running."
+    message: "AXON AI backend is running."
   });
 });
 
-// ================================
-// AI API HEALTH CHECK
-// ================================
+// ==================================
+// AI HEALTH
+// ==================================
 
 app.get("/api/health", async (req, res) => {
   if (!GROQ_API_KEY) {
@@ -163,7 +174,7 @@ app.get("/api/health", async (req, res) => {
     await askGroq([
       {
         role: "user",
-        content: "Reply with OK."
+        content: "Reply only OK."
       }
     ], 10);
 
@@ -176,56 +187,66 @@ app.get("/api/health", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("AI HEALTH ERROR:", error.message);
+    console.error("HEALTH ERROR:", error.message);
 
     return res.status(502).json({
       status: "failed",
       server: "online",
       ai_api: "failed",
-      model: GROQ_MODEL,
       message: error.message
     });
   }
 });
 
-// ================================
+// ==================================
 // MAIN CHAT API
-// ================================
+// ==================================
 
 app.post("/api/chat", async (req, res) => {
   try {
-    const { message, history, userName } = req.body || {};
+    const body = req.body || {};
 
-    if (typeof message !== "string" || !message.trim()) {
+    const message = body.message;
+    const history = body.history;
+    const userName = body.userName;
+
+    if (
+      typeof message !== "string" ||
+      !message.trim()
+    ) {
       return res.status(400).json({
-        error: "Please enter a message."
+        success: false,
+        reply: "Please enter a message."
       });
     }
 
     if (message.length > 8000) {
       return res.status(413).json({
-        error: "Message is too long."
+        success: false,
+        reply: "Message is too long."
       });
     }
 
-    // Only accept a display name from the frontend.
-    // Do not send email, phone or other profile details.
+    // Only use the display name.
     const safeName =
       typeof userName === "string"
-        ? userName.trim().slice(0, 80)
+        ? userName.trim().replace(/[<>]/g, "").slice(0, 80)
         : "";
+
+    const systemMessage =
+      SYSTEM_PROMPT +
+      (safeName
+        ? `\nThe user's display name is ${safeName}.`
+        : "");
 
     const messages = [
       {
         role: "system",
-        content: SYSTEM_PROMPT +
-          (safeName
-            ? `\nThe user's display name is: ${safeName}.`
-            : "")
+        content: systemMessage
       }
     ];
 
-    // Recent conversation context
+    // Conversation context
     if (Array.isArray(history)) {
       const safeHistory = history
         .filter(item =>
@@ -244,13 +265,12 @@ app.post("/api/chat", async (req, res) => {
       }
     }
 
-    // Current user message
     messages.push({
       role: "user",
       content: message.trim()
     });
 
-    const reply = await askGroq(messages, 1000);
+    const reply = await askGroq(messages, 1200);
 
     return res.json({
       success: true,
@@ -261,34 +281,62 @@ app.post("/api/chat", async (req, res) => {
   } catch (error) {
     console.error("CHAT ERROR:", error.message);
 
-    return res.status(500).json({
+    const timeoutError =
+      error.name === "AbortError";
+
+    return res.status(502).json({
       success: false,
-      reply: "Sorry, AXON AI se connection mein problem aa rahi hai. Thodi der baad dobara try karein.",
-      error: error.message
+      reply: timeoutError
+        ? "AXON AI ko response dene mein zyada samay lag raha hai. Dobara try karein."
+        : "AXON AI se connection mein problem aa rahi hai. Thodi der baad try karein.",
+      error: timeoutError
+        ? "Request timeout"
+        : error.message
     });
   }
 });
 
-// ================================
-// UNKNOWN API ROUTES
-// ================================
+// ==================================
+// API NOT FOUND
+// ==================================
 
 app.use("/api", (req, res) => {
   res.status(404).json({
+    success: false,
     error: "API route not found."
   });
 });
 
-// ================================
-// START SERVER
-// ================================
+// ==================================
+// GLOBAL ERROR HANDLER
+// ==================================
+
+app.use((error, req, res, next) => {
+  console.error("SERVER ERROR:", error.message);
+
+  if (res.headersSent) {
+    return next(error);
+  }
+
+  res.status(500).json({
+    success: false,
+    error: "Internal server error."
+  });
+});
+
+// ==================================
+// START AXON AI
+// ==================================
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log("================================");
-  console.log("       AXON AI ONLINE");
+  console.log("        AXON AI ONLINE");
   console.log("================================");
   console.log("Port:", PORT);
   console.log("Model:", GROQ_MODEL);
-  console.log("API Key:", GROQ_API_KEY ? "Configured" : "Missing");
+  console.log(
+    "Groq API:",
+    GROQ_API_KEY ? "Configured" : "Missing"
+  );
+  console.log("================================");
 });
-                
