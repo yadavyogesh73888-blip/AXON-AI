@@ -1,37 +1,252 @@
-import Groq from "groq-sdk";
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
 
-// Groq client initialize karein (environment variable se key uthayega)
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const app = express();
+const PORT = process.env.PORT || 10000;
 
-async function getAiResponse(userMessage) {
-  try {
-    const chatCompletion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile", // Ya jo model aap use kar rahe hain
-      messages: [
-        {
-          role: "system",
-          content: `You are AXON AI, an intelligent, helpful, and natural conversational assistant developed by Ms Devleoors. 
+app.use(cors());
+app.use(express.json({ limit: "32kb" }));
 
-Guidelines:
-- Match the user's language (English, Hindi, or Hinglish).
-- Keep responses natural, conversational, and direct. Avoid robotic or overly scripted replies.
-- Provide short answers for simple questions and clear, easy-to-understand explanations for complex topics.
-- Maintain context from the ongoing conversation. Be honest if you do not know something.`
-        },
-        {
-          role: "user",
-          content: userMessage.trim()
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 1024,
+// Homepage
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// Splash Screen Image
+app.get("/IMG_20261114_073941.png", (req, res) => {
+  res.sendFile(path.join(__dirname, "IMG_20261114_073941.png"));
+});
+
+// Basic Server Health Check
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "AXON-AI"
+  });
+});
+
+// Groq API Health Check
+app.get("/api/health", async (req, res) => {
+  const apiKey = process.env.GROQ_API_KEY;
+
+  if (!apiKey || !apiKey.trim()) {
+    return res.status(503).json({
+      status: "failed",
+      server: "online",
+      ai_api: "not_configured",
+      message: "API key is missing."
     });
-
-    return chatCompletion.choices[0]?.message?.content || "Mujhe samajh nahi aaya, kripya dobara kahein.";
-  } catch (error) {
-    console.error("AI Response Error:", error);
-    return "Maaf kijiye, abhi system mein kuch technical dikkat aa rahi hai. Kripya thodi der baad koshish karein.";
   }
-}
 
-export { getAiResponse };
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey.trim()}`
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+          messages: [
+            {
+              role: "user",
+              content: "Reply with OK."
+            }
+          ],
+          max_tokens: 5
+        })
+      }
+    );
+
+    const responseText = await response.text();
+    let data = {};
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      data = {};
+    }
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      console.error("GROQ HEALTH ERROR:", {
+        status: response.status,
+        details: responseText.slice(0, 1000)
+      });
+
+      return res.status(502).json({
+        status: "failed",
+        server: "online",
+        ai_api: "failed",
+        http_status: response.status,
+        message:
+          response.status === 401 || response.status === 403
+            ? "API authentication failed. Check your API key."
+            : response.status === 404
+            ? "Model or API endpoint not found. Check GROQ_MODEL."
+            : response.status === 429
+            ? "API rate limit reached."
+            : "Groq API request failed."
+      });
+    }
+
+    if (!data.choices?.[0]?.message?.content) {
+      return res.status(502).json({
+        status: "failed",
+        server: "online",
+        ai_api: "failed",
+        message: "No AI response received."
+      });
+    }
+
+    return res.json({
+      status: "ok",
+      server: "online",
+      ai_api: "connected",
+      model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+      message: "AXON-AI Groq connection successful."
+    });
+  } catch (error) {
+    clearTimeout(timeout);
+    console.error("Groq health check error:", error.message);
+
+    return res.status(502).json({
+      status: "failed",
+      server: "online",
+      ai_api: "unavailable",
+      message:
+        error.name === "AbortError"
+          ? "Groq API request timed out."
+          : "Unable to connect to Groq API."
+    });
+  }
+});
+
+// AI Chat
+app.post("/api/chat", async (req, res) => {
+  const message = req.body?.message;
+
+  if (typeof message !== "string" || !message.trim()) {
+    return res.status(400).json({
+      reply: "Please enter a message."
+    });
+  }
+
+  if (message.length > 4000) {
+    return res.status(400).json({
+      reply: "Message is too long."
+    });
+  }
+
+  const apiKey = process.env.GROQ_API_KEY;
+
+  if (!apiKey || !apiKey.trim()) {
+    return res.status(503).json({
+      reply: "AI service is not configured."
+    });
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+
+  const systemPrompt = `You are AXON AI, a natural and intelligent AI assistant developed by Ms Devlopers.
+
+IMPORTANT FORMATTING RULES:
+Never use Markdown formatting in your responses. Do not use:
+- bold (**text**)
+- italic (*text*)
+- headings (### or #)
+- horizontal dividers (---)
+- Markdown tables
+- Backticks for inline code
+- Unnecessary bullet points
+- Markdown or decorative symbols of any kind (such as ##, **, -, _, $, &, +, :).
+
+Always write in clean, natural plain text. Write like a normal human conversation using simple paragraphs and natural sentences. Do not create headings unless absolutely necessary.
+
+CONVERSATION GUIDELINES:
+Understand the actual meaning and intention behind the user's words. Understand Hindi, Hinglish, and English, and respond naturally in the user's language.
+If user says "Ek baat suno", reply "Haan, bolo! Kya baat hai?"
+Keep simple replies short, direct, and friendly. For detailed explanations, use clear paragraphs.
+Maintain context from the conversation and be honest if you do not know something. Always prioritize natural conversation over decorative formatting.`;
+
+  try {
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey.trim()}`
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt
+            },
+            {
+              role: "user",
+              content: message.trim()
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1024
+        })
+      }
+    );
+
+    const responseText = await response.text();
+    clearTimeout(timeout);
+
+    let data = {};
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      data = {};
+    }
+
+    if (!response.ok) {
+      console.error("GROQ API ERROR:", {
+        status: response.status,
+        details: responseText.slice(0, 1000)
+      });
+
+      return res.status(502).json({
+        reply: "AI service is temporarily unavailable."
+      });
+    }
+
+    const aiReply = data.choices?.[0]?.message?.content;
+
+    return res.json({
+      reply: aiReply || "No response received."
+    });
+  } catch (error) {
+    clearTimeout(timeout);
+    console.error("Server error:", error.message);
+
+    return res.status(
+      error.name === "AbortError" ? 504 : 500
+    ).json({
+      reply:
+        error.name === "AbortError"
+          ? "AI response timed out. Please try again."
+          : "Something went wrong."
+    });
+  }
+});
+
+// Start Server
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("AXON-AI server running on port " + PORT);
+});
