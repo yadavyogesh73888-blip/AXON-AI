@@ -1,45 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AXON AI — Intelligent Neural Workspace</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #070b14;
+      --bg-secondary: #0d1424;
+      --bg-elevated: #131c31;
+      --accent-cyan: #22d3ee;
+      --accent-indigo: #6366f1;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: #f1f5f9;
+      overflow: hidden;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.22);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.4);
+    }
 
-{
-  role: "system",
-  content: `
-You are AXON AI, a natural and intelligent AI assistant.
+    /* Animations */
+    @keyframes pulseRing {
+      0% { transform: scale(0.92); opacity: 0.8; }
+      70% { transform: scale(1.28); opacity: 0; }
+      100% { transform: scale(1.32); opacity: 0; }
+    }
+    @keyframes floatOrb {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-6px) scale(1.03); }
+    }
+    @keyframes waveBar {
+      0%, 100% { height: 8px; }
+      50% { height: 28px; }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-pulse-ring {
+      animation: pulseRing 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+    .animate-float-orb {
+      animation: floatOrb 3.5s ease-in-out infinite;
+    }
+    .animate-fade-up {
+      animation: fadeSlideUp 0.25s ease-out forwards;
+    }
+    .wave-bar {
+      width: 4px;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #22d3ee, #6366f1);
+      animation: waveBar 0.9s ease-in-out infinite;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .mesh-bg {
+      background-image:
+        radial-gradient(at 15% 20%, rgba(34, 211, 238, 0.14) 0px, transparent 50%),
+        radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.16) 0px, transparent 50%),
+        radial-gradient(at 50% 85%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+    }
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background-color: #22d3ee;
+      animation: waveBar 0.8s ease-in-out infinite;
+    }
+    @keyframes stopBlink {
+      0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 14px rgba(244, 63, 94, 0.65);
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.45;
+        box-shadow: 0 0 4px rgba(244, 63, 94, 0.25);
+        transform: scale(0.96);
+      }
+    }
+    .btn-stop-blink {
+      animation: stopBlink 0.9s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="mesh-bg antialiased selection:bg-cyan-500/30 selection:text-cyan-100">
 
-IMPORTANT FORMATTING RULES:
+  <!-- ==================== 1. SPLASH SCREEN ==================== -->
+  <section id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070b14] mesh-bg transition-opacity duration-500">
+    <div class="relative flex flex-col items-center">
+      <!-- Pulsing outer rings -->
+      <div class="relative flex items-center justify-center w-28 h-28 mb-6">
+        <span class="absolute inset-0 rounded-3xl border border-cyan-400/40 animate-pulse-ring"></span>
+        <span class="absolute inset-2 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 blur-xl"></span>
+        <div class="relative flex items-center justify-center w-24 h-24 rounded-[26px] bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-2xl shadow-cyan-500/30 animate-float-orb">
+          <svg class="w-12 h-12 drop-shadow-sm" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+        </div>
+      </div>
 
-Never use Markdown formatting in your responses.
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-cyan-200 to-indigo-300 bg-clip-text text-transparent">
+        AXON AI
+      </h1>
+      <p class="mt-2 text-xs sm:text-sm uppercase tracking-[0.26em] text-slate-400 font-medium">
+        Neural Intelligence Workspace
+      </p>
 
-Do not use:
-- **bold**
-- *italic*
-- ### headings
-- # headings
-- --- horizontal dividers
-- Markdown tables
-- Backticks for inline code
-- Unnecessary bullet points
-- Markdown symbols of any kind.
+      <!-- Progress bar -->
+      <div class="mt-8 w-56 h-1.5 bg-slate-800/90 rounded-full overflow-hidden border border-slate-700/50">
+        <div id="splash-progress" class="h-full w-0 bg-gradient-to-r from-cyan-400 to-indigo-500 rounded-full transition-all duration-300"></div>
+      </div>
+      <p id="splash-status" class="mt-3 text-xs text-slate-400">Initializing neural core...</p>
+    </div>
+  </section>
 
-Always write in clean, natural plain text.
+  <!-- ==================== 2. LOGIN SCREEN ==================== -->
+  <section id="login-screen" class="hidden fixed inset-0 z-40 overflow-y-auto px-4 py-8 flex items-center justify-center">
+    <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/50 animate-fade-up">
+      <!-- Brand Header -->
+      <div class="flex flex-col items-center text-center mb-6">
+        <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-lg shadow-cyan-500/25 mb-3">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+        </div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">Welcome to AXON AI</h2>
+        <p class="text-sm text-slate-400 mt-1">Sign in to access your AI assistant, voice control &amp; history</p>
+      </div>
 
-Write like a normal human conversation.
-Use simple paragraphs and natural sentences.
+      <!-- Auth Tabs -->
+      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800 mb-5">
+        <button id="tab-signin" type="button" class="py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition">Sign In</button>
+        <button id="tab-signup" type="button" class="py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition">Create Account</button>
+      </div>
 
-Do not create headings unless absolutely necessary.
-Do not decorate your answers with symbols.
+      <!-- Login Form -->
+      <form id="auth-form" class="space-y-4" novalidate>
+        <div id="name-field-wrap" class="hidden">
+          <label for="auth-name" class="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
+          <input id="auth-name" type="text" placeholder="Aarav Sharma" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+        </div>
 
-CONVERSATION:
-Understand the actual meaning and intention
-behind the user's words.
-Understand Hindi, Hinglish and English.
-Respond naturally and contextually.
+        <div>
+          <label for="auth-email" class="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
+          <input id="auth-email" type="email" placeholder="you@axon.ai" value="alex@axon.ai" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+        </div>
 
-If user says "Ek baat suno",
-reply "Haan, bolo! Kya baat hai?"
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="auth-password" class="block text-xs font-medium text-slate-300">Password</label>
+            <button id="btn-forgot-pw" type="button" class="text-xs text-cyan-400 hover:text-cyan-300 transition">Forgot password?</button>
+          </div>
+          <div class="relative">
+            <input id="auth-password" type="password" placeholder="••••••••" value="axon2026" class="w-full px-4 py-2.5 pr-11 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+            <button id="btn-toggle-pw" type="button" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
 
-Keep simple replies short and friendly.
-For detailed explanations, use clear paragraphs.
+        <p id="auth-error" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg px-3 py-2"></p>
 
-Always prioritize natural conversation
-over decorative formatting.
-`
-}
+        <button id="btn-auth-submit" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-cyan-500/20 transition transform active:scale-[0.99]">
+          Sign In to AXON AI
+        </button>
+      </form>
+
+      <div class="relative my-5">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-800"></div></div>
+        <div class="relative flex justify-center text-xs"><span class="px-3 bg-[#0e1526] text-slate-500">or continue with</span></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <button id="btn-google-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-slate-200 transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
+          Google
+        </button>
+        <button id="btn-guest-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-cyan-300 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Quick Demo
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. MAIN APPLICATION ==================== -->
+  <div id="app-screen" class="hidden h-full w-full flex overflow-hidden">
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebar-backdrop" class="hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-[#0a0f1d] border-r border-slate-800/80 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+      <!-- Sidebar Top -->
+      <div class="p-4 flex items-center justify-between border-b border-slate-800/80">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-md shadow-cyan-500/20 flex items-center justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+          </div>
+          <div>
+            <span class="font-bold text-white tracking-tight text-base">AXON AI</span>
+            <span class="block text-[10px] text-cyan-400 font-medium uppercase tracking-wider">Pro Workspace</span>
+          </div>
+        </div>
+        <button id="btn-close-sidebar" type="button" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- New Chat Button -->
+      <div class="p-3">
+        <button id="btn-new-chat" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500/15 to-indigo-500/15 hover:from-cyan-500/25 hover:to-indigo-500/25 border border-cyan-400/30 text-cyan-200 text-sm font-semibold transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          New Chat
+        </button>
+      </div>
+
+      <!-- Sidebar Chat History List -->
+      <div class="px-3 py-1 flex items-center justify-between">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Recent Chats</span>
+        <span id="sidebar-history-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium">Recording</span>
+      </div>
+      <div id="sidebar-chat-list" class="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-1">
+        <!-- Populated dynamically -->
+      </div>
+
+      <!-- Sidebar Nav Links -->
+      <div class="p-2.5 border-t border-slate-800/80 space-y-1">
+        <button id="nav-chat" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition">
+          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          AI Chat
+        </button>
+        <button id="nav-apps" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+          <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          App Hub &amp; YouTube
+        </button>
+        <button id="nav-settings" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings &amp; History
+        </button>
+      </div>
+
+      <!-- User Profile Footer -->
+      <div class="p-3 border-t border-slate-800/80 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div id="user-avatar" class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">AX</div>
+          <div class="min-w-0">
+            <p id="user-display-name" class="text-sm font-semibold text-white truncate">Alex</p>
+            <p id="user-display-email" class="text-[11px] text-slate-400 truncate">alex@axon.ai</p>
+          </div>
+        </div>
+        <button id="btn-logout" type="button" title="Sign Out" class="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 h-full relative">
+
+      <!-- Top Header Bar -->
+      <header class="h-14 shrink-0 px-3 sm:px-5 border-b border-slate-800/80 bg-[#0a0f1d]/80 backdrop-blur-md flex items-center justify-between gap-2 z-20">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button id="btn-open-sidebar" type="button" class="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <h2 id="header-title" class="text-sm sm:text-base font-semibold text-white truncate">AXON AI Chat</h2>
+          <span id="mode-badge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Online
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Voice Control Quick Toggle Pill -->
+          <button id="btn-header-voice" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+            <span id="header-voice-label">Voice Off</span>
+          </button>
+
+          <!-- Settings Shortcut -->
+          <button id="btn-header-settings" type="button" title="Settings" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/70 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ==================== VIEW 1: CHAT INTERFACE ==================== -->
+      <div id="view-chat" class="flex-1 flex flex-col min-h-0">
+        <!-- Messages Scroll Area -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto px-3 sm:px-6 py-5 space-y-5 scroll-smooth">
+          <!-- Welcome Empty State or Messages injected here -->
+        </div>
+
+        <!-- Chat Input Dock -->
+        <div class="shrink-0 px-3 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-[#070b14] via-[#070b14]/95 to-transparent">
+          <div class="max-w-4xl mx-auto relative">
+
+            <!-- Pending Attachment Preview -->
+            <div id="attachment-preview" class="hidden mb-2 p-2.5 rounded-2xl glass-panel flex items-center justify-between gap-3 animate-fade-up">
+              <div class="flex items-center gap-3 min-w-0">
+                <img id="attachment-thumb" src="" alt="Preview" class="hidden w-12 h-12 rounded-xl object-cover border border-slate-700" />
+                <div id="attachment-file-icon" class="hidden w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300 shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="min-w-0">
+                  <p id="attachment-name" class="text-xs font-semibold text-white truncate">file.png</p>
+                  <p id="attachment-size" class="text-[11px] text-slate-400">Ready to send</p>
+                </div>
+              </div>
+              <button id="btn-remove-attachment" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <!-- PLUS (+) POPUP MENU (Left Side) -->
+            <div id="plus-menu" class="hidden absolute bottom-16 left-0 z-30 w-60 glass-panel rounded-2xl p-2 shadow-2xl shadow-black/60 animate-fade-up">
+              <button id="menu-send-photo" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Send Photo</span>
+                  <span class="block text-[10px] text-slate-400">Upload from gallery</span>
+                </div>
+              </button>
+
+              <button id="menu-open-camera" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Open Camera</span>
+                  <span class="block text-[10px] text-slate-400">Capture live photo</span>
+                </div>
+              </button>
+
+              <button id="menu-send-file" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Send File</span>
+                  <span class="block text-[10px] text-slate-400">PDF, CSV, TXT, Code</span>
+                </div>
+              </button>
+
+              <button id="menu-deep-think" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Deep Think Mode</span>
+                  <span id="deep-think-status" class="block text-[10px] text-slate-400">Off — Standard speed</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Hidden File Inputs -->
+            <input id="input-photo" type="file" accept="image/*" class="hidden" />
+            <input id="input-file" type="file" accept=".pdf,.txt,.csv,.json,.md,.js,.py,.html,.doc,.docx" class="hidden" />
+
+            <!-- Main Input Container -->
+            <div class="glass-panel rounded-2xl p-2 flex items-end gap-2 shadow-xl shadow-black/40 border border-slate-700/70 focus-within:border-cyan-400/50 transition">
+              <!-- LEFT: Plus (+) Button -->
+              <button id="btn-plus-menu" type="button" title="Attach Photo, Camera, or File" class="shrink-0 w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+
+              <!-- CENTER: Textarea -->
+              <textarea id="chat-input" rows="1" placeholder="Message AXON AI..." class="flex-1 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-500 resize-none py-2.5 px-2 max-h-36 focus:outline-none leading-relaxed"></textarea>
+
+              <!-- RIGHT: Video Call Icon + Send Button -->
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button id="btn-video-call" type="button" title="Start AI Video Call" class="w-10 h-10 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-300 flex items-center justify-center transition">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </button>
+
+                <button id="btn-send" type="button" title="Send Message" class="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-cyan-500/20 transition active:scale-95">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 text-center mt-2">AXON AI can make mistakes. Verify important details.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 2: APP HUB & YOUTUBE (VOICE TARGET) ==================== -->
+      <div id="view-apps" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
+        <div class="max-w-5xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-bold text-white">App Hub &amp; Voice Launcher</h3>
+              <p class="text-sm text-slate-400">Say <span class="text-cyan-300">"Open YouTube"</span> or <span class="text-cyan-300">"Scroll the video"</span> while Voice Control is active.</p>
+            </div>
+            <button id="btn-launch-yt-ext" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+              Open YouTube.com
+            </button>
+          </div>
+
+          <!-- Simulated YouTube Video Feed for Voice Scroll Testing -->
+          <div id="yt-feed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 3: SETTINGS & HISTORY ==================== -->
+      <div id="view-settings" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
+        <div class="max-w-3xl mx-auto space-y-6 pb-10">
+          <div>
+            <h3 class="text-2xl font-bold text-white">Settings</h3>
+            <p class="text-sm text-slate-400 mt-1">Configure Voice Control, Chat History recording, and AXON AI server preferences.</p>
+          </div>
+
+          <!-- 1. VOICE CONTROL SYSTEM -->
+          <div class="glass-panel rounded-2xl p-5 space-y-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-400/30 text-cyan-400 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-base font-semibold text-white">Voice Control</h4>
+                  <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Control AXON AI hands-free. Open apps like YouTube, scroll videos, start calls, or ask questions by voice.</p>
+                </div>
+              </div>
+              <button id="toggle-voice-control" type="button" role="switch" aria-checked="false" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-slate-700 transition-colors duration-200 focus:outline-none">
+                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 translate-x-0"></span>
+              </button>
+            </div>
+
+            <!-- Voice TTS Sub-toggle -->
+            <div class="flex items-center justify-between pt-3 border-t border-slate-800/80">
+              <div>
+                <p class="text-sm font-medium text-slate-200">Spoken AI Responses (Text-to-Speech)</p>
+                <p class="text-xs text-slate-400">Read AI answers aloud when Voice Control is active</p>
+              </div>
+              <button id="toggle-voice-tts" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
+                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
+              </button>
+            </div>
+
+            <!-- Quick Voice Command Tester -->
+            <div class="pt-3 border-t border-slate-800/80 space-y-2.5">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Try Voice Commands (Live Mic or Text Simulator)</p>
+              <div class="flex gap-2">
+                <input id="voice-sim-input" type="text" placeholder='Type or say e.g. "Open YouTube" or "Scroll the video"' class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+                <button id="btn-run-voice-sim" type="button" class="px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/30 text-cyan-200 text-xs font-semibold transition">Execute</button>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" data-voice-cmd="Open YouTube" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Open YouTube"</button>
+                <button type="button" data-voice-cmd="Scroll the video" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Scroll the video"</button>
+                <button type="button" data-voice-cmd="Scroll up" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Scroll up"</button>
+                <button type="button" data-voice-cmd="Start video call" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Start video call"</button>
+                <button type="button" data-voice-cmd="New chat" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"New chat"</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. HISTORY SYSTEM (TOGGLE + LIVE RECORDED LOGS BELOW) -->
+          <div class="glass-panel rounded-2xl p-5 space-y-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-400/30 text-indigo-400 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-base font-semibold text-white">History</h4>
+                  <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Automatically record and save all your chat conversations and messages.</p>
+                </div>
+              </div>
+              <button id="toggle-history" type="button" role="switch" aria-checked="true" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-indigo-500 transition-colors duration-200 focus:outline-none">
+                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
+              </button>
+            </div>
+
+            <!-- Recorded History List Directly Below Toggle -->
+            <div class="pt-3 border-t border-slate-800/80 space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Recorded Chat History (<span id="history-count">0</span>)</span>
+                <div class="flex items-center gap-2">
+                  <button id="btn-export-history" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">Export JSON</button>
+                  <button id="btn-clear-history" type="button" class="px-3 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-xs font-medium text-rose-300 border border-rose-500/20 transition">Clear All</button>
+                </div>
+              </div>
+
+              <input id="history-search" type="text" placeholder="Search saved messages..." class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700/80 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400" />
+
+              <div id="settings-history-list" class="max-h-72 overflow-y-auto space-y-2 pr-1">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. SERVER CONNECTION CONFIG (server.js) -->
+          <div class="glass-panel rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-base font-semibold text-white">Node.js Backend Connection</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Connects to your <code class="text-cyan-300">server.js</code> endpoint when hosted on your server, with automatic built-in AI fallback.</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">Auto Fallback</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div>
+                <label for="setting-api-mode" class="block text-xs text-slate-400 mb-1">Response Engine</label>
+                <select id="setting-api-mode" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
+                  <option value="auto">Auto (Server API + Built-in Fallback)</option>
+                  <option value="local">Built-in AXON Engine Only</option>
+                </select>
+              </div>
+              <div>
+                <label for="setting-api-endpoint" class="block text-xs text-slate-400 mb-1">API Route</label>
+                <input id="setting-api-endpoint" type="text" value="/api/chat" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== FLOATING VOICE CONTROL HUD ==================== -->
+  <div id="voice-hud" class="hidden fixed bottom-24 right-4 sm:right-6 z-40 glass-panel rounded-2xl p-3.5 w-72 shadow-2xl shadow-cyan-500/20 border border-cyan-400/40 animate-fade-up">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+        </span>
+        <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Voice Control Active</span>
+      </div>
+      <button id="btn-hud-stop-voice" type="button" class="text-[11px] text-slate-400 hover:text-rose-400 font-medium">Stop</button>
+    </div>
+    <p id="voice-hud-transcript" class="text-xs text-slate-200 italic truncate">"Listening for commands..."</p>
+    <p id="voice-hud-action" class="text-[11px] text-emerald-400 mt-1 truncate">Ready: Try "Open YouTube" or "Scroll"</p>
+  </div>
+
+  <!-- ==================== CAMERA CAPTURE MODAL ==================== -->
+  <div id="camera-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-panel rounded-3xl overflow-hidden shadow-2xl animate-fade-up">
+      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-white">AXON Camera</h3>
+        <button id="btn-close-camera" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-4 space-y-4">
+        <div class="relative aspect-video bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center">
+          <video id="camera-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+          <canvas id="camera-canvas" class="hidden"></canvas>
+          <div id="camera-fallback" class="hidden text-center p-6">
+            <svg class="w-10 h-10 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <p class="text-xs text-slate-400">Camera access is unavailable or blocked. You can still upload a photo directly.</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-2">
+          <button id="btn-camera-upload-alt" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 transition">Upload Photo Instead</button>
+          <button id="btn-camera-capture" type="button" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow-lg transition">Capture Photo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VIDEO CALL MODAL ==================== -->
+  <div id="videocall-modal" class="hidden fixed inset-0 z-50 bg-[#050811]/95 backdrop-blur-xl flex flex-col items-center justify-between p-5 sm:p-8 animate-fade-up">
+    <!-- Top Info -->
+    <div class="w-full max-w-4xl flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <div>
+          <h3 class="text-base font-bold text-white">AXON AI Live Video Call</h3>
+          <p id="call-timer" class="text-xs text-cyan-300 font-mono">00:00</p>
+        </div>
+      </div>
+      <span class="px-3 py-1 rounded-full text-xs bg-slate-800/80 text-slate-300 border border-slate-700">End-to-End Encrypted</span>
+    </div>
+
+    <!-- Center AI Neural Orb + User PIP -->
+    <div class="relative w-full max-w-4xl flex-1 my-6 rounded-3xl glass-panel border border-slate-800 flex flex-col items-center justify-center overflow-hidden p-6">
+      <!-- AI Animated Orb -->
+      <div class="relative flex items-center justify-center w-40 h-40 mb-6">
+        <span class="absolute inset-0 rounded-full bg-cyan-500/20 animate-pulse-ring"></span>
+        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-400 via-indigo-500 to-purple-600 p-1 shadow-2xl shadow-cyan-500/30 animate-float-orb">
+          <div class="w-full h-full rounded-full bg-[#070b14] flex items-center justify-center gap-1.5">
+            <div class="wave-bar" style="animation-delay:0.0s"></div>
+            <div class="wave-bar" style="animation-delay:0.15s"></div>
+            <div class="wave-bar" style="animation-delay:0.3s"></div>
+            <div class="wave-bar" style="animation-delay:0.45s"></div>
+            <div class="wave-bar" style="animation-delay:0.2s"></div>
+          </div>
+        </div>
+      </div>
+
+      <p id="call-caption" class="text-sm sm:text-base text-slate-200 text-center max-w-lg font-medium">
+        "Hi! I'm AXON AI. Speak naturally—I can see and hear you."
+      </p>
+
+      <!-- User Picture-in-Picture Camera -->
+      <div class="absolute bottom-4 right-4 w-32 sm:w-44 aspect-video rounded-2xl bg-slate-900 border border-slate-700 overflow-hidden shadow-xl flex items-center justify-center">
+        <video id="call-pip-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <span id="call-pip-off" class="hidden text-[11px] text-slate-400">Camera Off</span>
+      </div>
+    </div>
+
+    <!-- Call Controls -->
+    <div class="flex items-center gap-4">
+      <button id="btn-call-mic" type="button" title="Mute / Unmute Mic" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center border border-slate-700 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+      </button>
+      <button id="btn-call-cam" type="button" title="Toggle Camera" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center border border-slate-700 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </button>
+      <button id="btn-end-call" type="button" title="End Video Call" class="px-6 h-12 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-rose-600/30 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="23" y1="1" x2="1" y2="23"/></svg>
+        End Call
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== CONFIRMATION MODAL (IN-PAGE) ==================== -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-sm glass-panel rounded-2xl p-5 space-y-4 animate-fade-up">
+      <h4 id="confirm-title" class="text-base font-bold text-white">Clear All History?</h4>
+      <p id="confirm-desc" class="text-xs sm:text-sm text-slate-400">This will permanently delete all saved conversations from this device.</p>
+      <div class="flex justify-end gap-2">
+        <button id="btn-confirm-cancel" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
+        <button id="btn-confirm-ok" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Delete All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast" class="hidden fixed top-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl glass-panel border border-cyan-400/30 text-xs sm:text-sm font-medium text-white shadow-2xl animate-fade-up"></div>
+
+  <!-- ==================== APPLICATION SCRIPT ==================== -->
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'axon_ai_workspace_v1';
+
+      const YT_SAMPLE_VIDEOS = [
+        { id: 'v1', title: 'Building Autonomous AI Agents in 2026', channel: 'AXON Labs', views: '142K views', duration: '14:22', color: 'from-cyan-600/30 to-indigo-700/40' },
+        { id: 'v2', title: 'Voice-Controlled Web Apps with Web Speech API', channel: 'DevPulse', views: '89K views', duration: '11:05', color: 'from-rose-600/30 to-orange-600/30' },
+        { id: 'v3', title: 'Node.js + Express Streaming Chat Architecture', channel: 'CodeCraft', views: '215K views', duration: '18:40', color: 'from-emerald-600/30 to-teal-700/30' },
+        { id: 'v4', title: 'Designing Glassmorphic Dark UIs Like a Pro', channel: 'PixelForge', views: '64K views', duration: '09:15', color: 'from-purple-600/30 to-indigo-700/30' },
+        { id: 'v5', title: 'Real-Time WebRTC Video Calls Explained', channel: 'NetStream', views: '112K views', duration: '16:08', color: 'from-amber-600/30 to-rose-700/30' },
+        { id: 'v6', title: 'Next-Gen Neural Interfaces & Multimodal AI', channel: 'FutureTech', views: '310K views', duration: '22:30', color: 'from-blue-600/30 to-cyan-700/30' }
+      ];
+
+      let state = {
+        user: null,
+        authMode: 'signin',
+        activeView: 'chat',
+        deepThink: false,
+        settings: {
+          voiceControl: false,
+          voiceTTS: true,
+          saveHistory: true,
+          apiMode: 'auto',
+          apiEndpoint: '/api/chat'
+        },
+        chats: [],
+        activeChatId: null,
+        pendingAttachment: null,
+        isGenerating: false
+      };
+
+      let recognition = null;
+      let generationAbort = null;
+      let generationTimer = null;
+      let cameraStream = null;
+      let callStream = null;
+      let callInterval = null;
+      let callSeconds = 0;
+      let callMicMuted = false;
+      let callCamOff = false;
+
+      // ---------- Safe Storage ----------
+      function saveState() {
+        try {
+          const payload = {
+            user: state.user,
+            settings: state.settings,
+            chats: state.settings.saveHistory ? state.chats : [],
+            activeChatId: state.activeChatId
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (e) { /* Ignore storage errors in restricted environments */ }
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (parsed.user) state.user = parsed.user;
+          if (parsed.settings) state.settings = { ...state.settings, ...parsed.settings };
+          if (Array.isArray(parsed.chats)) state.chats = parsed.chats;
+          if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
+        } catch (e) { /* Ignore storage errors */ }
+      }
+
+      // ---------- Helpers ----------
+      const $ = (id) => document.getElementById(id);
+
+      function showToast(msg, duration = 2800) {
+        const toast = $('toast');
+        toast.textContent = msg;
+        toast.classList.remove('hidden');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.add('hidden'), duration);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function formatMessageHtml(text) {
+        let safe = escapeHtml(text);
+        // Code blocks
+        safe = safe.replace(/```([\s\S]*?)```/g, (_, code) => {
+          return `<pre class="mt-2 mb-2 p-3 rounded-xl bg-slate-950/90 border border-slate-800 text-xs text-cyan-200 overflow-x-auto font-mono"><code>${code.trim()}</code></pre>`;
+        });
+        // Bold
+        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>');
+        // Line breaks
+        safe = safe.replace(/\n/g, '<br/>');
+        return safe;
+      }
+
+      function formatTime(iso) {
+        try {
+          return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        } catch (e) { return ''; }
+      }
+
+      function getActiveChat() {
+        return state.chats.find(c => c.id === state.activeChatId) || null;
+      }
+
+      function createNewChat(switchToChat = true) {
+        const id = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        const chat = {
+          id,
+          title: 'New Conversation',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          messages: []
+        };
+        if (state.settings.saveHistory) {
+          state.chats.unshift(chat);
+        } else {
+          state.chats = [chat];
+        }
+        state.activeChatId = id;
+        saveState();
+        if (switchToChat) switchView('chat');
+        renderAll();
+        return chat;
+      }
+
+      // ---------- Splash & Auth ----------
+      function runSplash() {
+        const bar = $('splash-progress');
+        const status = $('splash-status');
+        const steps = [
+          { pct: 30, text: 'Loading AXON Neural UI...' },
+          { pct: 68, text: 'Syncing Voice & History modules...' },
+          { pct: 100, text: 'Workspace ready.' }
+        ];
+        steps.forEach((s, idx) => {
+          setTimeout(() => {
+            bar.style.width = s.pct + '%';
+            status.textContent = s.text;
+          }, 280 * (idx + 1));
+        });
+        setTimeout(() => {
+          $('splash-screen').classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => {
+            $('splash-screen').classList.add('hidden');
+            if (state.user) {
+              enterApp();
+            } else {
+              $('login-screen').classList.remove('hidden');
+            }
+          }, 420);
+        }, 1250);
+      }
+
+      function setAuthMode(mode) {
+        state.authMode = mode;
+        const isSignup = mode === 'signup';
+        $('name-field-wrap').classList.toggle('hidden', !isSignup);
+        $('tab-signin').className = isSignup
+          ? 'py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition'
+          : 'py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition';
+        $('tab-signup').className = isSignup
+          ? 'py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition'
+          : 'py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition';
+        $('btn-auth-submit').textContent = isSignup ? 'Create AXON Account' : 'Sign In to AXON AI';
+        $('auth-error').classList.add('hidden');
+      }
+
+      function completeLogin(name, email) {
+        const cleanName = name.trim() || email.split('@')[0] || 'User';
+        const initials = cleanName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
+        state.user = { name: cleanName, email, initials };
+        if (!state.chats.length) createNewChat(false);
+        if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
+        saveState();
+        $('login-screen').classList.add('hidden');
+        enterApp();
+        showToast(`Welcome back, ${cleanName}!`);
+      }
+
+      function enterApp() {
+        $('app-screen').classList.remove('hidden');
+        if (state.user) {
+          $('user-display-name').textContent = state.user.name;
+          $('user-display-email').textContent = state.user.email;
+          $('user-avatar').textContent = state.user.initials;
+        }
+        if (!state.chats.length) createNewChat(false);
+        if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
+        renderAll();
+      }
+
+      // ---------- Navigation ----------
+      function switchView(view) {
+        state.activeView = view;
+        $('view-chat').classList.toggle('hidden', view !== 'chat');
+        $('view-apps').classList.toggle('hidden', view !== 'apps');
+        $('view-settings').classList.toggle('hidden', view !== 'settings');
+
+        const titles = {
+          chat: getActiveChat()?.title || 'AXON AI Chat',
+          apps: 'App Hub & YouTube',
+          settings: 'Settings & History'
+        };
+        $('header-title').textContent = titles[view];
+
+        const activeCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition';
+        const idleCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition';
+        $('nav-chat').className = view === 'chat' ? activeCls : idleCls;
+        $('nav-apps').className = view === 'apps' ? activeCls : idleCls;
+        $('nav-settings').className = view === 'settings' ? activeCls : idleCls;
+
+        closeSidebarMobile();
+        if (view === 'settings') renderSettingsHistory();
+        if (view === 'apps') renderAppHub();
+      }
+
+      function openSidebarMobile() {
+        $('sidebar').classList.remove('-translate-x-full');
+        $('sidebar-backdrop').classList.remove('hidden');
+      }
+
+      function closeSidebarMobile() {
+        $('sidebar').classList.add('-translate-x-full');
+        $('sidebar-backdrop').classList.add('hidden');
+      }
+
+      // ---------- Rendering ----------
+      function renderAll() {
+        renderSidebarChats();
+        renderMessages();
+        renderToggles();
+        renderSettingsHistory();
+      }
+
+      function renderSidebarChats() {
+        const list = $('sidebar-chat-list');
+        $('sidebar-history-badge').textContent = state.settings.saveHistory ? 'Recording' : 'Paused';
+        $('sidebar-history-badge').className = state.settings.saveHistory
+          ? 'text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium'
+          : 'text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-400 font-medium';
+
+        if (!state.chats.length) {
+          list.innerHTML = `<p class="text-xs text-slate-500 px-3 py-4 text-center">No chats yet</p>`;
+          return;
+        }
+        list.innerHTML = state.chats.map(c => {
+          const active = c.id === state.activeChatId;
+          return `
+            <div class="group flex items-center justify-between gap-1 px-2.5 py-2 rounded-xl cursor-pointer transition ${active ? 'bg-slate-800/90 text-white border border-slate-700/70' : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'}" data-chat-id="${c.id}">
+              <div class="flex items-center gap-2 min-w-0 flex-1 select-chat-btn" data-chat-id="${c.id}">
+                <svg class="w-3.5 h-3.5 shrink-0 ${active ? 'text-cyan-400' : 'text-slate-500'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="text-xs font-medium truncate">${escapeHtml(c.title)}</span>
+              </div>
+              <button type="button" class="delete-chat-btn opacity-0 group-hover:opacity-100 p-1 rounded text-slate-500 hover:text-rose-400 transition" data-chat-id="${c.id}" title="Delete chat">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderMessages() {
+        const container = $('chat-messages');
+        const chat = getActiveChat();
+        if (!chat || !chat.messages.length) {
+          container.innerHTML = `
+            <div class="h-full flex flex-col items-center justify-center text-center max-w-xl mx-auto py-8 animate-fade-up">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-xl shadow-cyan-500/25 flex items-center justify-center mb-4">
+                <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-bold text-white">How can AXON AI help today?</h3>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Attach photos, open the camera, start a video call, or enable Voice Control in Settings.</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-cyan-400/40 text-left transition" data-prompt="Write a clean Node.js Express route for /api/chat">
+                  <span class="block text-xs font-semibold text-cyan-300">Code &amp; Backend</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">Write a Node.js Express /api/chat route</span>
+                </button>
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-indigo-400/40 text-left transition" data-prompt="Explain how AXON Voice Control works in Hindi and English">
+                  <span class="block text-xs font-semibold text-indigo-300">Voice Assistant</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">How does AXON Voice Control work?</span>
+                </button>
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-emerald-400/40 text-left transition" data-prompt="Give me 5 productivity tips for developers">
+                  <span class="block text-xs font-semibold text-emerald-300">Productivity</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">5 productivity tips for developers</span>
+                </button>
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-amber-400/40 text-left transition" data-prompt="Open YouTube">
+                  <span class="block text-xs font-semibold text-amber-300">App Action</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">Try: "Open YouTube"</span>
+                </button>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = chat.messages.map(m => {
+          const isUser = m.role === 'user';
+          let attachHtml = '';
+          if (m.attachment) {
+            if (m.attachment.type === 'image') {
+              attachHtml = `<img src="${m.attachment.dataUrl}" alt="${escapeHtml(m.attachment.name)}" class="mt-2 max-h-56 rounded-xl border border-slate-700/80 object-cover" />`;
+            } else {
+              attachHtml = `
+                <div class="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
+                  <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>${escapeHtml(m.attachment.name)}</span>
+                </div>
+              `;
+            }
+          }
+
+          if (isUser) {
+            return `
+              <div class="max-w-4xl mx-auto flex justify-end animate-fade-up">
+                <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-3 bg-gradient-to-br from-cyan-600/30 to-indigo-600/30 border border-cyan-400/25 text-sm text-white shadow-md">
+                  <div class="leading-relaxed">${formatMessageHtml(m.text)}</div>
+                  ${attachHtml}
+                  <span class="block text-[10px] text-cyan-200/60 mt-1.5 text-right">${formatTime(m.timestamp)}</span>
+                </div>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="max-w-4xl mx-auto flex items-start gap-3 animate-fade-up">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-sm shadow-cyan-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+                </div>
+                <div class="max-w-[85%] sm:max-w-[78%] rounded-2xl rounded-tl-sm px-4 py-3 glass-panel text-sm text-slate-200 shadow-md">
+                  <div class="leading-relaxed">${formatMessageHtml(m.text)}</div>
+                  <span class="block text-[10px] text-slate-500 mt-1.5">${formatTime(m.timestamp)}</span>
+                </div>
+              </div>
+            `;
+          }
+        }).join('');
+
+        if (state.isGenerating) {
+          container.innerHTML += `
+            <div class="max-w-4xl mx-auto flex items-start gap-3">
+              <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-cyan-400 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
+              </div>
+              <div class="px-4 py-3 rounded-2xl glass-panel flex items-center gap-1.5">
+                <span class="typing-dot" style="animation-delay:0s"></span>
+                <span class="typing-dot" style="animation-delay:0.2s"></span>
+                <span class="typing-dot" style="animation-delay:0.4s"></span>
+              </div>
+            </div>
+          `;
+        }
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function renderToggles() {
+        setSwitchUI($('toggle-voice-control'), state.settings.voiceControl, 'bg-cyan-500');
+        setSwitchUI($('toggle-voice-tts'), state.settings.voiceTTS, 'bg-cyan-500', true);
+        setSwitchUI($('toggle-history'), state.settings.saveHistory, 'bg-indigo-500');
+
+        $('header-voice-label').textContent = state.settings.voiceControl ? 'Voice On' : 'Voice Off';
+        $('btn-header-voice').className = state.settings.voiceControl
+          ? 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition'
+          : 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition';
+        $('voice-hud').classList.toggle('hidden', !state.settings.voiceControl);
+        $('setting-api-mode').value = state.settings.apiMode;
+        $('setting-api-endpoint').value = state.settings.apiEndpoint;
+      }
+
+      function setSwitchUI(btn, on, activeBg, small = false) {
+        btn.setAttribute('aria-checked', String(on));
+        const knob = btn.querySelector('span');
+        if (small) {
+          btn.className = `relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent ${on ? activeBg : 'bg-slate-700'} transition-colors duration-200 focus:outline-none`;
+          knob.className = `pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 ${on ? 'translate-x-5' : 'translate-x-0'}`;
+        } else {
+          btn.className = `relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent ${on ? activeBg : 'bg-slate-700'} transition-colors duration-200 focus:outline-none`;
+          knob.className = `pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 ${on ? 'translate-x-5' : 'translate-x-0'}`;
+        }
+      }
+
+      function renderSettingsHistory() {
+        const list = $('settings-history-list');
+        const q = ($('history-search').value || '').trim().toLowerCase();
+        const nonEmpty = state.chats.filter(c => c.messages.length > 0);
+        const filtered = q
+          ? nonEmpty.filter(c => c.title.toLowerCase().includes(q) || c.messages.some(m => m.text.toLowerCase().includes(q)))
+          : nonEmpty;
+
+        $('history-count').textContent = String(nonEmpty.length);
+
+        if (!filtered.length) {
+          list.innerHTML = `<div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">${nonEmpty.length ? 'No matching chats found.' : 'No recorded chats yet. Send a message in chat to record it here!'}</div>`;
+          return;
+        }
+
+        list.innerHTML = filtered.map(c => {
+          const lastMsg = c.messages[c.messages.length - 1];
+          return `
+            <div class="p-3 rounded-xl bg-slate-900/75 border border-slate-800 hover:border-indigo-400/40 flex items-center justify-between gap-3 transition">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <p class="text-xs font-semibold text-white truncate">${escapeHtml(c.title)}</p>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${c.messages.length} msgs</span>
+                </div>
+                <p class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(lastMsg.text)}</p>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" class="open-history-chat px-2.5 py-1.5 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/30 text-indigo-300 text-[11px] font-medium transition" data-chat-id="${c.id}">Open</button>
+                <button type="button" class="delete-chat-btn px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 text-[11px] transition" data-chat-id="${c.id}">Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderAppHub() {
+        const grid = $('yt-feed-grid');
+        grid.innerHTML = YT_SAMPLE_VIDEOS.map(v => `
+          <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 hover:border-rose-500/40 transition group">
+            <div class="aspect-video bg-gradient-to-br ${v.color} relative flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white group-hover:scale-110 transition">
+                <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/75 text-[10px] font-mono text-white">${v.duration}</span>
+            </div>
+            <div class="p-3.5">
+              <h4 class="text-sm font-semibold text-white line-clamp-2">${v.title}</h4>
+              <p class="text-xs text-slate-400 mt-1">${v.channel} • ${v.views}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // ---------- Chat Engine (Server + Built-in Smart AI) ----------
+      function updateSendButtonState() {
+        const btn = $('btn-send');
+        if (!btn) return;
+        if (state.isGenerating) {
+          btn.className = 'h-10 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 border border-rose-400/60 text-white flex items-center justify-center gap-1.5 text-xs font-bold tracking-wide btn-stop-blink transition';
+          btn.title = 'Stop Generating';
+          btn.innerHTML = `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg><span>Stop</span>`;
+        } else {
+          btn.className = 'w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-cyan-500/20 transition active:scale-95';
+          btn.title = 'Send Message';
+          btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
+        }
+      }
+
+      function stopGeneration() {
+        if (!state.isGenerating) return;
+        if (generationAbort) {
+          try { generationAbort.abort(); } catch (e) { /* ignore */ }
+          generationAbort = null;
+        }
+        if (generationTimer) {
+          clearTimeout(generationTimer);
+          generationTimer = null;
+        }
+        state.isGenerating = false;
+        const chat = getActiveChat();
+        if (chat) {
+          chat.messages.push({
+            id: 'm_' + Date.now(),
+            role: 'assistant',
+            text: '_Response stopped by user._',
+            timestamp: new Date().toISOString()
+          });
+          chat.updatedAt = new Date().toISOString();
+        }
+        updateSendButtonState();
+        saveState();
+        renderAll();
+        showToast('Generation stopped.');
+      }
+
+      async function sendMessage(overrideText = null) {
+        if (state.isGenerating) {
+          stopGeneration();
+          return;
+        }
+        const input = $('chat-input');
+        const text = (overrideText !== null ? overrideText : input.value).trim();
+        const attachment = state.pendingAttachment;
+        if (!text && !attachment) return;
+
+        // Check if user typed a direct voice/app command in chat
+        const lower = text.toLowerCase();
+        if (lower === 'open youtube' || lower === 'youtube खोलो') {
+          executeVoiceCommand(text);
+        }
+
+        let chat = getActiveChat();
+        if (!chat) chat = createNewChat(false);
+
+        const userMsg = {
+          id: 'm_' + Date.now(),
+          role: 'user',
+          text: text || (attachment ? `Sent attachment: ${attachment.name}` : ''),
+          timestamp: new Date().toISOString(),
+          attachment
+        };
+        chat.messages.push(userMsg);
+        if (chat.messages.length === 1 && text) {
+          chat.title = text.length > 34 ? text.slice(0, 34) + '…' : text;
+        }
+        chat.updatedAt = new Date().toISOString();
+
+        if (overrideText === null) {
+          input.value = '';
+          input.style.height = 'auto';
+        }
+        clearAttachment();
+        state.isGenerating = true;
+        updateSendButtonState();
+        saveState();
+        renderAll();
+
+        generationAbort = new AbortController();
+        const replyText = await generateAIResponse(userMsg.text, attachment, chat.messages, generationAbort.signal);
+        if (!state.isGenerating) return; // Was stopped by user
+
+        state.isGenerating = false;
+        generationAbort = null;
+        updateSendButtonState();
+
+        chat.messages.push({
+          id: 'm_' + (Date.now() + 1),
+          role: 'assistant',
+          text: replyText,
+          timestamp: new Date().toISOString()
+        });
+        chat.updatedAt = new Date().toISOString();
+        saveState();
+        renderAll();
+
+        if (state.settings.voiceControl && state.settings.voiceTTS) {
+          speakText(replyText);
+        }
+      }
+
+      async function generateAIResponse(prompt, attachment, history, signal) {
+        // Attempt server.js endpoint ONLY when running on an HTTP/HTTPS origin (not sandboxed about:srcdoc)
+        const canTryServer =
+          state.settings.apiMode === 'auto' &&
+          typeof window.location.origin === 'string' &&
+          window.location.origin.startsWith('http') &&
+          !window.location.href.startsWith('about:');
+
+        if (canTryServer) {
+          try {
+            const res = await fetch(state.settings.apiEndpoint || '/api/chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal,
+              body: JSON.stringify({
+                message: prompt,
+                deepThink: state.deepThink,
+                history: history.slice(-10).map(m => ({ role: m.role, text: m.text }))
+              })
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data && (data.reply || data.response || data.message)) {
+                return data.reply || data.response || data.message;
+              }
+            }
+          } catch (e) {
+            // Fall through smoothly to built-in AXON AI engine
+          }
+        }
+
+        // Built-in intelligent response simulation
+        await new Promise(r => { generationTimer = setTimeout(r, state.deepThink ? 1800 : 1200); });
+        const p = prompt.toLowerCase();
+
+        if (attachment) {
+          if (attachment.type === 'image') {
+            return `I've received your image **${attachment.name}**. ${prompt ? `Regarding "${prompt}": ` : ''}Everything looks sharp! You can ask me to describe it, extract text, or suggest improvements.`;
+          }
+          return `I've loaded your file **${attachment.name}** (${attachment.size}). Ask me any question about its contents, or tell me how you'd like to process it.`;
+        }
+
+        if (p.includes('node') || p.includes('express') || p.includes('server.js') || p.includes('api/chat')) {
+          return `Here is a clean **Express.js** \`/api/chat\` route you can use in your \`server.js\`:\n\`\`\`javascript\napp.post('/api/chat', async (req, res) => {\n  const { message, history } = req.body;\n  // Call your LLM provider here\n  res.json({ reply: 'AXON AI received: ' + message });\n});\n\`\`\`\nYour new \`index.html\` automatically connects to \`/api/chat\` when hosted on your Node.js server!`;
+        }
+        if (p.includes('voice') || p.includes('आवाज') || p.includes('youtube')) {
+          return `**AXON Voice Control** listens to your commands in English and Hindi. Turn on **Voice Control** in Settings (or the top-right pill) and say:\n- **"Open YouTube"** — launches YouTube & the App Hub\n- **"Scroll the video"** / **"Scroll up"** — scrolls the feed smoothly\n- **"Start video call"** — opens the Live AI Video Call`;
+        }
+        if (p.includes('productivity') || p.includes('tips')) {
+          return `Here are **5 developer productivity tips**:\n1. **Time-box deep work** into 50-minute focus sprints.\n2. **Automate repetitive checks** with pre-commit hooks.\n3. **Keep prompts & snippets** versioned in one workspace.\n4. **Use voice commands** for hands-free navigation.\n5. **Review recorded chat history** to reuse past solutions.`;
+        }
+        if (/[\u0900-\u097F]/.test(prompt)) {
+          return `नमस्ते! मैं **AXON AI** हूँ। मैंने आपका संदेश प्राप्त कर लिया है: **"${prompt}"**।${state.deepThink ? ' (Deep Think मोड सक्रिय है)' : ''}\n\nआप मुझसे कोड लिखवा सकते हैं, फोटो या फाइल भेज सकते हैं, वीडियो कॉल कर सकते हैं, या **Settings** से **Voice Control** और **History** को मैनेज कर सकते हैं।`;
+        }
+        return `${state.deepThink ? '**[Deep Think Analysis]**\n' : ''}I've processed your request: **"${prompt}"**.\n\nEverything in your AXON AI workspace is active—your conversation is ${state.settings.saveHistory ? 'automatically saved to **History**' : 'not being recorded (History paused)'}. Let me know if you'd like code, a step-by-step breakdown, or voice-controlled actions!`;
+      }
+
+      // ---------- Attachments & Camera ----------
+      function setAttachment(att) {
+        state.pendingAttachment = att;
+        const wrap = $('attachment-preview');
+        wrap.classList.remove('hidden');
+        $('attachment-name').textContent = att.name;
+        $('attachment-size').textContent = att.size || 'Ready to send';
+        if (att.type === 'image') {
+          $('attachment-thumb').src = att.dataUrl;
+          $('attachment-thumb').classList.remove('hidden');
+          $('attachment-file-icon').classList.add('hidden');
+        } else {
+          $('attachment-thumb').classList.add('hidden');
+          $('attachment-file-icon').classList.remove('hidden');
+        }
+      }
+
+      function clearAttachment() {
+        state.pendingAttachment = null;
+        $('attachment-preview').classList.add('hidden');
+        $('input-photo').value = '';
+        $('input-file').value = '';
+      }
+
+      function handleFileSelected(file, isImage) {
+        if (!file) return;
+        const sizeStr = file.size < 1024 ? `${file.size} B` : file.size < 1048576 ? `${(file.size / 1024).toFixed(1)} KB` : `${(file.size / 1048576).toFixed(1)} MB`;
+        if (isImage) {
+          const reader = new FileReader();
+          reader.onload = (e) => setAttachment({ type: 'image', name: file.name, size: sizeStr, dataUrl: e.target.result });
+          reader.readAsDataURL(file);
+        } else {
+          setAttachment({ type: 'file', name: file.name, size: sizeStr, dataUrl: '' });
+        }
+      }
+
+      async function openCameraModal() {
+        $('plus-menu').classList.add('hidden');
+        $('camera-modal').classList.remove('hidden');
+        $('camera-fallback').classList.add('hidden');
+        $('camera-video').classList.remove('hidden');
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('No camera API');
+          cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+          $('camera-video').srcObject = cameraStream;
+        } catch (e) {
+          $('camera-video').classList.add('hidden');
+          $('camera-fallback').classList.remove('hidden');
+        }
+      }
+
+      function closeCameraModal() {
+        $('camera-modal').classList.add('hidden');
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(t => t.stop());
+          cameraStream = null;
+        }
+      }
+
+      function captureCameraPhoto() {
+        const video = $('camera-video');
+        if (!cameraStream || video.classList.contains('hidden')) {
+          showToast('Camera unavailable—use Upload Photo Instead.');
+          return;
+        }
+        const canvas = $('camera-canvas');
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/png');
+        setAttachment({ type: 'image', name: `Camera_${Date.now()}.png`, size: 'Captured photo', dataUrl });
+        closeCameraModal();
+        showToast('Photo captured and attached!');
+      }
+
+      // ---------- Video Call ----------
+      async function startVideoCall() {
+        $('videocall-modal').classList.remove('hidden');
+        callSeconds = 0;
+        callMicMuted = false;
+        callCamOff = false;
+        $('call-timer').textContent = '00:00';
+        $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak naturally—I'm listening."`;
+
+        clearInterval(callInterval);
+        callInterval = setInterval(() => {
+          callSeconds++;
+          const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+          const s = String(callSeconds % 60).padStart(2, '0');
+          $('call-timer').textContent = `${m}:${s}`;
+        }, 1000);
+
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            callStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            $('call-pip-video').srcObject = callStream;
+            $('call-pip-video').classList.remove('hidden');
+            $('call-pip-off').classList.add('hidden');
+          } else {
+            throw new Error('No mediaDevices');
+          }
+        } catch (e) {
+          $('call-pip-video').classList.add('hidden');
+          $('call-pip-off').classList.remove('hidden');
+        }
+      }
+
+      function endVideoCall() {
+        $('videocall-modal').classList.add('hidden');
+        clearInterval(callInterval);
+        if (callStream) {
+          callStream.getTracks().forEach(t => t.stop());
+          callStream = null;
+        }
+        showToast('Video call ended.');
+      }
+
+      // ---------- Voice Control System ----------
+      function speakText(text) {
+        try {
+          if (!('speechSynthesis' in window)) return;
+          window.speechSynthesis.cancel();
+          const clean = text.replace(/```[\s\S]*?```/g, 'Code block provided.').replace(/\*\*/g, '');
+          const utter = new SpeechSynthesisUtterance(clean.slice(0, 260));
+          utter.rate = 1.03;
+          window.speechSynthesis.speak(utter);
+        } catch (e) { /* Ignore TTS errors */ }
+      }
+
+      function toggleVoiceControl(forceState = null) {
+        const next = forceState !== null ? forceState : !state.settings.voiceControl;
+        state.settings.voiceControl = next;
+        saveState();
+        renderToggles();
+
+        if (next) {
+          startSpeechRecognition();
+          showToast('Voice Control enabled! Say "Open YouTube" or "Scroll the video".');
+        } else {
+          stopSpeechRecognition();
+          showToast('Voice Control turned off.');
+        }
+      }
+
+      function startSpeechRecognition() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+          $('voice-hud-transcript').textContent = 'Browser mic unavailable — use Voice Simulator in Settings';
+          return;
+        }
+        try {
+          if (recognition) recognition.stop();
+          recognition = new SpeechRec();
+          recognition.continuous = true;
+          recognition.interimResults = false;
+          recognition.lang = 'en-IN';
+          recognition.onresult = (event) => {
+            const transcript = event.results[event.results.length - 1][0].transcript.trim();
+            $('voice-hud-transcript').textContent = `"${transcript}"`;
+            executeVoiceCommand(transcript);
+          };
+          recognition.onerror = () => {
+            $('voice-hud-action').textContent = 'Mic blocked/idle — use Settings simulator';
+          };
+          recognition.onend = () => {
+            if (state.settings.voiceControl) {
+              try { recognition.start(); } catch (e) { /* ignore */ }
+            }
+          };
+          recognition.start();
+        } catch (e) {
+          $('voice-hud-action').textContent = 'Use Voice Simulator in Settings';
+        }
+      }
+
+      function stopSpeechRecognition() {
+        if (recognition) {
+          try { recognition.stop(); } catch (e) { /* ignore */ }
+          recognition = null;
+        }
+      }
+
+      function executeVoiceCommand(rawCmd) {
+        const cmd = rawCmd.trim();
+        const lower = cmd.toLowerCase();
+        $('voice-hud-transcript').textContent = `"${cmd}"`;
+
+        if (lower.includes('youtube') || lower.includes('यूट्यूब')) {
+          switchView('apps');
+          $('voice-hud-action').textContent = 'Action: Opened YouTube & App Hub';
+          showToast('Opening YouTube...');
+          try { window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer'); } catch (e) { /* ignore */ }
+          if (state.settings.voiceTTS) speakText('Opening YouTube');
+          return;
+        }
+        if (lower.includes('scroll down') || lower.includes('scroll the video') || lower.includes('scroll video') || lower.includes('नीचे')) {
+          const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
+          target.scrollBy({ top: 340, behavior: 'smooth' });
+          $('voice-hud-action').textContent = 'Action: Scrolled down';
+          showToast('Scrolled down');
+          return;
+        }
+        if (lower.includes('scroll up') || lower.includes('ऊपर')) {
+          const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
+          target.scrollBy({ top: -340, behavior: 'smooth' });
+          $('voice-hud-action').textContent = 'Action: Scrolled up';
+          showToast('Scrolled up');
+          return;
+        }
+        if (lower.includes('setting') || lower.includes('सेटिंग')) {
+          switchView('settings');
+          $('voice-hud-action').textContent = 'Action: Opened Settings';
+          return;
+        }
+        if (lower.includes('new chat') || lower.includes('नई चैट')) {
+          createNewChat(true);
+          $('voice-hud-action').textContent = 'Action: Started New Chat';
+          return;
+        }
+        if (lower.includes('video call') || lower.includes('वीडियो कॉल')) {
+          startVideoCall();
+          $('voice-hud-action').textContent = 'Action: Started Video Call';
+          return;
+        }
+        if (lower.includes('camera') || lower.includes('कैमरा')) {
+          openCameraModal();
+          $('voice-hud-action').textContent = 'Action: Opened Camera';
+          return;
+        }
+
+        // Otherwise send to AXON AI chat
+        switchView('chat');
+        $('voice-hud-action').textContent = 'Action: Sent to AXON AI';
+        sendMessage(cmd);
+      }
+
+      // ---------- Event Listeners ----------
+      function bindEvents() {
+        // Auth
+        $('tab-signin').addEventListener('click', () => setAuthMode('signin'));
+        $('tab-signup').addEventListener('click', () => setAuthMode('signup'));
+        $('btn-toggle-pw').addEventListener('click', () => {
+          const pw = $('auth-password');
+          pw.type = pw.type === 'password' ? 'text' : 'password';
+        });
+        $('btn-forgot-pw').addEventListener('click', () => showToast('Password reset link sent to your email.'));
+        $('auth-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = $('auth-email').value.trim();
+          const pw = $('auth-password').value.trim();
+          const name = $('auth-name').value.trim();
+          if (!email || !email.includes('@')) {
+            $('auth-error').textContent = 'Please enter a valid email address.';
+            $('auth-error').classList.remove('hidden');
+            return;
+          }
+          if (pw.length < 4) {
+            $('auth-error').textContent = 'Password must be at least 4 characters.';
+            $('auth-error').classList.remove('hidden');
+            return;
+          }
+          completeLogin(state.authMode === 'signup' ? name : email.split('@')[0], email);
+        });
+        $('btn-google-login').addEventListener('click', () => completeLogin('Alex Morgan', 'alex.morgan@gmail.com'));
+        $('btn-guest-login').addEventListener('click', () => completeLogin('AXON Demo User', 'demo@axon.ai'));
+
+        // Sidebar & Nav
+        $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
+        $('btn-close-sidebar').addEventListener('click', closeSidebarMobile);
+        $('sidebar-backdrop').addEventListener('click', closeSidebarMobile);
+        $('btn-new-chat').addEventListener('click', () => createNewChat(true));
+        $('nav-chat').addEventListener('click', () => switchView('chat'));
+        $('nav-apps').addEventListener('click', () => switchView('apps'));
+        $('nav-settings').addEventListener('click', () => switchView('settings'));
+        $('btn-header-settings').addEventListener('click', () => switchView('settings'));
+        $('btn-logout').addEventListener('click', () => {
+          state.user = null;
+          toggleVoiceControl(false);
+          saveState();
+          $('app-screen').classList.add('hidden');
+          $('login-screen').classList.remove('hidden');
+          showToast('Signed out of AXON AI');
+        });
+
+        // Delegated Chat List Actions
+        $('sidebar-chat-list').addEventListener('click', (e) => {
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) {
+            e.stopPropagation();
+            deleteChatById(delBtn.dataset.chatId);
+            return;
+          }
+          const sel = e.target.closest('.select-chat-btn');
+          if (sel) {
+            state.activeChatId = sel.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
+          }
+        });
+
+        // Chat Messages Delegated Starter Prompts
+        $('chat-messages').addEventListener('click', (e) => {
+          const starter = e.target.closest('.starter-prompt');
+          if (starter) sendMessage(starter.dataset.prompt);
+        });
+
+        // Chat Input & Send
+        const chatInput = $('chat-input');
+        chatInput.addEventListener('input', () => {
+          chatInput.style.height = 'auto';
+          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
+        });
+        chatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+        $('btn-send').addEventListener('click', () => {
+          if (state.isGenerating) stopGeneration();
+          else sendMessage();
+        });
+
+        // Plus (+) Menu
+        $('btn-plus-menu').addEventListener('click', (e) => {
+          e.stopPropagation();
+          $('plus-menu').classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('#plus-menu') && !e.target.closest('#btn-plus-menu')) {
+            $('plus-menu').classList.add('hidden');
+          }
+        });
+        $('menu-send-photo').addEventListener('click', () => {
+          $('plus-menu').classList.add('hidden');
+          $('input-photo').click();
+        });
+        $('menu-send-file').addEventListener('click', () => {
+          $('plus-menu').classList.add('hidden');
+          $('input-file').click();
+        });
+        $('menu-open-camera').addEventListener('click', openCameraModal);
+        $('menu-deep-think').addEventListener('click', () => {
+          state.deepThink = !state.deepThink;
+          $('deep-think-status').textContent = state.deepThink ? 'On — Detailed reasoning' : 'Off — Standard speed';
+          $('plus-menu').classList.add('hidden');
+          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode disabled');
+        });
+
+        $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], true));
+        $('input-file').addEventListener('change', (e) => handleFileSelected(e.target.files[0], false));
+        $('btn-remove-attachment').addEventListener('click', clearAttachment);
+
+        // Camera Modal
+        $('btn-close-camera').addEventListener('click', closeCameraModal);
+        $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
+        $('btn-camera-upload-alt').addEventListener('click', () => {
+          closeCameraModal();
+          $('input-photo').click();
+        });
+
+        // Video Call
+        $('btn-video-call').addEventListener('click', startVideoCall);
+        $('btn-end-call').addEventListener('click', endVideoCall);
+        $('btn-call-mic').addEventListener('click', () => {
+          callMicMuted = !callMicMuted;
+          $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
+          showToast(callMicMuted ? 'Microphone muted' : 'Microphone unmuted');
+        });
+        $('btn-call-cam').addEventListener('click', () => {
+          callCamOff = !callCamOff;
+          $('call-pip-video').classList.toggle('hidden', callCamOff);
+          $('call-pip-off').classList.toggle('hidden', !callCamOff);
+        });
+
+        // Voice Control & Settings Toggles
+        $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
+        $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
+        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
+        $('toggle-voice-tts').addEventListener('click', () => {
+          state.settings.voiceTTS = !state.settings.voiceTTS;
+          saveState();
+          renderToggles();
+        });
+        $('toggle-history').addEventListener('click', () => {
+          state.settings.saveHistory = !state.settings.saveHistory;
+          saveState();
+          renderAll();
+          showToast(state.settings.saveHistory ? 'Chat History recording ON' : 'Chat History recording paused');
+        });
+
+        // Voice Simulator
+        $('btn-run-voice-sim').addEventListener('click', () => {
+          const val = $('voice-sim-input').value.trim();
+          if (!val) return;
+          if (!state.settings.voiceControl) toggleVoiceControl(true);
+          executeVoiceCommand(val);
+          $('voice-sim-input').value = '';
+        });
+        document.querySelectorAll('.voice-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (!state.settings.voiceControl) toggleVoiceControl(true);
+            executeVoiceCommand(btn.dataset.voiceCmd);
+          });
+        });
+
+        // History Search, Open, Delete, Export, Clear
+        $('history-search').addEventListener('input', renderSettingsHistory);
+        $('settings-history-list').addEventListener('click', (e) => {
+          const openBtn = e.target.closest('.open-history-chat');
+          if (openBtn) {
+            state.activeChatId = openBtn.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
+            return;
+          }
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) deleteChatById(delBtn.dataset.chatId);
+        });
+
+        $('btn-export-history').addEventListener('click', () => {
+          const blob = new Blob([JSON.stringify(state.chats, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `axon-ai-history-${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast('History exported as JSON!');
+        });
+
+        $('btn-clear-history').addEventListener('click', () => $('confirm-modal').classList.remove('hidden'));
+        $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
+        $('btn-confirm-ok').addEventListener('click', () => {
+          state.chats = [];
+          createNewChat(false);
+          $('confirm-modal').classList.add('hidden');
+          saveState();
+          renderAll();
+          showToast('All chat history cleared.');
+        });
+
+        // API Config & App Hub
+        $('setting-api-mode').addEventListener('change', (e) => {
+          state.settings.apiMode = e.target.value;
+          saveState();
+        });
+        $('setting-api-endpoint').addEventListener('change', (e) => {
+          state.settings.apiEndpoint = e.target.value.trim() || '/api/chat';
+          saveState();
+        });
+        $('btn-launch-yt-ext').addEventListener('click', () => {
+          window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer');
+        });
+      }
+
+      function deleteChatById(id) {
+        state.chats = state.chats.filter(c => c.id !== id);
+        if (state.activeChatId === id) {
+          if (state.chats.length) state.activeChatId = state.chats[0].id;
+          else createNewChat(false);
+        }
+        saveState();
+        renderAll();
+        showToast('Chat deleted.');
+      }
+
+      // ---------- Boot ----------
+      loadState();
+      bindEvents();
+      runSplash();
+    })();
+  </script>
+</body>
+</html>
