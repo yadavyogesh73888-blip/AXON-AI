@@ -1770,7 +1770,28 @@
           $('auth-error').classList.add('hidden');
           try {
             if (state.authMode === 'signup') {
-              const credential = await firebaseAuth.createUserWithEmailAndPassword(email, pw);
+             $('#btn-firebase-google-auth').on('click', async () => {
+  if (!firebaseReady || !firebaseAuth) {
+    showAuthError('Firebase config add karna baaki hai. Setup steps follow karein.');
+    return;
+  }
+  const button = $('#btn-firebase-google-auth');
+  const originalText = button.text();
+  button.disabled = true;
+  button.text('Connecting to Google...');
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await firebaseAuth.signInWithPopup(provider);
+    $('#google-picker-modal').addClass('hidden');
+  } catch (error) {
+    showAuthError(firebaseErrorMessage(error));
+  } finally {
+    button.disabled = false;
+    button.text(originalText);
+  }
+});
+ 
               if (name) await credential.user.updateProfile({ displayName: name });
               completeLogin(name || credential.user.displayName || email.split('@')[0], email);
             } else {
