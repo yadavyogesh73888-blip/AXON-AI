@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>AXON AI — Intelligent Neural Workspace</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -215,7 +217,7 @@
 
         <div>
           <label for="auth-email" class="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
-          <input id="auth-email" type="email" placeholder="you@axon.ai" value="alex@axon.ai" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+          <input id="auth-email" type="email" placeholder="you@axon.ai" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
         </div>
 
         <div>
@@ -224,7 +226,7 @@
             <button id="btn-forgot-pw" type="button" class="text-xs text-cyan-400 hover:text-cyan-300 transition">Forgot password?</button>
           </div>
           <div class="relative">
-            <input id="auth-password" type="password" placeholder="••••••••" value="axon2026" class="w-full px-4 py-2.5 pr-11 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+            <input id="auth-password" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 pr-11 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
             <button id="btn-toggle-pw" type="button" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -714,6 +716,74 @@
 
       const STORAGE_KEY = 'axon_ai_workspace_v1';
 
+      // Firebase Console > Project settings > Your apps > Web app config.
+      // Replace every PASTE_... value with the exact values from your Firebase web app.
+      const firebaseConfig = {
+        apiKey: 'PASTE_API_KEY',
+        authDomain: 'axon-ai-9ee3b.firebaseapp.com',
+        databaseURL: 'https://axon-ai-9ee3b-default-rtdb.firebaseio.com',
+        projectId: 'axon-ai-9ee3b',
+        storageBucket: 'PASTE_STORAGE_BUCKET',
+        messagingSenderId: 'PASTE_MESSAGING_SENDER_ID',
+        appId: 'PASTE_APP_ID'
+      };
+
+      let firebaseAuth = null;
+      let firebaseReady = false;
+      let splashFinished = false;
+      let demoSession = false;
+
+      function initializeFirebaseAuth() {
+        const hasConfig = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_') &&
+          firebaseConfig.appId && !firebaseConfig.appId.startsWith('PASTE_') &&
+          firebaseConfig.messagingSenderId && !firebaseConfig.messagingSenderId.startsWith('PASTE_');
+        if (!hasConfig || typeof firebase === 'undefined' || !firebase.initializeApp) return false;
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          firebaseAuth = firebase.auth();
+          firebaseReady = true;
+          firebaseAuth.onAuthStateChanged((user) => {
+            if (user) {
+              demoSession = false;
+              completeLogin(user.displayName || user.email?.split('@')[0] || 'AXON User', user.email || '');
+            } else if (!demoSession) {
+              state.user = null;
+              if (splashFinished) {
+                $('app-screen').classList.add('hidden');
+                $('login-screen').classList.remove('hidden');
+              }
+            }
+          });
+          return true;
+        } catch (error) {
+          console.error('Firebase initialization failed:', error);
+          return false;
+        }
+      }
+
+      function showAuthError(message) {
+        const el = $('auth-error');
+        el.textContent = message;
+        el.classList.remove('hidden');
+      }
+
+      function firebaseErrorMessage(error) {
+        const code = error && error.code ? error.code : '';
+        const messages = {
+          'auth/invalid-email': 'Email address sahi nahi hai.',
+          'auth/user-not-found': 'Is email se account nahi mila. Pehle account banayein.',
+          'auth/wrong-password': 'Password galat hai.',
+          'auth/invalid-credential': 'Email ya password galat hai.',
+          'auth/email-already-in-use': 'Is email se account pehle se bana hua hai. Sign In karein.',
+          'auth/weak-password': 'Password kam se kam 6 characters ka hona chahiye.',
+          'auth/popup-closed-by-user': 'Google sign-in window band ho gayi. Dobara try karein.',
+          'auth/popup-blocked': 'Browser ne popup block kar diya. Page ko browser mein kholkar dobara try karein.',
+          'auth/unauthorized-domain': 'Firebase Authentication mein is website ka domain add karein.',
+          'auth/network-request-failed': 'Internet connection check karke dobara try karein.'
+        };
+        return messages[code] || (error?.message || 'Sign-in nahi ho paya. Firebase settings check karein.');
+      }
+
       // A-to-Z App Directory (Indian + Global popular apps)
       const APP_DIRECTORY = [
         { name: 'Airtel Thanks', aliases: ['airtel', 'एयरटेल'], url: 'https://www.airtel.in', color: 'from-red-600 to-rose-700', icon: '📶' },
@@ -802,7 +872,6 @@
       function saveState() {
         try {
           const payload = {
-            user: state.user,
             settings: state.settings,
             chats: state.settings.saveHistory ? state.chats : [],
             activeChatId: state.activeChatId
@@ -816,7 +885,6 @@
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) return;
           const parsed = JSON.parse(raw);
-          if (parsed.user) state.user = parsed.user;
           if (parsed.settings) state.settings = { ...state.settings, ...parsed.settings };
           if (Array.isArray(parsed.chats)) state.chats = parsed.chats;
           if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
@@ -919,6 +987,7 @@
           $('splash-screen').classList.add('opacity-0', 'pointer-events-none');
           setTimeout(() => {
             $('splash-screen').classList.add('hidden');
+            splashFinished = true;
             if (state.user) {
               enterApp();
             } else {
@@ -943,9 +1012,9 @@
       }
 
       function completeLogin(name, email) {
-        const cleanName = (name || '').trim() || email.split('@')[0] || 'User';
+        const cleanName = (name || '').trim() || (email || '').split('@')[0] || 'User';
         const initials = cleanName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
-        state.user = { name: cleanName, email, initials };
+        state.user = { name: cleanName, email: email || '', initials };
         if (!state.chats.length) createNewChat(false);
         if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
         saveState();
@@ -1656,25 +1725,64 @@
           const pw = $('auth-password');
           pw.type = pw.type === 'password' ? 'text' : 'password';
         });
-        $('btn-forgot-pw').addEventListener('click', () => showToast('Password reset link sent.'));
+        $('btn-forgot-pw').addEventListener('click', async () => {
+          const email = $('auth-email').value.trim();
+          if (!email || !email.includes('@')) {
+            showAuthError('Password reset ke liye pehle apna valid email likhein.');
+            return;
+          }
+          if (!firebaseReady || !firebaseAuth) {
+            showAuthError('Firebase config abhi add nahi hai. Neeche diye setup steps follow karein.');
+            return;
+          }
+          try {
+            await firebaseAuth.sendPasswordResetEmail(email);
+            $('auth-error').classList.add('hidden');
+            showToast('Password reset email bhej diya gaya hai. Inbox check karein.');
+          } catch (error) {
+            showAuthError(firebaseErrorMessage(error));
+          }
+        });
 
-        $('auth-form').addEventListener('submit', (e) => {
+        $('auth-form').addEventListener('submit', async (e) => {
           e.preventDefault();
           const email = $('auth-email').value.trim();
-          const pw = $('auth-password').value.trim();
+          const pw = $('auth-password').value;
           const name = $('auth-name').value.trim();
-          if (!email || !email.includes('@')) {
-            $('auth-error').textContent = 'Please enter a valid email address.';
-            $('auth-error').classList.remove('hidden');
+
+          if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+            showAuthError('Please enter a valid email address.');
             return;
           }
-          if (pw.length < 4) {
-            $('auth-error').textContent = 'Password must be at least 4 characters.';
-            $('auth-error').classList.remove('hidden');
+          if (pw.length < 6) {
+            showAuthError('Password must be at least 6 characters.');
             return;
           }
+          if (!firebaseReady || !firebaseAuth) {
+            showAuthError('Firebase config add karna baaki hai. Setup steps follow karein.');
+            return;
+          }
+
+          const submit = $('btn-auth-submit');
+          const originalText = submit.textContent;
+          submit.disabled = true;
+          submit.textContent = state.authMode === 'signup' ? 'Creating account...' : 'Signing in...';
           $('auth-error').classList.add('hidden');
-          completeLogin(state.authMode === 'signup' && name ? name : email.split('@')[0], email);
+          try {
+            if (state.authMode === 'signup') {
+              const credential = await firebaseAuth.createUserWithEmailAndPassword(email, pw);
+              if (name) await credential.user.updateProfile({ displayName: name });
+              completeLogin(name || credential.user.displayName || email.split('@')[0], email);
+            } else {
+              const credential = await firebaseAuth.signInWithEmailAndPassword(email, pw);
+              completeLogin(credential.user.displayName || email.split('@')[0], email);
+            }
+          } catch (error) {
+            showAuthError(firebaseErrorMessage(error));
+          } finally {
+            submit.disabled = false;
+            submit.textContent = originalText;
+          }
         });
 
         $('btn-google-login').addEventListener('click', () => {
@@ -1683,21 +1791,32 @@
         $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
 
         $('btn-firebase-google-auth').addEventListener('click', async () => {
-          try {
-            if (typeof firebase !== 'undefined' && firebase.auth && firebase.apps && firebase.apps.length) {
-              const provider = new firebase.auth.GoogleAuthProvider();
-              const result = await firebase.auth().signInWithPopup(provider);
-              const user = result.user;
-              completeLogin(user.displayName || 'Google User', user.email || 'google@axon.ai');
-              return;
-            }
-          } catch (e) {
-            // Fall through to local Google account login so sign-in always succeeds
+          if (!firebaseReady || !firebaseAuth) {
+            $('google-picker-modal').classList.add('hidden');
+            showAuthError('Firebase config add karna baaki hai. Setup steps follow karein.');
+            return;
           }
-          completeLogin('Aarav Sharma', 'aarav.sharma@gmail.com');
+          const button = $('btn-firebase-google-auth');
+          const originalText = button.textContent;
+          button.disabled = true;
+          button.textContent = 'Connecting to Google...';
+          try {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            await firebaseAuth.signInWithPopup(provider);
+            $('google-picker-modal').classList.add('hidden');
+          } catch (error) {
+            showAuthError(firebaseErrorMessage(error));
+          } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+          }
         });
 
-        $('btn-guest-login').addEventListener('click', () => completeLogin('AXON Demo User', 'demo@axon.ai'));
+        $('btn-guest-login').addEventListener('click', () => {
+          demoSession = true;
+          completeLogin('AXON Demo User', 'demo@axon.ai');
+        });
 
         $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
         $('btn-close-sidebar').addEventListener('click', closeSidebarMobile);
@@ -1707,9 +1826,15 @@
         $('nav-apps').addEventListener('click', () => switchView('apps'));
         $('nav-settings').addEventListener('click', () => switchView('settings'));
         $('btn-header-settings').addEventListener('click', () => switchView('settings'));
-        $('btn-logout').addEventListener('click', () => {
-          state.user = null;
+        $('btn-logout').addEventListener('click', async () => {
           toggleVoiceControl(false);
+          demoSession = false;
+          state.user = null;
+          try {
+            if (firebaseAuth && firebaseAuth.currentUser) await firebaseAuth.signOut();
+          } catch (error) {
+            showToast(firebaseErrorMessage(error));
+          }
           saveState();
           $('app-screen').classList.add('hidden');
           $('login-screen').classList.remove('hidden');
@@ -1931,9 +2056,18 @@
       }
 
       loadState();
+      initializeFirebaseAuth();
       bindEvents();
       runSplash();
     })();
   </script>
+  <!--
+    FIREBASE AUTH SETUP (required for real sign-in):
+    1. Replace firebaseConfig placeholders above with the Web App config from Firebase Console.
+    2. Firebase Console > Authentication > Sign-in method: enable Email/Password and Google.
+    3. Authentication > Settings > Authorized domains: add your deployed website domain.
+    4. Serve this page over HTTPS (or localhost while testing).
+    The existing screen markup and styling are intentionally unchanged.
+  -->
 </body>
 </html>
