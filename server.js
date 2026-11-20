@@ -25,6 +25,15 @@ app.use((req, res, next) => {
   express.json({ limit: "2mb" })(req, res, next);
 });
 
+function cleanModelName(val, fallback) {
+  if (!val || typeof val !== "string") return fallback;
+  const cleaned = val.trim().replace(/^["']+|["']+$/g, "");
+  return cleaned || fallback;
+}
+
+const DEFAULT_CHAT_MODEL = "openai/gpt-oss-120b";
+const DEFAULT_VISION_MODEL = "qwen/qwen3.8-27b";
+
 // Chat Rate Limiter
 const chatLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -80,6 +89,7 @@ app.get("/health", (req, res) => {
 // Groq API Health Check
 app.get("/api/health", healthLimiter, async (req, res) => {
   const apiKey = process.env.GROQ_API_KEY;
+  const chatModel = cleanModelName(process.env.GROQ_MODEL, DEFAULT_CHAT_MODEL);
 
   if (!apiKey || !apiKey.trim()) {
     return res.status(503).json({
@@ -104,7 +114,7 @@ app.get("/api/health", healthLimiter, async (req, res) => {
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+          model: chatModel,
           messages: [
             {
               role: "user",
@@ -156,7 +166,7 @@ app.get("/api/health", healthLimiter, async (req, res) => {
       status: "ok",
       server: "online",
       ai_api: "connected",
-      model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+      model: chatModel,
       message: "AXON-AI Groq connection successful."
     });
   } catch (error) {
@@ -214,7 +224,7 @@ app.post(
       ? prompt.trim().slice(0, 2500)
       : "Analyze this image clearly, note visual details, and suggest photo/video editing or VFX ideas if helpful.";
 
-    const visionModel = process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
+    const visionModel = cleanModelName(process.env.GROQ_VISION_MODEL, DEFAULT_VISION_MODEL);
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
@@ -259,7 +269,7 @@ app.post(
 
       if (!response.ok) {
         const apiErrMsg = data?.error?.message || "Photo analysis failed. Please try again.";
-        console.error("VISION API ERROR:", { status: response.status, message: apiErrMsg });
+        console.error("VISION API ERROR:", { status: response.status, message: apiErrMsg, model: visionModel });
         return res.status(502).json({
           error: apiErrMsg
         });
@@ -299,6 +309,7 @@ app.post("/api/chat", chatLimiter, async (req, res) => {
   }
 
   const apiKey = process.env.GROQ_API_KEY;
+  const chatModel = cleanModelName(process.env.GROQ_MODEL, DEFAULT_CHAT_MODEL);
 
   if (!apiKey || !apiKey.trim()) {
     return res.status(503).json({
@@ -338,7 +349,7 @@ You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur 
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+          model: chatModel,
           messages: [
             {
               role: "system",
@@ -367,7 +378,7 @@ You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur 
 
     if (!response.ok) {
       const errDetail = data?.error?.message || `HTTP ${response.status}`;
-      console.error("GROQ API ERROR:", { status: response.status, message: errDetail });
+      console.error("GROQ API ERROR:", { status: response.status, message: errDetail, model: chatModel });
       return res.status(502).json({
         reply: `Yaar, abhi AI API mein dikkat aayi (${errDetail}). Thodi der baad try karna!`
       });
