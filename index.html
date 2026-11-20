@@ -634,14 +634,12 @@
     </div>
 
     <div class="relative w-full max-w-5xl flex-1 my-4 rounded-3xl glass-panel border border-slate-800 flex flex-col items-center justify-between overflow-hidden p-4 sm:p-6">
-      <!-- Larger User Camera Stage -->
       <div class="relative w-full flex-1 min-h-[210px] sm:min-h-[280px] rounded-2xl bg-slate-950 border border-slate-700/80 overflow-hidden shadow-2xl flex items-center justify-center">
         <video id="call-pip-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
         <div id="call-pip-off" class="hidden flex-col items-center justify-center text-center p-4">
           <span class="text-xs sm:text-sm text-slate-400">Your Camera is Off</span>
         </div>
 
-        <!-- Compact Floating AI Orb Badge -->
         <div class="absolute top-3 left-3 flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#070b14]/85 backdrop-blur-md border border-cyan-400/30 shadow-lg">
           <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 via-indigo-500 to-purple-600 p-0.5 animate-float-orb">
             <div class="w-full h-full rounded-full bg-[#070b14] flex items-center justify-center gap-0.5">
@@ -716,18 +714,16 @@
 
       const STORAGE_KEY = 'axon_ai_workspace_v1';
 
-      // Firebase Console > Project settings > Your apps > Web app config.
-      // Replace every PASTE_... value with the exact values from your Firebase web app.
       const firebaseConfig = {
-  apiKey: "AIzaSyA-YnGuAr8BdGt8xbo0Eq06lijQEPoeTC8",
-  authDomain: "axon-ai-9ee3b.firebaseapp.com",
-  databaseURL: "https://axon-ai-9ee3b-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "axon-ai-9ee3b",
-  storageBucket: "axon-ai-9ee3b.firebasestorage.app",
-  messagingSenderId: "304665322304",
-  appId: "1:304665322304:web:b409df4442f3cf018710a5",
-  measurementId: "G-NBP2KRZWSG"
-};
+        apiKey: "AIzaSyA-YnGuAr8BdGt8xbo0Eq06lijQEPoeTC8",
+        authDomain: "axon-ai-9ee3b.firebaseapp.com",
+        databaseURL: "https://axon-ai-9ee3b-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "axon-ai-9ee3b",
+        storageBucket: "axon-ai-9ee3b.firebasestorage.app",
+        messagingSenderId: "304665322304",
+        appId: "1:304665322304:web:b409df4442f3cf018710a5",
+        measurementId: "G-NBP2KRZWSG"
+      };
 
       let firebaseAuth = null;
       let firebaseReady = false;
@@ -785,7 +781,6 @@
         return messages[code] || (error?.message || 'Sign-in nahi ho paya. Firebase settings check karein.');
       }
 
-      // A-to-Z App Directory (Indian + Global popular apps)
       const APP_DIRECTORY = [
         { name: 'Airtel Thanks', aliases: ['airtel', 'एयरटेल'], url: 'https://www.airtel.in', color: 'from-red-600 to-rose-700', icon: '📶' },
         { name: 'Amazon India', aliases: ['amazon', 'अमेजन'], url: 'https://www.amazon.in', color: 'from-amber-500 to-orange-600', icon: '📦' },
@@ -980,21 +975,24 @@
         ];
         steps.forEach((s, idx) => {
           setTimeout(() => {
-            bar.style.width = s.pct + '%';
-            status.textContent = s.text;
+            if (bar) bar.style.width = s.pct + '%';
+            if (status) status.textContent = s.text;
           }, 280 * (idx + 1));
         });
         setTimeout(() => {
-          $('splash-screen').classList.add('opacity-0', 'pointer-events-none');
-          setTimeout(() => {
-            $('splash-screen').classList.add('hidden');
-            splashFinished = true;
-            if (state.user) {
-              enterApp();
-            } else {
-              $('login-screen').classList.remove('hidden');
-            }
-          }, 420);
+          const splash = $('splash-screen');
+          if (splash) {
+            splash.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+              splash.classList.add('hidden');
+              splashFinished = true;
+              if (state.user) {
+                enterApp();
+              } else {
+                $('login-screen').classList.remove('hidden');
+              }
+            }, 420);
+          }
         }, 1250);
       }
 
@@ -1508,16 +1506,17 @@
           callRecognition = new SpeechRec();
           callRecognition.continuous = true;
           callRecognition.interimResults = true;
-          callRecognition.lang = 'hi-IN';
+          callRecognition.lang = navigator.language || 'en-IN';
 
           callRecognition.onresult = async (event) => {
             if (callMicMuted) return;
             const lastIdx = event.results.length - 1;
             const res = event.results[lastIdx];
             const transcript = res[0].transcript.trim();
+            if (!transcript) return;
             $('call-heard-text').textContent = `You: "${transcript}"`;
 
-            if (res.isFinal && transcript) {
+            if (res.isFinal) {
               $('call-voice-status').textContent = 'Sending to AI...';
               const reply = await fetchAIReply(transcript);
               $('call-caption').textContent = `"${reply}"`;
@@ -1526,13 +1525,21 @@
             }
           };
 
-          callRecognition.onerror = () => {
-            $('call-voice-status').textContent = 'Mic Ready';
+          callRecognition.onerror = (ev) => {
+            if (ev && ev.error === 'not-allowed') {
+              $('call-voice-status').textContent = 'Mic Permission Needed';
+            } else {
+              $('call-voice-status').textContent = 'Mic Ready';
+            }
           };
 
           callRecognition.onend = () => {
             if (!$('videocall-modal').classList.contains('hidden') && !callMicMuted) {
-              try { callRecognition.start(); } catch (e) {}
+              setTimeout(() => {
+                if (!$('videocall-modal').classList.contains('hidden') && !callMicMuted && callRecognition) {
+                  try { callRecognition.start(); } catch (e) {}
+                }
+              }, 200);
             }
           };
 
@@ -1545,8 +1552,10 @@
 
       function stopCallVoiceCapture() {
         if (callRecognition) {
-          try { callRecognition.stop(); } catch (e) {}
+          const rec = callRecognition;
           callRecognition = null;
+          rec.onend = null;
+          try { rec.stop(); } catch (e) {}
         }
       }
 
@@ -1747,11 +1756,12 @@
 
         $('auth-form').addEventListener('submit', async (e) => {
           e.preventDefault();
+          $('auth-error').classList.add('hidden');
           const email = $('auth-email').value.trim();
           const pw = $('auth-password').value;
           const name = $('auth-name').value.trim();
-if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             showAuthError('Please enter a valid email address.');
             return;
           }
@@ -1763,45 +1773,22 @@ if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             showAuthError('Firebase config add karna baaki hai. Setup steps follow karein.');
             return;
           }
-          const credential =
-  await firebaseAuth.createUserWithEmailAndPassword(email, pw);
 
           const submit = $('btn-auth-submit');
           const originalText = submit.textContent;
           submit.disabled = true;
           submit.textContent = state.authMode === 'signup' ? 'Creating account...' : 'Signing in...';
-          $('#btn-firebase-google-auth').on('click', async () => {
-  // ...
-});
+
           try {
             if (state.authMode === 'signup') {
-             $('#btn-firebase-google-auth').on('click', async () => {
-  if (!firebaseReady || !firebaseAuth) {
-    showAuthError('Firebase config add karna baaki hai. Setup steps follow karein.');
-    return;
-  }
-  const button = $('#btn-firebase-google-auth');
-  const originalText = button.text();
-  button.disabled = true;
-  button.text('Connecting to Google...');
-  try {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-    await firebaseAuth.signInWithPopup(provider);
-    $('#google-picker-modal').addClass('hidden');
-  } catch (error) {
-    showAuthError(firebaseErrorMessage(error));
-  } finally {
-    button.disabled = false;
-    button.text(originalText);
-  }
-});
- 
-              if (name) await credential.user.updateProfile({ displayName: name });
-              completeLogin(name || credential.user.displayName || email.split('@')[0], email);
+              const credential = await firebaseAuth.createUserWithEmailAndPassword(email, pw);
+              if (name && credential.user) {
+                await credential.user.updateProfile({ displayName: name });
+              }
+              completeLogin(name || credential.user?.displayName || email.split('@')[0], email);
             } else {
               const credential = await firebaseAuth.signInWithEmailAndPassword(email, pw);
-              completeLogin(credential.user.displayName || email.split('@')[0], email);
+              completeLogin(credential.user?.displayName || email.split('@')[0], email);
             }
           } catch (error) {
             showAuthError(firebaseErrorMessage(error));
@@ -1812,6 +1799,7 @@ if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         });
 
         $('btn-google-login').addEventListener('click', () => {
+          $('auth-error').classList.add('hidden');
           $('google-picker-modal').classList.remove('hidden');
         });
         $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
@@ -1832,6 +1820,7 @@ if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             await firebaseAuth.signInWithPopup(provider);
             $('google-picker-modal').classList.add('hidden');
           } catch (error) {
+            $('google-picker-modal').classList.add('hidden');
             showAuthError(firebaseErrorMessage(error));
           } finally {
             button.disabled = false;
@@ -1948,8 +1937,15 @@ if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
           }
           $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
-          $('call-voice-status').textContent = callMicMuted ? 'Mic Muted' : 'Mic Listening';
-          showToast(callMicMuted ? 'Microphone muted' : 'Microphone unmuted');
+          if (callMicMuted) {
+            stopCallVoiceCapture();
+            $('call-voice-status').textContent = 'Mic Muted';
+            showToast('Microphone muted');
+          } else {
+            startCallVoiceCapture();
+            $('call-voice-status').textContent = 'Mic Listening';
+            showToast('Microphone unmuted');
+          }
         });
         $('btn-call-cam').addEventListener('click', () => {
           callCamOff = !callCamOff;
@@ -2087,13 +2083,5 @@ if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       runSplash();
     })();
   </script>
-  <!--
-    FIREBASE AUTH SETUP (required for real sign-in):
-    1. Replace firebaseConfig placeholders above with the Web App config from Firebase Console.
-    2. Firebase Console > Authentication > Sign-in method: enable Email/Password and Google.
-    3. Authentication > Settings > Authorized domains: add your deployed website domain.
-    4. Serve this page over HTTPS (or localhost while testing).
-    The existing screen markup and styling are intentionally unchanged.
-  -->
 </body>
 </html>
