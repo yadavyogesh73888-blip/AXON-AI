@@ -1,335 +1,2222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AXON AI Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AXON AI — Intelligent Neural Workspace</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body {
-      background: #070b16;
+    :root {
+      --bg-primary: #070b14;
+      --bg-secondary: #0d1424;
+      --bg-elevated: #131c31;
+      --accent-cyan: #22d3ee;
+      --accent-indigo: #6366f1;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      max-width: 100vw;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
       color: #f1f5f9;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
+      overflow: hidden;
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+      touch-action: pan-y;
     }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      background: #0d1426;
-      border-bottom: 1px solid #1e293b;
-      gap: 8px;
+    html.light-theme body {
+      background-color: #f1f5f9;
+      color: #0f172a;
     }
-    .brand { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-    .auth-box { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .user-pill { font-size: 12px; color: #cbd5e1; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    button {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
+    html.light-theme .mesh-bg {
+      background-image:
+        radial-gradient(at 15% 20%, rgba(34, 211, 238, 0.14) 0px, transparent 50%),
+        radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.14) 0px, transparent 50%);
     }
-    button.secondary { background: #1e293b; color: #e2e8f0; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    html.light-theme #app-screen,
+    html.light-theme #view-chat,
+    html.light-theme #view-apps,
+    html.light-theme #view-settings {
+      background-color: #f8fafc;
+      color: #0f172a;
     }
-    .msg {
-      max-width: 84%;
-      padding: 11px 14px;
-      border-radius: 14px;
-      line-height: 1.45;
-      font-size: 14px;
-      white-space: pre-wrap;
-      word-break: break-word;
+    html.light-theme header,
+    html.light-theme aside {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
     }
-    .user {
-      align-self: flex-end;
-      background: #2563eb;
-      color: #fff;
+    html.light-theme .glass-panel {
+      background: rgba(255, 255, 255, 0.88);
+      border-color: rgba(148, 163, 184, 0.35);
+      color: #0f172a;
     }
-    .bot {
-      align-self: flex-start;
-      background: #111827;
-      border: 1px solid #1f2937;
-      color: #f8fafc;
+    html.light-theme .text-white { color: #0f172a !important; }
+    html.light-theme .text-slate-200,
+    html.light-theme .text-slate-300 { color: #334155 !important; }
+    html.light-theme .text-slate-400 { color: #64748b !important; }
+    html.light-theme .bg-slate-900\/80,
+    html.light-theme .bg-slate-900\/90,
+    html.light-theme .bg-slate-900\/75,
+    html.light-theme .bg-slate-900\/60,
+    html.light-theme .bg-slate-900 {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
     }
-    .msg img {
-      max-width: 190px;
-      border-radius: 10px;
-      display: block;
-      margin-bottom: 6px;
+    html.light-theme #btn-send,
+    html.light-theme #btn-auth-submit,
+    html.light-theme #btn-camera-capture,
+    html.light-theme #btn-end-call,
+    html.light-theme #btn-confirm-ok,
+    html.light-theme #btn-launch-yt-ext {
+      color: #ffffff !important;
     }
-    .composer {
-      padding: 10px 12px;
-      background: #0d1426;
-      border-top: 1px solid #1e293b;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-    input[type="text"] {
-      flex: 1;
-      background: #111827;
-      border: 1px solid #263248;
-      color: #fff;
-      border-radius: 12px;
-      padding: 11px 13px;
-      font-size: 14px;
-      outline: none;
+    ::-webkit-scrollbar-track {
+      background: transparent;
     }
-    input[type="text"]:focus { border-color: #3b82f6; }
-    .status-note {
-      text-align: center;
-      font-size: 11px;
-      color: #94a3b8;
-      padding: 4px 10px 8px;
-      background: #0d1426;
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.22);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.4);
+    }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.92); opacity: 0.8; }
+      70% { transform: scale(1.28); opacity: 0; }
+      100% { transform: scale(1.32); opacity: 0; }
+    }
+    @keyframes floatOrb {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-6px) scale(1.03); }
+    }
+    @keyframes waveBar {
+      0%, 100% { height: 8px; }
+      50% { height: 28px; }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-pulse-ring {
+      animation: pulseRing 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+    .animate-float-orb {
+      animation: floatOrb 3.5s ease-in-out infinite;
+    }
+    .animate-fade-up {
+      animation: fadeSlideUp 0.25s ease-out forwards;
+    }
+    .wave-bar {
+      width: 4px;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #22d3ee, #6366f1);
+      animation: waveBar 0.9s ease-in-out infinite;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .mesh-bg {
+      background-image:
+        radial-gradient(at 15% 20%, rgba(34, 211, 238, 0.14) 0px, transparent 50%),
+        radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.16) 0px, transparent 50%),
+        radial-gradient(at 50% 85%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+    }
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background-color: #22d3ee;
+      animation: waveBar 0.8s ease-in-out infinite;
+    }
+    @keyframes stopBlink {
+      0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 14px rgba(244, 63, 94, 0.65);
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.45;
+        box-shadow: 0 0 4px rgba(244, 63, 94, 0.25);
+        transform: scale(0.96);
+      }
+    }
+    .btn-stop-blink {
+      animation: stopBlink 0.9s ease-in-out infinite;
     }
   </style>
 </head>
-<body>
-  <header>
-    <div class="brand">⚡ AXON AI Chat</div>
-    <div class="auth-box">
-      <span id="userLabel" class="user-pill">Guest</span>
-      <button id="googleSignInBtn" type="button">Google Sign-In</button>
-      <button id="signOutBtn" type="button" class="secondary" style="display:none;">Logout</button>
+<body class="mesh-bg antialiased selection:bg-cyan-500/30 selection:text-cyan-100">
+
+  <!-- ==================== 1. SPLASH SCREEN ==================== -->
+  <section id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070b14] mesh-bg transition-opacity duration-500">
+    <div class="relative flex flex-col items-center">
+      <div class="relative flex items-center justify-center w-28 h-28 mb-6">
+        <span class="absolute inset-0 rounded-3xl border border-cyan-400/40 animate-pulse-ring"></span>
+        <span class="absolute inset-2 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 blur-xl"></span>
+        <div class="relative flex items-center justify-center w-24 h-24 rounded-[26px] bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-2xl shadow-cyan-500/30 animate-float-orb">
+          <svg class="w-12 h-12 drop-shadow-sm" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+        </div>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-cyan-200 to-indigo-300 bg-clip-text text-transparent">
+        AXON AI
+      </h1>
+      <p class="mt-2 text-xs sm:text-sm uppercase tracking-[0.26em] text-slate-400 font-medium">
+        Neural Intelligence Workspace
+      </p>
+
+      <div class="mt-8 w-56 h-1.5 bg-slate-800/90 rounded-full overflow-hidden border border-slate-700/50">
+        <div id="splash-progress" class="h-full w-0 bg-gradient-to-r from-cyan-400 to-indigo-500 rounded-full transition-all duration-300"></div>
+      </div>
+      <p id="splash-status" class="mt-3 text-xs text-slate-400">Initializing neural core...</p>
     </div>
-  </header>
+  </section>
 
-  <main id="chat">
-    <div class="msg bot">Hi bhai! Chat aur photo analysis dono ab ready hain. Kya help chahiye?</div>
-  </main>
+  <!-- ==================== 2. LOGIN SCREEN ==================== -->
+  <section id="login-screen" class="hidden fixed inset-0 z-40 overflow-y-auto px-4 py-8 flex items-center justify-center">
+    <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/50 animate-fade-up">
+      <div class="flex flex-col items-center text-center mb-6">
+        <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-lg shadow-cyan-500/25 mb-3">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+        </div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">Welcome to AXON AI</h2>
+        <p class="text-sm text-slate-400 mt-1">Sign in to access your AI assistant, voice control &amp; history</p>
+      </div>
 
-  <form id="chatForm" class="composer">
-    <input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
-    <button id="photoBtn" type="button" class="secondary" title="Upload Photo">+ Photo</button>
-    <input id="msgInput" type="text" placeholder="Message AXON AI..." autocomplete="off" />
-    <button id="sendBtn" type="submit">Send</button>
-  </form>
-  <div id="helperBar" class="status-note">AXON AI can make mistakes. Verify important details.</div>
+      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800 mb-5">
+        <button id="tab-signin" type="button" class="py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition">Sign In</button>
+        <button id="tab-signup" type="button" class="py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition">Create Account</button>
+      </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
-      signInWithRedirect,
-      getRedirectResult,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+      <form id="auth-form" class="space-y-4" novalidate>
+        <div id="name-field-wrap" class="hidden">
+          <label for="auth-name" class="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
+          <input id="auth-name" type="text" placeholder="Aarav Sharma" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+        </div>
 
-    // Apni asli Firebase config yahan daalein:
-    const firebaseConfig = {
-      apiKey: "YOUR_FIREBASE_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      appId: "YOUR_FIREBASE_APP_ID"
-    };
+        <div>
+          <label for="auth-email" class="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
+          <input id="auth-email" type="email" placeholder="you@axon.ai" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+        </div>
 
-    const chatEl = document.getElementById("chat");
-    const formEl = document.getElementById("chatForm");
-    const inputEl = document.getElementById("msgInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const photoBtn = document.getElementById("photoBtn");
-    const photoInput = document.getElementById("photoInput");
-    const googleSignInBtn = document.getElementById("googleSignInBtn");
-    const signOutBtn = document.getElementById("signOutBtn");
-    const userLabel = document.getElementById("userLabel");
-    const helperBar = document.getElementById("helperBar");
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="auth-password" class="block text-xs font-medium text-slate-300">Password</label>
+            <button id="btn-forgot-pw" type="button" class="text-xs text-cyan-400 hover:text-cyan-300 transition">Forgot password?</button>
+          </div>
+          <div class="relative">
+            <input id="auth-password" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 pr-11 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
+            <button id="btn-toggle-pw" type="button" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
 
-    let auth = null;
-    let provider = null;
-    let pendingImageData = null;
+        <p id="auth-error" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg px-3 py-2"></p>
 
-    const hasRealFirebaseConfig =
-      firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("YOUR_");
+        <button id="btn-auth-submit" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-cyan-500/20 transition transform active:scale-[0.99]">
+          Sign In to AXON AI
+        </button>
+      </form>
 
-    if (hasRealFirebaseConfig) {
-      const app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: "select_account" });
+      <div class="relative my-5">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-800"></div></div>
+        <div class="relative flex justify-center text-xs"><span class="px-3 bg-[#0e1526] text-slate-500">or continue with</span></div>
+      </div>
 
-      getRedirectResult(auth).catch((err) => {
-        console.error("Redirect auth error:", err);
-      });
+      <div class="grid grid-cols-2 gap-3">
+        <button id="btn-google-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-slate-200 transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
+          Google
+        </button>
+        <button id="btn-guest-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-cyan-300 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Quick Demo
+        </button>
+      </div>
+    </div>
+  </section>
 
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          userLabel.textContent = user.displayName || user.email || "Signed In";
-          googleSignInBtn.style.display = "none";
-          signOutBtn.style.display = "inline-block";
-        } else {
-          userLabel.textContent = "Guest";
-          googleSignInBtn.style.display = "inline-block";
-          signOutBtn.style.display = "none";
-        }
-      });
-    } else {
-      helperBar.textContent = "Note: Google Sign-In ke liye index.html mein apni Firebase config daalein.";
-    }
+  <!-- ==================== 3. MAIN APPLICATION ==================== -->
+  <div id="app-screen" class="hidden h-full w-full flex overflow-hidden">
+    <div id="sidebar-backdrop" class="hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"></div>
 
-    googleSignInBtn.addEventListener("click", async () => {
-      if (!hasRealFirebaseConfig || !auth || !provider) {
-        alert("Google Sign-In ke liye pehle index.html mein Firebase config aur Firebase Console mein Authorized Domain set karein.");
-        return;
-      }
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-[#0a0f1d] border-r border-slate-800/80 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+      <div class="p-4 flex items-center justify-between border-b border-slate-800/80">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-md shadow-cyan-500/20 flex items-center justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+          </div>
+          <div>
+            <span class="font-bold text-white tracking-tight text-base">AXON AI</span>
+            <span class="block text-[10px] text-cyan-400 font-medium uppercase tracking-wider">Pro Workspace</span>
+          </div>
+        </div>
+        <button id="btn-close-sidebar" type="button" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
 
-      googleSignInBtn.disabled = true;
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (err) {
-        console.error("Google sign-in error:", err);
-        if (
-          err.code === "auth/popup-blocked" ||
-          err.code === "auth/operation-not-supported-in-this-environment"
-        ) {
-          try {
-            await signInWithRedirect(auth, provider);
-            return;
-          } catch (redirectErr) {
-            alert("Google Sign-In error: " + (redirectErr.message || redirectErr.code));
-          }
-        } else if (err.code === "auth/unauthorized-domain") {
-          alert(
-            "Domain authorize nahi hai! Firebase Console -> Authentication -> Settings -> Authorized domains mein apna website domain add karein."
-          );
-        } else if (err.code !== "auth/popup-closed-by-user") {
-          alert("Google Sign-In failed: " + (err.message || err.code));
-        }
-      } finally {
-        googleSignInBtn.disabled = false;
-      }
-    });
+      <div class="p-3">
+        <button id="btn-new-chat" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500/15 to-indigo-500/15 hover:from-cyan-500/25 hover:to-indigo-500/25 border border-cyan-400/30 text-cyan-200 text-sm font-semibold transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          New Chat
+        </button>
+      </div>
 
-    signOutBtn.addEventListener("click", async () => {
-      if (auth) {
-        await signOut(auth);
-      }
-    });
+      <div class="px-3 py-1 flex items-center justify-between">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Recent Chats</span>
+        <span id="sidebar-history-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium">Recording</span>
+      </div>
+      <div id="sidebar-chat-list" class="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-1"></div>
 
-    function appendMessage(role, text, imgSrc = null) {
-      const div = document.createElement("div");
-      div.className = `msg ${role}`;
-      if (imgSrc) {
-        const img = document.createElement("img");
-        img.src = imgSrc;
-        div.appendChild(img);
-      }
-      if (text) {
-        const span = document.createElement("span");
-        span.textContent = text;
-        div.appendChild(span);
-      }
-      chatEl.appendChild(div);
-      chatEl.scrollTop = chatEl.scrollHeight;
-      return div;
-    }
+      <div class="p-2.5 border-t border-slate-800/80 space-y-1">
+        <button id="nav-chat" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition">
+          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          AI Chat
+        </button>
+        <button id="nav-apps" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+          <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          App Hub
+        </button>
+        <button id="nav-settings" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings &amp; History
+        </button>
+      </div>
 
-    function compressImageToDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const img = new Image();
-          img.onload = () => {
-            const maxSide = 1024;
-            let { width, height } = img;
-            if (width > maxSide || height > maxSide) {
-              if (width > height) {
-                height = Math.round((height * maxSide) / width);
-                width = maxSide;
-              } else {
-                width = Math.round((width * maxSide) / height);
-                height = maxSide;
+      <div class="p-3 border-t border-slate-800/80 flex items-center justify-between">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div id="user-avatar" class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">AX</div>
+          <div class="min-w-0">
+            <p id="user-display-name" class="text-sm font-semibold text-white truncate">Alex</p>
+            <p id="user-display-email" class="text-[11px] text-slate-400 truncate">alex@axon.ai</p>
+          </div>
+        </div>
+        <button id="btn-logout" type="button" title="Sign Out" class="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 h-full relative">
+      <header class="h-14 shrink-0 px-3 sm:px-5 border-b border-slate-800/80 bg-[#0a0f1d]/80 backdrop-blur-md flex items-center justify-between gap-2 z-20">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button id="btn-open-sidebar" type="button" class="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <h2 id="header-title" class="text-sm sm:text-base font-semibold text-white truncate">AXON AI Chat</h2>
+          <span id="mode-badge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Online
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-header-voice" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+            <span id="header-voice-label">Voice Off</span>
+          </button>
+
+          <button id="btn-header-settings" type="button" title="Settings" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/70 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ==================== VIEW 1: CHAT INTERFACE ==================== -->
+      <div id="view-chat" class="flex-1 flex flex-col min-h-0">
+        <div id="chat-messages" class="flex-1 overflow-y-auto px-3 sm:px-6 py-5 space-y-5 scroll-smooth"></div>
+
+        <div class="shrink-0 px-3 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-[#070b14] via-[#070b14]/95 to-transparent">
+          <div class="max-w-4xl mx-auto relative">
+
+            <div id="attachment-preview" class="hidden mb-2 p-2.5 rounded-2xl glass-panel flex items-center justify-between gap-3 animate-fade-up">
+              <div class="flex items-center gap-3 min-w-0">
+                <img id="attachment-thumb" src="" alt="Preview" class="hidden w-12 h-12 rounded-xl object-cover border border-slate-700" />
+                <div id="attachment-file-icon" class="hidden w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300 shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="min-w-0">
+                  <p id="attachment-name" class="text-xs font-semibold text-white truncate">file.png</p>
+                  <p id="attachment-size" class="text-[11px] text-slate-400">Ready to send</p>
+                </div>
+              </div>
+              <button id="btn-remove-attachment" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <div id="plus-menu" class="hidden absolute bottom-16 left-0 z-30 w-60 glass-panel rounded-2xl p-2 shadow-2xl shadow-black/60 animate-fade-up">
+              <button id="menu-send-photo" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Send Photo</span>
+                  <span class="block text-[10px] text-slate-400">Upload from gallery</span>
+                </div>
+              </button>
+
+              <button id="menu-open-camera" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Open Camera</span>
+                  <span class="block text-[10px] text-slate-400">Capture live photo</span>
+                </div>
+              </button>
+
+              <button id="menu-send-file" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Send File</span>
+                  <span class="block text-[10px] text-slate-400">PDF, CSV, TXT, Code</span>
+                </div>
+              </button>
+
+              <button id="menu-deep-think" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Deep Think Mode</span>
+                  <span id="deep-think-status" class="block text-[10px] text-slate-400">Off — Standard speed</span>
+                </div>
+              </button>
+            </div>
+
+            <input id="input-photo" type="file" accept="image/*" class="hidden" />
+            <input id="input-file" type="file" accept=".pdf,.txt,.csv,.json,.md,.js,.py,.html,.doc,.docx" class="hidden" />
+
+            <div class="glass-panel rounded-2xl p-2 flex items-end gap-2 shadow-xl shadow-black/40 border border-slate-700/70 focus-within:border-cyan-400/50 transition">
+              <button id="btn-plus-menu" type="button" title="Attach Photo, Camera, or File" class="shrink-0 w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+
+              <textarea id="chat-input" rows="1" placeholder="Message AXON AI..." class="flex-1 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-500 resize-none py-2.5 px-2 max-h-36 focus:outline-none leading-relaxed"></textarea>
+
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button id="btn-video-call" type="button" title="Start AI Video Call" class="w-10 h-10 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-300 flex items-center justify-center transition">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </button>
+
+                <button id="btn-send" type="button" title="Send Message" class="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-cyan-500/20 transition active:scale-95">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 text-center mt-2">AXON AI can make mistakes. Verify important details.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 2: APP HUB & YOUTUBE ==================== -->
+      <div id="view-apps" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
+        <div class="max-w-5xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 class="text-xl font-bold text-white">A-to-Z App Hub &amp; Voice Launcher</h3>
+              <p class="text-sm text-slate-400">Say <span class="text-cyan-300">"Open WhatsApp"</span>, <span class="text-cyan-300">"Open Instagram"</span>, <span class="text-cyan-300">"Open YouTube"</span>, or <span class="text-cyan-300">"Scroll the video"</span>.</p>
+            </div>
+            <button id="btn-launch-yt-ext" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+              Open YouTube.com
+            </button>
+          </div>
+
+          <div id="app-launcher-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3"></div>
+
+          <h4 class="text-sm font-semibold text-slate-300 pt-2">Video Feed (Voice Scroll Ready)</h4>
+          <div id="yt-feed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+      </div>
+
+      <!-- ==================== VIEW 3: SETTINGS & HISTORY ==================== -->
+      <div id="view-settings" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
+        <div class="max-w-3xl mx-auto space-y-6 pb-10">
+          <div>
+            <h3 class="text-2xl font-bold text-white">Settings</h3>
+            <p class="text-sm text-slate-400 mt-1">Configure Voice Control, Voice Selection, and Chat History preferences.</p>
+          </div>
+
+          <div class="glass-panel rounded-2xl p-5 space-y-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-400/30 text-cyan-400 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-base font-semibold text-white">Voice Control</h4>
+                  <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Control AXON AI hands-free. Open apps like WhatsApp, Instagram, YouTube, or scroll videos.</p>
+                </div>
+              </div>
+              <button id="toggle-voice-control" type="button" role="switch" aria-checked="false" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-slate-700 transition-colors duration-200 focus:outline-none">
+                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 translate-x-0"></span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-slate-800/80">
+              <div>
+                <p class="text-sm font-medium text-slate-200">Spoken AI Responses (Text-to-Speech)</p>
+                <p class="text-xs text-slate-400">Read AI answers aloud when Voice Control is active</p>
+              </div>
+              <button id="toggle-voice-tts" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
+                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
+              </button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/80 space-y-2">
+              <label for="setting-voice-select" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Voice Change (Text-to-Speech Voice)</label>
+              <p class="text-xs text-slate-400">Choose your preferred AI speaking voice (Male, Female, or language accent).</p>
+              <select id="setting-voice-select" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
+                <option value="">Default Browser Voice</option>
+              </select>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/80 space-y-2.5">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Try Voice Commands (Live Mic or Text Simulator)</p>
+              <div class="flex gap-2">
+                <input id="voice-sim-input" type="text" placeholder='Type or say e.g. "Open WhatsApp" or "Open Instagram"' class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+                <button id="btn-run-voice-sim" type="button" class="px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/30 text-cyan-200 text-xs font-semibold transition">Execute</button>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" data-voice-cmd="Open WhatsApp" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Open WhatsApp"</button>
+                <button type="button" data-voice-cmd="Open Instagram" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Open Instagram"</button>
+                <button type="button" data-voice-cmd="Open YouTube" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Open YouTube"</button>
+                <button type="button" data-voice-cmd="Scroll the video" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Scroll the video"</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel rounded-2xl p-5 space-y-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-400/30 text-indigo-400 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-base font-semibold text-white">History</h4>
+                  <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Automatically record and save all your chat conversations and messages.</p>
+                </div>
+              </div>
+              <button id="toggle-history" type="button" role="switch" aria-checked="true" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-indigo-500 transition-colors duration-200 focus:outline-none">
+                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
+              </button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/80 space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Recorded Chat History (<span id="history-count">0</span>)</span>
+                <div class="flex items-center gap-2">
+                  <button id="btn-export-history" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">Export JSON</button>
+                  <button id="btn-clear-history" type="button" class="px-3 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-xs font-medium text-rose-300 border border-rose-500/20 transition">Clear All</button>
+                </div>
+              </div>
+
+              <input id="history-search" type="text" placeholder="Search saved messages..." class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700/80 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400" />
+
+              <div id="settings-history-list" class="max-h-72 overflow-y-auto space-y-2 pr-1"></div>
+            </div>
+          </div>
+
+          <div class="glass-panel rounded-2xl p-5 space-y-4">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h4 class="text-base font-semibold text-white">Appearance &amp; Display</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Customize Dark/Light theme and text size.</p>
+              </div>
+              <div class="flex items-center gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800">
+                <button id="btn-theme-dark" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition">Dark</button>
+                <button id="btn-theme-light" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">Light</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
+              <div>
+                <label for="setting-font-size" class="block text-xs text-slate-400 mb-1">Chat Text Size</label>
+                <select id="setting-font-size" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
+                  <option value="sm">Compact (Small)</option>
+                  <option value="md" selected>Standard (Medium)</option>
+                  <option value="lg">Comfortable (Large)</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div>
+                  <p class="text-xs font-medium text-slate-200">Auto-Scroll Chat</p>
+                  <p class="text-[11px] text-slate-400">Jump to newest message</p>
+                </div>
+                <button id="toggle-autoscroll" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
+                  <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="voice-hud" class="hidden fixed bottom-24 right-4 sm:right-6 z-40 glass-panel rounded-2xl p-3.5 w-72 shadow-2xl shadow-cyan-500/20 border border-cyan-400/40 animate-fade-up">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+        </span>
+        <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Voice Control Active</span>
+      </div>
+      <button id="btn-hud-stop-voice" type="button" class="text-[11px] text-slate-400 hover:text-rose-400 font-medium">Stop</button>
+    </div>
+    <p id="voice-hud-transcript" class="text-xs text-slate-200 italic truncate">"Listening for commands..."</p>
+    <p id="voice-hud-action" class="text-[11px] text-emerald-400 mt-1 truncate">Ready: Try "Open WhatsApp" or "Scroll"</p>
+  </div>
+
+  <div id="camera-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-lg glass-panel rounded-3xl overflow-hidden shadow-2xl animate-fade-up">
+      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-white">AXON Camera</h3>
+        <button id="btn-close-camera" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-4 space-y-4">
+        <div class="relative aspect-video bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center">
+          <video id="camera-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+          <canvas id="camera-canvas" class="hidden"></canvas>
+          <div id="camera-fallback" class="hidden text-center p-6">
+            <svg class="w-10 h-10 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <p class="text-xs text-slate-400">Camera access is unavailable or blocked.</p>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-2">
+          <button id="btn-camera-upload-alt" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 transition">Upload Photo Instead</button>
+          <button id="btn-camera-capture" type="button" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow-lg transition">Capture Photo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VIDEO CALL MODAL ==================== -->
+  <div id="videocall-modal" class="hidden fixed inset-0 z-50 bg-[#050811]/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-7 animate-fade-up">
+    <div class="w-full max-w-5xl flex items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <div>
+          <h3 class="text-base font-bold text-white">AXON AI Live Video Call</h3>
+          <p id="call-timer" class="text-xs text-cyan-300 font-mono">00:00</p>
+        </div>
+      </div>
+      <span id="call-voice-status" class="px-3 py-1 rounded-full text-xs bg-cyan-500/15 text-cyan-300 border border-cyan-400/30">Mic Listening</span>
+    </div>
+
+    <div class="relative w-full max-w-5xl flex-1 my-4 rounded-3xl glass-panel border border-slate-800 flex flex-col items-center justify-between overflow-hidden p-4 sm:p-6">
+      <div class="relative w-full flex-1 min-h-[210px] sm:min-h-[280px] rounded-2xl bg-slate-950 border border-slate-700/80 overflow-hidden shadow-2xl flex items-center justify-center">
+        <video id="call-pip-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <div id="call-pip-off" class="hidden flex-col items-center justify-center text-center p-4">
+          <span class="text-xs sm:text-sm text-slate-400">Your Camera is Off</span>
+        </div>
+
+        <div class="absolute top-3 left-3 flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#070b14]/85 backdrop-blur-md border border-cyan-400/30 shadow-lg">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 via-indigo-500 to-purple-600 p-0.5 animate-float-orb">
+            <div class="w-full h-full rounded-full bg-[#070b14] flex items-center justify-center gap-0.5">
+              <div class="wave-bar" style="height:6px;width:2.5px;animation-delay:0.0s"></div>
+              <div class="wave-bar" style="height:12px;width:2.5px;animation-delay:0.15s"></div>
+              <div class="wave-bar" style="height:8px;width:2.5px;animation-delay:0.3s"></div>
+            </div>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-white leading-none">AXON AI</p>
+            <p id="call-heard-text" class="text-[10px] text-cyan-300 mt-0.5 max-w-[180px] sm:max-w-[260px] truncate">Speak now — voice active</p>
+          </div>
+        </div>
+      </div>
+
+      <p id="call-caption" class="mt-3 text-sm sm:text-base text-slate-200 text-center max-w-2xl font-medium">
+        "Hi! I'm AXON AI. Speak clearly—your voice is being sent directly to me."
+      </p>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <button id="btn-call-mic" type="button" title="Mute / Unmute Mic" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center border border-slate-700 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+      </button>
+      <button id="btn-call-cam" type="button" title="Toggle Camera" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center border border-slate-700 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </button>
+      <button id="btn-end-call" type="button" title="End Video Call" class="px-6 h-12 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-rose-600/30 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="23" y1="1" x2="1" y2="23"/></svg>
+        End Call
+      </button>
+    </div>
+  </div>
+
+  <div id="confirm-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-sm glass-panel rounded-2xl p-5 space-y-4 animate-fade-up">
+      <h4 id="confirm-title" class="text-base font-bold text-white">Clear All History?</h4>
+      <p id="confirm-desc" class="text-xs sm:text-sm text-slate-400">This will permanently delete all saved conversations from this device.</p>
+      <div class="flex justify-end gap-2">
+        <button id="btn-confirm-cancel" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
+        <button id="btn-confirm-ok" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Delete All</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="google-picker-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-md glass-panel rounded-3xl p-6 shadow-2xl animate-fade-up space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <svg class="w-6 h-6" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
+          <div>
+            <h3 class="text-base font-bold text-white">Firebase Google Sign-In</h3>
+            <p class="text-[11px] text-slate-400">Authenticating with your Google Account</p>
+          </div>
+        </div>
+        <button id="btn-close-google-picker" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-4 text-center space-y-3">
+        <p class="text-xs text-slate-300">Firebase Auth SDK is initialized with your project configuration.</p>
+        <button id="btn-firebase-google-auth" type="button" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow transition">Continue with Firebase Google Sign-In</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden fixed top-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl glass-panel border border-cyan-400/30 text-xs sm:text-sm font-medium text-white shadow-2xl animate-fade-up"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'axon_ai_workspace_v1';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA-YnGuAr8BdGt8xbo0Eq06lijQEPoeTC8",
+        authDomain: "axon-ai-9ee3b.firebaseapp.com",
+        databaseURL: "https://axon-ai-9ee3b-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "axon-ai-9ee3b",
+        storageBucket: "axon-ai-9ee3b.firebasestorage.app",
+        messagingSenderId: "304665322304",
+        appId: "1:304665322304:web:b409df4442f3cf018710a5",
+        measurementId: "G-NBP2KRZWSG"
+      };
+
+      let firebaseAuth = null;
+      let firebaseReady = false;
+      let splashFinished = false;
+      let demoSession = false;
+
+      function initializeFirebaseAuth() {
+        const hasConfig = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_') &&
+          firebaseConfig.appId && !firebaseConfig.appId.startsWith('PASTE_') &&
+          firebaseConfig.messagingSenderId && !firebaseConfig.messagingSenderId.startsWith('PASTE_');
+        if (!hasConfig || typeof firebase === 'undefined' || !firebase.initializeApp) return false;
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          firebaseAuth = firebase.auth();
+          firebaseReady = true;
+          firebaseAuth.getRedirectResult().catch((err) => {
+            if (err && err.code && err.code !== 'auth/popup-closed-by-user') {
+              showAuthError(firebaseErrorMessage(err));
+            }
+          });
+          firebaseAuth.onAuthStateChanged((user) => {
+            if (user) {
+              demoSession = false;
+              completeLogin(user.displayName || user.email?.split('@')[0] || 'AXON User', user.email || '');
+            } else if (!demoSession) {
+              state.user = null;
+              if (splashFinished) {
+                $('app-screen').classList.add('hidden');
+                $('login-screen').classList.remove('hidden');
               }
             }
-            const canvas = document.createElement("canvas");
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL("image/jpeg", 0.8));
-          };
-          img.onerror = reject;
-          img.src = reader.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    photoBtn.addEventListener("click", () => photoInput.click());
-
-    photoInput.addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      try {
-        pendingImageData = await compressImageToDataUrl(file);
-        helperBar.textContent = `Photo ready: ${file.name} — ab Send dabayein ya saath mein message likhein.`;
-      } catch {
-        alert("Photo load nahi ho paayi.");
-      }
-    });
-
-    formEl.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const text = inputEl.value.trim();
-      const imgToSend = pendingImageData;
-
-      if (!text && !imgToSend) return;
-
-      inputEl.value = "";
-      pendingImageData = null;
-      photoInput.value = "";
-      helperBar.textContent = "AXON AI can make mistakes. Verify important details.";
-      sendBtn.disabled = true;
-
-      appendMessage("user", text || "Is photo ka analysis karo", imgToSend);
-      const loadingMsg = appendMessage("bot", "Soch raha hoon...");
-
-      try {
-        if (imgToSend) {
-          const res = await fetch("/api/vision", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              imageData: imgToSend,
-              prompt: text || "Analyze this image clearly and helpfully."
-            })
           });
-          const data = await res.json();
-          loadingMsg.textContent = data.reply || data.error || "Photo analysis failed.";
+          return true;
+        } catch (error) {
+          console.error('Firebase initialization failed:', error);
+          return false;
+        }
+      }
+
+      function showAuthError(message) {
+        const el = $('auth-error');
+        el.textContent = message;
+        el.classList.remove('hidden');
+      }
+
+      function firebaseErrorMessage(error) {
+        const code = error && error.code ? error.code : '';
+        const messages = {
+          'auth/invalid-email': 'Email address sahi nahi hai.',
+          'auth/user-not-found': 'Is email se account nahi mila. Pehle account banayein.',
+          'auth/wrong-password': 'Password galat hai.',
+          'auth/invalid-credential': 'Email ya password galat hai.',
+          'auth/email-already-in-use': 'Is email se account pehle se bana hua hai. Sign In karein.',
+          'auth/weak-password': 'Password kam se kam 6 characters ka hona chahiye.',
+          'auth/popup-closed-by-user': 'Google sign-in window band ho gayi. Dobara try karein.',
+          'auth/popup-blocked': 'Browser ne popup block kar diya. Page ko browser mein kholkar dobara try karein.',
+          'auth/unauthorized-domain': 'Firebase Console -> Auth -> Authorized domains mein is website ka domain add karein.',
+          'auth/network-request-failed': 'Internet connection check karke dobara try karein.'
+        };
+        return messages[code] || (error?.message || 'Sign-in nahi ho paya. Firebase settings check karein.');
+      }
+
+      const APP_DIRECTORY = [
+        { name: 'Airtel Thanks', aliases: ['airtel', 'एयरटेल'], url: 'https://www.airtel.in', color: 'from-red-600 to-rose-700', icon: '📶' },
+        { name: 'Amazon India', aliases: ['amazon', 'अमेजन'], url: 'https://www.amazon.in', color: 'from-amber-500 to-orange-600', icon: '📦' },
+        { name: 'BharatPe', aliases: ['bharatpe', 'भारतपे'], url: 'https://bharatpe.com', color: 'from-blue-600 to-cyan-600', icon: '💳' },
+        { name: 'BookMyShow', aliases: ['bookmyshow', 'tickets', 'movie'], url: 'https://in.bookmyshow.com', color: 'from-rose-600 to-pink-600', icon: '🎟️' },
+        { name: 'Canva', aliases: ['canva', 'design'], url: 'https://www.canva.com', color: 'from-cyan-500 to-indigo-600', icon: '🎨' },
+        { name: 'DigiLocker', aliases: ['digilocker', 'aadhaar', 'डिजिलॉकर'], url: 'https://www.digilocker.gov.in', color: 'from-blue-600 to-indigo-700', icon: '🪪' },
+        { name: 'Discord', aliases: ['discord', 'डिस्कॉर्ड'], url: 'https://discord.com/app', color: 'from-indigo-500 to-purple-600', icon: '🎮' },
+        { name: 'Duolingo', aliases: ['duolingo', 'language'], url: 'https://www.duolingo.com', color: 'from-emerald-500 to-green-600', icon: '🦉' },
+        { name: 'Facebook', aliases: ['facebook', 'fb', 'फेसबुक'], url: 'https://www.facebook.com', color: 'from-blue-600 to-indigo-600', icon: '📘' },
+        { name: 'Flipkart', aliases: ['flipkart', 'फ्लिपकार्ट'], url: 'https://www.flipkart.com', color: 'from-blue-500 to-amber-500', icon: '🛍️' },
+        { name: 'GitHub', aliases: ['github', 'गिटहब'], url: 'https://github.com', color: 'from-slate-600 to-slate-800', icon: '💻' },
+        { name: 'Gmail', aliases: ['gmail', 'email', 'mail', 'जीमेल'], url: 'https://mail.google.com', color: 'from-red-500 to-amber-500', icon: '✉️' },
+        { name: 'Google', aliases: ['google', 'गूगल'], url: 'https://www.google.com', color: 'from-blue-500 to-cyan-500', icon: '🔍' },
+        { name: 'Google Maps', aliases: ['maps', 'map', 'मैप्स'], url: 'https://maps.google.com', color: 'from-emerald-500 to-teal-600', icon: '📍' },
+        { name: 'Google Pay', aliases: ['gpay', 'google pay', 'upi'], url: 'https://pay.google.com', color: 'from-blue-600 to-emerald-500', icon: '💸' },
+        { name: 'Hotstar / JioCinema', aliases: ['hotstar', 'jiocinema', 'jio', 'cinema'], url: 'https://www.hotstar.com', color: 'from-indigo-600 to-cyan-500', icon: '📺' },
+        { name: 'Instagram', aliases: ['instagram', 'insta', 'इंस्टाग्राम'], url: 'https://www.instagram.com', color: 'from-pink-500 via-rose-500 to-amber-500', icon: '📷' },
+        { name: 'IRCTC', aliases: ['irctc', 'train', 'railway', 'ट्रेन'], url: 'https://www.irctc.co.in', color: 'from-blue-700 to-sky-600', icon: '🚆' },
+        { name: 'JioSaavn', aliases: ['jiosaavn', 'saavn', 'gaana'], url: 'https://www.jiosaavn.com', color: 'from-teal-500 to-emerald-600', icon: '🎶' },
+        { name: 'LinkedIn', aliases: ['linkedin', 'लिंक्डइन', 'jobs'], url: 'https://www.linkedin.com', color: 'from-sky-600 to-blue-700', icon: '💼' },
+        { name: 'Meesho', aliases: ['meesho', 'मीशो'], url: 'https://www.meesho.com', color: 'from-pink-600 to-rose-600', icon: '🧺' },
+        { name: 'Netflix', aliases: ['netflix', 'नेटफ्लिक्स'], url: 'https://www.netflix.com', color: 'from-red-600 to-rose-700', icon: '🎬' },
+        { name: 'Ola / Uber', aliases: ['ola', 'uber', 'cab', 'auto'], url: 'https://m.uber.com', color: 'from-slate-700 to-emerald-700', icon: '🚕' },
+        { name: 'Paytm', aliases: ['paytm', 'पेटीएम'], url: 'https://paytm.com', color: 'from-sky-500 to-blue-700', icon: '🏦' },
+        { name: 'PhonePe', aliases: ['phonepe', 'फोनपे'], url: 'https://www.phonepe.com', color: 'from-purple-600 to-indigo-700', icon: '💜' },
+        { name: 'Pinterest', aliases: ['pinterest'], url: 'https://www.pinterest.com', color: 'from-rose-600 to-red-700', icon: '📌' },
+        { name: 'Quora', aliases: ['quora'], url: 'https://www.quora.com', color: 'from-red-600 to-rose-700', icon: '❓' },
+        { name: 'Reddit', aliases: ['reddit', 'रेडिट'], url: 'https://www.reddit.com', color: 'from-orange-500 to-red-600', icon: '🤖' },
+        { name: 'Snapchat', aliases: ['snapchat', 'snap', 'स्नैपचैट'], url: 'https://www.snapchat.com', color: 'from-amber-400 to-yellow-500', icon: '👻' },
+        { name: 'Spotify', aliases: ['spotify', 'स्पॉटीफाई', 'music'], url: 'https://open.spotify.com', color: 'from-green-500 to-emerald-600', icon: '🎵' },
+        { name: 'Swiggy', aliases: ['swiggy', 'food', 'स्विगी'], url: 'https://www.swiggy.com', color: 'from-orange-500 to-amber-600', icon: '🍔' },
+        { name: 'Telegram', aliases: ['telegram', 'टेलीग्राम'], url: 'https://web.telegram.org', color: 'from-sky-500 to-blue-600', icon: '✈️' },
+        { name: 'Truecaller', aliases: ['truecaller', 'caller'], url: 'https://www.truecaller.com', color: 'from-blue-600 to-cyan-600', icon: '📞' },
+        { name: 'UPI / BHIM', aliases: ['bhim', 'upi'], url: 'https://www.bhimupi.org.in', color: 'from-orange-600 to-emerald-600', icon: '🇮🇳' },
+        { name: 'Voot / Jio', aliases: ['jio', 'myjio'], url: 'https://www.jio.com', color: 'from-blue-600 to-rose-600', icon: '📡' },
+        { name: 'WhatsApp', aliases: ['whatsapp', 'व्हाट्सएप', 'whats app'], url: 'https://web.whatsapp.com', color: 'from-emerald-500 to-green-600', icon: '💬' },
+        { name: 'X / Twitter', aliases: ['twitter', 'x ', 'x.com', 'ट्विटर'], url: 'https://x.com', color: 'from-slate-700 to-slate-900', icon: '𝕏' },
+        { name: 'YouTube', aliases: ['youtube', 'यूट्यूब'], url: 'https://www.youtube.com', color: 'from-rose-500 to-red-600', icon: '▶' },
+        { name: 'Zepto', aliases: ['zepto', 'grocery'], url: 'https://www.zeptonow.com', color: 'from-purple-600 to-fuchsia-600', icon: '⚡' },
+        { name: 'Zomato', aliases: ['zomato', 'ज़ोमैटो'], url: 'https://www.zomato.com', color: 'from-red-600 to-rose-700', icon: '🍕' }
+      ];
+
+      const YT_SAMPLE_VIDEOS = [
+        { id: 'v1', title: 'Building Autonomous AI Agents in 2026', channel: 'AXON Labs', views: '142K views', duration: '14:22', color: 'from-cyan-600/30 to-indigo-700/40' },
+        { id: 'v2', title: 'Voice-Controlled Web Apps with Web Speech API', channel: 'DevPulse', views: '89K views', duration: '11:05', color: 'from-rose-600/30 to-orange-600/30' },
+        { id: 'v3', title: 'Node.js + Express Streaming Chat Architecture', channel: 'CodeCraft', views: '215K views', duration: '18:40', color: 'from-emerald-600/30 to-teal-700/30' },
+        { id: 'v4', title: 'Designing Glassmorphic Dark UIs Like a Pro', channel: 'PixelForge', views: '64K views', duration: '09:15', color: 'from-purple-600/30 to-indigo-700/30' },
+        { id: 'v5', title: 'Real-Time WebRTC Video Calls Explained', channel: 'NetStream', views: '112K views', duration: '16:08', color: 'from-amber-600/30 to-rose-700/30' },
+        { id: 'v6', title: 'Next-Gen Neural Interfaces & Multimodal AI', channel: 'FutureTech', views: '310K views', duration: '22:30', color: 'from-blue-600/30 to-cyan-700/30' }
+      ];
+
+      let state = {
+        user: null,
+        authMode: 'signin',
+        activeView: 'chat',
+        deepThink: false,
+        settings: {
+          voiceControl: false,
+          voiceTTS: true,
+          selectedVoice: '',
+          saveHistory: true,
+          theme: 'dark',
+          fontSize: 'md',
+          autoScroll: true
+        },
+        chats: [],
+        activeChatId: null,
+        pendingAttachment: null,
+        isGenerating: false
+      };
+
+      let recognition = null;
+      let callRecognition = null;
+      let generationAbort = null;
+      let generationTimer = null;
+      let cameraStream = null;
+      let callStream = null;
+      let callInterval = null;
+      let callSeconds = 0;
+      let callMicMuted = false;
+      let callCamOff = false;
+      let availableVoices = [];
+
+      function saveState() {
+        try {
+          const payload = {
+            settings: state.settings,
+            chats: state.settings.saveHistory ? state.chats : [],
+            activeChatId: state.activeChatId
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (e) {}
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          if (parsed.settings) state.settings = { ...state.settings, ...parsed.settings };
+          if (Array.isArray(parsed.chats)) state.chats = parsed.chats;
+          if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
+        } catch (e) {}
+      }
+
+      const $ = (id) => document.getElementById(id);
+
+      function showToast(msg, duration = 2800) {
+        const toast = $('toast');
+        toast.textContent = msg;
+        toast.classList.remove('hidden');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.add('hidden'), duration);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function formatMessageHtml(text) {
+        let safe = escapeHtml(text);
+        safe = safe.replace(/```([\s\S]*?)```/g, (_, code) => {
+          return `<pre class="mt-2 mb-2 p-3 rounded-xl bg-slate-950/90 border border-slate-800 text-xs text-cyan-200 overflow-x-auto font-mono"><code>${code.trim()}</code></pre>`;
+        });
+        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>');
+        safe = safe.replace(/\n/g, '<br/>');
+        return safe;
+      }
+
+      function formatTime(iso) {
+        try {
+          return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        } catch (e) { return ''; }
+      }
+
+      function getActiveChat() {
+        return state.chats.find(c => c.id === state.activeChatId) || null;
+      }
+
+      function createNewChat(switchToChat = true) {
+        const id = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        const chat = {
+          id,
+          title: 'New Conversation',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          messages: []
+        };
+        if (state.settings.saveHistory) {
+          state.chats.unshift(chat);
         } else {
+          state.chats = [chat];
+        }
+        state.activeChatId = id;
+        saveState();
+        if (switchToChat) switchView('chat');
+        renderAll();
+        return chat;
+      }
+
+      function populateVoicesDropdown() {
+        const select = $('setting-voice-select');
+        if (!select) return;
+        if (!('speechSynthesis' in window)) return;
+
+        availableVoices = window.speechSynthesis.getVoices() || [];
+        select.innerHTML = '<option value="">Default Browser Voice</option>';
+
+        availableVoices.forEach((v) => {
+          const opt = document.createElement('option');
+          opt.value = v.name;
+          opt.textContent = `${v.name} (${v.lang})`;
+          if (v.name === state.settings.selectedVoice) {
+            opt.selected = true;
+          }
+          select.appendChild(opt);
+        });
+      }
+
+      function runSplash() {
+        const bar = $('splash-progress');
+        const status = $('splash-status');
+        const steps = [
+          { pct: 30, text: 'Loading AXON Neural UI...' },
+          { pct: 68, text: 'Syncing Voice & Firebase Auth...' },
+          { pct: 100, text: 'Workspace ready.' }
+        ];
+        steps.forEach((s, idx) => {
+          setTimeout(() => {
+            if (bar) bar.style.width = s.pct + '%';
+            if (status) status.textContent = s.text;
+          }, 280 * (idx + 1));
+        });
+        setTimeout(() => {
+          const splash = $('splash-screen');
+          if (splash) {
+            splash.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+              splash.classList.add('hidden');
+              splashFinished = true;
+              if (state.user) {
+                enterApp();
+              } else {
+                $('login-screen').classList.remove('hidden');
+              }
+            }, 420);
+          }
+        }, 1250);
+      }
+
+      function setAuthMode(mode) {
+        state.authMode = mode;
+        const isSignup = mode === 'signup';
+        $('name-field-wrap').classList.toggle('hidden', !isSignup);
+        $('tab-signin').className = isSignup
+          ? 'py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition'
+          : 'py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition';
+        $('tab-signup').className = isSignup
+          ? 'py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition'
+          : 'py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition';
+        $('btn-auth-submit').textContent = isSignup ? 'Create AXON Account' : 'Sign In to AXON AI';
+        $('auth-error').classList.add('hidden');
+      }
+
+      function completeLogin(name, email) {
+        const cleanName = (name || '').trim() || (email || '').split('@')[0] || 'User';
+        const initials = cleanName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
+        state.user = { name: cleanName, email: email || '', initials };
+        if (!state.chats.length) createNewChat(false);
+        if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
+        saveState();
+        $('login-screen').classList.add('hidden');
+        $('google-picker-modal').classList.add('hidden');
+        enterApp();
+        showToast(`Welcome back, ${cleanName}!`);
+      }
+
+      function enterApp() {
+        $('app-screen').classList.remove('hidden');
+        if (state.user) {
+          $('user-display-name').textContent = state.user.name;
+          $('user-display-email').textContent = state.user.email;
+          $('user-avatar').textContent = state.user.initials;
+        }
+        if (!state.chats.length) createNewChat(false);
+        if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
+        renderAll();
+        populateVoicesDropdown();
+      }
+
+      function switchView(view) {
+        state.activeView = view;
+        $('view-chat').classList.toggle('hidden', view !== 'chat');
+        $('view-apps').classList.toggle('hidden', view !== 'apps');
+        $('view-settings').classList.toggle('hidden', view !== 'settings');
+
+        const titles = {
+          chat: getActiveChat()?.title || 'AXON AI Chat',
+          apps: 'App Hub & YouTube',
+          settings: 'Settings & History'
+        };
+        $('header-title').textContent = titles[view];
+
+        const activeCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition';
+        const idleCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition';
+        $('nav-chat').className = view === 'chat' ? activeCls : idleCls;
+        $('nav-apps').className = view === 'apps' ? activeCls : idleCls;
+        $('nav-settings').className = view === 'settings' ? activeCls : idleCls;
+
+        closeSidebarMobile();
+        if (view === 'settings') {
+          renderSettingsHistory();
+          populateVoicesDropdown();
+        }
+        if (view === 'apps') renderAppHub();
+      }
+
+      function openSidebarMobile() {
+        $('sidebar').classList.remove('-translate-x-full');
+        $('sidebar-backdrop').classList.remove('hidden');
+      }
+
+      function closeSidebarMobile() {
+        $('sidebar').classList.add('-translate-x-full');
+        $('sidebar-backdrop').classList.add('hidden');
+      }
+
+      function renderAll() {
+        renderSidebarChats();
+        renderMessages();
+        renderToggles();
+        renderSettingsHistory();
+      }
+
+      function renderSidebarChats() {
+        const list = $('sidebar-chat-list');
+        $('sidebar-history-badge').textContent = state.settings.saveHistory ? 'Recording' : 'Paused';
+        $('sidebar-history-badge').className = state.settings.saveHistory
+          ? 'text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium'
+          : 'text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-400 font-medium';
+
+        if (!state.chats.length) {
+          list.innerHTML = `<p class="text-xs text-slate-500 px-3 py-4 text-center">No chats yet</p>`;
+          return;
+        }
+        list.innerHTML = state.chats.map(c => {
+          const active = c.id === state.activeChatId;
+          return `
+            <div class="group flex items-center justify-between gap-1 px-2.5 py-2 rounded-xl cursor-pointer transition ${active ? 'bg-slate-800/90 text-white border border-slate-700/70' : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'}" data-chat-id="${c.id}">
+              <div class="flex items-center gap-2 min-w-0 flex-1 select-chat-btn" data-chat-id="${c.id}">
+                <svg class="w-3.5 h-3.5 shrink-0 ${active ? 'text-cyan-400' : 'text-slate-500'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="text-xs font-medium truncate">${escapeHtml(c.title)}</span>
+              </div>
+              <button type="button" class="delete-chat-btn opacity-0 group-hover:opacity-100 p-1 rounded text-slate-500 hover:text-rose-400 transition" data-chat-id="${c.id}" title="Delete chat">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderMessages() {
+        const container = $('chat-messages');
+        const chat = getActiveChat();
+        if (!chat || !chat.messages.length) {
+          container.innerHTML = `
+            <div class="h-full flex flex-col items-center justify-center text-center max-w-xl mx-auto py-8 animate-fade-up">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-xl shadow-cyan-500/25 flex items-center justify-center mb-4">
+                <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-bold text-white">How can AXON AI help today?</h3>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Attach photos, open the camera, start a video call, or enable Voice Control in Settings.</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-cyan-400/40 text-left transition" data-prompt="Open WhatsApp">
+                  <span class="block text-xs font-semibold text-cyan-300">App Action</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">Try saying or clicking: "Open WhatsApp"</span>
+                </button>
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-indigo-400/40 text-left transition" data-prompt="Explain how AXON Voice Control works">
+                  <span class="block text-xs font-semibold text-indigo-300">Voice Assistant</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">How does AXON Voice Control work?</span>
+                </button>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = chat.messages.map(m => {
+          const isUser = m.role === 'user';
+          let attachHtml = '';
+          if (m.attachment) {
+            if (m.attachment.type === 'image') {
+              attachHtml = `<img src="${m.attachment.dataUrl}" alt="${escapeHtml(m.attachment.name)}" class="mt-2 max-h-56 rounded-xl border border-slate-700/80 object-cover" />`;
+            } else {
+              attachHtml = `
+                <div class="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
+                  <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>${escapeHtml(m.attachment.name)}</span>
+                </div>
+              `;
+            }
+          }
+
+          if (isUser) {
+            return `
+              <div class="max-w-4xl mx-auto flex justify-end animate-fade-up">
+                <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-3 bg-gradient-to-br from-cyan-600/30 to-indigo-600/30 border border-cyan-400/25 text-sm text-white shadow-md">
+                  <div class="leading-relaxed">${formatMessageHtml(m.text)}</div>
+                  ${attachHtml}
+                  <span class="block text-[10px] text-cyan-200/60 mt-1.5 text-right">${formatTime(m.timestamp)}</span>
+                </div>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="max-w-4xl mx-auto flex items-start gap-3 animate-fade-up">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-sm shadow-cyan-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
+                </div>
+                <div class="max-w-[85%] sm:max-w-[78%] rounded-2xl rounded-tl-sm px-4 py-3 glass-panel text-sm text-slate-200 shadow-md">
+                  <div class="leading-relaxed">${formatMessageHtml(m.text)}</div>
+                  <span class="block text-[10px] text-slate-500 mt-1.5">${formatTime(m.timestamp)}</span>
+                </div>
+              </div>
+            `;
+          }
+        }).join('');
+
+        if (state.isGenerating) {
+          container.innerHTML += `
+            <div class="max-w-4xl mx-auto flex items-start gap-3">
+              <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-cyan-400 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
+              </div>
+              <div class="px-4 py-3 rounded-2xl glass-panel flex items-center gap-1.5">
+                <span class="typing-dot" style="animation-delay:0s"></span>
+                <span class="typing-dot" style="animation-delay:0.2s"></span>
+                <span class="typing-dot" style="animation-delay:0.4s"></span>
+              </div>
+            </div>
+          `;
+        }
+        if (state.settings.autoScroll) {
+          container.scrollTop = container.scrollHeight;
+        }
+      }
+
+      function renderToggles() {
+        setSwitchUI($('toggle-voice-control'), state.settings.voiceControl, 'bg-cyan-500');
+        setSwitchUI($('toggle-voice-tts'), state.settings.voiceTTS, 'bg-cyan-500', true);
+        setSwitchUI($('toggle-history'), state.settings.saveHistory, 'bg-indigo-500');
+
+        $('header-voice-label').textContent = state.settings.voiceControl ? 'Voice On' : 'Voice Off';
+        $('btn-header-voice').className = state.settings.voiceControl
+          ? 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition'
+          : 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition';
+        $('voice-hud').classList.toggle('hidden', !state.settings.voiceControl);
+        setSwitchUI($('toggle-autoscroll'), state.settings.autoScroll, 'bg-cyan-500', true);
+        $('setting-font-size').value = state.settings.fontSize;
+        if ($('setting-voice-select')) {
+          $('setting-voice-select').value = state.settings.selectedVoice;
+        }
+        applyAppearance();
+      }
+
+      function setSwitchUI(btn, on, activeBg, small = false) {
+        btn.setAttribute('aria-checked', String(on));
+        const knob = btn.querySelector('span');
+        if (small) {
+          btn.className = `relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent ${on ? activeBg : 'bg-slate-700'} transition-colors duration-200 focus:outline-none`;
+          knob.className = `pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 ${on ? 'translate-x-5' : 'translate-x-0'}`;
+        } else {
+          btn.className = `relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent ${on ? activeBg : 'bg-slate-700'} transition-colors duration-200 focus:outline-none`;
+          knob.className = `pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 ${on ? 'translate-x-5' : 'translate-x-0'}`;
+        }
+      }
+
+      function renderSettingsHistory() {
+        const list = $('settings-history-list');
+        const q = ($('history-search').value || '').trim().toLowerCase();
+        const nonEmpty = state.chats.filter(c => c.messages.length > 0);
+        const filtered = q
+          ? nonEmpty.filter(c => c.title.toLowerCase().includes(q) || c.messages.some(m => m.text.toLowerCase().includes(q)))
+          : nonEmpty;
+
+        $('history-count').textContent = String(nonEmpty.length);
+
+        if (!filtered.length) {
+          list.innerHTML = `<div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">${nonEmpty.length ? 'No matching chats found.' : 'No recorded chats yet.'}</div>`;
+          return;
+        }
+
+        list.innerHTML = filtered.map(c => {
+          const lastMsg = c.messages[c.messages.length - 1];
+          return `
+            <div class="p-3 rounded-xl bg-slate-900/75 border border-slate-800 hover:border-indigo-400/40 flex items-center justify-between gap-3 transition">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <p class="text-xs font-semibold text-white truncate">${escapeHtml(c.title)}</p>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${c.messages.length} msgs</span>
+                </div>
+                <p class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(lastMsg.text)}</p>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" class="open-history-chat px-2.5 py-1.5 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/30 text-indigo-300 text-[11px] font-medium transition" data-chat-id="${c.id}">Open</button>
+                <button type="button" class="delete-chat-btn px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 text-[11px] transition" data-chat-id="${c.id}">Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function applyAppearance() {
+        const isLight = state.settings.theme === 'light';
+        document.documentElement.classList.toggle('light-theme', isLight);
+        $('btn-theme-dark').className = !isLight
+          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition'
+          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-900 transition';
+        $('btn-theme-light').className = isLight
+          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-white transition'
+          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition';
+        const msgBox = $('chat-messages');
+        msgBox.classList.remove('text-xs', 'text-sm', 'text-base');
+        msgBox.classList.add(state.settings.fontSize === 'sm' ? 'text-xs' : state.settings.fontSize === 'lg' ? 'text-base' : 'text-sm');
+      }
+
+      function renderAppHub() {
+        const launcher = $('app-launcher-grid');
+        launcher.innerHTML = APP_DIRECTORY.map(app => `
+          <button type="button" class="launch-app-btn glass-panel rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:border-cyan-400/40 transition group" data-url="${app.url}" data-name="${app.name}">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${app.color} flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition">${app.icon}</div>
+            <span class="text-xs font-semibold text-white text-center">${app.name}</span>
+          </button>
+        `).join('');
+
+        const grid = $('yt-feed-grid');
+        grid.innerHTML = YT_SAMPLE_VIDEOS.map(v => `
+          <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 hover:border-rose-500/40 transition group">
+            <div class="aspect-video bg-gradient-to-br ${v.color} relative flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white group-hover:scale-110 transition">
+                <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/75 text-[10px] font-mono text-white">${v.duration}</span>
+            </div>
+            <div class="p-3.5">
+              <h4 class="text-sm font-semibold text-white line-clamp-2">${v.title}</h4>
+              <p class="text-xs text-slate-400 mt-1">${v.channel} • ${v.views}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function updateSendButtonState() {
+        const btn = $('btn-send');
+        if (!btn) return;
+        if (state.isGenerating) {
+          btn.className = 'h-10 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 border border-rose-400/60 text-white flex items-center justify-center gap-1.5 text-xs font-bold tracking-wide btn-stop-blink transition';
+          btn.title = 'Stop Generating';
+          btn.innerHTML = `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg><span>Stop</span>`;
+        } else {
+          btn.className = 'w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-cyan-500/20 transition active:scale-95';
+          btn.title = 'Send Message';
+          btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
+        }
+      }
+
+      function stopGeneration() {
+        if (!state.isGenerating) return;
+        if (generationAbort) {
+          try { generationAbort.abort(); } catch (e) {}
+          generationAbort = null;
+        }
+        if (generationTimer) {
+          clearTimeout(generationTimer);
+          generationTimer = null;
+        }
+        state.isGenerating = false;
+        const chat = getActiveChat();
+        if (chat) {
+          chat.messages.push({
+            id: 'm_' + Date.now(),
+            role: 'assistant',
+            text: '_Response stopped by user._',
+            timestamp: new Date().toISOString()
+          });
+          chat.updatedAt = new Date().toISOString();
+        }
+        updateSendButtonState();
+        saveState();
+        renderAll();
+        showToast('Generation stopped.');
+      }
+
+      function captureLiveCallFrameDataUrl() {
+        try {
+          const video = $('call-pip-video');
+          if (!callStream || callCamOff || !video || video.hidden || !video.videoWidth) return null;
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.min(video.videoWidth, 640);
+          canvas.height = Math.min(video.videoHeight, 480);
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          return canvas.toDataURL('image/jpeg', 0.75);
+        } catch (e) {
+          return null;
+        }
+      }
+
+      async function fetchAIReply(promptText, signal = null, attachment = null) {
+        try {
+          if (attachment && attachment.type === "image") {
+            const res = await fetch("/api/vision", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                imageData: attachment.dataUrl,
+                prompt: promptText || "Analyze this photo clearly and give helpful editing/VFX tips."
+              }),
+              signal
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+              throw new Error(data.error || `HTTP ${res.status}`);
+            }
+            return data.reply || "Photo ka analysis nahi ho paya.";
+          }
+
+          let combinedPrompt = promptText || "";
+          if (attachment && attachment.type === "file" && attachment.textContent) {
+            combinedPrompt = `${promptText ? promptText + "\n\n" : "Analyze this file:\n"}[File: ${attachment.name}]\n\`\`\`\n${attachment.textContent.slice(0, 7000)}\n\`\`\``;
+          }
+
           const res = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text })
+            body: JSON.stringify({
+              message: combinedPrompt,
+              deepThink: state.deepThink
+            }),
+            signal
           });
-          const data = await res.json();
-          loadingMsg.textContent = data.reply || "Kuch response nahi aaya.";
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(data.reply || data.error || `HTTP ${res.status}`);
+          }
+          return data.reply || "Kuch response nahi aaya yaar.";
+        } catch (err) {
+          if (err && err.name === "AbortError") throw err;
+          console.error("AXON AI Error:", err);
+          return attachment && attachment.type === "image"
+            ? `Photo analysis failed: ${err.message}`
+            : `AI request issue: ${err.message}`;
         }
-      } catch {
-        loadingMsg.textContent = "Network ya server error aaya. Dobara try karein.";
-      } finally {
-        sendBtn.disabled = false;
-        inputEl.focus();
       }
-    });
+
+      async function sendMessage(overrideText = null) {
+        if (state.isGenerating) {
+          stopGeneration();
+          return;
+        }
+        const input = $('chat-input');
+        const text = (overrideText !== null ? overrideText : input.value).trim();
+        const attachment = state.pendingAttachment;
+        if (!text && !attachment) return;
+
+        let chat = getActiveChat();
+        if (!chat) chat = createNewChat(false);
+
+        const userMsg = {
+          id: 'm_' + Date.now(),
+          role: 'user',
+          text: text || (attachment ? `Sent attachment: ${attachment.name}` : ''),
+          timestamp: new Date().toISOString(),
+          attachment
+        };
+        chat.messages.push(userMsg);
+
+        if (chat.messages.length === 1 && text) {
+          chat.title = text.length > 34 ? text.slice(0, 34) + '…' : text;
+        }
+        chat.updatedAt = new Date().toISOString();
+
+        if (overrideText === null) {
+          input.value = '';
+          input.style.height = 'auto';
+        }
+        clearAttachment();
+        state.isGenerating = true;
+        generationAbort = new AbortController();
+        updateSendButtonState();
+        saveState();
+        renderAll();
+
+        try {
+          const replyText = await fetchAIReply(
+            userMsg.text,
+            generationAbort.signal,
+            userMsg.attachment
+          );
+          state.isGenerating = false;
+          generationAbort = null;
+          updateSendButtonState();
+
+          chat.messages.push({
+            id: 'm_' + (Date.now() + 1),
+            role: 'assistant',
+            text: replyText,
+            timestamp: new Date().toISOString()
+          });
+          chat.updatedAt = new Date().toISOString();
+          saveState();
+          renderAll();
+
+          if (state.settings.voiceControl && state.settings.voiceTTS) {
+            speakText(replyText);
+          }
+          return replyText;
+        } catch (err) {
+          state.isGenerating = false;
+          generationAbort = null;
+          updateSendButtonState();
+          renderAll();
+          return null;
+        }
+      }
+
+      function setAttachment(att) {
+        state.pendingAttachment = att;
+        const wrap = $('attachment-preview');
+        wrap.classList.remove('hidden');
+        $('attachment-name').textContent = att.name;
+        $('attachment-size').textContent = att.size || 'Ready to send';
+        if (att.type === 'image') {
+          $('attachment-thumb').src = att.dataUrl;
+          $('attachment-thumb').classList.remove('hidden');
+          $('attachment-file-icon').classList.add('hidden');
+        } else {
+          $('attachment-thumb').classList.add('hidden');
+          $('attachment-file-icon').classList.remove('hidden');
+        }
+      }
+
+      function clearAttachment() {
+        state.pendingAttachment = null;
+        $('attachment-preview').classList.add('hidden');
+        $('input-photo').value = '';
+        $('input-file').value = '';
+      }
+
+      function handleFileSelected(file, isImage) {
+        if (!file) return;
+        const sizeStr = file.size < 1024 ? `${file.size} B` : file.size < 1048576 ? `${(file.size / 1024).toFixed(1)} KB` : `${(file.size / 1048576).toFixed(1)} MB`;
+        if (isImage) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              const maxSide = 1024;
+              let { width, height } = img;
+              if (width > maxSide || height > maxSide) {
+                if (width > height) {
+                  height = Math.round((height * maxSide) / width);
+                  width = maxSide;
+                } else {
+                  width = Math.round((width * maxSide) / height);
+                  height = maxSide;
+                }
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+              setAttachment({
+                type: 'image',
+                name: file.name,
+                size: sizeStr,
+                dataUrl: canvas.toDataURL('image/jpeg', 0.8)
+              });
+            };
+            img.onerror = () => setAttachment({ type: 'image', name: file.name, size: sizeStr, dataUrl: e.target.result });
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const rawText = typeof e.target.result === 'string' ? e.target.result : '';
+            setAttachment({
+              type: 'file',
+              name: file.name,
+              size: sizeStr,
+              dataUrl: '',
+              textContent: rawText
+            });
+          };
+          reader.readAsText(file);
+        }
+      }
+
+      async function openCameraModal() {
+        $('plus-menu').classList.add('hidden');
+        $('camera-modal').classList.remove('hidden');
+        $('camera-fallback').classList.add('hidden');
+        $('camera-video').classList.remove('hidden');
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('No camera API');
+          cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+          $('camera-video').srcObject = cameraStream;
+        } catch (e) {
+          $('camera-video').classList.add('hidden');
+          $('camera-fallback').classList.remove('hidden');
+        }
+      }
+
+      function closeCameraModal() {
+        $('camera-modal').classList.add('hidden');
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(t => t.stop());
+          cameraStream = null;
+        }
+      }
+
+      function captureCameraPhoto() {
+        const video = $('camera-video');
+        if (!cameraStream || video.classList.contains('hidden')) {
+          showToast('Camera unavailable.');
+          return;
+        }
+        const canvas = $('camera-canvas');
+        canvas.width = Math.min(video.videoWidth || 640, 1024);
+        canvas.height = Math.min(video.videoHeight || 480, 1024);
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        setAttachment({ type: 'image', name: `Camera_${Date.now()}.jpg`, size: 'Captured photo', dataUrl });
+        closeCameraModal();
+        showToast('Photo captured and attached!');
+      }
+
+      function startCallVoiceCapture() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+          $('call-voice-status').textContent = 'Voice API Unsupported';
+          return;
+        }
+        stopCallVoiceCapture();
+        try {
+          callRecognition = new SpeechRec();
+          callRecognition.continuous = true;
+          callRecognition.interimResults = true;
+          callRecognition.lang = navigator.language || 'hi-IN';
+
+          callRecognition.onresult = async (event) => {
+            if (callMicMuted) return;
+            const lastIdx = event.results.length - 1;
+            const res = event.results[lastIdx];
+            const transcript = res[0].transcript.trim();
+            if (!transcript) return;
+            $('call-heard-text').textContent = `You: "${transcript}"`;
+
+            if (res.isFinal) {
+              $('call-voice-status').textContent = 'Sending to AI...';
+              const lower = transcript.toLowerCase();
+              const asksAboutCamera = /camera|dikha|dikhai|dikh|see|look|watch|show|screen|face|what is this|kya hai|kya dikh/.test(lower);
+              const liveFrame = asksAboutCamera ? captureLiveCallFrameDataUrl() : null;
+
+              let reply = '';
+              if (liveFrame) {
+                const vRes = await fetch('/api/vision', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    imageData: liveFrame,
+                    prompt: `User on live video call asked: "${transcript}". Describe what is visible in the camera frame clearly and concisely.`
+                  })
+                });
+                const vData = await vRes.json().catch(() => ({}));
+                reply = vRes.ok ? (vData.reply || 'Camera frame checked.') : (vData.error || await fetchAIReply(transcript));
+              } else {
+                reply = await fetchAIReply(transcript);
+              }
+
+              $('call-caption').textContent = `"${reply}"`;
+              $('call-voice-status').textContent = 'Mic Listening';
+              if (state.settings.voiceTTS) speakText(reply);
+            }
+          };
+
+          callRecognition.onerror = (ev) => {
+            if (ev && ev.error === 'not-allowed') {
+              $('call-voice-status').textContent = 'Mic Permission Needed';
+            } else {
+              $('call-voice-status').textContent = 'Mic Ready';
+            }
+          };
+
+          callRecognition.onend = () => {
+            if (!$('videocall-modal').classList.contains('hidden') && !callMicMuted) {
+              setTimeout(() => {
+                if (!$('videocall-modal').classList.contains('hidden') && !callMicMuted && callRecognition) {
+                  try { callRecognition.start(); } catch (e) {}
+                }
+              }, 200);
+            }
+          };
+
+          callRecognition.start();
+          $('call-voice-status').textContent = 'Mic Listening';
+        } catch (e) {
+          $('call-voice-status').textContent = 'Mic Ready';
+        }
+      }
+
+      function stopCallVoiceCapture() {
+        if (callRecognition) {
+          const rec = callRecognition;
+          callRecognition = null;
+          rec.onend = null;
+          try { rec.stop(); } catch (e) {}
+        }
+      }
+
+      async function startVideoCall() {
+        $('videocall-modal').classList.remove('hidden');
+        callSeconds = 0;
+        callMicMuted = false;
+        callCamOff = false;
+        $('btn-call-mic').classList.remove('bg-rose-600');
+        $('call-timer').textContent = '00:00';
+        $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak clearly—I can hear you and check what's on your camera."`;
+        $('call-heard-text').textContent = 'Speak now — voice active';
+
+        clearInterval(callInterval);
+        callInterval = setInterval(() => {
+          callSeconds++;
+          const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+          const s = String(callSeconds % 60).padStart(2, '0');
+          $('call-timer').textContent = `${m}:${s}`;
+        }, 1000);
+
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            callStream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+              audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+            });
+            $('call-pip-video').srcObject = callStream;
+            $('call-pip-video').classList.remove('hidden');
+            $('call-pip-off').classList.add('hidden');
+          } else {
+            throw new Error('No mediaDevices');
+          }
+        } catch (e) {
+          $('call-pip-video').classList.add('hidden');
+          $('call-pip-off').classList.remove('hidden');
+        }
+
+        startCallVoiceCapture();
+      }
+
+      function endVideoCall() {
+        $('videocall-modal').classList.add('hidden');
+        clearInterval(callInterval);
+        stopCallVoiceCapture();
+        if (callStream) {
+          callStream.getTracks().forEach(t => t.stop());
+          callStream = null;
+        }
+        showToast('Video call ended.');
+      }
+
+      function speakText(text) {
+        try {
+          if (!('speechSynthesis' in window)) return;
+          window.speechSynthesis.cancel();
+          const clean = text.replace(/```[\s\S]*?```/g, 'Code block provided.').replace(/\*\*/g, '');
+          const utter = new SpeechSynthesisUtterance(clean.slice(0, 260));
+          utter.rate = 1.03;
+
+          if (state.settings.selectedVoice && availableVoices.length > 0) {
+            const found = availableVoices.find(v => v.name === state.settings.selectedVoice);
+            if (found) utter.voice = found;
+          }
+
+          window.speechSynthesis.speak(utter);
+        } catch (e) {}
+      }
+
+      function toggleVoiceControl(forceState = null) {
+        const next = forceState !== null ? forceState : !state.settings.voiceControl;
+        state.settings.voiceControl = next;
+        saveState();
+        renderToggles();
+
+        if (next) {
+          startSpeechRecognition();
+          showToast('Voice Control enabled! Say "Open WhatsApp" or "Open YouTube".');
+        } else {
+          stopSpeechRecognition();
+          showToast('Voice Control turned off.');
+        }
+      }
+
+      function startSpeechRecognition() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+          $('voice-hud-transcript').textContent = 'Browser mic unavailable — use Voice Simulator';
+          return;
+        }
+        try {
+          if (recognition) recognition.stop();
+          recognition = new SpeechRec();
+          recognition.continuous = true;
+          recognition.interimResults = false;
+          recognition.lang = 'hi-IN';
+          recognition.onresult = (event) => {
+            const transcript = event.results[event.results.length - 1][0].transcript.trim();
+            $('voice-hud-transcript').textContent = `"${transcript}"`;
+            executeVoiceCommand(transcript);
+          };
+          recognition.onerror = () => {
+            $('voice-hud-action').textContent = 'Mic blocked/idle';
+          };
+          recognition.onend = () => {
+            if (state.settings.voiceControl) {
+              try { recognition.start(); } catch (e) {}
+            }
+          };
+          recognition.start();
+        } catch (e) {
+          $('voice-hud-action').textContent = 'Use Voice Simulator in Settings';
+        }
+      }
+
+      function stopSpeechRecognition() {
+        if (recognition) {
+          try { recognition.stop(); } catch (e) {}
+          recognition = null;
+        }
+      }
+
+      function executeVoiceCommand(rawCmd) {
+        const cmd = rawCmd.trim();
+        const lower = cmd.toLowerCase();
+        $('voice-hud-transcript').textContent = `"${cmd}"`;
+
+        for (const app of APP_DIRECTORY) {
+          if (app.aliases.some(alias => lower.includes(alias))) {
+            if (app.name === 'YouTube') switchView('apps');
+            $('voice-hud-action').textContent = `Action: Opened ${app.name}`;
+            showToast(`Opening ${app.name}...`);
+            try { window.open(app.url, '_blank', 'noopener,noreferrer'); } catch (e) {}
+            if (state.settings.voiceTTS) speakText(`Opening ${app.name}`);
+            return;
+          }
+        }
+        if (lower.includes('scroll down') || lower.includes('scroll the video') || lower.includes('नीचे')) {
+          const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
+          target.scrollBy({ top: 340, behavior: 'smooth' });
+          $('voice-hud-action').textContent = 'Action: Scrolled down';
+          showToast('Scrolled down');
+          return;
+        }
+        if (lower.includes('scroll up') || lower.includes('ऊपर')) {
+          const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
+          target.scrollBy({ top: -340, behavior: 'smooth' });
+          $('voice-hud-action').textContent = 'Action: Scrolled up';
+          showToast('Scrolled up');
+          return;
+        }
+        if (lower.includes('setting') || lower.includes('सेटिंग')) {
+          switchView('settings');
+          $('voice-hud-action').textContent = 'Action: Opened Settings';
+          return;
+        }
+        if (lower.includes('new chat') || lower.includes('नई चैट')) {
+          createNewChat(true);
+          $('voice-hud-action').textContent = 'Action: Started New Chat';
+          return;
+        }
+        if (lower.includes('video call') || lower.includes('वीडियो कॉल')) {
+          startVideoCall();
+          $('voice-hud-action').textContent = 'Action: Started Video Call';
+          return;
+        }
+
+        switchView('chat');
+        $('voice-hud-action').textContent = 'Action: Sent to AXON AI';
+        sendMessage(cmd);
+      }
+
+      async function triggerGoogleSignIn() {
+        if (!firebaseReady || !firebaseAuth) {
+          $('google-picker-modal').classList.add('hidden');
+          showAuthError('Firebase Auth initialize nahi ho paya.');
+          return;
+        }
+        const button = $('btn-firebase-google-auth');
+        const originalText = button ? button.textContent : '';
+        if (button) {
+          button.disabled = true;
+          button.textContent = 'Connecting to Google...';
+        }
+        try {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          provider.setCustomParameters({ prompt: 'select_account' });
+          await firebaseAuth.signInWithPopup(provider);
+          $('google-picker-modal').classList.add('hidden');
+        } catch (error) {
+          if (
+            error &&
+            (error.code === 'auth/popup-blocked' ||
+              error.code === 'auth/operation-not-supported-in-this-environment')
+          ) {
+            try {
+              const provider = new firebase.auth.GoogleAuthProvider();
+              provider.setCustomParameters({ prompt: 'select_account' });
+              await firebaseAuth.signInWithRedirect(provider);
+              return;
+            } catch (redirectErr) {
+              $('google-picker-modal').classList.add('hidden');
+              showAuthError(firebaseErrorMessage(redirectErr));
+            }
+          } else {
+            $('google-picker-modal').classList.add('hidden');
+            showAuthError(firebaseErrorMessage(error));
+          }
+        } finally {
+          if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+          }
+        }
+      }
+
+      function bindEvents() {
+        $('tab-signin').addEventListener('click', () => setAuthMode('signin'));
+        $('tab-signup').addEventListener('click', () => setAuthMode('signup'));
+        $('btn-toggle-pw').addEventListener('click', () => {
+          const pw = $('auth-password');
+          pw.type = pw.type === 'password' ? 'text' : 'password';
+        });
+        $('btn-forgot-pw').addEventListener('click', async () => {
+          const email = $('auth-email').value.trim();
+          if (!email || !email.includes('@')) {
+            showAuthError('Password reset ke liye pehle apna valid email likhein.');
+            return;
+          }
+          if (!firebaseReady || !firebaseAuth) {
+            showAuthError('Firebase config abhi add nahi hai.');
+            return;
+          }
+          try {
+            await firebaseAuth.sendPasswordResetEmail(email);
+            $('auth-error').classList.add('hidden');
+            showToast('Password reset email bhej diya gaya hai. Inbox check karein.');
+          } catch (error) {
+            showAuthError(firebaseErrorMessage(error));
+          }
+        });
+
+        $('auth-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          $('auth-error').classList.add('hidden');
+          const email = $('auth-email').value.trim();
+          const pw = $('auth-password').value;
+          const name = $('auth-name').value.trim();
+
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showAuthError('Please enter a valid email address.');
+            return;
+          }
+          if (pw.length < 6) {
+            showAuthError('Password must be at least 6 characters.');
+            return;
+          }
+          if (!firebaseReady || !firebaseAuth) {
+            showAuthError('Firebase config add karna baaki hai.');
+            return;
+          }
+
+          const submit = $('btn-auth-submit');
+          const originalText = submit.textContent;
+          submit.disabled = true;
+          submit.textContent = state.authMode === 'signup' ? 'Creating account...' : 'Signing in...';
+
+          try {
+            if (state.authMode === 'signup') {
+              const credential = await firebaseAuth.createUserWithEmailAndPassword(email, pw);
+              if (name && credential.user) {
+                await credential.user.updateProfile({ displayName: name });
+              }
+              completeLogin(name || credential.user?.displayName || email.split('@')[0], email);
+            } else {
+              const credential = await firebaseAuth.signInWithEmailAndPassword(email, pw);
+              completeLogin(credential.user?.displayName || email.split('@')[0], email);
+            }
+          } catch (error) {
+            showAuthError(firebaseErrorMessage(error));
+          } finally {
+            submit.disabled = false;
+            submit.textContent = originalText;
+          }
+        });
+
+        $('btn-google-login').addEventListener('click', () => {
+          $('auth-error').classList.add('hidden');
+          $('google-picker-modal').classList.remove('hidden');
+        });
+        $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
+        $('btn-firebase-google-auth').addEventListener('click', triggerGoogleSignIn);
+
+        $('btn-guest-login').addEventListener('click', () => {
+          demoSession = true;
+          completeLogin('AXON Demo User', 'demo@axon.ai');
+        });
+
+        $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
+        $('btn-close-sidebar').addEventListener('click', closeSidebarMobile);
+        $('sidebar-backdrop').addEventListener('click', closeSidebarMobile);
+        $('btn-new-chat').addEventListener('click', () => createNewChat(true));
+        $('nav-chat').addEventListener('click', () => switchView('chat'));
+        $('nav-apps').addEventListener('click', () => switchView('apps'));
+        $('nav-settings').addEventListener('click', () => switchView('settings'));
+        $('btn-header-settings').addEventListener('click', () => switchView('settings'));
+        $('btn-logout').addEventListener('click', async () => {
+          toggleVoiceControl(false);
+          demoSession = false;
+          state.user = null;
+          try {
+            if (firebaseAuth && firebaseAuth.currentUser) await firebaseAuth.signOut();
+          } catch (error) {
+            showToast(firebaseErrorMessage(error));
+          }
+          saveState();
+          $('app-screen').classList.add('hidden');
+          $('login-screen').classList.remove('hidden');
+          showToast('Signed out of AXON AI');
+        });
+
+        $('sidebar-chat-list').addEventListener('click', (e) => {
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) {
+            e.stopPropagation();
+            deleteChatById(delBtn.dataset.chatId);
+            return;
+          }
+          const sel = e.target.closest('.select-chat-btn');
+          if (sel) {
+            state.activeChatId = sel.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
+          }
+        });
+
+        $('chat-messages').addEventListener('click', (e) => {
+          const starter = e.target.closest('.starter-prompt');
+          if (starter) sendMessage(starter.dataset.prompt);
+        });
+
+        const chatInput = $('chat-input');
+        chatInput.addEventListener('input', () => {
+          chatInput.style.height = 'auto';
+          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
+        });
+        chatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+        $('btn-send').addEventListener('click', () => {
+          if (state.isGenerating) stopGeneration();
+          else sendMessage();
+        });
+
+        $('btn-plus-menu').addEventListener('click', (e) => {
+          e.stopPropagation();
+          $('plus-menu').classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('#plus-menu') && !e.target.closest('#btn-plus-menu')) {
+            $('plus-menu').classList.add('hidden');
+          }
+        });
+        $('menu-send-photo').addEventListener('click', () => {
+          $('plus-menu').classList.add('hidden');
+          $('input-photo').click();
+        });
+        $('menu-send-file').addEventListener('click', () => {
+          $('plus-menu').classList.add('hidden');
+          $('input-file').click();
+        });
+        $('menu-open-camera').addEventListener('click', openCameraModal);
+        $('menu-deep-think').addEventListener('click', () => {
+          state.deepThink = !state.deepThink;
+          $('deep-think-status').textContent = state.deepThink ? 'On — Detailed reasoning' : 'Off — Standard speed';
+          $('plus-menu').classList.add('hidden');
+          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode disabled');
+        });
+
+        $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], true));
+        $('input-file').addEventListener('change', (e) => handleFileSelected(e.target.files[0], false));
+        $('btn-remove-attachment').addEventListener('click', clearAttachment);
+
+        $('btn-close-camera').addEventListener('click', closeCameraModal);
+        $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
+        $('btn-camera-upload-alt').addEventListener('click', () => {
+          closeCameraModal();
+          $('input-photo').click();
+        });
+
+        $('btn-video-call').addEventListener('click', startVideoCall);
+        $('btn-end-call').addEventListener('click', endVideoCall);
+        $('btn-call-mic').addEventListener('click', () => {
+          callMicMuted = !callMicMuted;
+          if (callStream) {
+            callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
+          }
+          $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
+          if (callMicMuted) {
+            stopCallVoiceCapture();
+            $('call-voice-status').textContent = 'Mic Muted';
+            showToast('Microphone muted');
+          } else {
+            startCallVoiceCapture();
+            $('call-voice-status').textContent = 'Mic Listening';
+            showToast('Microphone unmuted');
+          }
+        });
+        $('btn-call-cam').addEventListener('click', () => {
+          callCamOff = !callCamOff;
+          if (callStream) {
+            callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
+          }
+          $('call-pip-video').classList.toggle('hidden', callCamOff);
+          $('call-pip-off').classList.toggle('hidden', !callCamOff);
+        });
+
+        $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
+        $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
+        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
+        $('toggle-voice-tts').addEventListener('click', () => {
+          state.settings.voiceTTS = !state.settings.voiceTTS;
+          saveState();
+          renderToggles();
+        });
+
+        $('setting-voice-select').addEventListener('change', (e) => {
+          state.settings.selectedVoice = e.target.value;
+          saveState();
+          showToast(`Voice changed to: ${e.target.value || 'Default'}`);
+          speakText("Voice changed successfully!");
+        });
+
+        $('toggle-history').addEventListener('click', () => {
+          state.settings.saveHistory = !state.settings.saveHistory;
+          saveState();
+          renderAll();
+          showToast(state.settings.saveHistory ? 'Chat History recording ON' : 'Chat History recording paused');
+        });
+
+        $('btn-run-voice-sim').addEventListener('click', () => {
+          const val = $('voice-sim-input').value.trim();
+          if (!val) return;
+          if (!state.settings.voiceControl) toggleVoiceControl(true);
+          executeVoiceCommand(val);
+          $('voice-sim-input').value = '';
+        });
+        document.querySelectorAll('.voice-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (!state.settings.voiceControl) toggleVoiceControl(true);
+            executeVoiceCommand(btn.dataset.voiceCmd);
+          });
+        });
+
+        $('history-search').addEventListener('input', renderSettingsHistory);
+        $('settings-history-list').addEventListener('click', (e) => {
+          const openBtn = e.target.closest('.open-history-chat');
+          if (openBtn) {
+            state.activeChatId = openBtn.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
+            return;
+          }
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) deleteChatById(delBtn.dataset.chatId);
+        });
+
+        $('btn-export-history').addEventListener('click', () => {
+          const blob = new Blob([JSON.stringify(state.chats, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `axon-ai-history-${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast('History exported as JSON!');
+        });
+
+        $('btn-clear-history').addEventListener('click', () => $('confirm-modal').classList.remove('hidden'));
+        $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
+        $('btn-confirm-ok').addEventListener('click', () => {
+          state.chats = [];
+          createNewChat(false);
+          $('confirm-modal').classList.add('hidden');
+          saveState();
+          renderAll();
+          showToast('All chat history cleared.');
+        });
+
+        $('btn-theme-dark').addEventListener('click', () => {
+          state.settings.theme = 'dark';
+          saveState();
+          applyAppearance();
+        });
+        $('btn-theme-light').addEventListener('click', () => {
+          state.settings.theme = 'light';
+          saveState();
+          applyAppearance();
+        });
+        $('setting-font-size').addEventListener('change', (e) => {
+          state.settings.fontSize = e.target.value;
+          saveState();
+          applyAppearance();
+        });
+        $('toggle-autoscroll').addEventListener('click', () => {
+          state.settings.autoScroll = !state.settings.autoScroll;
+          saveState();
+          renderToggles();
+        });
+        $('app-launcher-grid').addEventListener('click', (e) => {
+          const btn = e.target.closest('.launch-app-btn');
+          if (!btn) return;
+          showToast(`Opening ${btn.dataset.name}...`);
+          window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
+        });
+        $('btn-launch-yt-ext').addEventListener('click', () => {
+          window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer');
+        });
+      }
+
+      function deleteChatById(id) {
+        state.chats = state.chats.filter(c => c.id !== id);
+        if (state.activeChatId === id) {
+          if (state.chats.length) state.activeChatId = state.chats[0].id;
+          else createNewChat(false);
+        }
+        saveState();
+        renderAll();
+        showToast('Chat deleted.');
+      }
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          populateVoicesDropdown();
+        };
+      }
+
+      loadState();
+      initializeFirebaseAuth();
+      bindEvents();
+      runSplash();
+    })();
   </script>
 </body>
 </html>
