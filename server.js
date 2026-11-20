@@ -180,6 +180,98 @@ app.get("/api/health", healthLimiter, async (req, res) => {
     });
   }
 });
+// AXON AI - PHOTO VISION API
+app.post(
+  "/api/vision",
+  visionLimiter,
+  express.json({ limit: "7mb" }),
+  async (req, res) => {
+    const { imageData, prompt } = req.body || {};
+
+    if (!process.env.GROQ_API_KEY) {
+      return res.status(503).json({ error: "AI service is not configured." });
+    }
+
+    if (typeof imageData !== "string") {
+      return res.status(400).json({ error: "Image is required." });
+    }
+
+    const match = imageData.match(
+      /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/i
+    );
+
+    if (!match) {
+      return res.status(400).json({
+        error: "Only JPEG, PNG and WebP images are supported."
+      });
+    }
+
+    const imageBytes = Buffer.from(match[2], "base64");
+
+    if (!imageBytes.length || imageBytes.length > 4 * 1024 * 1024) {
+      return res.status(413).json({
+        error: "Image must be smaller than 4 MB."
+      });
+    }
+
+    const question = typeof prompt === "string" && prompt.trim()
+      ? prompt.trim().slice(0, 2000)
+      : "Describe this image.";
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
+    try {
+      const response = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.GROQ_API_KEY.trim()}`
+          },
+          signal: controller.signal,
+          body: JSON.stringify({
+            model: "qwen/qwen3.8-27b",
+            messages: [{
+              role: "user",
+              content: [
+                { type: "text", text: question },
+                {
+                  type: "image_url",
+                  image_url: { url: imageData }
+                }
+              ]
+            }],
+            max_completion_tokens: 1024
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("VISION API ERROR:", data.error?.message);
+        return res.status(502).json({
+          error: "Photo analysis failed. Please try again."
+        });
+      }
+
+      return res.json({
+        reply: data.choices?.[0]?.message?.content ||
+          "Photo ka analysis nahi ho paya."
+      });
+
+    } catch (error) {
+      console.error("VISION SERVER ERROR:", error.message);
+      return res.status(500).json({
+        error: "Vision server error."
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+);
 
 // AI Chat Route
 app.post("/api/chat", chatLimiter, async (req, res) => {
