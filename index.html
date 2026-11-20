@@ -1339,60 +1339,70 @@
         showToast('Generation stopped.');
       }
 
-      
-async function fetchAIReply(promptText, signal = null, attachment = null) {
-  try {
-    // PHOTO VISION
-    if (attachment && attachment.type === "image") {
-      const res = await fetch("/api/vision", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          imageData: attachment.dataUrl,
-          prompt: promptText || "Describe this image in detail."
-        }),
-        signal
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Photo analysis failed");
+      function captureLiveCallFrameDataUrl() {
+        try {
+          const video = $('call-pip-video');
+          if (!callStream || callCamOff || !video || video.hidden || !video.videoWidth) return null;
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.min(video.videoWidth, 640);
+          canvas.height = Math.min(video.videoHeight, 480);
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+          return canvas.toDataURL('image/jpeg', 0.75);
+        } catch (e) {
+          return null;
+        }
       }
 
-      return data.reply || "Photo ka analysis nahi ho paya.";
-    }
+      async function fetchAIReply(promptText, signal = null, attachment = null) {
+        try {
+          // PHOTO VISION ANALYSIS / EDITING GUIDANCE
+          if (attachment && attachment.type === "image") {
+            const res = await fetch("/api/vision", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                imageData: attachment.dataUrl,
+                prompt: promptText || "Analyze this photo and provide photo editing, color/lighting, and VFX/video suggestions."
+              }),
+              signal
+            });
 
-    // NORMAL TEXT CHAT
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: promptText,
-        deepThink: state.deepThink
-      }),
-      signal
-    });
+            const data = await res.json();
+            if (!res.ok) {
+              throw new Error(data.error || `HTTP ${res.status}`);
+            }
+            return data.reply || "Photo ka analysis nahi ho paya.";
+          }
 
-    if (!res.ok) throw new Error("HTTP " + res.status);
+          // FILE CONTENT + PROMPT
+          let combinedPrompt = promptText || "";
+          if (attachment && attachment.type === "file" && attachment.textContent) {
+            combinedPrompt = `${promptText ? promptText + "\n\n" : "Analyze this file:\n"}[File: ${attachment.name}]\n\`\`\`\n${attachment.textContent.slice(0, 7000)}\n\`\`\``;
+          }
 
-    const data = await res.json();
-    return data.reply || "Kuch response nahi aaya yaar.";
+          const res = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: combinedPrompt,
+              deepThink: state.deepThink
+            }),
+            signal
+          });
 
-  } catch (err) {
-    if (err && err.name === "AbortError") throw err;
-
-    console.error("AXON AI Error:", err);
-
-    return attachment && attachment.type === "image"
-      ? "Photo analysis failed: " + err.message
-      : `Samajh gaya! Tumne kaha: "${promptText}". Abhi backend unavailable hai.`;
-  }
-}
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(data.reply || data.error || `HTTP ${res.status}`);
+          }
+          return data.reply || "Kuch response nahi aaya yaar.";
+        } catch (err) {
+          if (err && err.name === "AbortError") throw err;
+          console.error("AXON AI Error:", err);
+          return attachment && attachment.type === "image"
+            ? `Photo analysis failed: ${err.message}`
+            : `AI request issue: ${err.message}`;
+        }
+      }
 
       async function sendMessage(overrideText = null) {
         if (state.isGenerating) {
@@ -1415,7 +1425,7 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
           attachment
         };
         chat.messages.push(userMsg);
-       
+
         if (chat.messages.length === 1 && text) {
           chat.title = text.length > 34 ? text.slice(0, 34) + '…' : text;
         }
@@ -1434,10 +1444,12 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
 
         try {
           const replyText = await fetchAIReply(
-  userMsg.text,
-  generationAbort.signal,
-  userMsg.attachment
-);
+            userMsg.text,
+            generationAbort.signal,
+            userMsg.attachment
+          );
+          state.isGenerating = false;
+          generationAbort = null;
           updateSendButtonState();
 
           chat.messages.push({
@@ -1458,6 +1470,7 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
           state.isGenerating = false;
           generationAbort = null;
           updateSendButtonState();
+          renderAll();
           return null;
         }
       }
@@ -1493,7 +1506,18 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
           reader.onload = (e) => setAttachment({ type: 'image', name: file.name, size: sizeStr, dataUrl: e.target.result });
           reader.readAsDataURL(file);
         } else {
-          setAttachment({ type: 'file', name: file.name, size: sizeStr, dataUrl: '' });
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const rawText = typeof e.target.result === 'string' ? e.target.result : '';
+            setAttachment({
+              type: 'file',
+              name: file.name,
+              size: sizeStr,
+              dataUrl: '',
+              textContent: rawText
+            });
+          };
+          reader.readAsText(file);
         }
       }
 
@@ -1547,7 +1571,7 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
           callRecognition = new SpeechRec();
           callRecognition.continuous = true;
           callRecognition.interimResults = true;
-          callRecognition.lang = navigator.language || 'en-IN';
+          callRecognition.lang = navigator.language || 'hi-IN';
 
           callRecognition.onresult = async (event) => {
             if (callMicMuted) return;
@@ -1559,7 +1583,26 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
 
             if (res.isFinal) {
               $('call-voice-status').textContent = 'Sending to AI...';
-              const reply = await fetchAIReply(transcript);
+              const lower = transcript.toLowerCase();
+              const asksAboutCamera = /camera|dikha|dikhai|dikh|see|look|watch|show|screen|face|what is this|kya hai|kya dikh/.test(lower);
+              const liveFrame = asksAboutCamera ? captureLiveCallFrameDataUrl() : null;
+
+              let reply = '';
+              if (liveFrame) {
+                const vRes = await fetch('/api/vision', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    imageData: liveFrame,
+                    prompt: `User on live video call asked: "${transcript}". Describe what is visible in the camera frame clearly and concisely.`
+                  })
+                });
+                const vData = await vRes.json().catch(() => ({}));
+                reply = vRes.ok ? (vData.reply || 'Camera frame checked.') : (vData.error || await fetchAIReply(transcript));
+              } else {
+                reply = await fetchAIReply(transcript);
+              }
+
               $('call-caption').textContent = `"${reply}"`;
               $('call-voice-status').textContent = 'Mic Listening';
               if (state.settings.voiceTTS) speakText(reply);
@@ -1607,7 +1650,7 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
         callCamOff = false;
         $('btn-call-mic').classList.remove('bg-rose-600');
         $('call-timer').textContent = '00:00';
-        $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak clearly—your voice is being sent directly to me."`;
+        $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak clearly—I can hear you and check what's on your camera."`;
         $('call-heard-text').textContent = 'Speak now — voice active';
 
         clearInterval(callInterval);
@@ -1692,7 +1735,7 @@ async function fetchAIReply(promptText, signal = null, attachment = null) {
           recognition = new SpeechRec();
           recognition.continuous = true;
           recognition.interimResults = false;
-          recognition.lang = 'en-IN';
+          recognition.lang = 'hi-IN';
           recognition.onresult = (event) => {
             const transcript = event.results[event.results.length - 1][0].transcript.trim();
             $('voice-hud-transcript').textContent = `"${transcript}"`;
