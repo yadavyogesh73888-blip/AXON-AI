@@ -19,7 +19,13 @@ app.use(helmet({
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: "32kb" }));
+app.use((req, res, next) => {
+  if (req.path === "/api/vision") {
+    return next();
+  }
+
+  express.json({ limit: "32kb" })(req, res, next);
+});
 
 // Chat Rate Limiter
 const chatLimiter = rateLimit({
@@ -41,6 +47,16 @@ const healthLimiter = rateLimit({
   message: {
     status: "failed",
     message: "Too many health checks. Please try again later."
+  }
+});
+  // Photo Vision Rate Limiter
+const visionLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    error: "Too many image requests. Please wait a minute."
   }
 });
 
@@ -192,6 +208,130 @@ app.post("/api/chat", chatLimiter, async (req, res) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 30000);
 
+// AXON AI - PHOTO VISION API
+app.post(
+  "/api/vision",
+  visionLimiter,
+  express.json({ limit: "7mb" }),
+  async (req, res) => {
+    const { imageData, prompt } = req.body || {};
+
+    if (!process.env.GROQ_API_KEY) {
+      return res.status(503).json({
+        error: "AI service is not configured."
+      });
+    }
+
+    if (typeof imageData !== "string") {
+      return res.status(400).json({
+        error: "Image is required."
+      });
+    }
+
+    const match = imageData.match(
+      /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/i
+    );
+
+    if (!match) {
+      return res.status(400).json({
+        error: "Only JPEG, PNG and WebP images are supported."
+      });
+    }
+
+    const imageBytes = Buffer.from(match[2], "base64");
+
+    if (
+      imageBytes.length === 0 ||
+      imageBytes.length > 4 * 1024 * 1024
+    ) {
+      return res.status(413).json({
+        error: "Image must be smaller than 4 MB."
+      });
+    }
+
+    const question =
+      typeof prompt === "string" && prompt.trim()
+        ? prompt.trim().slice(0, 2000)
+        : "Describe this image and explain what you can see.";
+
+    const controller = new AbortController();
+    const timeout = setTimeout(
+      () => controller.abort(),
+      30000
+    );
+
+    try {
+      const response = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+              `Bearer ${process.env.GROQ_API_KEY.trim()}`
+          },
+          signal: controller.signal,
+          body: JSON.stringify({
+            model: "qwen/qwen3.8-27b",
+            messages: [
+              {
+                role: "user",
+                content: [
+                  {
+                    type: "text",
+                    text: question
+                  },
+                  {
+                    type: "image_url",
+                    image_url: {
+                      url: imageData
+                    }
+                  }
+                ]
+              }
+            ],
+            max_completion_tokens: 1024
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("VISION API ERROR:", {
+          status: response.status,
+          error: data.error?.message
+        });
+
+        return res.status(502).json({
+          error: "Photo analysis failed. Please try again."
+        });
+      }
+
+      return res.json({
+        reply:
+          data.choices?.[0]?.message?.content ||
+          "Photo ka analysis nahi ho paya."
+      });
+
+    } catch (error) {
+      console.error("VISION SERVER ERROR:", error.message);
+
+      return res.status(
+        error.name === "AbortError" ? 504 : 500
+      ).json({
+        error:
+          error.name === "AbortError"
+            ? "Photo analysis timed out."
+            : "Vision server error."
+      });
+
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+);
+  
   // Original Creator Rules - Preserved
   const systemPrompt = `
 You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur izzat dene wale best friend ki tarah). 
