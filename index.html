@@ -1750,7 +1750,7 @@
           const email = $('auth-email').value.trim();
           const pw = $('auth-password').value;
           const name = $('auth-name').value.trim();
-
+if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
             showAuthError('Please enter a valid email address.');
             return;
@@ -1763,12 +1763,16 @@
             showAuthError('Firebase config add karna baaki hai. Setup steps follow karein.');
             return;
           }
+          const credential =
+  await firebaseAuth.createUserWithEmailAndPassword(email, pw);
 
           const submit = $('btn-auth-submit');
           const originalText = submit.textContent;
           submit.disabled = true;
           submit.textContent = state.authMode === 'signup' ? 'Creating account...' : 'Signing in...';
-          $('auth-error').classList.add('hidden');
+          $('#btn-firebase-google-auth').on('click', async () => {
+  // ...
+});
           try {
             if (state.authMode === 'signup') {
              $('#btn-firebase-google-auth').on('click', async () => {
