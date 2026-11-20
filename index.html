@@ -1339,22 +1339,60 @@
         showToast('Generation stopped.');
       }
 
-      async function fetchAIReply(promptText, signal = null) {
-        try {
-          const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: promptText, deepThink: state.deepThink }),
-            signal
-          });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const data = await res.json();
-          return data.reply || "Kuch response nahi aaya yaar.";
-        } catch (err) {
-          if (err && err.name === 'AbortError') throw err;
-          return `Samajh gaya! Tumne kaha: "${promptText}". Abhi backend (/api/chat) offline ya unreachable hai, par AXON AI voice & workspace ready hai.`;
-        }
+      
+async function fetchAIReply(promptText, signal = null, attachment = null) {
+  try {
+    // PHOTO VISION
+    if (attachment && attachment.type === "image") {
+      const res = await fetch("/api/vision", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          imageData: attachment.dataUrl,
+          prompt: promptText || "Describe this image in detail."
+        }),
+        signal
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Photo analysis failed");
       }
+
+      return data.reply || "Photo ka analysis nahi ho paya.";
+    }
+
+    // NORMAL TEXT CHAT
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: promptText,
+        deepThink: state.deepThink
+      }),
+      signal
+    });
+
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    const data = await res.json();
+    return data.reply || "Kuch response nahi aaya yaar.";
+
+  } catch (err) {
+    if (err && err.name === "AbortError") throw err;
+
+    console.error("AXON AI Error:", err);
+
+    return attachment && attachment.type === "image"
+      ? "Photo analysis failed: " + err.message
+      : `Samajh gaya! Tumne kaha: "${promptText}". Abhi backend unavailable hai.`;
+  }
+}
 
       async function sendMessage(overrideText = null) {
         if (state.isGenerating) {
