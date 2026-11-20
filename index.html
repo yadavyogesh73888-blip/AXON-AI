@@ -1377,6 +1377,7 @@
           attachment
         };
         chat.messages.push(userMsg);
+       
         if (chat.messages.length === 1 && text) {
           chat.title = text.length > 34 ? text.slice(0, 34) + '…' : text;
         }
@@ -1394,9 +1395,11 @@
         renderAll();
 
         try {
-          const replyText = await fetchAIReply(userMsg.text, generationAbort.signal);
-          state.isGenerating = false;
-          generationAbort = null;
+          const replyText = await fetchAIReply(
+  userMsg.text,
+  generationAbort.signal,
+  userMsg.attachment
+);
           updateSendButtonState();
 
           chat.messages.push({
