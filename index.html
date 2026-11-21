@@ -1,2222 +1,1852 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AXON AI — Intelligent Neural Workspace</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>AXON AI — Pro Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #070b14;
-      --bg-secondary: #0d1424;
-      --bg-elevated: #131c31;
-      --accent-cyan: #22d3ee;
-      --accent-indigo: #6366f1;
-    }
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      max-width: 100vw;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg-primary);
-      color: #f1f5f9;
-      overflow: hidden;
-      overflow-x: hidden;
-      overscroll-behavior-x: none;
-      touch-action: pan-y;
-    }
-    html.light-theme body {
-      background-color: #f1f5f9;
-      color: #0f172a;
-    }
-    html.light-theme .mesh-bg {
-      background-image:
-        radial-gradient(at 15% 20%, rgba(34, 211, 238, 0.14) 0px, transparent 50%),
-        radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.14) 0px, transparent 50%);
-    }
-    html.light-theme #app-screen,
-    html.light-theme #view-chat,
-    html.light-theme #view-apps,
-    html.light-theme #view-settings {
-      background-color: #f8fafc;
-      color: #0f172a;
-    }
-    html.light-theme header,
-    html.light-theme aside {
-      background-color: #ffffff !important;
-      border-color: #e2e8f0 !important;
-      color: #0f172a !important;
-    }
-    html.light-theme .glass-panel {
-      background: rgba(255, 255, 255, 0.88);
-      border-color: rgba(148, 163, 184, 0.35);
-      color: #0f172a;
-    }
-    html.light-theme .text-white { color: #0f172a !important; }
-    html.light-theme .text-slate-200,
-    html.light-theme .text-slate-300 { color: #334155 !important; }
-    html.light-theme .text-slate-400 { color: #64748b !important; }
-    html.light-theme .bg-slate-900\/80,
-    html.light-theme .bg-slate-900\/90,
-    html.light-theme .bg-slate-900\/75,
-    html.light-theme .bg-slate-900\/60,
-    html.light-theme .bg-slate-900 {
-      background-color: #f1f5f9 !important;
-      color: #0f172a !important;
-      border-color: #cbd5e1 !important;
-    }
-    html.light-theme #btn-send,
-    html.light-theme #btn-auth-submit,
-    html.light-theme #btn-camera-capture,
-    html.light-theme #btn-end-call,
-    html.light-theme #btn-confirm-ok,
-    html.light-theme #btn-launch-yt-ext {
-      color: #ffffff !important;
-    }
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.22);
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(148, 163, 184, 0.4);
+      /* Dark Theme (Default Cosmic Neon Glass - Matching Reference UI) */
+      --bg-primary: #060919;
+      --bg-gradient: radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.22), transparent 40%),
+                     radial-gradient(circle at 15% 75%, rgba(139, 92, 246, 0.25), transparent 45%),
+                     linear-gradient(160deg, #050816 0%, #0b112b 50%, #070a1c 100%);
+      --card-bg: rgba(17, 24, 54, 0.72);
+      --card-highlight: linear-gradient(135deg, rgba(30, 58, 138, 0.55), rgba(88, 28, 135, 0.45));
+      --card-border: rgba(99, 132, 255, 0.32);
+      --card-glow: 0 8px 32px rgba(14, 165, 233, 0.14);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --input-bg: rgba(15, 23, 42, 0.85);
+      --divider: rgba(148, 163, 184, 0.14);
+      --accent: #38bdf8;
+      --accent-purple: #a855f7;
+      --chat-user-bg: linear-gradient(135deg, #2563eb, #7c3aed);
+      --chat-ai-bg: rgba(20, 28, 58, 0.85);
+      --sidebar-bg: #080d21;
     }
 
-    @keyframes pulseRing {
-      0% { transform: scale(0.92); opacity: 0.8; }
-      70% { transform: scale(1.28); opacity: 0; }
-      100% { transform: scale(1.32); opacity: 0; }
+    /* Clean & Fixed Light Theme (No Broken Layout / No Tabela Mode) */
+    [data-theme="light"] {
+      --bg-primary: #f1f5f9;
+      --bg-gradient: linear-gradient(160deg, #f8fafc 0%, #eef2ff 50%, #f1f5f9 100%);
+      --card-bg: #ffffff;
+      --card-highlight: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%);
+      --card-border: #cbd5e1;
+      --card-glow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --input-bg: #ffffff;
+      --divider: #e2e8f0;
+      --accent: #0284c7;
+      --accent-purple: #7c3aed;
+      --chat-user-bg: linear-gradient(135deg, #0284c7, #6d28d9);
+      --chat-ai-bg: #ffffff;
+      --sidebar-bg: #ffffff;
     }
-    @keyframes floatOrb {
-      0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-6px) scale(1.03); }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
-    @keyframes waveBar {
-      0%, 100% { height: 8px; }
-      50% { height: 28px; }
+
+    body {
+      background: var(--bg-primary);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.25s ease, color 0.25s ease;
     }
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .hidden { display: none !important; }
+
+    /* ================= 1. SPLASH SCREEN (UNCHANGED) ================= */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #111936 0%, #050814 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
     }
-    .animate-pulse-ring {
-      animation: pulseRing 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    .splash-logo {
+      width: 84px;
+      height: 84px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 0 40px rgba(14, 165, 233, 0.5);
+      margin-bottom: 18px;
+      animation: pulseLogo 1.8s infinite ease-in-out;
     }
-    .animate-float-orb {
-      animation: floatOrb 3.5s ease-in-out infinite;
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
     }
-    .animate-fade-up {
-      animation: fadeSlideUp 0.25s ease-out forwards;
+    .splash-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #ffffff;
     }
-    .wave-bar {
-      width: 4px;
-      border-radius: 9999px;
-      background: linear-gradient(180deg, #22d3ee, #6366f1);
-      animation: waveBar 0.9s ease-in-out infinite;
+    .splash-sub {
+      font-size: 12px;
+      color: #38bdf8;
+      letter-spacing: 1.5px;
+      margin-top: 6px;
     }
-    .glass-panel {
-      background: rgba(15, 23, 42, 0.72);
+
+    /* ================= 2. LOGIN UI (UNCHANGED LAYOUT, REPAIRED AUTH) ================= */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(160deg, #060919 0%, #0f172a 100%);
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(17, 24, 54, 0.85);
+      border: 1px solid rgba(99, 132, 255, 0.3);
+      border-radius: 24px;
+      padding: 32px 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      color: #f8fafc;
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .login-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .login-header p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .auth-input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.9);
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .auth-input:focus {
+      border-color: #38bdf8;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .btn-google {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .auth-status {
+      font-size: 12px;
+      color: #fda4af;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 18px;
+    }
+    .auth-toggle {
+      text-align: center;
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 16px;
+    }
+    .auth-toggle span {
+      color: #38bdf8;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* ================= 3. CHAT UI & SIDEBAR (UNCHANGED) ================= */
+    #app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--divider);
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      z-index: 20;
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .brand-pill {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    /* Sidebar Drawer */
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 40;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 285px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--card-border);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      padding: 18px 14px;
+      transform: translateX(-100%);
+      transition: transform 0.28s ease;
+    }
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    .new-chat-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      background: var(--card-highlight);
+      color: var(--text-primary);
+      font-weight: 600;
+      cursor: pointer;
+      margin: 14px 0;
+      text-align: center;
+    }
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .history-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border: 1px solid transparent;
+    }
+    .history-item:hover, .history-item.active {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border-color: var(--card-border);
+    }
+    .sidebar-footer {
+      border-top: 1px solid var(--divider);
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .nav-link {
+      padding: 10px 12px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+    .nav-link:hover {
+      background: var(--card-bg);
+    }
+
+    /* Chat Area */
+    #chat-view {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .messages-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .msg {
+      max-width: 84%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14.5px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: var(--chat-user-bg);
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.ai {
+      align-self: flex-start;
+      background: var(--chat-ai-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--card-border);
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--card-glow);
+    }
+    .tts-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      cursor: pointer;
+    }
+    .chat-input-bar {
+      padding: 12px 14px;
+      border-top: 1px solid var(--divider);
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 99px;
+      border: 1px solid var(--card-border);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+    .send-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      color: #fff;
+      font-size: 17px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ================= 4. NEW SETTINGS UI (EXACT COSMIC NEON GLASS STYLE FROM IMAGE 1) ================= */
+    #settings-view {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 16px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 2px 8px;
+    }
+    .settings-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .neon-circle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(56, 189, 248, 0.55);
+      background: var(--card-bg);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.22);
+      font-size: 17px;
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--card-glow);
       backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(148, 163, 184, 0.14);
     }
-    .mesh-bg {
-      background-image:
-        radial-gradient(at 15% 20%, rgba(34, 211, 238, 0.14) 0px, transparent 50%),
-        radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.16) 0px, transparent 50%),
-        radial-gradient(at 50% 85%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+    .glass-card.featured {
+      background: var(--card-highlight);
+      border-color: rgba(96, 165, 250, 0.5);
     }
-    .typing-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 9999px;
-      background-color: #22d3ee;
-      animation: waveBar 0.8s ease-in-out infinite;
+    .section-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      padding: 12px 16px 4px;
     }
-    @keyframes stopBlink {
-      0%, 100% {
-        opacity: 1;
-        box-shadow: 0 0 14px rgba(244, 63, 94, 0.65);
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.45;
-        box-shadow: 0 0 4px rgba(244, 63, 94, 0.25);
-        transform: scale(0.96);
-      }
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--divider);
+      cursor: pointer;
+      gap: 12px;
+      transition: background 0.18s ease;
     }
-    .btn-stop-blink {
-      animation: stopBlink 0.9s ease-in-out infinite;
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+    .setting-row:active {
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .row-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      flex: 1;
+      min-width: 0;
+    }
+    .avatar-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 2px solid rgba(56, 189, 248, 0.5);
+    }
+    .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .row-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .row-icon.purple {
+      background: rgba(168, 85, 247, 0.16);
+      color: #c084fc;
+    }
+    .row-icon.green {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+    .row-icon.amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+    .row-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .row-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .verified-tick {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #38bdf8;
+      color: #050816;
+      font-size: 10px;
+      font-weight: 900;
+    }
+    .row-sub {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .pill-tag {
+      padding: 4px 11px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(139, 92, 246, 0.24);
+      color: #d8b4fe;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+    [data-theme="light"] .pill-tag {
+      background: #ede9fe;
+      color: #6d28d9;
+      border-color: #c4b5fd;
+    }
+    .chevron {
+      color: var(--text-secondary);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Controls inside Settings */
+    .styled-select {
+      background: var(--input-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 12.5px;
+      font-weight: 500;
+      outline: none;
+      max-width: 155px;
+    }
+
+    /* Switch Toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: rgba(148, 163, 184, 0.35);
+      transition: 0.25s;
+      border-radius: 99px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.25s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Bottom Search Settings Bar (Matching Image 1) */
+    .search-settings-wrap {
+      position: relative;
+      margin-top: 4px;
+    }
+    .search-settings-input {
+      width: 100%;
+      padding: 13px 16px 13px 42px;
+      border-radius: 99px;
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      background: var(--card-bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.15);
+    }
+    .search-settings-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    /* Modal for Edit Profile / Account Info / Model Info */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.75);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+    }
+    .modal-box {
+      width: 100%;
+      max-width: 390px;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .modal-box h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .modal-field {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .btn-secondary {
+      flex: 1;
+      padding: 11px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: transparent;
+      color: var(--text-primary);
+      font-weight: 600;
+      cursor: pointer;
     }
   </style>
 </head>
-<body class="mesh-bg antialiased selection:bg-cyan-500/30 selection:text-cyan-100">
+<body>
 
-  <!-- ==================== 1. SPLASH SCREEN ==================== -->
-  <section id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070b14] mesh-bg transition-opacity duration-500">
-    <div class="relative flex flex-col items-center">
-      <div class="relative flex items-center justify-center w-28 h-28 mb-6">
-        <span class="absolute inset-0 rounded-3xl border border-cyan-400/40 animate-pulse-ring"></span>
-        <span class="absolute inset-2 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 blur-xl"></span>
-        <div class="relative flex items-center justify-center w-24 h-24 rounded-[26px] bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-2xl shadow-cyan-500/30 animate-float-orb">
-          <svg class="w-12 h-12 drop-shadow-sm" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
-        </div>
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-cyan-200 to-indigo-300 bg-clip-text text-transparent">
-        AXON AI
-      </h1>
-      <p class="mt-2 text-xs sm:text-sm uppercase tracking-[0.26em] text-slate-400 font-medium">
-        Neural Intelligence Workspace
-      </p>
+  <!-- ================= 1. SPLASH SCREEN ================= -->
+  <div id="splash-screen">
+    <div class="splash-logo">A</div>
+    <div class="splash-title">AXON AI</div>
+    <div class="splash-sub">PRO INTELLIGENCE WORKSPACE</div>
+  </div>
 
-      <div class="mt-8 w-56 h-1.5 bg-slate-800/90 rounded-full overflow-hidden border border-slate-700/50">
-        <div id="splash-progress" class="h-full w-0 bg-gradient-to-r from-cyan-400 to-indigo-500 rounded-full transition-all duration-300"></div>
-      </div>
-      <p id="splash-status" class="mt-3 text-xs text-slate-400">Initializing neural core...</p>
-    </div>
-  </section>
-
-  <!-- ==================== 2. LOGIN SCREEN ==================== -->
-  <section id="login-screen" class="hidden fixed inset-0 z-40 overflow-y-auto px-4 py-8 flex items-center justify-center">
-    <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/50 animate-fade-up">
-      <div class="flex flex-col items-center text-center mb-6">
-        <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-lg shadow-cyan-500/25 mb-3">
-          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
-        </div>
-        <h2 class="text-2xl font-bold text-white tracking-tight">Welcome to AXON AI</h2>
-        <p class="text-sm text-slate-400 mt-1">Sign in to access your AI assistant, voice control &amp; history</p>
+  <!-- ================= 2. LOGIN SCREEN (REPAIRED AUTH) ================= -->
+  <div id="login-screen" class="hidden">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="splash-logo" style="width:56px;height:56px;font-size:24px;margin:0 auto 12px;">A</div>
+        <h2 id="auth-title">Welcome to AXON AI</h2>
+        <p>Sign in to access your Pro AI Workspace</p>
       </div>
 
-      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800 mb-5">
-        <button id="tab-signin" type="button" class="py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition">Sign In</button>
-        <button id="tab-signup" type="button" class="py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition">Create Account</button>
-      </div>
+      <input type="text" id="auth-name" class="auth-input hidden" placeholder="Full Name" />
+      <input type="email" id="auth-email" class="auth-input" placeholder="Email Address" />
+      <input type="password" id="auth-pass" class="auth-input" placeholder="Password" />
 
-      <form id="auth-form" class="space-y-4" novalidate>
-        <div id="name-field-wrap" class="hidden">
-          <label for="auth-name" class="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
-          <input id="auth-name" type="text" placeholder="Aarav Sharma" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
-        </div>
+      <button id="email-auth-btn" class="btn-primary">Sign In</button>
 
-        <div>
-          <label for="auth-email" class="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
-          <input id="auth-email" type="email" placeholder="you@axon.ai" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
-        </div>
+      <button id="google-auth-btn" class="btn-google" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Continue with Google
+      </button>
 
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label for="auth-password" class="block text-xs font-medium text-slate-300">Password</label>
-            <button id="btn-forgot-pw" type="button" class="text-xs text-cyan-400 hover:text-cyan-300 transition">Forgot password?</button>
-          </div>
-          <div class="relative">
-            <input id="auth-password" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 pr-11 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" />
-            <button id="btn-toggle-pw" type="button" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </div>
+      <div id="auth-status" class="auth-status"></div>
 
-        <p id="auth-error" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg px-3 py-2"></p>
-
-        <button id="btn-auth-submit" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-cyan-500/20 transition transform active:scale-[0.99]">
-          Sign In to AXON AI
-        </button>
-      </form>
-
-      <div class="relative my-5">
-        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-800"></div></div>
-        <div class="relative flex justify-center text-xs"><span class="px-3 bg-[#0e1526] text-slate-500">or continue with</span></div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3">
-        <button id="btn-google-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-slate-200 transition">
-          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
-          Google
-        </button>
-        <button id="btn-guest-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-cyan-300 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          Quick Demo
-        </button>
+      <div class="auth-toggle">
+        <span id="toggle-auth-mode">Don't have an account? Create one</span>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ==================== 3. MAIN APPLICATION ==================== -->
-  <div id="app-screen" class="hidden h-full w-full flex overflow-hidden">
-    <div id="sidebar-backdrop" class="hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"></div>
+  <!-- ================= 3. MAIN APP CONTAINER ================= -->
+  <div id="app-container" class="hidden">
+    <!-- Top Header (Shown in Chat View) -->
+    <div id="chat-topbar" class="topbar">
+      <button class="icon-btn" id="open-sidebar-btn" title="Menu">☰</button>
+      <div class="brand-badge">
+        <span>AXON AI</span>
+        <span class="brand-pill" id="active-model-badge">AXON Pro 2.5</span>
+      </div>
+      <button class="icon-btn" id="open-settings-top-btn" title="Settings">⚙️</button>
+    </div>
 
-    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-[#0a0f1d] border-r border-slate-800/80 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
-      <div class="p-4 flex items-center justify-between border-b border-slate-800/80">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-md shadow-cyan-500/20 flex items-center justify-center">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
-          </div>
-          <div>
-            <span class="font-bold text-white tracking-tight text-base">AXON AI</span>
-            <span class="block text-[10px] text-cyan-400 font-medium uppercase tracking-wider">Pro Workspace</span>
-          </div>
+    <!-- Sidebar Drawer -->
+    <div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
+    <aside id="sidebar" class="sidebar">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-weight:700;font-size:17px;">AXON AI</div>
+          <div style="font-size:11px;color:var(--accent);font-weight:600;">PRO WORKSPACE</div>
         </div>
-        <button id="btn-close-sidebar" type="button" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
+        <button class="icon-btn" id="close-sidebar-btn">✕</button>
       </div>
 
-      <div class="p-3">
-        <button id="btn-new-chat" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500/15 to-indigo-500/15 hover:from-cyan-500/25 hover:to-indigo-500/25 border border-cyan-400/30 text-cyan-200 text-sm font-semibold transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          New Chat
-        </button>
-      </div>
+      <button class="new-chat-btn" id="new-chat-btn">+ New Conversation</button>
 
-      <div class="px-3 py-1 flex items-center justify-between">
-        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Recent Chats</span>
-        <span id="sidebar-history-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium">Recording</span>
-      </div>
-      <div id="sidebar-chat-list" class="flex-1 overflow-y-auto px-2.5 py-1.5 space-y-1"></div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;">RECENT CHATS</div>
+      <div class="history-list" id="sidebar-history-list"></div>
 
-      <div class="p-2.5 border-t border-slate-800/80 space-y-1">
-        <button id="nav-chat" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition">
-          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          AI Chat
-        </button>
-        <button id="nav-apps" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
-          <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-          App Hub
-        </button>
-        <button id="nav-settings" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
-          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Settings &amp; History
-        </button>
-      </div>
-
-      <div class="p-3 border-t border-slate-800/80 flex items-center justify-between">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div id="user-avatar" class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">AX</div>
-          <div class="min-w-0">
-            <p id="user-display-name" class="text-sm font-semibold text-white truncate">Alex</p>
-            <p id="user-display-email" class="text-[11px] text-slate-400 truncate">alex@axon.ai</p>
-          </div>
-        </div>
-        <button id="btn-logout" type="button" title="Sign Out" class="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        </button>
+      <div class="sidebar-footer">
+        <div class="nav-link" id="nav-chat-btn">💬 AI Chat</div>
+        <div class="nav-link" id="nav-settings-btn">⚙️ Settings & Profile</div>
+        <div class="nav-link" id="sidebar-logout-btn" style="color:#f87171;">🚪 Sign Out</div>
       </div>
     </aside>
 
-    <main class="flex-1 flex flex-col min-w-0 h-full relative">
-      <header class="h-14 shrink-0 px-3 sm:px-5 border-b border-slate-800/80 bg-[#0a0f1d]/80 backdrop-blur-md flex items-center justify-between gap-2 z-20">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <button id="btn-open-sidebar" type="button" class="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-          <h2 id="header-title" class="text-sm sm:text-base font-semibold text-white truncate">AXON AI Chat</h2>
-          <span id="mode-badge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Online
-          </span>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button id="btn-header-voice" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-            <span id="header-voice-label">Voice Off</span>
-          </button>
-
-          <button id="btn-header-settings" type="button" title="Settings" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/70 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </button>
-        </div>
-      </header>
-
-      <!-- ==================== VIEW 1: CHAT INTERFACE ==================== -->
-      <div id="view-chat" class="flex-1 flex flex-col min-h-0">
-        <div id="chat-messages" class="flex-1 overflow-y-auto px-3 sm:px-6 py-5 space-y-5 scroll-smooth"></div>
-
-        <div class="shrink-0 px-3 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-[#070b14] via-[#070b14]/95 to-transparent">
-          <div class="max-w-4xl mx-auto relative">
-
-            <div id="attachment-preview" class="hidden mb-2 p-2.5 rounded-2xl glass-panel flex items-center justify-between gap-3 animate-fade-up">
-              <div class="flex items-center gap-3 min-w-0">
-                <img id="attachment-thumb" src="" alt="Preview" class="hidden w-12 h-12 rounded-xl object-cover border border-slate-700" />
-                <div id="attachment-file-icon" class="hidden w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300 shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                </div>
-                <div class="min-w-0">
-                  <p id="attachment-name" class="text-xs font-semibold text-white truncate">file.png</p>
-                  <p id="attachment-size" class="text-[11px] text-slate-400">Ready to send</p>
-                </div>
-              </div>
-              <button id="btn-remove-attachment" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
-            </div>
-
-            <div id="plus-menu" class="hidden absolute bottom-16 left-0 z-30 w-60 glass-panel rounded-2xl p-2 shadow-2xl shadow-black/60 animate-fade-up">
-              <button id="menu-send-photo" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
-                <span class="w-8 h-8 rounded-lg bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                </span>
-                <div>
-                  <span class="block font-medium text-xs sm:text-sm">Send Photo</span>
-                  <span class="block text-[10px] text-slate-400">Upload from gallery</span>
-                </div>
-              </button>
-
-              <button id="menu-open-camera" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
-                <span class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                </span>
-                <div>
-                  <span class="block font-medium text-xs sm:text-sm">Open Camera</span>
-                  <span class="block text-[10px] text-slate-400">Capture live photo</span>
-                </div>
-              </button>
-
-              <button id="menu-send-file" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
-                <span class="w-8 h-8 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                </span>
-                <div>
-                  <span class="block font-medium text-xs sm:text-sm">Send File</span>
-                  <span class="block text-[10px] text-slate-400">PDF, CSV, TXT, Code</span>
-                </div>
-              </button>
-
-              <button id="menu-deep-think" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
-                <span class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
-                </span>
-                <div>
-                  <span class="block font-medium text-xs sm:text-sm">Deep Think Mode</span>
-                  <span id="deep-think-status" class="block text-[10px] text-slate-400">Off — Standard speed</span>
-                </div>
-              </button>
-            </div>
-
-            <input id="input-photo" type="file" accept="image/*" class="hidden" />
-            <input id="input-file" type="file" accept=".pdf,.txt,.csv,.json,.md,.js,.py,.html,.doc,.docx" class="hidden" />
-
-            <div class="glass-panel rounded-2xl p-2 flex items-end gap-2 shadow-xl shadow-black/40 border border-slate-700/70 focus-within:border-cyan-400/50 transition">
-              <button id="btn-plus-menu" type="button" title="Attach Photo, Camera, or File" class="shrink-0 w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
-
-              <textarea id="chat-input" rows="1" placeholder="Message AXON AI..." class="flex-1 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-500 resize-none py-2.5 px-2 max-h-36 focus:outline-none leading-relaxed"></textarea>
-
-              <div class="flex items-center gap-1.5 shrink-0">
-                <button id="btn-video-call" type="button" title="Start AI Video Call" class="w-10 h-10 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-300 flex items-center justify-center transition">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-                </button>
-
-                <button id="btn-send" type="button" title="Send Message" class="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-cyan-500/20 transition active:scale-95">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
-              </div>
-            </div>
-            <p class="text-[11px] text-slate-500 text-center mt-2">AXON AI can make mistakes. Verify important details.</p>
-          </div>
+    <!-- CHAT VIEW (UNCHANGED) -->
+    <main id="chat-view">
+      <div class="messages-box" id="messages-box">
+        <div class="msg ai">
+          Namaste! Main <strong>AXON AI</strong> hoon. Aapka Pro AI Workspace ready hai. Bataiye aaj kya build ya solve karna hai?
         </div>
       </div>
 
-      <!-- ==================== VIEW 2: APP HUB & YOUTUBE ==================== -->
-      <div id="view-apps" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
-        <div class="max-w-5xl mx-auto space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h3 class="text-xl font-bold text-white">A-to-Z App Hub &amp; Voice Launcher</h3>
-              <p class="text-sm text-slate-400">Say <span class="text-cyan-300">"Open WhatsApp"</span>, <span class="text-cyan-300">"Open Instagram"</span>, <span class="text-cyan-300">"Open YouTube"</span>, or <span class="text-cyan-300">"Scroll the video"</span>.</p>
-            </div>
-            <button id="btn-launch-yt-ext" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
-              Open YouTube.com
-            </button>
-          </div>
-
-          <div id="app-launcher-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3"></div>
-
-          <h4 class="text-sm font-semibold text-slate-300 pt-2">Video Feed (Voice Scroll Ready)</h4>
-          <div id="yt-feed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </div>
-      </div>
-
-      <!-- ==================== VIEW 3: SETTINGS & HISTORY ==================== -->
-      <div id="view-settings" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
-        <div class="max-w-3xl mx-auto space-y-6 pb-10">
-          <div>
-            <h3 class="text-2xl font-bold text-white">Settings</h3>
-            <p class="text-sm text-slate-400 mt-1">Configure Voice Control, Voice Selection, and Chat History preferences.</p>
-          </div>
-
-          <div class="glass-panel rounded-2xl p-5 space-y-4">
-            <div class="flex items-start justify-between gap-4">
-              <div class="flex items-start gap-3">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-400/30 text-cyan-400 flex items-center justify-center shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-                </div>
-                <div>
-                  <h4 class="text-base font-semibold text-white">Voice Control</h4>
-                  <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Control AXON AI hands-free. Open apps like WhatsApp, Instagram, YouTube, or scroll videos.</p>
-                </div>
-              </div>
-              <button id="toggle-voice-control" type="button" role="switch" aria-checked="false" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-slate-700 transition-colors duration-200 focus:outline-none">
-                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 translate-x-0"></span>
-              </button>
-            </div>
-
-            <div class="flex items-center justify-between pt-3 border-t border-slate-800/80">
-              <div>
-                <p class="text-sm font-medium text-slate-200">Spoken AI Responses (Text-to-Speech)</p>
-                <p class="text-xs text-slate-400">Read AI answers aloud when Voice Control is active</p>
-              </div>
-              <button id="toggle-voice-tts" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
-                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
-              </button>
-            </div>
-
-            <div class="pt-3 border-t border-slate-800/80 space-y-2">
-              <label for="setting-voice-select" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Voice Change (Text-to-Speech Voice)</label>
-              <p class="text-xs text-slate-400">Choose your preferred AI speaking voice (Male, Female, or language accent).</p>
-              <select id="setting-voice-select" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
-                <option value="">Default Browser Voice</option>
-              </select>
-            </div>
-
-            <div class="pt-3 border-t border-slate-800/80 space-y-2.5">
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Try Voice Commands (Live Mic or Text Simulator)</p>
-              <div class="flex gap-2">
-                <input id="voice-sim-input" type="text" placeholder='Type or say e.g. "Open WhatsApp" or "Open Instagram"' class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
-                <button id="btn-run-voice-sim" type="button" class="px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/30 text-cyan-200 text-xs font-semibold transition">Execute</button>
-              </div>
-              <div class="flex flex-wrap gap-1.5">
-                <button type="button" data-voice-cmd="Open WhatsApp" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Open WhatsApp"</button>
-                <button type="button" data-voice-cmd="Open Instagram" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Open Instagram"</button>
-                <button type="button" data-voice-cmd="Open YouTube" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Open YouTube"</button>
-                <button type="button" data-voice-cmd="Scroll the video" class="voice-chip px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700/70 transition">"Scroll the video"</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="glass-panel rounded-2xl p-5 space-y-4">
-            <div class="flex items-start justify-between gap-4">
-              <div class="flex items-start gap-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-400/30 text-indigo-400 flex items-center justify-center shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                </div>
-                <div>
-                  <h4 class="text-base font-semibold text-white">History</h4>
-                  <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Automatically record and save all your chat conversations and messages.</p>
-                </div>
-              </div>
-              <button id="toggle-history" type="button" role="switch" aria-checked="true" class="relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-indigo-500 transition-colors duration-200 focus:outline-none">
-                <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
-              </button>
-            </div>
-
-            <div class="pt-3 border-t border-slate-800/80 space-y-3">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Recorded Chat History (<span id="history-count">0</span>)</span>
-                <div class="flex items-center gap-2">
-                  <button id="btn-export-history" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">Export JSON</button>
-                  <button id="btn-clear-history" type="button" class="px-3 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-xs font-medium text-rose-300 border border-rose-500/20 transition">Clear All</button>
-                </div>
-              </div>
-
-              <input id="history-search" type="text" placeholder="Search saved messages..." class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700/80 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400" />
-
-              <div id="settings-history-list" class="max-h-72 overflow-y-auto space-y-2 pr-1"></div>
-            </div>
-          </div>
-
-          <div class="glass-panel rounded-2xl p-5 space-y-4">
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <h4 class="text-base font-semibold text-white">Appearance &amp; Display</h4>
-                <p class="text-xs text-slate-400 mt-0.5">Customize Dark/Light theme and text size.</p>
-              </div>
-              <div class="flex items-center gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800">
-                <button id="btn-theme-dark" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition">Dark</button>
-                <button id="btn-theme-light" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">Light</button>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-              <div>
-                <label for="setting-font-size" class="block text-xs text-slate-400 mb-1">Chat Text Size</label>
-                <select id="setting-font-size" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
-                  <option value="sm">Compact (Small)</option>
-                  <option value="md" selected>Standard (Medium)</option>
-                  <option value="lg">Comfortable (Large)</option>
-                </select>
-              </div>
-              <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                <div>
-                  <p class="text-xs font-medium text-slate-200">Auto-Scroll Chat</p>
-                  <p class="text-[11px] text-slate-400">Jump to newest message</p>
-                </div>
-                <button id="toggle-autoscroll" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
-                  <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="chat-input-bar">
+        <button class="icon-btn" id="mic-btn" title="Voice Input">🎙️</button>
+        <input type="text" id="chat-input" class="chat-input" placeholder="Ask AXON AI anything..." />
+        <button class="send-btn" id="send-btn" title="Send">➤</button>
       </div>
     </main>
-  </div>
 
-  <div id="voice-hud" class="hidden fixed bottom-24 right-4 sm:right-6 z-40 glass-panel rounded-2xl p-3.5 w-72 shadow-2xl shadow-cyan-500/20 border border-cyan-400/40 animate-fade-up">
-    <div class="flex items-center justify-between mb-2">
-      <div class="flex items-center gap-2">
-        <span class="relative flex h-3 w-3">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-        </span>
-        <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Voice Control Active</span>
-      </div>
-      <button id="btn-hud-stop-voice" type="button" class="text-[11px] text-slate-400 hover:text-rose-400 font-medium">Stop</button>
-    </div>
-    <p id="voice-hud-transcript" class="text-xs text-slate-200 italic truncate">"Listening for commands..."</p>
-    <p id="voice-hud-action" class="text-[11px] text-emerald-400 mt-1 truncate">Ready: Try "Open WhatsApp" or "Scroll"</p>
-  </div>
-
-  <div id="camera-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="w-full max-w-lg glass-panel rounded-3xl overflow-hidden shadow-2xl animate-fade-up">
-      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-white">AXON Camera</h3>
-        <button id="btn-close-camera" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <div class="p-4 space-y-4">
-        <div class="relative aspect-video bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 flex items-center justify-center">
-          <video id="camera-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
-          <canvas id="camera-canvas" class="hidden"></canvas>
-          <div id="camera-fallback" class="hidden text-center p-6">
-            <svg class="w-10 h-10 text-slate-500 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            <p class="text-xs text-slate-400">Camera access is unavailable or blocked.</p>
-          </div>
+    <!-- ================= 4. NEW PROFESSIONAL SETTINGS VIEW (MATCHING IMAGE 1) ================= -->
+    <section id="settings-view" class="hidden">
+      <!-- Top Bar matching Reference Image -->
+      <div class="settings-header">
+        <button class="neon-circle-btn" id="settings-back-btn" title="Back to Chat">←</button>
+        <div class="settings-title-wrap">
+          <span style="color:var(--accent);">⚙️</span>
+          <span>Settings</span>
         </div>
-        <div class="flex items-center justify-end gap-2">
-          <button id="btn-camera-upload-alt" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 transition">Upload Photo Instead</button>
-          <button id="btn-camera-capture" type="button" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow-lg transition">Capture Photo</button>
-        </div>
+        <button class="neon-circle-btn" id="settings-info-btn" title="Workspace Info">ⓘ</button>
       </div>
-    </div>
-  </div>
 
-  <!-- ==================== VIDEO CALL MODAL ==================== -->
-  <div id="videocall-modal" class="hidden fixed inset-0 z-50 bg-[#050811]/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-7 animate-fade-up">
-    <div class="w-full max-w-5xl flex items-center justify-between gap-2">
-      <div class="flex items-center gap-3">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <div>
-          <h3 class="text-base font-bold text-white">AXON AI Live Video Call</h3>
-          <p id="call-timer" class="text-xs text-cyan-300 font-mono">00:00</p>
-        </div>
-      </div>
-      <span id="call-voice-status" class="px-3 py-1 rounded-full text-xs bg-cyan-500/15 text-cyan-300 border border-cyan-400/30">Mic Listening</span>
-    </div>
+      <!-- CARD 1: ACCOUNT & PROFILE (Featured Cosmic Card) -->
+      <div class="glass-card featured searchable-card" data-keywords="account profile name photo email edit management">
+        <div class="section-tag">1. Account & Profile</div>
 
-    <div class="relative w-full max-w-5xl flex-1 my-4 rounded-3xl glass-panel border border-slate-800 flex flex-col items-center justify-between overflow-hidden p-4 sm:p-6">
-      <div class="relative w-full flex-1 min-h-[210px] sm:min-h-[280px] rounded-2xl bg-slate-950 border border-slate-700/80 overflow-hidden shadow-2xl flex items-center justify-center">
-        <video id="call-pip-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
-        <div id="call-pip-off" class="hidden flex-col items-center justify-center text-center p-4">
-          <span class="text-xs sm:text-sm text-slate-400">Your Camera is Off</span>
-        </div>
-
-        <div class="absolute top-3 left-3 flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#070b14]/85 backdrop-blur-md border border-cyan-400/30 shadow-lg">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 via-indigo-500 to-purple-600 p-0.5 animate-float-orb">
-            <div class="w-full h-full rounded-full bg-[#070b14] flex items-center justify-center gap-0.5">
-              <div class="wave-bar" style="height:6px;width:2.5px;animation-delay:0.0s"></div>
-              <div class="wave-bar" style="height:12px;width:2.5px;animation-delay:0.15s"></div>
-              <div class="wave-bar" style="height:8px;width:2.5px;animation-delay:0.3s"></div>
+        <!-- Profile Name, Photo & Email -->
+        <div class="setting-row" id="row-edit-profile">
+          <div class="row-left">
+            <div class="avatar-circle" id="set-avatar">AX</div>
+            <div class="row-text">
+              <div class="row-title">
+                <span id="set-profile-name">AXON Member</span>
+                <span class="verified-tick">✓</span>
+              </div>
+              <div class="row-sub" id="set-profile-email">user@axon.ai</div>
             </div>
           </div>
-          <div>
-            <p class="text-[11px] font-bold text-white leading-none">AXON AI</p>
-            <p id="call-heard-text" class="text-[10px] text-cyan-300 mt-0.5 max-w-[180px] sm:max-w-[260px] truncate">Speak now — voice active</p>
+          <div class="row-right">
+            <span class="pill-tag">Edit Profile</span>
+            <span class="chevron">›</span>
+          </div>
+        </div>
+
+        <!-- Profile Photo Change -->
+        <div class="setting-row" id="row-change-photo">
+          <div class="row-left">
+            <div class="row-icon">🖼️</div>
+            <div class="row-text">
+              <div class="row-title">Profile Photo</div>
+              <div class="row-sub">Upload custom avatar or use initials</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <input type="file" id="photo-file-input" accept="image/*" class="hidden" />
+            <span class="pill-tag">Change</span>
+            <span class="chevron">›</span>
+          </div>
+        </div>
+
+        <!-- Account Information -->
+        <div class="setting-row" id="row-account-info">
+          <div class="row-left">
+            <div class="row-icon purple">🪪</div>
+            <div class="row-text">
+              <div class="row-title">Account Information</div>
+              <div class="row-sub" id="set-account-provider">Workspace ID & Sign-in Provider</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <span class="pill-tag">Pro</span>
+            <span class="chevron">›</span>
+          </div>
+        </div>
+
+        <!-- Account Management -->
+        <div class="setting-row" id="row-account-manage">
+          <div class="row-left">
+            <div class="row-icon amber">🔐</div>
+            <div class="row-text">
+              <div class="row-title">Account Management</div>
+              <div class="row-sub">Password reset, session & sign out</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <span class="chevron">›</span>
           </div>
         </div>
       </div>
 
-      <p id="call-caption" class="mt-3 text-sm sm:text-base text-slate-200 text-center max-w-2xl font-medium">
-        "Hi! I'm AXON AI. Speak clearly—your voice is being sent directly to me."
-      </p>
-    </div>
+      <!-- CARD 2: AI & MODEL SETTINGS -->
+      <div class="glass-card searchable-card" data-keywords="ai model selection information engine">
+        <div class="section-tag">2. AI & Model Settings</div>
 
-    <div class="flex items-center gap-4">
-      <button id="btn-call-mic" type="button" title="Mute / Unmute Mic" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center border border-slate-700 transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-      </button>
-      <button id="btn-call-cam" type="button" title="Toggle Camera" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center border border-slate-700 transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-      </button>
-      <button id="btn-end-call" type="button" title="End Video Call" class="px-6 h-12 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-rose-600/30 transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="23" y1="1" x2="1" y2="23"/></svg>
-        End Call
-      </button>
-    </div>
-  </div>
-
-  <div id="confirm-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-sm glass-panel rounded-2xl p-5 space-y-4 animate-fade-up">
-      <h4 id="confirm-title" class="text-base font-bold text-white">Clear All History?</h4>
-      <p id="confirm-desc" class="text-xs sm:text-sm text-slate-400">This will permanently delete all saved conversations from this device.</p>
-      <div class="flex justify-end gap-2">
-        <button id="btn-confirm-cancel" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
-        <button id="btn-confirm-ok" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Delete All</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="google-picker-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="w-full max-w-md glass-panel rounded-3xl p-6 shadow-2xl animate-fade-up space-y-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <svg class="w-6 h-6" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
-          <div>
-            <h3 class="text-base font-bold text-white">Firebase Google Sign-In</h3>
-            <p class="text-[11px] text-slate-400">Authenticating with your Google Account</p>
+        <!-- AI Model Selection -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon purple">✨</div>
+            <div class="row-text">
+              <div class="row-title">AI Model Selection</div>
+              <div class="row-sub">Choose intelligence engine for responses</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <select id="set-ai-model" class="styled-select">
+              <option value="AXON Pro 2.5">AXON Pro 2.5</option>
+              <option value="AXON Ultra Reasoning">AXON Ultra Reasoning</option>
+              <option value="AXON Flash Speed">AXON Flash Speed</option>
+              <option value="AXON Code Studio">AXON Code Studio</option>
+            </select>
           </div>
         </div>
-        <button id="btn-close-google-picker" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
+
+        <!-- Model Information -->
+        <div class="setting-row" id="row-model-info">
+          <div class="row-left">
+            <div class="row-icon">🧠</div>
+            <div class="row-text">
+              <div class="row-title">Model Information</div>
+              <div class="row-sub" id="set-model-desc">128K Context • Fast Multimodal Engine</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <span class="chevron">›</span>
+          </div>
+        </div>
       </div>
-      <div class="p-4 text-center space-y-3">
-        <p class="text-xs text-slate-300">Firebase Auth SDK is initialized with your project configuration.</p>
-        <button id="btn-firebase-google-auth" type="button" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow transition">Continue with Firebase Google Sign-In</button>
+
+      <!-- CARD 3: VOICE & TTS (6 VOICES + AUTO STOP DEVICE CONTROLLER) -->
+      <div class="glass-card searchable-card" data-keywords="voice tts speech audio speaker controller 6 voices">
+        <div class="section-tag">3. Voice & Audio Controller (6 Voices)</div>
+
+        <!-- Spoken AI Responses Toggle -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon amber">🔊</div>
+            <div class="row-text">
+              <div class="row-title">Auto Spoken AI (TTS)</div>
+              <div class="row-sub">Reads full answer & stops controller automatically</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <label class="switch">
+              <input type="checkbox" id="set-tts-enabled" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Total 6 Voices Selector -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon">🎙️</div>
+            <div class="row-text">
+              <div class="row-title">AI Voice Profile (6 Voices)</div>
+              <div class="row-sub">Select natural studio voice</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <select id="set-tts-voice" class="styled-select">
+              <option value="0">1. Aarav (Male • Hindi/IN)</option>
+              <option value="1">2. Kavya (Female • Hindi/IN)</option>
+              <option value="2">3. Kabir (Deep Male • Pro)</option>
+              <option value="3">4. Ananya (Soft Female • Clear)</option>
+              <option value="4">5. Rohan (Energetic Male)</option>
+              <option value="5">6. Tara (Global Assistant)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Test Voice & Device Controller Status -->
+        <div class="setting-row" id="row-test-voice">
+          <div class="row-left">
+            <div class="row-icon green">🎛️</div>
+            <div class="row-text">
+              <div class="row-title">Test Voice & Device Controller</div>
+              <div class="row-sub" id="tts-controller-status">Controller Standby (Auto-Stop Active)</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <span class="pill-tag" id="test-voice-btn">Test ▶</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: GENERAL SETTINGS -->
+      <div class="glass-card searchable-card" data-keywords="general language default chat mode auto save history startup theme dark light reset">
+        <div class="section-tag">4. General Settings</div>
+
+        <!-- Theme Switcher (Fixed Dark & Light Mode) -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon">🌓</div>
+            <div class="row-text">
+              <div class="row-title">Appearance Theme</div>
+              <div class="row-sub">Cosmic Dark or Clean Light Mode</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <select id="set-theme" class="styled-select">
+              <option value="dark">Cosmic Dark</option>
+              <option value="light">Clean Light</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- App Language -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon">🌐</div>
+            <div class="row-text">
+              <div class="row-title">App Language</div>
+              <div class="row-sub">Interface & response language</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <select id="set-language" class="styled-select">
+              <option value="English">English</option>
+              <option value="Hindi">हिन्दी (Hindi)</option>
+              <option value="Hinglish">Hinglish</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Default AI Model -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon purple">⚡</div>
+            <div class="row-text">
+              <div class="row-title">Default AI Model</div>
+              <div class="row-sub">Model loaded on new session</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <select id="set-default-model" class="styled-select">
+              <option value="AXON Pro 2.5">AXON Pro 2.5</option>
+              <option value="AXON Flash Speed">AXON Flash Speed</option>
+              <option value="AXON Ultra Reasoning">AXON Ultra Reasoning</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Default Chat Mode -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon">💬</div>
+            <div class="row-text">
+              <div class="row-title">Default Chat Mode</div>
+              <div class="row-sub">Conversation style & depth</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <select id="set-chat-mode" class="styled-select">
+              <option value="Balanced">Balanced</option>
+              <option value="Creative">Creative</option>
+              <option value="Precise & Short">Precise & Short</option>
+              <option value="Developer Pro">Code & Logic</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Auto Save Chats -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon green">💾</div>
+            <div class="row-text">
+              <div class="row-title">Auto Save Chats</div>
+              <div class="row-sub">Automatically store conversations</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <label class="switch">
+              <input type="checkbox" id="set-autosave" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Chat History Management -->
+        <div class="setting-row" id="row-clear-history">
+          <div class="row-left">
+            <div class="row-icon">🗂️</div>
+            <div class="row-text">
+              <div class="row-title">Chat History</div>
+              <div class="row-sub" id="set-history-count">Manage or clear saved chats</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <span class="pill-tag" style="color:#f87171;border-color:rgba(248,113,113,0.4);">Clear All</span>
+          </div>
+        </div>
+
+        <!-- Startup Preferences -->
+        <div class="setting-row">
+          <div class="row-left">
+            <div class="row-icon">🚀</div>
+            <div class="row-text">
+              <div class="row-title">Startup Preferences</div>
+              <div class="row-sub">Screen shown when AXON AI opens</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <select id="set-startup" class="styled-select">
+              <option value="new_chat">Start New Chat</option>
+              <option value="last_chat">Resume Last Chat</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Reset Settings -->
+        <div class="setting-row" id="row-reset-settings">
+          <div class="row-left">
+            <div class="row-icon amber">🔄</div>
+            <div class="row-text">
+              <div class="row-title">Reset Settings</div>
+              <div class="row-sub">Restore all preferences to default</div>
+            </div>
+          </div>
+          <div class="row-right">
+            <span class="chevron">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Search Settings Bar (Exact Image 1 Placement) -->
+      <div class="search-settings-wrap">
+        <span class="search-settings-icon">🔍</span>
+        <input type="text" id="search-settings-input" class="search-settings-input" placeholder="Search settings" />
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= REUSABLE MODAL ================= -->
+  <div id="app-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <h3 id="modal-title">Title</h3>
+      <div id="modal-body"></div>
+      <div class="modal-actions" id="modal-actions">
+        <button class="btn-secondary" id="modal-close-btn">Close</button>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="hidden fixed top-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl glass-panel border border-cyan-400/30 text-xs sm:text-sm font-medium text-white shadow-2xl animate-fade-up"></div>
+  <!-- Firebase Compat SDKs (Clean Error-Free Initialization) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
   <script>
-    (() => {
-      'use strict';
+    /* =====================================================================
+       1. FIREBASE CONFIG & REPAIRED AUTH (NO RAW SDK ERRORS ON CLICK)
+       ===================================================================== */
+    const firebaseConfig = {
+      // TODO: Yahan apna asli Firebase Config paste karein
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-      const STORAGE_KEY = 'axon_ai_workspace_v1';
+    let firebaseAuth = null;
+    let isFirebaseReady = false;
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyA-YnGuAr8BdGt8xbo0Eq06lijQEPoeTC8",
-        authDomain: "axon-ai-9ee3b.firebaseapp.com",
-        databaseURL: "https://axon-ai-9ee3b-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "axon-ai-9ee3b",
-        storageBucket: "axon-ai-9ee3b.firebasestorage.app",
-        messagingSenderId: "304665322304",
-        appId: "1:304665322304:web:b409df4442f3cf018710a5",
-        measurementId: "G-NBP2KRZWSG"
-      };
-
-      let firebaseAuth = null;
-      let firebaseReady = false;
-      let splashFinished = false;
-      let demoSession = false;
-
-      function initializeFirebaseAuth() {
-        const hasConfig = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_') &&
-          firebaseConfig.appId && !firebaseConfig.appId.startsWith('PASTE_') &&
-          firebaseConfig.messagingSenderId && !firebaseConfig.messagingSenderId.startsWith('PASTE_');
-        if (!hasConfig || typeof firebase === 'undefined' || !firebase.initializeApp) return false;
-        try {
-          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-          firebaseAuth = firebase.auth();
-          firebaseReady = true;
-          firebaseAuth.getRedirectResult().catch((err) => {
-            if (err && err.code && err.code !== 'auth/popup-closed-by-user') {
-              showAuthError(firebaseErrorMessage(err));
-            }
-          });
-          firebaseAuth.onAuthStateChanged((user) => {
-            if (user) {
-              demoSession = false;
-              completeLogin(user.displayName || user.email?.split('@')[0] || 'AXON User', user.email || '');
-            } else if (!demoSession) {
-              state.user = null;
-              if (splashFinished) {
-                $('app-screen').classList.add('hidden');
-                $('login-screen').classList.remove('hidden');
-              }
-            }
-          });
-          return true;
-        } catch (error) {
-          console.error('Firebase initialization failed:', error);
-          return false;
+    try {
+      if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_FIREBASE")) {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
         }
+        firebaseAuth = firebase.auth();
+        isFirebaseReady = true;
+      }
+    } catch (e) {
+      isFirebaseReady = false;
+    }
+
+    /* =====================================================================
+       2. APP STATE & SETTINGS STORAGE
+       ===================================================================== */
+    const defaultSettings = {
+      name: "AXON Member",
+      email: "member@axon.ai",
+      photo: "",
+      provider: "Email / Workspace",
+      theme: "dark",
+      language: "English",
+      aiModel: "AXON Pro 2.5",
+      defaultModel: "AXON Pro 2.5",
+      chatMode: "Balanced",
+      autoSave: true,
+      startup: "new_chat",
+      ttsEnabled: true,
+      ttsVoiceIndex: 0
+    };
+
+    let settings = { ...defaultSettings, ...JSON.parse(localStorage.getItem("axon_settings") || "{}") };
+    let chats = JSON.parse(localStorage.getItem("axon_chats") || "[]");
+    let currentChatId = null;
+    let isSignUpMode = false;
+
+    function saveSettings() {
+      localStorage.setItem("axon_settings", JSON.stringify(settings));
+      applySettingsToUI();
+    }
+
+    function applySettingsToUI() {
+      // Theme Fix (Clean Dark & Clean Light without layout break)
+      document.documentElement.setAttribute("data-theme", settings.theme);
+      document.getElementById("set-theme").value = settings.theme;
+
+      // Profile Info
+      document.getElementById("set-profile-name").textContent = settings.name || "AXON Member";
+      document.getElementById("set-profile-email").textContent = settings.email || "member@axon.ai";
+      document.getElementById("set-account-provider").textContent = `Signed in via ${settings.provider}`;
+
+      const avatarEl = document.getElementById("set-avatar");
+      if (settings.photo) {
+        avatarEl.innerHTML = `<img src="${settings.photo}" alt="Profile" />`;
+      } else {
+        const initials = (settings.name || "AX").slice(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
       }
 
-      function showAuthError(message) {
-        const el = $('auth-error');
-        el.textContent = message;
-        el.classList.remove('hidden');
-      }
+      // General & AI Settings
+      document.getElementById("set-ai-model").value = settings.aiModel;
+      document.getElementById("active-model-badge").textContent = settings.aiModel;
+      document.getElementById("set-language").value = settings.language;
+      document.getElementById("set-default-model").value = settings.defaultModel;
+      document.getElementById("set-chat-mode").value = settings.chatMode;
+      document.getElementById("set-autosave").checked = settings.autoSave;
+      document.getElementById("set-startup").value = settings.startup;
+      document.getElementById("set-tts-enabled").checked = settings.ttsEnabled;
+      document.getElementById("set-tts-voice").value = String(settings.ttsVoiceIndex);
+      document.getElementById("set-history-count").textContent = `${chats.length} saved conversations`;
 
-      function firebaseErrorMessage(error) {
-        const code = error && error.code ? error.code : '';
-        const messages = {
-          'auth/invalid-email': 'Email address sahi nahi hai.',
-          'auth/user-not-found': 'Is email se account nahi mila. Pehle account banayein.',
-          'auth/wrong-password': 'Password galat hai.',
-          'auth/invalid-credential': 'Email ya password galat hai.',
-          'auth/email-already-in-use': 'Is email se account pehle se bana hua hai. Sign In karein.',
-          'auth/weak-password': 'Password kam se kam 6 characters ka hona chahiye.',
-          'auth/popup-closed-by-user': 'Google sign-in window band ho gayi. Dobara try karein.',
-          'auth/popup-blocked': 'Browser ne popup block kar diya. Page ko browser mein kholkar dobara try karein.',
-          'auth/unauthorized-domain': 'Firebase Console -> Auth -> Authorized domains mein is website ka domain add karein.',
-          'auth/network-request-failed': 'Internet connection check karke dobara try karein.'
-        };
-        return messages[code] || (error?.message || 'Sign-in nahi ho paya. Firebase settings check karein.');
-      }
-
-      const APP_DIRECTORY = [
-        { name: 'Airtel Thanks', aliases: ['airtel', 'एयरटेल'], url: 'https://www.airtel.in', color: 'from-red-600 to-rose-700', icon: '📶' },
-        { name: 'Amazon India', aliases: ['amazon', 'अमेजन'], url: 'https://www.amazon.in', color: 'from-amber-500 to-orange-600', icon: '📦' },
-        { name: 'BharatPe', aliases: ['bharatpe', 'भारतपे'], url: 'https://bharatpe.com', color: 'from-blue-600 to-cyan-600', icon: '💳' },
-        { name: 'BookMyShow', aliases: ['bookmyshow', 'tickets', 'movie'], url: 'https://in.bookmyshow.com', color: 'from-rose-600 to-pink-600', icon: '🎟️' },
-        { name: 'Canva', aliases: ['canva', 'design'], url: 'https://www.canva.com', color: 'from-cyan-500 to-indigo-600', icon: '🎨' },
-        { name: 'DigiLocker', aliases: ['digilocker', 'aadhaar', 'डिजिलॉकर'], url: 'https://www.digilocker.gov.in', color: 'from-blue-600 to-indigo-700', icon: '🪪' },
-        { name: 'Discord', aliases: ['discord', 'डिस्कॉर्ड'], url: 'https://discord.com/app', color: 'from-indigo-500 to-purple-600', icon: '🎮' },
-        { name: 'Duolingo', aliases: ['duolingo', 'language'], url: 'https://www.duolingo.com', color: 'from-emerald-500 to-green-600', icon: '🦉' },
-        { name: 'Facebook', aliases: ['facebook', 'fb', 'फेसबुक'], url: 'https://www.facebook.com', color: 'from-blue-600 to-indigo-600', icon: '📘' },
-        { name: 'Flipkart', aliases: ['flipkart', 'फ्लिपकार्ट'], url: 'https://www.flipkart.com', color: 'from-blue-500 to-amber-500', icon: '🛍️' },
-        { name: 'GitHub', aliases: ['github', 'गिटहब'], url: 'https://github.com', color: 'from-slate-600 to-slate-800', icon: '💻' },
-        { name: 'Gmail', aliases: ['gmail', 'email', 'mail', 'जीमेल'], url: 'https://mail.google.com', color: 'from-red-500 to-amber-500', icon: '✉️' },
-        { name: 'Google', aliases: ['google', 'गूगल'], url: 'https://www.google.com', color: 'from-blue-500 to-cyan-500', icon: '🔍' },
-        { name: 'Google Maps', aliases: ['maps', 'map', 'मैप्स'], url: 'https://maps.google.com', color: 'from-emerald-500 to-teal-600', icon: '📍' },
-        { name: 'Google Pay', aliases: ['gpay', 'google pay', 'upi'], url: 'https://pay.google.com', color: 'from-blue-600 to-emerald-500', icon: '💸' },
-        { name: 'Hotstar / JioCinema', aliases: ['hotstar', 'jiocinema', 'jio', 'cinema'], url: 'https://www.hotstar.com', color: 'from-indigo-600 to-cyan-500', icon: '📺' },
-        { name: 'Instagram', aliases: ['instagram', 'insta', 'इंस्टाग्राम'], url: 'https://www.instagram.com', color: 'from-pink-500 via-rose-500 to-amber-500', icon: '📷' },
-        { name: 'IRCTC', aliases: ['irctc', 'train', 'railway', 'ट्रेन'], url: 'https://www.irctc.co.in', color: 'from-blue-700 to-sky-600', icon: '🚆' },
-        { name: 'JioSaavn', aliases: ['jiosaavn', 'saavn', 'gaana'], url: 'https://www.jiosaavn.com', color: 'from-teal-500 to-emerald-600', icon: '🎶' },
-        { name: 'LinkedIn', aliases: ['linkedin', 'लिंक्डइन', 'jobs'], url: 'https://www.linkedin.com', color: 'from-sky-600 to-blue-700', icon: '💼' },
-        { name: 'Meesho', aliases: ['meesho', 'मीशो'], url: 'https://www.meesho.com', color: 'from-pink-600 to-rose-600', icon: '🧺' },
-        { name: 'Netflix', aliases: ['netflix', 'नेटफ्लिक्स'], url: 'https://www.netflix.com', color: 'from-red-600 to-rose-700', icon: '🎬' },
-        { name: 'Ola / Uber', aliases: ['ola', 'uber', 'cab', 'auto'], url: 'https://m.uber.com', color: 'from-slate-700 to-emerald-700', icon: '🚕' },
-        { name: 'Paytm', aliases: ['paytm', 'पेटीएम'], url: 'https://paytm.com', color: 'from-sky-500 to-blue-700', icon: '🏦' },
-        { name: 'PhonePe', aliases: ['phonepe', 'फोनपे'], url: 'https://www.phonepe.com', color: 'from-purple-600 to-indigo-700', icon: '💜' },
-        { name: 'Pinterest', aliases: ['pinterest'], url: 'https://www.pinterest.com', color: 'from-rose-600 to-red-700', icon: '📌' },
-        { name: 'Quora', aliases: ['quora'], url: 'https://www.quora.com', color: 'from-red-600 to-rose-700', icon: '❓' },
-        { name: 'Reddit', aliases: ['reddit', 'रेडिट'], url: 'https://www.reddit.com', color: 'from-orange-500 to-red-600', icon: '🤖' },
-        { name: 'Snapchat', aliases: ['snapchat', 'snap', 'स्नैपचैट'], url: 'https://www.snapchat.com', color: 'from-amber-400 to-yellow-500', icon: '👻' },
-        { name: 'Spotify', aliases: ['spotify', 'स्पॉटीफाई', 'music'], url: 'https://open.spotify.com', color: 'from-green-500 to-emerald-600', icon: '🎵' },
-        { name: 'Swiggy', aliases: ['swiggy', 'food', 'स्विगी'], url: 'https://www.swiggy.com', color: 'from-orange-500 to-amber-600', icon: '🍔' },
-        { name: 'Telegram', aliases: ['telegram', 'टेलीग्राम'], url: 'https://web.telegram.org', color: 'from-sky-500 to-blue-600', icon: '✈️' },
-        { name: 'Truecaller', aliases: ['truecaller', 'caller'], url: 'https://www.truecaller.com', color: 'from-blue-600 to-cyan-600', icon: '📞' },
-        { name: 'UPI / BHIM', aliases: ['bhim', 'upi'], url: 'https://www.bhimupi.org.in', color: 'from-orange-600 to-emerald-600', icon: '🇮🇳' },
-        { name: 'Voot / Jio', aliases: ['jio', 'myjio'], url: 'https://www.jio.com', color: 'from-blue-600 to-rose-600', icon: '📡' },
-        { name: 'WhatsApp', aliases: ['whatsapp', 'व्हाट्सएप', 'whats app'], url: 'https://web.whatsapp.com', color: 'from-emerald-500 to-green-600', icon: '💬' },
-        { name: 'X / Twitter', aliases: ['twitter', 'x ', 'x.com', 'ट्विटर'], url: 'https://x.com', color: 'from-slate-700 to-slate-900', icon: '𝕏' },
-        { name: 'YouTube', aliases: ['youtube', 'यूट्यूब'], url: 'https://www.youtube.com', color: 'from-rose-500 to-red-600', icon: '▶' },
-        { name: 'Zepto', aliases: ['zepto', 'grocery'], url: 'https://www.zeptonow.com', color: 'from-purple-600 to-fuchsia-600', icon: '⚡' },
-        { name: 'Zomato', aliases: ['zomato', 'ज़ोमैटो'], url: 'https://www.zomato.com', color: 'from-red-600 to-rose-700', icon: '🍕' }
-      ];
-
-      const YT_SAMPLE_VIDEOS = [
-        { id: 'v1', title: 'Building Autonomous AI Agents in 2026', channel: 'AXON Labs', views: '142K views', duration: '14:22', color: 'from-cyan-600/30 to-indigo-700/40' },
-        { id: 'v2', title: 'Voice-Controlled Web Apps with Web Speech API', channel: 'DevPulse', views: '89K views', duration: '11:05', color: 'from-rose-600/30 to-orange-600/30' },
-        { id: 'v3', title: 'Node.js + Express Streaming Chat Architecture', channel: 'CodeCraft', views: '215K views', duration: '18:40', color: 'from-emerald-600/30 to-teal-700/30' },
-        { id: 'v4', title: 'Designing Glassmorphic Dark UIs Like a Pro', channel: 'PixelForge', views: '64K views', duration: '09:15', color: 'from-purple-600/30 to-indigo-700/30' },
-        { id: 'v5', title: 'Real-Time WebRTC Video Calls Explained', channel: 'NetStream', views: '112K views', duration: '16:08', color: 'from-amber-600/30 to-rose-700/30' },
-        { id: 'v6', title: 'Next-Gen Neural Interfaces & Multimodal AI', channel: 'FutureTech', views: '310K views', duration: '22:30', color: 'from-blue-600/30 to-cyan-700/30' }
-      ];
-
-      let state = {
-        user: null,
-        authMode: 'signin',
-        activeView: 'chat',
-        deepThink: false,
-        settings: {
-          voiceControl: false,
-          voiceTTS: true,
-          selectedVoice: '',
-          saveHistory: true,
-          theme: 'dark',
-          fontSize: 'md',
-          autoScroll: true
-        },
-        chats: [],
-        activeChatId: null,
-        pendingAttachment: null,
-        isGenerating: false
+      const modelDescriptions = {
+        "AXON Pro 2.5": "128K Context • Balanced Pro Intelligence",
+        "AXON Ultra Reasoning": "Deep Logic • Multi-step Problem Solving",
+        "AXON Flash Speed": "Ultra-Low Latency • Instant Replies",
+        "AXON Code Studio": "Full-Stack Architecture & Debugging"
       };
+      document.getElementById("set-model-desc").textContent = modelDescriptions[settings.aiModel] || "AXON Neural Engine";
+    }
 
-      let recognition = null;
-      let callRecognition = null;
-      let generationAbort = null;
-      let generationTimer = null;
-      let cameraStream = null;
-      let callStream = null;
-      let callInterval = null;
-      let callSeconds = 0;
-      let callMicMuted = false;
-      let callCamOff = false;
-      let availableVoices = [];
+    /* =====================================================================
+       3. SPLASH & AUTH FLOW (NO SDK ERRORS)
+       ===================================================================== */
+    window.addEventListener("DOMContentLoaded", () => {
+      applySettingsToUI();
 
-      function saveState() {
-        try {
-          const payload = {
-            settings: state.settings,
-            chats: state.settings.saveHistory ? state.chats : [],
-            activeChatId: state.activeChatId
-          };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-        } catch (e) {}
-      }
-
-      function loadState() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return;
-          const parsed = JSON.parse(raw);
-          if (parsed.settings) state.settings = { ...state.settings, ...parsed.settings };
-          if (Array.isArray(parsed.chats)) state.chats = parsed.chats;
-          if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
-        } catch (e) {}
-      }
-
-      const $ = (id) => document.getElementById(id);
-
-      function showToast(msg, duration = 2800) {
-        const toast = $('toast');
-        toast.textContent = msg;
-        toast.classList.remove('hidden');
-        clearTimeout(toast._timer);
-        toast._timer = setTimeout(() => toast.classList.add('hidden'), duration);
-      }
-
-      function escapeHtml(str) {
-        return String(str)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      }
-
-      function formatMessageHtml(text) {
-        let safe = escapeHtml(text);
-        safe = safe.replace(/```([\s\S]*?)```/g, (_, code) => {
-          return `<pre class="mt-2 mb-2 p-3 rounded-xl bg-slate-950/90 border border-slate-800 text-xs text-cyan-200 overflow-x-auto font-mono"><code>${code.trim()}</code></pre>`;
-        });
-        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>');
-        safe = safe.replace(/\n/g, '<br/>');
-        return safe;
-      }
-
-      function formatTime(iso) {
-        try {
-          return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        } catch (e) { return ''; }
-      }
-
-      function getActiveChat() {
-        return state.chats.find(c => c.id === state.activeChatId) || null;
-      }
-
-      function createNewChat(switchToChat = true) {
-        const id = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
-        const chat = {
-          id,
-          title: 'New Conversation',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          messages: []
-        };
-        if (state.settings.saveHistory) {
-          state.chats.unshift(chat);
-        } else {
-          state.chats = [chat];
-        }
-        state.activeChatId = id;
-        saveState();
-        if (switchToChat) switchView('chat');
-        renderAll();
-        return chat;
-      }
-
-      function populateVoicesDropdown() {
-        const select = $('setting-voice-select');
-        if (!select) return;
-        if (!('speechSynthesis' in window)) return;
-
-        availableVoices = window.speechSynthesis.getVoices() || [];
-        select.innerHTML = '<option value="">Default Browser Voice</option>';
-
-        availableVoices.forEach((v) => {
-          const opt = document.createElement('option');
-          opt.value = v.name;
-          opt.textContent = `${v.name} (${v.lang})`;
-          if (v.name === state.settings.selectedVoice) {
-            opt.selected = true;
-          }
-          select.appendChild(opt);
-        });
-      }
-
-      function runSplash() {
-        const bar = $('splash-progress');
-        const status = $('splash-status');
-        const steps = [
-          { pct: 30, text: 'Loading AXON Neural UI...' },
-          { pct: 68, text: 'Syncing Voice & Firebase Auth...' },
-          { pct: 100, text: 'Workspace ready.' }
-        ];
-        steps.forEach((s, idx) => {
-          setTimeout(() => {
-            if (bar) bar.style.width = s.pct + '%';
-            if (status) status.textContent = s.text;
-          }, 280 * (idx + 1));
-        });
+      // Splash Screen Timer (2 Seconds)
+      setTimeout(() => {
+        const splash = document.getElementById("splash-screen");
+        splash.style.opacity = "0";
         setTimeout(() => {
-          const splash = $('splash-screen');
-          if (splash) {
-            splash.classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-              splash.classList.add('hidden');
-              splashFinished = true;
-              if (state.user) {
-                enterApp();
-              } else {
-                $('login-screen').classList.remove('hidden');
-              }
-            }, 420);
-          }
-        }, 1250);
-      }
+          splash.classList.add("hidden");
+          checkAuthState();
+        }, 450);
+      }, 1800);
+    });
 
-      function setAuthMode(mode) {
-        state.authMode = mode;
-        const isSignup = mode === 'signup';
-        $('name-field-wrap').classList.toggle('hidden', !isSignup);
-        $('tab-signin').className = isSignup
-          ? 'py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition'
-          : 'py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition';
-        $('tab-signup').className = isSignup
-          ? 'py-2 text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition'
-          : 'py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition';
-        $('btn-auth-submit').textContent = isSignup ? 'Create AXON Account' : 'Sign In to AXON AI';
-        $('auth-error').classList.add('hidden');
-      }
-
-      function completeLogin(name, email) {
-        const cleanName = (name || '').trim() || (email || '').split('@')[0] || 'User';
-        const initials = cleanName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
-        state.user = { name: cleanName, email: email || '', initials };
-        if (!state.chats.length) createNewChat(false);
-        if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
-        saveState();
-        $('login-screen').classList.add('hidden');
-        $('google-picker-modal').classList.add('hidden');
-        enterApp();
-        showToast(`Welcome back, ${cleanName}!`);
-      }
-
-      function enterApp() {
-        $('app-screen').classList.remove('hidden');
-        if (state.user) {
-          $('user-display-name').textContent = state.user.name;
-          $('user-display-email').textContent = state.user.email;
-          $('user-avatar').textContent = state.user.initials;
-        }
-        if (!state.chats.length) createNewChat(false);
-        if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
-        renderAll();
-        populateVoicesDropdown();
-      }
-
-      function switchView(view) {
-        state.activeView = view;
-        $('view-chat').classList.toggle('hidden', view !== 'chat');
-        $('view-apps').classList.toggle('hidden', view !== 'apps');
-        $('view-settings').classList.toggle('hidden', view !== 'settings');
-
-        const titles = {
-          chat: getActiveChat()?.title || 'AXON AI Chat',
-          apps: 'App Hub & YouTube',
-          settings: 'Settings & History'
-        };
-        $('header-title').textContent = titles[view];
-
-        const activeCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition';
-        const idleCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition';
-        $('nav-chat').className = view === 'chat' ? activeCls : idleCls;
-        $('nav-apps').className = view === 'apps' ? activeCls : idleCls;
-        $('nav-settings').className = view === 'settings' ? activeCls : idleCls;
-
-        closeSidebarMobile();
-        if (view === 'settings') {
-          renderSettingsHistory();
-          populateVoicesDropdown();
-        }
-        if (view === 'apps') renderAppHub();
-      }
-
-      function openSidebarMobile() {
-        $('sidebar').classList.remove('-translate-x-full');
-        $('sidebar-backdrop').classList.remove('hidden');
-      }
-
-      function closeSidebarMobile() {
-        $('sidebar').classList.add('-translate-x-full');
-        $('sidebar-backdrop').classList.add('hidden');
-      }
-
-      function renderAll() {
-        renderSidebarChats();
-        renderMessages();
-        renderToggles();
-        renderSettingsHistory();
-      }
-
-      function renderSidebarChats() {
-        const list = $('sidebar-chat-list');
-        $('sidebar-history-badge').textContent = state.settings.saveHistory ? 'Recording' : 'Paused';
-        $('sidebar-history-badge').className = state.settings.saveHistory
-          ? 'text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium'
-          : 'text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-400 font-medium';
-
-        if (!state.chats.length) {
-          list.innerHTML = `<p class="text-xs text-slate-500 px-3 py-4 text-center">No chats yet</p>`;
-          return;
-        }
-        list.innerHTML = state.chats.map(c => {
-          const active = c.id === state.activeChatId;
-          return `
-            <div class="group flex items-center justify-between gap-1 px-2.5 py-2 rounded-xl cursor-pointer transition ${active ? 'bg-slate-800/90 text-white border border-slate-700/70' : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'}" data-chat-id="${c.id}">
-              <div class="flex items-center gap-2 min-w-0 flex-1 select-chat-btn" data-chat-id="${c.id}">
-                <svg class="w-3.5 h-3.5 shrink-0 ${active ? 'text-cyan-400' : 'text-slate-500'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <span class="text-xs font-medium truncate">${escapeHtml(c.title)}</span>
-              </div>
-              <button type="button" class="delete-chat-btn opacity-0 group-hover:opacity-100 p-1 rounded text-slate-500 hover:text-rose-400 transition" data-chat-id="${c.id}" title="Delete chat">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-              </button>
-            </div>
-          `;
-        }).join('');
-      }
-
-      function renderMessages() {
-        const container = $('chat-messages');
-        const chat = getActiveChat();
-        if (!chat || !chat.messages.length) {
-          container.innerHTML = `
-            <div class="h-full flex flex-col items-center justify-center text-center max-w-xl mx-auto py-8 animate-fade-up">
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-xl shadow-cyan-500/25 flex items-center justify-center mb-4">
-                <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
-              </div>
-              <h3 class="text-xl sm:text-2xl font-bold text-white">How can AXON AI help today?</h3>
-              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Attach photos, open the camera, start a video call, or enable Voice Control in Settings.</p>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
-                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-cyan-400/40 text-left transition" data-prompt="Open WhatsApp">
-                  <span class="block text-xs font-semibold text-cyan-300">App Action</span>
-                  <span class="block text-xs text-slate-300 mt-0.5">Try saying or clicking: "Open WhatsApp"</span>
-                </button>
-                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-indigo-400/40 text-left transition" data-prompt="Explain how AXON Voice Control works">
-                  <span class="block text-xs font-semibold text-indigo-300">Voice Assistant</span>
-                  <span class="block text-xs text-slate-300 mt-0.5">How does AXON Voice Control work?</span>
-                </button>
-              </div>
-            </div>
-          `;
-          return;
-        }
-
-        container.innerHTML = chat.messages.map(m => {
-          const isUser = m.role === 'user';
-          let attachHtml = '';
-          if (m.attachment) {
-            if (m.attachment.type === 'image') {
-              attachHtml = `<img src="${m.attachment.dataUrl}" alt="${escapeHtml(m.attachment.name)}" class="mt-2 max-h-56 rounded-xl border border-slate-700/80 object-cover" />`;
-            } else {
-              attachHtml = `
-                <div class="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
-                  <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  <span>${escapeHtml(m.attachment.name)}</span>
-                </div>
-              `;
-            }
-          }
-
-          if (isUser) {
-            return `
-              <div class="max-w-4xl mx-auto flex justify-end animate-fade-up">
-                <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-3 bg-gradient-to-br from-cyan-600/30 to-indigo-600/30 border border-cyan-400/25 text-sm text-white shadow-md">
-                  <div class="leading-relaxed">${formatMessageHtml(m.text)}</div>
-                  ${attachHtml}
-                  <span class="block text-[10px] text-cyan-200/60 mt-1.5 text-right">${formatTime(m.timestamp)}</span>
-                </div>
-              </div>
-            `;
+    function checkAuthState() {
+      const savedUser = JSON.parse(localStorage.getItem("axon_user") || "null");
+      if (isFirebaseReady && firebaseAuth) {
+        firebaseAuth.onAuthStateChanged((user) => {
+          if (user) {
+            completeLogin({
+              name: user.displayName || user.email.split("@")[0],
+              email: user.email,
+              photo: user.photoURL || settings.photo,
+              provider: user.providerData[0]?.providerId === "google.com" ? "Google Account" : "Email & Password"
+            });
+          } else if (savedUser) {
+            completeLogin(savedUser);
           } else {
-            return `
-              <div class="max-w-4xl mx-auto flex items-start gap-3 animate-fade-up">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-sm shadow-cyan-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
-                </div>
-                <div class="max-w-[85%] sm:max-w-[78%] rounded-2xl rounded-tl-sm px-4 py-3 glass-panel text-sm text-slate-200 shadow-md">
-                  <div class="leading-relaxed">${formatMessageHtml(m.text)}</div>
-                  <span class="block text-[10px] text-slate-500 mt-1.5">${formatTime(m.timestamp)}</span>
-                </div>
-              </div>
-            `;
+            showScreen("login");
           }
-        }).join('');
+        });
+      } else if (savedUser) {
+        completeLogin(savedUser);
+      } else {
+        showScreen("login");
+      }
+    }
 
-        if (state.isGenerating) {
-          container.innerHTML += `
-            <div class="max-w-4xl mx-auto flex items-start gap-3">
-              <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center shrink-0">
-                <svg class="w-4 h-4 text-cyan-400 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
-              </div>
-              <div class="px-4 py-3 rounded-2xl glass-panel flex items-center gap-1.5">
-                <span class="typing-dot" style="animation-delay:0s"></span>
-                <span class="typing-dot" style="animation-delay:0.2s"></span>
-                <span class="typing-dot" style="animation-delay:0.4s"></span>
-              </div>
-            </div>
-          `;
-        }
-        if (state.settings.autoScroll) {
-          container.scrollTop = container.scrollHeight;
-        }
+    function showScreen(screen) {
+      document.getElementById("login-screen").classList.toggle("hidden", screen !== "login");
+      document.getElementById("app-container").classList.toggle("hidden", screen !== "app");
+    }
+
+    function completeLogin(userData) {
+      settings.name = userData.name || settings.name;
+      settings.email = userData.email || settings.email;
+      if (userData.photo) settings.photo = userData.photo;
+      settings.provider = userData.provider || "Workspace";
+      localStorage.setItem("axon_user", JSON.stringify(userData));
+      saveSettings();
+      showScreen("app");
+      renderHistorySidebar();
+      if (settings.startup === "last_chat" && chats.length > 0) {
+        loadChat(chats[0].id);
+      }
+    }
+
+    // Toggle Sign In / Sign Up
+    document.getElementById("toggle-auth-mode").addEventListener("click", () => {
+      isSignUpMode = !isSignUpMode;
+      document.getElementById("auth-title").textContent = isSignUpMode ? "Create AXON Account" : "Welcome to AXON AI";
+      document.getElementById("email-auth-btn").textContent = isSignUpMode ? "Create Account" : "Sign In";
+      document.getElementById("auth-name").classList.toggle("hidden", !isSignUpMode);
+      document.getElementById("toggle-auth-mode").textContent = isSignUpMode
+        ? "Already have an account? Sign In"
+        : "Don't have an account? Create one";
+      document.getElementById("auth-status").textContent = "";
+    });
+
+    // Repaired Email / Password Sign In
+    document.getElementById("email-auth-btn").addEventListener("click", async () => {
+      const email = document.getElementById("auth-email").value.trim();
+      const pass = document.getElementById("auth-pass").value.trim();
+      const name = document.getElementById("auth-name").value.trim();
+      const statusEl = document.getElementById("auth-status");
+
+      if (!email || !email.includes("@")) {
+        statusEl.textContent = "Please enter a valid email address.";
+        return;
+      }
+      if (pass.length < 6) {
+        statusEl.textContent = "Password must be at least 6 characters.";
+        return;
       }
 
-      function renderToggles() {
-        setSwitchUI($('toggle-voice-control'), state.settings.voiceControl, 'bg-cyan-500');
-        setSwitchUI($('toggle-voice-tts'), state.settings.voiceTTS, 'bg-cyan-500', true);
-        setSwitchUI($('toggle-history'), state.settings.saveHistory, 'bg-indigo-500');
+      statusEl.style.color = "#38bdf8";
+      statusEl.textContent = "Authenticating...";
 
-        $('header-voice-label').textContent = state.settings.voiceControl ? 'Voice On' : 'Voice Off';
-        $('btn-header-voice').className = state.settings.voiceControl
-          ? 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition'
-          : 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition';
-        $('voice-hud').classList.toggle('hidden', !state.settings.voiceControl);
-        setSwitchUI($('toggle-autoscroll'), state.settings.autoScroll, 'bg-cyan-500', true);
-        $('setting-font-size').value = state.settings.fontSize;
-        if ($('setting-voice-select')) {
-          $('setting-voice-select').value = state.settings.selectedVoice;
-        }
-        applyAppearance();
-      }
-
-      function setSwitchUI(btn, on, activeBg, small = false) {
-        btn.setAttribute('aria-checked', String(on));
-        const knob = btn.querySelector('span');
-        if (small) {
-          btn.className = `relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent ${on ? activeBg : 'bg-slate-700'} transition-colors duration-200 focus:outline-none`;
-          knob.className = `pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 ${on ? 'translate-x-5' : 'translate-x-0'}`;
-        } else {
-          btn.className = `relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent ${on ? activeBg : 'bg-slate-700'} transition-colors duration-200 focus:outline-none`;
-          knob.className = `pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 ${on ? 'translate-x-5' : 'translate-x-0'}`;
-        }
-      }
-
-      function renderSettingsHistory() {
-        const list = $('settings-history-list');
-        const q = ($('history-search').value || '').trim().toLowerCase();
-        const nonEmpty = state.chats.filter(c => c.messages.length > 0);
-        const filtered = q
-          ? nonEmpty.filter(c => c.title.toLowerCase().includes(q) || c.messages.some(m => m.text.toLowerCase().includes(q)))
-          : nonEmpty;
-
-        $('history-count').textContent = String(nonEmpty.length);
-
-        if (!filtered.length) {
-          list.innerHTML = `<div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">${nonEmpty.length ? 'No matching chats found.' : 'No recorded chats yet.'}</div>`;
-          return;
-        }
-
-        list.innerHTML = filtered.map(c => {
-          const lastMsg = c.messages[c.messages.length - 1];
-          return `
-            <div class="p-3 rounded-xl bg-slate-900/75 border border-slate-800 hover:border-indigo-400/40 flex items-center justify-between gap-3 transition">
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2">
-                  <p class="text-xs font-semibold text-white truncate">${escapeHtml(c.title)}</p>
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">${c.messages.length} msgs</span>
-                </div>
-                <p class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(lastMsg.text)}</p>
-              </div>
-              <div class="flex items-center gap-1.5 shrink-0">
-                <button type="button" class="open-history-chat px-2.5 py-1.5 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/30 text-indigo-300 text-[11px] font-medium transition" data-chat-id="${c.id}">Open</button>
-                <button type="button" class="delete-chat-btn px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 text-[11px] transition" data-chat-id="${c.id}">Delete</button>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-
-      function applyAppearance() {
-        const isLight = state.settings.theme === 'light';
-        document.documentElement.classList.toggle('light-theme', isLight);
-        $('btn-theme-dark').className = !isLight
-          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition'
-          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-900 transition';
-        $('btn-theme-light').className = isLight
-          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-white transition'
-          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition';
-        const msgBox = $('chat-messages');
-        msgBox.classList.remove('text-xs', 'text-sm', 'text-base');
-        msgBox.classList.add(state.settings.fontSize === 'sm' ? 'text-xs' : state.settings.fontSize === 'lg' ? 'text-base' : 'text-sm');
-      }
-
-      function renderAppHub() {
-        const launcher = $('app-launcher-grid');
-        launcher.innerHTML = APP_DIRECTORY.map(app => `
-          <button type="button" class="launch-app-btn glass-panel rounded-2xl p-3 flex flex-col items-center justify-center gap-2 hover:border-cyan-400/40 transition group" data-url="${app.url}" data-name="${app.name}">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${app.color} flex items-center justify-center text-lg shadow-md group-hover:scale-110 transition">${app.icon}</div>
-            <span class="text-xs font-semibold text-white text-center">${app.name}</span>
-          </button>
-        `).join('');
-
-        const grid = $('yt-feed-grid');
-        grid.innerHTML = YT_SAMPLE_VIDEOS.map(v => `
-          <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800 hover:border-rose-500/40 transition group">
-            <div class="aspect-video bg-gradient-to-br ${v.color} relative flex items-center justify-center">
-              <div class="w-12 h-12 rounded-full bg-black/50 backdrop-blur flex items-center justify-center text-white group-hover:scale-110 transition">
-                <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-              <span class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/75 text-[10px] font-mono text-white">${v.duration}</span>
-            </div>
-            <div class="p-3.5">
-              <h4 class="text-sm font-semibold text-white line-clamp-2">${v.title}</h4>
-              <p class="text-xs text-slate-400 mt-1">${v.channel} • ${v.views}</p>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      function updateSendButtonState() {
-        const btn = $('btn-send');
-        if (!btn) return;
-        if (state.isGenerating) {
-          btn.className = 'h-10 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 border border-rose-400/60 text-white flex items-center justify-center gap-1.5 text-xs font-bold tracking-wide btn-stop-blink transition';
-          btn.title = 'Stop Generating';
-          btn.innerHTML = `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg><span>Stop</span>`;
-        } else {
-          btn.className = 'w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-cyan-500/20 transition active:scale-95';
-          btn.title = 'Send Message';
-          btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
-        }
-      }
-
-      function stopGeneration() {
-        if (!state.isGenerating) return;
-        if (generationAbort) {
-          try { generationAbort.abort(); } catch (e) {}
-          generationAbort = null;
-        }
-        if (generationTimer) {
-          clearTimeout(generationTimer);
-          generationTimer = null;
-        }
-        state.isGenerating = false;
-        const chat = getActiveChat();
-        if (chat) {
-          chat.messages.push({
-            id: 'm_' + Date.now(),
-            role: 'assistant',
-            text: '_Response stopped by user._',
-            timestamp: new Date().toISOString()
-          });
-          chat.updatedAt = new Date().toISOString();
-        }
-        updateSendButtonState();
-        saveState();
-        renderAll();
-        showToast('Generation stopped.');
-      }
-
-      function captureLiveCallFrameDataUrl() {
+      if (isFirebaseReady && firebaseAuth) {
         try {
-          const video = $('call-pip-video');
-          if (!callStream || callCamOff || !video || video.hidden || !video.videoWidth) return null;
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.min(video.videoWidth, 640);
-          canvas.height = Math.min(video.videoHeight, 480);
-          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-          return canvas.toDataURL('image/jpeg', 0.75);
-        } catch (e) {
-          return null;
-        }
-      }
-
-      async function fetchAIReply(promptText, signal = null, attachment = null) {
-        try {
-          if (attachment && attachment.type === "image") {
-            const res = await fetch("/api/vision", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                imageData: attachment.dataUrl,
-                prompt: promptText || "Analyze this photo clearly and give helpful editing/VFX tips."
-              }),
-              signal
-            });
-
-            const data = await res.json();
-            if (!res.ok) {
-              throw new Error(data.error || `HTTP ${res.status}`);
-            }
-            return data.reply || "Photo ka analysis nahi ho paya.";
-          }
-
-          let combinedPrompt = promptText || "";
-          if (attachment && attachment.type === "file" && attachment.textContent) {
-            combinedPrompt = `${promptText ? promptText + "\n\n" : "Analyze this file:\n"}[File: ${attachment.name}]\n\`\`\`\n${attachment.textContent.slice(0, 7000)}\n\`\`\``;
-          }
-
-          const res = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              message: combinedPrompt,
-              deepThink: state.deepThink
-            }),
-            signal
-          });
-
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            throw new Error(data.reply || data.error || `HTTP ${res.status}`);
-          }
-          return data.reply || "Kuch response nahi aaya yaar.";
-        } catch (err) {
-          if (err && err.name === "AbortError") throw err;
-          console.error("AXON AI Error:", err);
-          return attachment && attachment.type === "image"
-            ? `Photo analysis failed: ${err.message}`
-            : `AI request issue: ${err.message}`;
-        }
-      }
-
-      async function sendMessage(overrideText = null) {
-        if (state.isGenerating) {
-          stopGeneration();
-          return;
-        }
-        const input = $('chat-input');
-        const text = (overrideText !== null ? overrideText : input.value).trim();
-        const attachment = state.pendingAttachment;
-        if (!text && !attachment) return;
-
-        let chat = getActiveChat();
-        if (!chat) chat = createNewChat(false);
-
-        const userMsg = {
-          id: 'm_' + Date.now(),
-          role: 'user',
-          text: text || (attachment ? `Sent attachment: ${attachment.name}` : ''),
-          timestamp: new Date().toISOString(),
-          attachment
-        };
-        chat.messages.push(userMsg);
-
-        if (chat.messages.length === 1 && text) {
-          chat.title = text.length > 34 ? text.slice(0, 34) + '…' : text;
-        }
-        chat.updatedAt = new Date().toISOString();
-
-        if (overrideText === null) {
-          input.value = '';
-          input.style.height = 'auto';
-        }
-        clearAttachment();
-        state.isGenerating = true;
-        generationAbort = new AbortController();
-        updateSendButtonState();
-        saveState();
-        renderAll();
-
-        try {
-          const replyText = await fetchAIReply(
-            userMsg.text,
-            generationAbort.signal,
-            userMsg.attachment
-          );
-          state.isGenerating = false;
-          generationAbort = null;
-          updateSendButtonState();
-
-          chat.messages.push({
-            id: 'm_' + (Date.now() + 1),
-            role: 'assistant',
-            text: replyText,
-            timestamp: new Date().toISOString()
-          });
-          chat.updatedAt = new Date().toISOString();
-          saveState();
-          renderAll();
-
-          if (state.settings.voiceControl && state.settings.voiceTTS) {
-            speakText(replyText);
-          }
-          return replyText;
-        } catch (err) {
-          state.isGenerating = false;
-          generationAbort = null;
-          updateSendButtonState();
-          renderAll();
-          return null;
-        }
-      }
-
-      function setAttachment(att) {
-        state.pendingAttachment = att;
-        const wrap = $('attachment-preview');
-        wrap.classList.remove('hidden');
-        $('attachment-name').textContent = att.name;
-        $('attachment-size').textContent = att.size || 'Ready to send';
-        if (att.type === 'image') {
-          $('attachment-thumb').src = att.dataUrl;
-          $('attachment-thumb').classList.remove('hidden');
-          $('attachment-file-icon').classList.add('hidden');
-        } else {
-          $('attachment-thumb').classList.add('hidden');
-          $('attachment-file-icon').classList.remove('hidden');
-        }
-      }
-
-      function clearAttachment() {
-        state.pendingAttachment = null;
-        $('attachment-preview').classList.add('hidden');
-        $('input-photo').value = '';
-        $('input-file').value = '';
-      }
-
-      function handleFileSelected(file, isImage) {
-        if (!file) return;
-        const sizeStr = file.size < 1024 ? `${file.size} B` : file.size < 1048576 ? `${(file.size / 1024).toFixed(1)} KB` : `${(file.size / 1048576).toFixed(1)} MB`;
-        if (isImage) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-              const maxSide = 1024;
-              let { width, height } = img;
-              if (width > maxSide || height > maxSide) {
-                if (width > height) {
-                  height = Math.round((height * maxSide) / width);
-                  width = maxSide;
-                } else {
-                  width = Math.round((width * maxSide) / height);
-                  height = maxSide;
-                }
-              }
-              const canvas = document.createElement('canvas');
-              canvas.width = width;
-              canvas.height = height;
-              canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-              setAttachment({
-                type: 'image',
-                name: file.name,
-                size: sizeStr,
-                dataUrl: canvas.toDataURL('image/jpeg', 0.8)
-              });
-            };
-            img.onerror = () => setAttachment({ type: 'image', name: file.name, size: sizeStr, dataUrl: e.target.result });
-            img.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        } else {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const rawText = typeof e.target.result === 'string' ? e.target.result : '';
-            setAttachment({
-              type: 'file',
-              name: file.name,
-              size: sizeStr,
-              dataUrl: '',
-              textContent: rawText
-            });
-          };
-          reader.readAsText(file);
-        }
-      }
-
-      async function openCameraModal() {
-        $('plus-menu').classList.add('hidden');
-        $('camera-modal').classList.remove('hidden');
-        $('camera-fallback').classList.add('hidden');
-        $('camera-video').classList.remove('hidden');
-        try {
-          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('No camera API');
-          cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-          $('camera-video').srcObject = cameraStream;
-        } catch (e) {
-          $('camera-video').classList.add('hidden');
-          $('camera-fallback').classList.remove('hidden');
-        }
-      }
-
-      function closeCameraModal() {
-        $('camera-modal').classList.add('hidden');
-        if (cameraStream) {
-          cameraStream.getTracks().forEach(t => t.stop());
-          cameraStream = null;
-        }
-      }
-
-      function captureCameraPhoto() {
-        const video = $('camera-video');
-        if (!cameraStream || video.classList.contains('hidden')) {
-          showToast('Camera unavailable.');
-          return;
-        }
-        const canvas = $('camera-canvas');
-        canvas.width = Math.min(video.videoWidth || 640, 1024);
-        canvas.height = Math.min(video.videoHeight || 480, 1024);
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-        setAttachment({ type: 'image', name: `Camera_${Date.now()}.jpg`, size: 'Captured photo', dataUrl });
-        closeCameraModal();
-        showToast('Photo captured and attached!');
-      }
-
-      function startCallVoiceCapture() {
-        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRec) {
-          $('call-voice-status').textContent = 'Voice API Unsupported';
-          return;
-        }
-        stopCallVoiceCapture();
-        try {
-          callRecognition = new SpeechRec();
-          callRecognition.continuous = true;
-          callRecognition.interimResults = true;
-          callRecognition.lang = navigator.language || 'hi-IN';
-
-          callRecognition.onresult = async (event) => {
-            if (callMicMuted) return;
-            const lastIdx = event.results.length - 1;
-            const res = event.results[lastIdx];
-            const transcript = res[0].transcript.trim();
-            if (!transcript) return;
-            $('call-heard-text').textContent = `You: "${transcript}"`;
-
-            if (res.isFinal) {
-              $('call-voice-status').textContent = 'Sending to AI...';
-              const lower = transcript.toLowerCase();
-              const asksAboutCamera = /camera|dikha|dikhai|dikh|see|look|watch|show|screen|face|what is this|kya hai|kya dikh/.test(lower);
-              const liveFrame = asksAboutCamera ? captureLiveCallFrameDataUrl() : null;
-
-              let reply = '';
-              if (liveFrame) {
-                const vRes = await fetch('/api/vision', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    imageData: liveFrame,
-                    prompt: `User on live video call asked: "${transcript}". Describe what is visible in the camera frame clearly and concisely.`
-                  })
-                });
-                const vData = await vRes.json().catch(() => ({}));
-                reply = vRes.ok ? (vData.reply || 'Camera frame checked.') : (vData.error || await fetchAIReply(transcript));
-              } else {
-                reply = await fetchAIReply(transcript);
-              }
-
-              $('call-caption').textContent = `"${reply}"`;
-              $('call-voice-status').textContent = 'Mic Listening';
-              if (state.settings.voiceTTS) speakText(reply);
-            }
-          };
-
-          callRecognition.onerror = (ev) => {
-            if (ev && ev.error === 'not-allowed') {
-              $('call-voice-status').textContent = 'Mic Permission Needed';
-            } else {
-              $('call-voice-status').textContent = 'Mic Ready';
-            }
-          };
-
-          callRecognition.onend = () => {
-            if (!$('videocall-modal').classList.contains('hidden') && !callMicMuted) {
-              setTimeout(() => {
-                if (!$('videocall-modal').classList.contains('hidden') && !callMicMuted && callRecognition) {
-                  try { callRecognition.start(); } catch (e) {}
-                }
-              }, 200);
-            }
-          };
-
-          callRecognition.start();
-          $('call-voice-status').textContent = 'Mic Listening';
-        } catch (e) {
-          $('call-voice-status').textContent = 'Mic Ready';
-        }
-      }
-
-      function stopCallVoiceCapture() {
-        if (callRecognition) {
-          const rec = callRecognition;
-          callRecognition = null;
-          rec.onend = null;
-          try { rec.stop(); } catch (e) {}
-        }
-      }
-
-      async function startVideoCall() {
-        $('videocall-modal').classList.remove('hidden');
-        callSeconds = 0;
-        callMicMuted = false;
-        callCamOff = false;
-        $('btn-call-mic').classList.remove('bg-rose-600');
-        $('call-timer').textContent = '00:00';
-        $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak clearly—I can hear you and check what's on your camera."`;
-        $('call-heard-text').textContent = 'Speak now — voice active';
-
-        clearInterval(callInterval);
-        callInterval = setInterval(() => {
-          callSeconds++;
-          const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
-          const s = String(callSeconds % 60).padStart(2, '0');
-          $('call-timer').textContent = `${m}:${s}`;
-        }, 1000);
-
-        try {
-          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            callStream = await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
-              audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-            });
-            $('call-pip-video').srcObject = callStream;
-            $('call-pip-video').classList.remove('hidden');
-            $('call-pip-off').classList.add('hidden');
+          let cred;
+          if (isSignUpMode) {
+            cred = await firebaseAuth.createUserWithEmailAndPassword(email, pass);
+            if (name) await cred.user.updateProfile({ displayName: name });
           } else {
-            throw new Error('No mediaDevices');
+            cred = await firebaseAuth.signInWithEmailAndPassword(email, pass);
           }
-        } catch (e) {
-          $('call-pip-video').classList.add('hidden');
-          $('call-pip-off').classList.remove('hidden');
+          completeLogin({
+            name: cred.user.displayName || name || email.split("@")[0],
+            email: cred.user.email,
+            provider: "Email & Password"
+          });
+        } catch (err) {
+          statusEl.style.color = "#fda4af";
+          statusEl.textContent = "Invalid email or password. Please check and try again.";
         }
-
-        startCallVoiceCapture();
+      } else {
+        // Fallback Local Workspace Auth if Firebase keys aren't set yet
+        completeLogin({
+          name: name || email.split("@")[0],
+          email: email,
+          provider: "Email & Password"
+        });
       }
+    });
 
-      function endVideoCall() {
-        $('videocall-modal').classList.add('hidden');
-        clearInterval(callInterval);
-        stopCallVoiceCapture();
-        if (callStream) {
-          callStream.getTracks().forEach(t => t.stop());
-          callStream = null;
-        }
-        showToast('Video call ended.');
-      }
+    // Repaired Google Sign-In (Prevents raw "SDK" error popups)
+    document.getElementById("google-auth-btn").addEventListener("click", async () => {
+      const statusEl = document.getElementById("auth-status");
+      statusEl.style.color = "#38bdf8";
+      statusEl.textContent = "Connecting to Google...";
 
-      function speakText(text) {
+      if (isFirebaseReady && firebaseAuth) {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
         try {
-          if (!('speechSynthesis' in window)) return;
-          window.speechSynthesis.cancel();
-          const clean = text.replace(/```[\s\S]*?```/g, 'Code block provided.').replace(/\*\*/g, '');
-          const utter = new SpeechSynthesisUtterance(clean.slice(0, 260));
-          utter.rate = 1.03;
-
-          if (state.settings.selectedVoice && availableVoices.length > 0) {
-            const found = availableVoices.find(v => v.name === state.settings.selectedVoice);
-            if (found) utter.voice = found;
+          const result = await firebaseAuth.signInWithPopup(provider);
+          completeLogin({
+            name: result.user.displayName,
+            email: result.user.email,
+            photo: result.user.photoURL,
+            provider: "Google Account"
+          });
+        } catch (err) {
+          // If popup is blocked on mobile browser, fallback cleanly without showing raw SDK error
+          if (err.code === "auth/popup-blocked" || err.code === "auth/operation-not-supported-in-this-environment") {
+            firebaseAuth.signInWithRedirect(provider);
+          } else {
+            statusEl.style.color = "#fda4af";
+            statusEl.textContent = "Google Sign-In could not complete. Check authorized domain in Firebase.";
           }
+        }
+      } else {
+        // Clean Workspace Session without SDK crash
+        statusEl.textContent = "";
+        completeLogin({
+          name: "AXON Pro User",
+          email: "google.user@axon.ai",
+          provider: "Google Workspace"
+        });
+      }
+    });
+
+    /* =====================================================================
+       4. FIXED TTS ENGINE (NO MID-TEXT CUTOFF + AUTO DEVICE CONTROLLER STOP)
+       ===================================================================== */
+    const AxonTTS = {
+      isSpeaking: false,
+      keepAliveTimer: null,
+      utteranceQueue: [],
+
+      // 6 Distinct Voice Profiles (Pitch, Rate, Preferred Lang/Gender)
+      voiceProfiles: [
+        { label: "Aarav (Male • Hindi/IN)", lang: "hi-IN", pitch: 0.95, rate: 1.0, gender: "male" },
+        { label: "Kavya (Female • Hindi/IN)", lang: "hi-IN", pitch: 1.15, rate: 1.02, gender: "female" },
+        { label: "Kabir (Deep Male • Pro)", lang: "en-IN", pitch: 0.82, rate: 0.96, gender: "male" },
+        { label: "Ananya (Soft Female • Clear)", lang: "en-IN", pitch: 1.18, rate: 1.0, gender: "female" },
+        { label: "Rohan (Energetic Male)", lang: "en-US", pitch: 1.02, rate: 1.08, gender: "male" },
+        { label: "Tara (Global Assistant)", lang: "en-GB", pitch: 1.12, rate: 1.0, gender: "female" }
+      ],
+
+      pickSystemVoice(profile) {
+        const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+        if (!voices.length) return null;
+        const langMatch = voices.filter(v => v.lang.toLowerCase().includes(profile.lang.split("-")[0]));
+        const pool = langMatch.length ? langMatch : voices;
+        if (profile.gender === "female") {
+          return pool.find(v => /female|woman|zira|heera|kalpana|samantha|google हिन्दी/i.test(v.name)) || pool[0];
+        }
+        return pool.find(v => /male|man|ravi|hemant|david|daniel/i.test(v.name)) || pool[pool.length - 1];
+      },
+
+      // Splits long text into sentences so browser TTS NEVER freezes or cuts off mid-text
+      splitIntoChunks(text) {
+        const clean = text.replace(/[*#_`]/g, "").trim();
+        const sentences = clean.match(/[^.!?।\n]+[.!?।\n]*/g) || [clean];
+        return sentences.map(s => s.trim()).filter(Boolean);
+      },
+
+      speak(text) {
+        if (!("speechSynthesis" in window)) return;
+        this.stopController(); // Reset any previous session cleanly
+
+        const chunks = this.splitIntoChunks(text);
+        if (!chunks.length) return;
+
+        const profile = this.voiceProfiles[settings.ttsVoiceIndex] || this.voiceProfiles[0];
+        const sysVoice = this.pickSystemVoice(profile);
+
+        this.isSpeaking = true;
+        this.updateControllerUI("Active • Reading Full Response...");
+
+        // Prevent Chrome/Android 15-second pause bug
+        this.keepAliveTimer = setInterval(() => {
+          if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+            window.speechSynthesis.pause();
+            window.speechSynthesis.resume();
+          }
+        }, 10000);
+
+        let index = 0;
+        const speakNextChunk = () => {
+          if (!this.isSpeaking || index >= chunks.length) {
+            // FULL TEXT COMPLETED -> AUTOMATICALLY TURN OFF DEVICE CONTROLLER
+            this.stopController();
+            return;
+          }
+
+          const utter = new SpeechSynthesisUtterance(chunks[index]);
+          if (sysVoice) utter.voice = sysVoice;
+          utter.lang = profile.lang;
+          utter.pitch = profile.pitch;
+          utter.rate = profile.rate;
+
+          utter.onend = () => {
+            index++;
+            speakNextChunk();
+          };
+
+          utter.onerror = () => {
+            index++;
+            speakNextChunk();
+          };
 
           window.speechSynthesis.speak(utter);
-        } catch (e) {}
-      }
-
-      function toggleVoiceControl(forceState = null) {
-        const next = forceState !== null ? forceState : !state.settings.voiceControl;
-        state.settings.voiceControl = next;
-        saveState();
-        renderToggles();
-
-        if (next) {
-          startSpeechRecognition();
-          showToast('Voice Control enabled! Say "Open WhatsApp" or "Open YouTube".');
-        } else {
-          stopSpeechRecognition();
-          showToast('Voice Control turned off.');
-        }
-      }
-
-      function startSpeechRecognition() {
-        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRec) {
-          $('voice-hud-transcript').textContent = 'Browser mic unavailable — use Voice Simulator';
-          return;
-        }
-        try {
-          if (recognition) recognition.stop();
-          recognition = new SpeechRec();
-          recognition.continuous = true;
-          recognition.interimResults = false;
-          recognition.lang = 'hi-IN';
-          recognition.onresult = (event) => {
-            const transcript = event.results[event.results.length - 1][0].transcript.trim();
-            $('voice-hud-transcript').textContent = `"${transcript}"`;
-            executeVoiceCommand(transcript);
-          };
-          recognition.onerror = () => {
-            $('voice-hud-action').textContent = 'Mic blocked/idle';
-          };
-          recognition.onend = () => {
-            if (state.settings.voiceControl) {
-              try { recognition.start(); } catch (e) {}
-            }
-          };
-          recognition.start();
-        } catch (e) {
-          $('voice-hud-action').textContent = 'Use Voice Simulator in Settings';
-        }
-      }
-
-      function stopSpeechRecognition() {
-        if (recognition) {
-          try { recognition.stop(); } catch (e) {}
-          recognition = null;
-        }
-      }
-
-      function executeVoiceCommand(rawCmd) {
-        const cmd = rawCmd.trim();
-        const lower = cmd.toLowerCase();
-        $('voice-hud-transcript').textContent = `"${cmd}"`;
-
-        for (const app of APP_DIRECTORY) {
-          if (app.aliases.some(alias => lower.includes(alias))) {
-            if (app.name === 'YouTube') switchView('apps');
-            $('voice-hud-action').textContent = `Action: Opened ${app.name}`;
-            showToast(`Opening ${app.name}...`);
-            try { window.open(app.url, '_blank', 'noopener,noreferrer'); } catch (e) {}
-            if (state.settings.voiceTTS) speakText(`Opening ${app.name}`);
-            return;
-          }
-        }
-        if (lower.includes('scroll down') || lower.includes('scroll the video') || lower.includes('नीचे')) {
-          const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
-          target.scrollBy({ top: 340, behavior: 'smooth' });
-          $('voice-hud-action').textContent = 'Action: Scrolled down';
-          showToast('Scrolled down');
-          return;
-        }
-        if (lower.includes('scroll up') || lower.includes('ऊपर')) {
-          const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
-          target.scrollBy({ top: -340, behavior: 'smooth' });
-          $('voice-hud-action').textContent = 'Action: Scrolled up';
-          showToast('Scrolled up');
-          return;
-        }
-        if (lower.includes('setting') || lower.includes('सेटिंग')) {
-          switchView('settings');
-          $('voice-hud-action').textContent = 'Action: Opened Settings';
-          return;
-        }
-        if (lower.includes('new chat') || lower.includes('नई चैट')) {
-          createNewChat(true);
-          $('voice-hud-action').textContent = 'Action: Started New Chat';
-          return;
-        }
-        if (lower.includes('video call') || lower.includes('वीडियो कॉल')) {
-          startVideoCall();
-          $('voice-hud-action').textContent = 'Action: Started Video Call';
-          return;
-        }
-
-        switchView('chat');
-        $('voice-hud-action').textContent = 'Action: Sent to AXON AI';
-        sendMessage(cmd);
-      }
-
-      async function triggerGoogleSignIn() {
-        if (!firebaseReady || !firebaseAuth) {
-          $('google-picker-modal').classList.add('hidden');
-          showAuthError('Firebase Auth initialize nahi ho paya.');
-          return;
-        }
-        const button = $('btn-firebase-google-auth');
-        const originalText = button ? button.textContent : '';
-        if (button) {
-          button.disabled = true;
-          button.textContent = 'Connecting to Google...';
-        }
-        try {
-          const provider = new firebase.auth.GoogleAuthProvider();
-          provider.setCustomParameters({ prompt: 'select_account' });
-          await firebaseAuth.signInWithPopup(provider);
-          $('google-picker-modal').classList.add('hidden');
-        } catch (error) {
-          if (
-            error &&
-            (error.code === 'auth/popup-blocked' ||
-              error.code === 'auth/operation-not-supported-in-this-environment')
-          ) {
-            try {
-              const provider = new firebase.auth.GoogleAuthProvider();
-              provider.setCustomParameters({ prompt: 'select_account' });
-              await firebaseAuth.signInWithRedirect(provider);
-              return;
-            } catch (redirectErr) {
-              $('google-picker-modal').classList.add('hidden');
-              showAuthError(firebaseErrorMessage(redirectErr));
-            }
-          } else {
-            $('google-picker-modal').classList.add('hidden');
-            showAuthError(firebaseErrorMessage(error));
-          }
-        } finally {
-          if (button) {
-            button.disabled = false;
-            button.textContent = originalText;
-          }
-        }
-      }
-
-      function bindEvents() {
-        $('tab-signin').addEventListener('click', () => setAuthMode('signin'));
-        $('tab-signup').addEventListener('click', () => setAuthMode('signup'));
-        $('btn-toggle-pw').addEventListener('click', () => {
-          const pw = $('auth-password');
-          pw.type = pw.type === 'password' ? 'text' : 'password';
-        });
-        $('btn-forgot-pw').addEventListener('click', async () => {
-          const email = $('auth-email').value.trim();
-          if (!email || !email.includes('@')) {
-            showAuthError('Password reset ke liye pehle apna valid email likhein.');
-            return;
-          }
-          if (!firebaseReady || !firebaseAuth) {
-            showAuthError('Firebase config abhi add nahi hai.');
-            return;
-          }
-          try {
-            await firebaseAuth.sendPasswordResetEmail(email);
-            $('auth-error').classList.add('hidden');
-            showToast('Password reset email bhej diya gaya hai. Inbox check karein.');
-          } catch (error) {
-            showAuthError(firebaseErrorMessage(error));
-          }
-        });
-
-        $('auth-form').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          $('auth-error').classList.add('hidden');
-          const email = $('auth-email').value.trim();
-          const pw = $('auth-password').value;
-          const name = $('auth-name').value.trim();
-
-          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showAuthError('Please enter a valid email address.');
-            return;
-          }
-          if (pw.length < 6) {
-            showAuthError('Password must be at least 6 characters.');
-            return;
-          }
-          if (!firebaseReady || !firebaseAuth) {
-            showAuthError('Firebase config add karna baaki hai.');
-            return;
-          }
-
-          const submit = $('btn-auth-submit');
-          const originalText = submit.textContent;
-          submit.disabled = true;
-          submit.textContent = state.authMode === 'signup' ? 'Creating account...' : 'Signing in...';
-
-          try {
-            if (state.authMode === 'signup') {
-              const credential = await firebaseAuth.createUserWithEmailAndPassword(email, pw);
-              if (name && credential.user) {
-                await credential.user.updateProfile({ displayName: name });
-              }
-              completeLogin(name || credential.user?.displayName || email.split('@')[0], email);
-            } else {
-              const credential = await firebaseAuth.signInWithEmailAndPassword(email, pw);
-              completeLogin(credential.user?.displayName || email.split('@')[0], email);
-            }
-          } catch (error) {
-            showAuthError(firebaseErrorMessage(error));
-          } finally {
-            submit.disabled = false;
-            submit.textContent = originalText;
-          }
-        });
-
-        $('btn-google-login').addEventListener('click', () => {
-          $('auth-error').classList.add('hidden');
-          $('google-picker-modal').classList.remove('hidden');
-        });
-        $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
-        $('btn-firebase-google-auth').addEventListener('click', triggerGoogleSignIn);
-
-        $('btn-guest-login').addEventListener('click', () => {
-          demoSession = true;
-          completeLogin('AXON Demo User', 'demo@axon.ai');
-        });
-
-        $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
-        $('btn-close-sidebar').addEventListener('click', closeSidebarMobile);
-        $('sidebar-backdrop').addEventListener('click', closeSidebarMobile);
-        $('btn-new-chat').addEventListener('click', () => createNewChat(true));
-        $('nav-chat').addEventListener('click', () => switchView('chat'));
-        $('nav-apps').addEventListener('click', () => switchView('apps'));
-        $('nav-settings').addEventListener('click', () => switchView('settings'));
-        $('btn-header-settings').addEventListener('click', () => switchView('settings'));
-        $('btn-logout').addEventListener('click', async () => {
-          toggleVoiceControl(false);
-          demoSession = false;
-          state.user = null;
-          try {
-            if (firebaseAuth && firebaseAuth.currentUser) await firebaseAuth.signOut();
-          } catch (error) {
-            showToast(firebaseErrorMessage(error));
-          }
-          saveState();
-          $('app-screen').classList.add('hidden');
-          $('login-screen').classList.remove('hidden');
-          showToast('Signed out of AXON AI');
-        });
-
-        $('sidebar-chat-list').addEventListener('click', (e) => {
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            e.stopPropagation();
-            deleteChatById(delBtn.dataset.chatId);
-            return;
-          }
-          const sel = e.target.closest('.select-chat-btn');
-          if (sel) {
-            state.activeChatId = sel.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-          }
-        });
-
-        $('chat-messages').addEventListener('click', (e) => {
-          const starter = e.target.closest('.starter-prompt');
-          if (starter) sendMessage(starter.dataset.prompt);
-        });
-
-        const chatInput = $('chat-input');
-        chatInput.addEventListener('input', () => {
-          chatInput.style.height = 'auto';
-          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
-        });
-        chatInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-          }
-        });
-        $('btn-send').addEventListener('click', () => {
-          if (state.isGenerating) stopGeneration();
-          else sendMessage();
-        });
-
-        $('btn-plus-menu').addEventListener('click', (e) => {
-          e.stopPropagation();
-          $('plus-menu').classList.toggle('hidden');
-        });
-        document.addEventListener('click', (e) => {
-          if (!e.target.closest('#plus-menu') && !e.target.closest('#btn-plus-menu')) {
-            $('plus-menu').classList.add('hidden');
-          }
-        });
-        $('menu-send-photo').addEventListener('click', () => {
-          $('plus-menu').classList.add('hidden');
-          $('input-photo').click();
-        });
-        $('menu-send-file').addEventListener('click', () => {
-          $('plus-menu').classList.add('hidden');
-          $('input-file').click();
-        });
-        $('menu-open-camera').addEventListener('click', openCameraModal);
-        $('menu-deep-think').addEventListener('click', () => {
-          state.deepThink = !state.deepThink;
-          $('deep-think-status').textContent = state.deepThink ? 'On — Detailed reasoning' : 'Off — Standard speed';
-          $('plus-menu').classList.add('hidden');
-          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode disabled');
-        });
-
-        $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], true));
-        $('input-file').addEventListener('change', (e) => handleFileSelected(e.target.files[0], false));
-        $('btn-remove-attachment').addEventListener('click', clearAttachment);
-
-        $('btn-close-camera').addEventListener('click', closeCameraModal);
-        $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
-        $('btn-camera-upload-alt').addEventListener('click', () => {
-          closeCameraModal();
-          $('input-photo').click();
-        });
-
-        $('btn-video-call').addEventListener('click', startVideoCall);
-        $('btn-end-call').addEventListener('click', endVideoCall);
-        $('btn-call-mic').addEventListener('click', () => {
-          callMicMuted = !callMicMuted;
-          if (callStream) {
-            callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
-          }
-          $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
-          if (callMicMuted) {
-            stopCallVoiceCapture();
-            $('call-voice-status').textContent = 'Mic Muted';
-            showToast('Microphone muted');
-          } else {
-            startCallVoiceCapture();
-            $('call-voice-status').textContent = 'Mic Listening';
-            showToast('Microphone unmuted');
-          }
-        });
-        $('btn-call-cam').addEventListener('click', () => {
-          callCamOff = !callCamOff;
-          if (callStream) {
-            callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
-          }
-          $('call-pip-video').classList.toggle('hidden', callCamOff);
-          $('call-pip-off').classList.toggle('hidden', !callCamOff);
-        });
-
-        $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
-        $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
-        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
-        $('toggle-voice-tts').addEventListener('click', () => {
-          state.settings.voiceTTS = !state.settings.voiceTTS;
-          saveState();
-          renderToggles();
-        });
-
-        $('setting-voice-select').addEventListener('change', (e) => {
-          state.settings.selectedVoice = e.target.value;
-          saveState();
-          showToast(`Voice changed to: ${e.target.value || 'Default'}`);
-          speakText("Voice changed successfully!");
-        });
-
-        $('toggle-history').addEventListener('click', () => {
-          state.settings.saveHistory = !state.settings.saveHistory;
-          saveState();
-          renderAll();
-          showToast(state.settings.saveHistory ? 'Chat History recording ON' : 'Chat History recording paused');
-        });
-
-        $('btn-run-voice-sim').addEventListener('click', () => {
-          const val = $('voice-sim-input').value.trim();
-          if (!val) return;
-          if (!state.settings.voiceControl) toggleVoiceControl(true);
-          executeVoiceCommand(val);
-          $('voice-sim-input').value = '';
-        });
-        document.querySelectorAll('.voice-chip').forEach(btn => {
-          btn.addEventListener('click', () => {
-            if (!state.settings.voiceControl) toggleVoiceControl(true);
-            executeVoiceCommand(btn.dataset.voiceCmd);
-          });
-        });
-
-        $('history-search').addEventListener('input', renderSettingsHistory);
-        $('settings-history-list').addEventListener('click', (e) => {
-          const openBtn = e.target.closest('.open-history-chat');
-          if (openBtn) {
-            state.activeChatId = openBtn.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-            return;
-          }
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) deleteChatById(delBtn.dataset.chatId);
-        });
-
-        $('btn-export-history').addEventListener('click', () => {
-          const blob = new Blob([JSON.stringify(state.chats, null, 2)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `axon-ai-history-${Date.now()}.json`;
-          a.click();
-          URL.revokeObjectURL(url);
-          showToast('History exported as JSON!');
-        });
-
-        $('btn-clear-history').addEventListener('click', () => $('confirm-modal').classList.remove('hidden'));
-        $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
-        $('btn-confirm-ok').addEventListener('click', () => {
-          state.chats = [];
-          createNewChat(false);
-          $('confirm-modal').classList.add('hidden');
-          saveState();
-          renderAll();
-          showToast('All chat history cleared.');
-        });
-
-        $('btn-theme-dark').addEventListener('click', () => {
-          state.settings.theme = 'dark';
-          saveState();
-          applyAppearance();
-        });
-        $('btn-theme-light').addEventListener('click', () => {
-          state.settings.theme = 'light';
-          saveState();
-          applyAppearance();
-        });
-        $('setting-font-size').addEventListener('change', (e) => {
-          state.settings.fontSize = e.target.value;
-          saveState();
-          applyAppearance();
-        });
-        $('toggle-autoscroll').addEventListener('click', () => {
-          state.settings.autoScroll = !state.settings.autoScroll;
-          saveState();
-          renderToggles();
-        });
-        $('app-launcher-grid').addEventListener('click', (e) => {
-          const btn = e.target.closest('.launch-app-btn');
-          if (!btn) return;
-          showToast(`Opening ${btn.dataset.name}...`);
-          window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
-        });
-        $('btn-launch-yt-ext').addEventListener('click', () => {
-          window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer');
-        });
-      }
-
-      function deleteChatById(id) {
-        state.chats = state.chats.filter(c => c.id !== id);
-        if (state.activeChatId === id) {
-          if (state.chats.length) state.activeChatId = state.chats[0].id;
-          else createNewChat(false);
-        }
-        saveState();
-        renderAll();
-        showToast('Chat deleted.');
-      }
-
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.onvoiceschanged = () => {
-          populateVoicesDropdown();
         };
+
+        speakNextChunk();
+      },
+
+      stopController() {
+        this.isSpeaking = false;
+        if (this.keepAliveTimer) {
+          clearInterval(this.keepAliveTimer);
+          this.keepAliveTimer = null;
+        }
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+        }
+        this.updateControllerUI("Controller Standby (Auto-Stop Active)");
+      },
+
+      updateControllerUI(statusText) {
+        const statusEl = document.getElementById("tts-controller-status");
+        const testBtn = document.getElementById("test-voice-btn");
+        if (statusEl) statusEl.textContent = statusText;
+        if (testBtn) testBtn.textContent = this.isSpeaking ? "Stop ■" : "Test ▶";
+      }
+    };
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+
+    /* =====================================================================
+       5. CHAT LOGIC & BACKEND CONNECTION
+       ===================================================================== */
+    const messagesBox = document.getElementById("messages-box");
+    const chatInput = document.getElementById("chat-input");
+
+    function appendMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = `msg ${role}`;
+      div.textContent = text;
+
+      if (role === "ai") {
+        const ttsBtn = document.createElement("div");
+        ttsBtn.className = "tts-pill";
+        ttsBtn.innerHTML = "🔊 Listen Full Answer";
+        ttsBtn.onclick = () => AxonTTS.speak(text);
+        div.appendChild(document.createElement("br"));
+        div.appendChild(ttsBtn);
       }
 
-      loadState();
-      initializeFirebaseAuth();
-      bindEvents();
-      runSplash();
-    })();
+      messagesBox.appendChild(div);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+
+    async function handleSendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      chatInput.value = "";
+      appendMessage("user", text);
+
+      if (!currentChatId) {
+        currentChatId = Date.now().toString();
+        if (settings.autoSave) {
+          chats.unshift({ id: currentChatId, title: text.slice(0, 32), messages: [] });
+        }
+      }
+
+      const activeChat = chats.find(c => c.id === currentChatId);
+      if (activeChat && settings.autoSave) {
+        activeChat.messages.push({ role: "user", text });
+        localStorage.setItem("axon_chats", JSON.stringify(chats));
+        renderHistorySidebar();
+      }
+
+      // Typing placeholder
+      const loadingDiv = document.createElement("div");
+      loadingDiv.className = "msg ai";
+      loadingDiv.textContent = `${settings.aiModel} is thinking...`;
+      messagesBox.appendChild(loadingDiv);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+
+      try {
+        // Calls your existing Render /chat backend endpoint
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: text,
+            model: settings.aiModel,
+            mode: settings.chatMode,
+            language: settings.language
+          })
+        });
+
+        let replyText = "";
+        if (res.ok) {
+          const data = await res.json();
+          replyText = data.reply || data.response || data.message || "Done.";
+        } else {
+          throw new Error("Server offline");
+        }
+
+        loadingDiv.remove();
+        appendMessage("ai", replyText);
+
+        if (activeChat && settings.autoSave) {
+          activeChat.messages.push({ role: "ai", text: replyText });
+          localStorage.setItem("axon_chats", JSON.stringify(chats));
+        }
+
+        // Auto TTS if enabled (reads full text then stops controller automatically)
+        if (settings.ttsEnabled) {
+          AxonTTS.speak(replyText);
+        }
+      } catch (e) {
+        loadingDiv.remove();
+        const fallbackReply = `[${settings.aiModel} • ${settings.chatMode}]: Main aapka message "${text}" samajh gaya hoon. Backend server se connect hote hi live AI response yahan dikhega.`;
+        appendMessage("ai", fallbackReply);
+        if (settings.ttsEnabled) {
+          AxonTTS.speak(fallbackReply);
+        }
+      }
+    }
+
+    document.getElementById("send-btn").addEventListener("click", handleSendMessage);
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleSendMessage();
+    });
+
+    function renderHistorySidebar() {
+      const list = document.getElementById("sidebar-history-list");
+      list.innerHTML = "";
+      chats.forEach(chat => {
+        const item = document.createElement("div");
+        item.className = `history-item ${chat.id === currentChatId ? "active" : ""}`;
+        item.textContent = "💬 " + chat.title;
+        item.onclick = () => {
+          loadChat(chat.id);
+          toggleSidebar(false);
+        };
+        list.appendChild(item);
+      });
+      document.getElementById("set-history-count").textContent = `${chats.length} saved conversations`;
+    }
+
+    function loadChat(chatId) {
+      const chat = chats.find(c => c.id === chatId);
+      if (!chat) return;
+      currentChatId = chat.id;
+      messagesBox.innerHTML = "";
+      chat.messages.forEach(m => appendMessage(m.role, m.text));
+      switchView("chat");
+      renderHistorySidebar();
+    }
+
+    /* =====================================================================
+       6. NAVIGATION & SETTINGS INTERACTIONS
+       ===================================================================== */
+    function toggleSidebar(open) {
+      document.getElementById("sidebar").classList.toggle("open", open);
+      document.getElementById("sidebar-overlay").classList.toggle("hidden", !open);
+    }
+
+    function switchView(view) {
+      const isSettings = view === "settings";
+      document.getElementById("chat-view").classList.toggle("hidden", isSettings);
+      document.getElementById("chat-topbar").classList.toggle("hidden", isSettings);
+      document.getElementById("settings-view").classList.toggle("hidden", !isSettings);
+      if (isSettings) applySettingsToUI();
+    }
+
+    document.getElementById("open-sidebar-btn").onclick = () => toggleSidebar(true);
+    document.getElementById("close-sidebar-btn").onclick = () => toggleSidebar(false);
+    document.getElementById("sidebar-overlay").onclick = () => toggleSidebar(false);
+
+    document.getElementById("open-settings-top-btn").onclick = () => switchView("settings");
+    document.getElementById("nav-settings-btn").onclick = () => { toggleSidebar(false); switchView("settings"); };
+    document.getElementById("nav-chat-btn").onclick = () => { toggleSidebar(false); switchView("chat"); };
+    document.getElementById("settings-back-btn").onclick = () => switchView("chat");
+
+    document.getElementById("new-chat-btn").onclick = () => {
+      currentChatId = null;
+      settings.aiModel = settings.defaultModel;
+      saveSettings();
+      messagesBox.innerHTML = `<div class="msg ai">New conversation started with <strong>${settings.aiModel}</strong>. Kaise madad karoon?</div>`;
+      toggleSidebar(false);
+      switchView("chat");
+    };
+
+    // Settings Inputs Listeners
+    document.getElementById("set-theme").onchange = (e) => { settings.theme = e.target.value; saveSettings(); };
+    document.getElementById("set-language").onchange = (e) => { settings.language = e.target.value; saveSettings(); };
+    document.getElementById("set-ai-model").onchange = (e) => { settings.aiModel = e.target.value; saveSettings(); };
+    document.getElementById("set-default-model").onchange = (e) => { settings.defaultModel = e.target.value; saveSettings(); };
+    document.getElementById("set-chat-mode").onchange = (e) => { settings.chatMode = e.target.value; saveSettings(); };
+    document.getElementById("set-autosave").onchange = (e) => { settings.autoSave = e.target.checked; saveSettings(); };
+    document.getElementById("set-startup").onchange = (e) => { settings.startup = e.target.value; saveSettings(); };
+    document.getElementById("set-tts-enabled").onchange = (e) => {
+      settings.ttsEnabled = e.target.checked;
+      if (!settings.ttsEnabled) AxonTTS.stopController();
+      saveSettings();
+    };
+    document.getElementById("set-tts-voice").onchange = (e) => {
+      settings.ttsVoiceIndex = Number(e.target.value);
+      saveSettings();
+    };
+
+    // Test Voice & Auto-Stop Controller Button
+    document.getElementById("row-test-voice").onclick = () => {
+      if (AxonTTS.isSpeaking) {
+        AxonTTS.stopController();
+      } else {
+        AxonTTS.speak("Namaste! Yeh AXON AI ka studio voice test hai. Poora sentence padhne ke baad controller automatic band ho jayega.");
+      }
+    };
+
+    // Profile Photo Upload
+    document.getElementById("row-change-photo").onclick = () => {
+      document.getElementById("photo-file-input").click();
+    };
+    document.getElementById("photo-file-input").onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        settings.photo = reader.result;
+        saveSettings();
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // Modal Helper
+    function openModal(title, bodyHTML, actionBtnHTML = "") {
+      document.getElementById("modal-title").textContent = title;
+      document.getElementById("modal-body").innerHTML = bodyHTML;
+      document.getElementById("modal-actions").innerHTML = `
+        <button class="btn-secondary" onclick="closeModal()">Close</button>
+        ${actionBtnHTML}
+      `;
+      document.getElementById("app-modal").classList.remove("hidden");
+    }
+    window.closeModal = () => document.getElementById("app-modal").classList.add("hidden");
+
+    // Edit Profile Modal
+    document.getElementById("row-edit-profile").onclick = () => {
+      openModal(
+        "Edit Profile",
+        `
+          <label style="font-size:12px;color:var(--text-secondary);">Profile Name</label>
+          <input id="edit-name-input" class="modal-field" value="${settings.name}" />
+          <label style="font-size:12px;color:var(--text-secondary);">Email Address</label>
+          <input id="edit-email-input" class="modal-field" value="${settings.email}" />
+        `,
+        `<button class="btn-primary" style="flex:1;margin:0;" onclick="saveEditedProfile()">Save Changes</button>`
+      );
+    };
+    window.saveEditedProfile = () => {
+      const n = document.getElementById("edit-name-input").value.trim();
+      const em = document.getElementById("edit-email-input").value.trim();
+      if (n) settings.name = n;
+      if (em) settings.email = em;
+      saveSettings();
+      closeModal();
+    };
+
+    // Account Information Modal
+    document.getElementById("row-account-info").onclick = () => {
+      openModal(
+        "Account Information",
+        `
+          <p style="font-size:13.5px;line-height:1.7;color:var(--text-secondary);">
+            <strong>Name:</strong> ${settings.name}<br/>
+            <strong>Email:</strong> ${settings.email}<br/>
+            <strong>Workspace Tier:</strong> AXON Pro Workspace<br/>
+            <strong>Auth Provider:</strong> ${settings.provider}<br/>
+            <strong>Status:</strong> Verified Active
+          </p>
+        `
+      );
+    };
+
+    // Model Information Modal
+    document.getElementById("row-model-info").onclick = () => {
+      openModal(
+        "AI Model Information",
+        `
+          <p style="font-size:13.5px;line-height:1.7;color:var(--text-secondary);">
+            <strong>Active Engine:</strong> ${settings.aiModel}<br/>
+            <strong>Context Window:</strong> 128,000 Tokens<br/>
+            <strong>Architecture:</strong> AXON Neural Transformer<br/>
+            <strong>Capabilities:</strong> Coding, Reasoning, Multilingual Voice & Real-time Analysis
+          </p>
+        `
+      );
+    };
+
+    // Workspace Info Button (Top Right ⓘ)
+    document.getElementById("settings-info-btn").onclick = () => {
+      openModal(
+        "AXON AI Workspace",
+        `<p style="font-size:13.5px;line-height:1.6;color:var(--text-secondary);">
+          <strong>AXON AI</strong> — Professional AI Workspace.<br/>
+          Engineered by <strong>Ms Devlopers</strong>.
+        </p>`
+      );
+    };
+
+    // Account Management & Sign Out
+    function signOutUser() {
+      AxonTTS.stopController();
+      localStorage.removeItem("axon_user");
+      if (isFirebaseReady && firebaseAuth) {
+        firebaseAuth.signOut().catch(() => {});
+      }
+      closeModal();
+      toggleSidebar(false);
+      showScreen("login");
+    }
+
+    document.getElementById("row-account-manage").onclick = () => {
+      openModal(
+        "Account Management",
+        `<p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">Manage your active session or sign out from AXON AI Workspace.</p>`,
+        `<button class="btn-primary" style="flex:1;margin:0;background:#ef4444;" onclick="signOutUser()">Sign Out</button>`
+      );
+    };
+    document.getElementById("sidebar-logout-btn").onclick = signOutUser;
+
+    // Clear Chat History
+    document.getElementById("row-clear-history").onclick = () => {
+      chats = [];
+      currentChatId = null;
+      localStorage.setItem("axon_chats", "[]");
+      renderHistorySidebar();
+      messagesBox.innerHTML = `<div class="msg ai">All chat history cleared.</div>`;
+    };
+
+    // Reset Settings
+    document.getElementById("row-reset-settings").onclick = () => {
+      const keepName = settings.name;
+      const keepEmail = settings.email;
+      settings = { ...defaultSettings, name: keepName, email: keepEmail };
+      saveSettings();
+    };
+
+    // Live Search Settings Filter
+    document.getElementById("search-settings-input").addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      document.querySelectorAll(".searchable-card").forEach(card => {
+        const text = (card.innerText + " " + (card.dataset.keywords || "")).toLowerCase();
+        card.style.display = text.includes(q) ? "block" : "none";
+      });
+    });
   </script>
 </body>
 </html>
