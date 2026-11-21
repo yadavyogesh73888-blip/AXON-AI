@@ -1,17 +1,14 @@
+
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
 const path = require("path");
-
-5 const helmet = require("helmet");
 const admin = require("firebase-admin");
-6 const { rateLimit } = require("express-rate-limit");
+
 const app = express();
 const PORT = process.env.PORT || 10000;
-7 const path = require("path");
-const app = express();
-const PORT = process.env.PORT || 10000;
+
 
 app.set("trust proxy", 1);
 
