@@ -4,6 +4,12 @@ const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
 const path = require("path");
 
+5 const helmet = require("helmet");
+const admin = require("firebase-admin");
+6 const { rateLimit } = require("express-rate-limit");
+const app = express();
+const PORT = process.env.PORT || 10000;
+7 const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -505,3 +511,16 @@ You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur 
 app.listen(PORT, "0.0.0.0", () => {
   console.log("AXON-AI Secure Server running on port " + PORT);
 });
+async function verifyUser(req) {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) return null;
+
+  const decoded = await admin.auth().verifyIdToken(token);
+
+  return {
+    uid: decoded.uid,
+    name: decoded.name || "",
+    email: decoded.email || ""
+  };
+}
