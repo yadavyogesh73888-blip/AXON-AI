@@ -384,6 +384,7 @@
             <div id="attachment-preview" class="hidden mb-2 p-2.5 rounded-2xl glass-panel flex items-center justify-between gap-3 animate-fade-up">
               <div class="flex items-center gap-3 min-w-0">
                 <img id="attachment-thumb" src="" alt="Preview" class="hidden w-12 h-12 rounded-xl object-cover border border-slate-700" />
+                <video id="attachment-video-thumb" src="" muted playsinline class="hidden w-14 h-12 rounded-xl object-cover border border-slate-700 bg-slate-950"></video>
                 <div id="attachment-file-icon" class="hidden w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300 shrink-0">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
@@ -405,6 +406,16 @@
                 <div>
                   <span class="block font-medium text-xs sm:text-sm">Send Photo</span>
                   <span class="block text-[10px] text-slate-400">Upload from gallery</span>
+                </div>
+              </button>
+
+              <button id="menu-send-video" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-slate-800/80 transition text-left">
+                <span class="w-8 h-8 rounded-lg bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </span>
+                <div>
+                  <span class="block font-medium text-xs sm:text-sm">Send Video</span>
+                  <span class="block text-[10px] text-slate-400">Show a video to AI</span>
                 </div>
               </button>
 
@@ -440,10 +451,11 @@
             </div>
 
             <input id="input-photo" type="file" accept="image/*" class="hidden" />
+            <input id="input-video" type="file" accept="video/*" class="hidden" />
             <input id="input-file" type="file" accept=".pdf,.txt,.csv,.json,.md,.js,.py,.html,.doc,.docx" class="hidden" />
 
             <div class="glass-panel rounded-2xl p-2 flex items-end gap-2 shadow-xl shadow-black/40 border border-slate-700/70 focus-within:border-cyan-400/50 transition">
-              <button id="btn-plus-menu" type="button" title="Attach Photo, Camera, or File" class="shrink-0 w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition">
+              <button id="btn-plus-menu" type="button" title="Attach Photo, Video, Camera, or File" class="shrink-0 w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
 
@@ -1026,11 +1038,19 @@
           if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
           firebaseAuth = firebase.auth();
           firebaseReady = true;
-          firebaseAuth.getRedirectResult().catch((err) => {
+
+          firebaseAuth.getRedirectResult().then((result) => {
+            if (result && result.user) {
+              demoSession = false;
+              const u = result.user;
+              completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '');
+            }
+          }).catch((err) => {
             if (err && err.code && err.code !== 'auth/popup-closed-by-user') {
               showAuthError(firebaseErrorMessage(err));
             }
           });
+
           firebaseAuth.onAuthStateChanged((user) => {
             if (user) {
               demoSession = false;
@@ -1066,7 +1086,7 @@
           'auth/email-already-in-use': 'An account already exists with this email. Please sign in.',
           'auth/weak-password': 'Password must be at least 6 characters long.',
           'auth/popup-closed-by-user': 'Google sign-in window was closed before completion.',
-          'auth/popup-blocked': 'Browser blocked the sign-in popup. Please allow popups and try again.',
+          'auth/popup-blocked': 'Browser blocked the sign-in popup. Redirecting or allow popups.',
           'auth/unauthorized-domain': 'This domain is not authorized in Firebase Console.',
           'auth/network-request-failed': 'Network error. Please check your internet connection.'
         };
@@ -1200,7 +1220,6 @@
         toast._timer = setTimeout(() => toast.classList.add('hidden'), duration);
       }
 
-      // Check whether user is signed in (including Quick Demo session)
       function isSignedInUser() {
         return Boolean(state.user && (state.user.email || demoSession));
       }
@@ -1479,7 +1498,7 @@
                 <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
               </div>
               <h3 class="text-xl sm:text-2xl font-bold text-white">How can AXON AI help today?</h3>
-              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Attach photos, open the camera, start a video call, or enable Voice Control in Settings.</p>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Attach photos, videos, open the camera, start a video call, or enable Voice Control in Settings.</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
                 <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-cyan-400/40 text-left transition" data-prompt="Open WhatsApp">
                   <span class="block text-xs font-semibold text-cyan-300">App Action</span>
@@ -1501,6 +1520,13 @@
           if (m.attachment) {
             if (m.attachment.type === 'image') {
               attachHtml = `<img src="${m.attachment.dataUrl}" alt="${escapeHtml(m.attachment.name)}" class="mt-2 max-h-56 rounded-xl border border-slate-700/80 object-cover" />`;
+            } else if (m.attachment.type === 'video' && m.attachment.dataUrl) {
+              attachHtml = `
+                <div class="mt-2 space-y-1">
+                  <video src="${m.attachment.dataUrl}" controls playsinline class="max-h-60 w-full rounded-xl border border-slate-700/80 bg-slate-950"></video>
+                  <p class="text-[11px] text-cyan-200/80">${escapeHtml(m.attachment.name)} • ${escapeHtml(m.attachment.size || '')}</p>
+                </div>
+              `;
             } else {
               attachHtml = `
                 <div class="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
@@ -1712,6 +1738,52 @@
         }
       }
 
+      function extractVideoFrameDataUrl(videoUrl) {
+        return new Promise((resolve) => {
+          try {
+            if (!videoUrl) return resolve(null);
+            const v = document.createElement('video');
+            v.muted = true;
+            v.playsInline = true;
+            v.preload = 'metadata';
+            v.src = videoUrl;
+            const cleanup = () => {
+              v.onloadeddata = null;
+              v.onseeked = null;
+              v.onerror = null;
+            };
+            v.onloadeddata = () => {
+              try {
+                v.currentTime = Math.min(1, (v.duration || 2) * 0.2);
+              } catch (e) {
+                cleanup();
+                resolve(null);
+              }
+            };
+            v.onseeked = () => {
+              try {
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.min(v.videoWidth || 640, 640);
+                canvas.height = Math.min(v.videoHeight || 360, 480);
+                canvas.getContext('2d').drawImage(v, 0, 0, canvas.width, canvas.height);
+                const url = canvas.toDataURL('image/jpeg', 0.75);
+                cleanup();
+                resolve(url);
+              } catch (e) {
+                cleanup();
+                resolve(null);
+              }
+            };
+            v.onerror = () => {
+              cleanup();
+              resolve(null);
+            };
+          } catch (e) {
+            resolve(null);
+          }
+        });
+      }
+
       async function fetchAIReply(promptText, signal = null, attachment = null) {
         try {
           if (attachment && attachment.type === "image") {
@@ -1736,6 +1808,31 @@
           }
 
           let combinedPrompt = promptText || "";
+          if (attachment && attachment.type === "video") {
+            const frameUrl = await extractVideoFrameDataUrl(attachment.dataUrl);
+            if (frameUrl) {
+              try {
+                const vRes = await fetch("/api/vision", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    imageData: frameUrl,
+                    prompt: `${promptText ? promptText + " — " : ""}User uploaded video "${attachment.name}" (${attachment.size || "video"}). Describe what is shown in this video frame and respond helpfully.`,
+                    model: state.settings.aiModel,
+                    mode: state.settings.chatMode,
+                    language: state.settings.appLanguage
+                  }),
+                  signal
+                });
+                const vData = await vRes.json().catch(() => ({}));
+                if (vRes.ok && vData.reply) return vData.reply;
+              } catch (e) {
+                if (e && e.name === "AbortError") throw e;
+              }
+            }
+            combinedPrompt = `${promptText ? promptText + "\n\n" : ""}[Uploaded Video: ${attachment.name}, Size: ${attachment.size || "unknown"}] Please analyze/respond to this video shared by the user.`;
+          }
+
           if (attachment && attachment.type === "file" && attachment.textContent) {
             combinedPrompt = `${promptText ? promptText + "\n\n" : "Analyze this file:\n"}[File: ${attachment.name}]\n\`\`\`\n${attachment.textContent.slice(0, 7000)}\n\`\`\``;
           }
@@ -1783,7 +1880,7 @@
         const userMsg = {
           id: 'm_' + Date.now(),
           role: 'user',
-          text: text || (attachment ? `Sent attachment: ${attachment.name}` : ''),
+          text: text || (attachment ? `Sent ${attachment.type}: ${attachment.name}` : ''),
           timestamp: new Date().toISOString(),
           attachment
         };
@@ -1791,6 +1888,8 @@
 
         if (chat.messages.length === 1 && text) {
           chat.title = text.length > 34 ? text.slice(0, 34) + '…' : text;
+        } else if (chat.messages.length === 1 && attachment) {
+          chat.title = attachment.name.length > 34 ? attachment.name.slice(0, 34) + '…' : attachment.name;
         }
         chat.updatedAt = new Date().toISOString();
 
@@ -1844,12 +1943,17 @@
         wrap.classList.remove('hidden');
         $('attachment-name').textContent = att.name;
         $('attachment-size').textContent = att.size || 'Ready to send';
+        $('attachment-thumb').classList.add('hidden');
+        $('attachment-video-thumb').classList.add('hidden');
+        $('attachment-file-icon').classList.add('hidden');
+
         if (att.type === 'image') {
           $('attachment-thumb').src = att.dataUrl;
           $('attachment-thumb').classList.remove('hidden');
-          $('attachment-file-icon').classList.add('hidden');
+        } else if (att.type === 'video' && att.dataUrl) {
+          $('attachment-video-thumb').src = att.dataUrl;
+          $('attachment-video-thumb').classList.remove('hidden');
         } else {
-          $('attachment-thumb').classList.add('hidden');
           $('attachment-file-icon').classList.remove('hidden');
         }
       }
@@ -1857,19 +1961,23 @@
       function clearAttachment() {
         state.pendingAttachment = null;
         $('attachment-preview').classList.add('hidden');
+        $('attachment-video-thumb').src = '';
         $('input-photo').value = '';
+        $('input-video').value = '';
         $('input-file').value = '';
       }
 
-      function handleFileSelected(file, isImage) {
+      function handleFileSelected(file, kind) {
         if (!file) return;
         if (!requireSignInForUpload()) {
           $('input-photo').value = '';
+          $('input-video').value = '';
           $('input-file').value = '';
           return;
         }
         const sizeStr = file.size < 1024 ? `${file.size} B` : file.size < 1048576 ? `${(file.size / 1024).toFixed(1)} KB` : `${(file.size / 1048576).toFixed(1)} MB`;
-        if (isImage) {
+
+        if (kind === 'image') {
           const reader = new FileReader();
           reader.onload = (e) => {
             const img = new Image();
@@ -1900,6 +2008,15 @@
             img.src = e.target.result;
           };
           reader.readAsDataURL(file);
+        } else if (kind === 'video') {
+          const videoUrl = URL.createObjectURL(file);
+          setAttachment({
+            type: 'video',
+            name: file.name,
+            size: sizeStr,
+            dataUrl: videoUrl
+          });
+          showToast('Video attached! Add a message or press Send.');
         } else {
           const reader = new FileReader();
           reader.onload = (e) => {
@@ -2089,7 +2206,6 @@
         showToast('Video call ended.');
       }
 
-      // Auto-stop TTS controller cleanly once full text completes (no mid-text cutoff)
       function stopTTSController() {
         if (ttsKeepAliveTimer) {
           clearInterval(ttsKeepAliveTimer);
@@ -2275,6 +2391,9 @@
 
       async function triggerGoogleSignIn() {
         if (!firebaseReady || !firebaseAuth) {
+          initializeFirebaseAuth();
+        }
+        if (!firebaseReady || !firebaseAuth) {
           $('google-picker-modal').classList.add('hidden');
           showAuthError('Firebase Auth is not initialized.');
           return;
@@ -2288,13 +2407,19 @@
         try {
           const provider = new firebase.auth.GoogleAuthProvider();
           provider.setCustomParameters({ prompt: 'select_account' });
-          await firebaseAuth.signInWithPopup(provider);
+          const cred = await firebaseAuth.signInWithPopup(provider);
           $('google-picker-modal').classList.add('hidden');
+          if (cred && cred.user) {
+            demoSession = false;
+            const u = cred.user;
+            completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '');
+          }
         } catch (error) {
           if (
             error &&
             (error.code === 'auth/popup-blocked' ||
-              error.code === 'auth/operation-not-supported-in-this-environment')
+              error.code === 'auth/operation-not-supported-in-this-environment' ||
+              error.code === 'auth/cancelled-popup-request')
           ) {
             try {
               const provider = new firebase.auth.GoogleAuthProvider();
@@ -2405,7 +2530,6 @@
         $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
         $('btn-firebase-google-auth').addEventListener('click', triggerGoogleSignIn);
 
-        // Quick Demo button works cleanly
         $('btn-guest-login').addEventListener('click', () => {
           demoSession = true;
           completeLogin('AXON Demo User', 'demo@axon.ai');
@@ -2428,7 +2552,6 @@
           );
         });
 
-        // Account & Profile actions
         $('row-edit-profile').addEventListener('click', () => {
           const curName = state.user?.name || state.settings.profileName || '';
           const curEmail = state.user?.email || state.settings.profileEmail || '';
@@ -2605,11 +2728,15 @@
           }
         });
 
-        // Photo, File & Camera upload checks sign-in and shows "Please sign in this app" if not signed in
         $('menu-send-photo').addEventListener('click', () => {
           $('plus-menu').classList.add('hidden');
           if (!requireSignInForUpload()) return;
           $('input-photo').click();
+        });
+        $('menu-send-video').addEventListener('click', () => {
+          $('plus-menu').classList.add('hidden');
+          if (!requireSignInForUpload()) return;
+          $('input-video').click();
         });
         $('menu-send-file').addEventListener('click', () => {
           $('plus-menu').classList.add('hidden');
@@ -2625,8 +2752,9 @@
           showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode disabled');
         });
 
-        $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], true));
-        $('input-file').addEventListener('change', (e) => handleFileSelected(e.target.files[0], false));
+        $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'image'));
+        $('input-video').addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'video'));
+        $('input-file').addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'file'));
         $('btn-remove-attachment').addEventListener('click', clearAttachment);
 
         $('btn-close-camera').addEventListener('click', closeCameraModal);
