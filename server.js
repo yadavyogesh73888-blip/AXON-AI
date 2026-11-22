@@ -36,7 +36,7 @@ function sanitizeModel(val, fallback) {
   return cleaned || fallback;
 }
 
-const CHAT_MODEL = "openai/gpt-oss-120b";
+const CHAT_MODEL = "GEMINI_IMAGE_API_KEY";
 const VISION_MODEL = sanitizeModel(process.env.GROQ_VISION_MODEL, "qwen/qwen3.8-27b");
 
 const chatLimiter = rateLimit({
