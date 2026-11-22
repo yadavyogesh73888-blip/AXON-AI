@@ -36,9 +36,10 @@ function sanitizeModel(val, fallback) {
   return cleaned || fallback;
 }
 
-const CHAT_MODEL = "openai/gpt-oss-120b";
+const CHAT_MODEL = sanitizeModel(process.env.GROQ_MODEL, "openai/gpt-oss-120b");
 const VISION_MODEL = sanitizeModel(process.env.GROQ_VISION_MODEL, "qwen/qwen3.8-27b");
-const IMAGE_EDIT_MODEL = "gemini-2.5-flash-image";
+const IMAGE_EDIT_MODEL = sanitizeModel(process.env.GEMINI_IMAGE_MODEL, "gemini-2.5-flash-image");
+
 const chatLimiter = rateLimit({
   windowMs: 60 * 1000,
   limit: 25,
@@ -78,11 +79,18 @@ function isValidBase64Image(imageData) {
   if (!match) {
     return { ok: false, error: "Only JPEG, PNG, and WebP images are supported." };
   }
-  const imageBytes = Buffer.from(match[2], "base64");
+  const base64Clean = match[2];
+  const imageBytes = Buffer.from(base64Clean, "base64");
   if (!imageBytes.length || imageBytes.length > 5 * 1024 * 1024) {
     return { ok: false, error: "Image must be smaller than 5 MB." };
   }
-  return { ok: true, bytes: imageBytes, mimeType: `image/${match[1].toLowerCase() === "jpg" ? "jpeg" : match[1].toLowerCase()}` };
+  const mimeType = `image/${match[1].toLowerCase() === "jpg" ? "jpeg" : match[1].toLowerCase()}`;
+  return {
+    ok: true,
+    bytes: imageBytes,
+    base64: base64Clean,
+    mimeType
+  };
 }
 
 async function analyzeWithVisionModel(apiKey, contentParts, maxTokens = 800, temperature = 0.5, timeoutMs = 30000) {
@@ -229,14 +237,14 @@ app.get("/api/health", healthLimiter, async (req, res) => {
   }
 });
 
-// Photo Studio AI Image Edit Route (Uses OPENAI_API_KEY if configured)
+// Photo Studio AI Image Edit Route (Uses GEMINI_API_KEY & IMAGE_EDIT_MODEL)
 app.post("/api/photo-studio-edit", visionLimiter, express.json({ limit: "12mb" }), async (req, res) => {
   const { imageBase64, prompt, mode } = req.body || {};
-  const openaiKey = process.env.OPENAI_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY;
 
-  if (!openaiKey || !openaiKey.trim()) {
+  if (!geminiKey || !geminiKey.trim()) {
     return res.status(503).json({
-      error: "OPENAI_API_KEY Render par set nahi hai ya empty hai."
+      error: "GEMINI_API_KEY Render par set nahi hai ya empty hai."
     });
   }
 
@@ -256,42 +264,78 @@ app.post("/api/photo-studio-edit", visionLimiter, express.json({ limit: "12mb" }
       ? "Replace and transform the background environment naturally while keeping the foreground subject sharp and consistent. "
       : "Apply heavy AI style and scene transformation while keeping the core subject consistent. ";
 
-  try {
-    const form = new FormData();
-    const blob = new Blob([imgCheck.bytes], { type: imgCheck.mimeType });
-    form.append("model", "gpt-image-1");
-    form.append("image", blob, "input.png");
-    form.append("prompt", `${prefix}${prompt.trim().slice(0, 1500)}`);
-    form.append("size", "1024x1024");
+  const fullPrompt = `${prefix}${prompt.trim().slice(0, 1500)}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(IMAGE_EDIT_MODEL)}:generateContent`;
 
-    const response = await fetch("https://api.openai.com/v1/images/edits", {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 45000);
+
+  try {
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${openaiKey.trim()}`
+        "Content-Type": "application/json",
+        "x-goog-api-key": geminiKey.trim()
       },
-      body: form
+      signal: controller.signal,
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                inlineData: {
+                  mimeType: imgCheck.mimeType,
+                  data: imgCheck.base64
+                }
+              },
+              {
+                text: fullPrompt
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          responseModalities: ["IMAGE", "TEXT"]
+        }
+      })
     });
 
-    const data = await response.json().catch(() => ({}));
+    const rawText = await response.text();
+    let data = {};
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      data = {};
+    }
+
     if (!response.ok) {
       return res.status(response.status).json({
-        error: data?.error?.message || "OpenAI image edit failed."
+        error: data?.error?.message || "Gemini image edit failed."
       });
     }
 
-    const b64 = data?.data?.[0]?.b64_json;
-    const url = data?.data?.[0]?.url;
+    const parts = data?.candidates?.[0]?.content?.parts || [];
+    const imagePart = parts.find((p) => p?.inlineData?.data);
 
-    if (b64) {
-      return res.json({ editedImage: `data:image/png;base64,${b64}` });
-    }
-    if (url) {
-      return res.json({ editedImage: url });
+    if (imagePart?.inlineData?.data) {
+      const outMime = imagePart.inlineData.mimeType || "image/png";
+      return res.json({
+        editedImage: `data:${outMime};base64,${imagePart.inlineData.data}`,
+        model: IMAGE_EDIT_MODEL
+      });
     }
 
-    return res.status(502).json({ error: "Edited image data nahi mila." });
+    const textPart = parts.find((p) => typeof p?.text === "string")?.text;
+    return res.status(502).json({
+      error: textPart || "Gemini se edited image data nahi mila."
+    });
   } catch (err) {
-    return res.status(500).json({ error: err?.message || "Photo Studio edit error." });
+    return res.status(err.name === "AbortError" ? 504 : 500).json({
+      error: err.name === "AbortError" ? "Gemini image edit timed out." : err?.message || "Photo Studio edit error."
+    });
+  } finally {
+    clearTimeout(timeout);
   }
 });
 
