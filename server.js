@@ -1,4 +1,3 @@
-
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -8,7 +7,6 @@ const admin = require("firebase-admin");
 
 const app = express();
 const PORT = process.env.PORT || 10000;
-
 
 app.set("trust proxy", 1);
 
@@ -21,7 +19,12 @@ app.use(
 app.use(cors());
 
 app.use((req, res, next) => {
-  if (req.path === "/api/vision" || req.path === "/api/video" || req.path === "/api/photo-edit") {
+  if (
+    req.path === "/api/vision" ||
+    req.path === "/api/video" ||
+    req.path === "/api/photo-edit" ||
+    req.path === "/api/photo-studio-edit"
+  ) {
     return next();
   }
   express.json({ limit: "2mb" })(req, res, next);
@@ -79,7 +82,7 @@ function isValidBase64Image(imageData) {
   if (!imageBytes.length || imageBytes.length > 5 * 1024 * 1024) {
     return { ok: false, error: "Image must be smaller than 5 MB." };
   }
-  return { ok: true, bytes: imageBytes };
+  return { ok: true, bytes: imageBytes, mimeType: `image/${match[1].toLowerCase() === "jpg" ? "jpeg" : match[1].toLowerCase()}` };
 }
 
 async function analyzeWithVisionModel(apiKey, contentParts, maxTokens = 800, temperature = 0.5, timeoutMs = 30000) {
@@ -226,7 +229,73 @@ app.get("/api/health", healthLimiter, async (req, res) => {
   }
 });
 
-// Photo & Live Camera Vision Route (What's inside + Photo Editing Guidance)
+// Photo Studio AI Image Edit Route (Uses OPENAI_API_KEY if configured)
+app.post("/api/photo-studio-edit", visionLimiter, express.json({ limit: "12mb" }), async (req, res) => {
+  const { imageBase64, prompt, mode } = req.body || {};
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  if (!openaiKey || !openaiKey.trim()) {
+    return res.status(503).json({
+      error: "OPENAI_API_KEY Render par set nahi hai ya empty hai."
+    });
+  }
+
+  const imgCheck = isValidBase64Image(imageBase64);
+  if (!imgCheck.ok) {
+    return res.status(400).json({ error: imgCheck.error });
+  }
+
+  if (typeof prompt !== "string" || !prompt.trim()) {
+    return res.status(400).json({ error: "Edit prompt zaroori hai." });
+  }
+
+  const prefix =
+    mode === "cgi"
+      ? "Transform into a high-detail 3D CGI / Unreal Engine cinematic render with dramatic lighting and depth while keeping the main subject recognizable. "
+      : mode === "background"
+      ? "Replace and transform the background environment naturally while keeping the foreground subject sharp and consistent. "
+      : "Apply heavy AI style and scene transformation while keeping the core subject consistent. ";
+
+  try {
+    const form = new FormData();
+    const blob = new Blob([imgCheck.bytes], { type: imgCheck.mimeType });
+    form.append("model", "gpt-image-1");
+    form.append("image", blob, "input.png");
+    form.append("prompt", `${prefix}${prompt.trim().slice(0, 1500)}`);
+    form.append("size", "1024x1024");
+
+    const response = await fetch("https://api.openai.com/v1/images/edits", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${openaiKey.trim()}`
+      },
+      body: form
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: data?.error?.message || "OpenAI image edit failed."
+      });
+    }
+
+    const b64 = data?.data?.[0]?.b64_json;
+    const url = data?.data?.[0]?.url;
+
+    if (b64) {
+      return res.json({ editedImage: `data:image/png;base64,${b64}` });
+    }
+    if (url) {
+      return res.json({ editedImage: url });
+    }
+
+    return res.status(502).json({ error: "Edited image data nahi mila." });
+  } catch (err) {
+    return res.status(500).json({ error: err?.message || "Photo Studio edit error." });
+  }
+});
+
+// Photo & Live Camera Vision Route
 app.post("/api/vision", visionLimiter, express.json({ limit: "8mb" }), async (req, res) => {
   const { imageData, prompt, editMode } = req.body || {};
   const apiKey = process.env.GROQ_API_KEY;
@@ -317,7 +386,7 @@ ${customAsk}`;
   return res.json({ reply: result.reply });
 });
 
-// Video Inspection Route (Watches extracted frames & tells what's inside the video)
+// Video Inspection Route
 app.post("/api/video", visionLimiter, express.json({ limit: "15mb" }), async (req, res) => {
   const { frames, prompt, videoName } = req.body || {};
   const apiKey = process.env.GROQ_API_KEY;
@@ -379,7 +448,7 @@ ${userAsk ? `Specific question from user: ${userAsk}` : ""}`;
   return res.json({ reply: result.reply });
 });
 
-// Main Chat Route (Text chat + optional videoFrames inspection)
+// Main Chat Route
 app.post("/api/chat", chatLimiter, async (req, res) => {
   const message = req.body?.message;
   const deepThink = Boolean(req.body?.deepThink);
@@ -404,7 +473,6 @@ app.post("/api/chat", chatLimiter, async (req, res) => {
     });
   }
 
-  // If video frames are attached with a chat message, inspect the video first and include details
   let videoContext = "";
   if (videoFrames.length > 0) {
     const parts = [
@@ -505,9 +573,6 @@ You are AXON-AI, an intelligent, respectful, and fun best friend (ek sacche aur 
   }
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("AXON-AI Secure Server running on port " + PORT);
-});
 async function verifyUser(req) {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -521,3 +586,7 @@ async function verifyUser(req) {
     email: decoded.email || ""
   };
 }
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("AXON-AI Secure Server running on port " + PORT);
+});
