@@ -38,7 +38,7 @@ function sanitizeModel(val, fallback) {
 
 const CHAT_MODEL = "openai/gpt-oss-120b";
 const VISION_MODEL = sanitizeModel(process.env.GROQ_VISION_MODEL, "qwen/qwen3.8-27b");
-
+const IMAGE_EDIT_MODEL = "gemini-2.5-flash-image";
 const chatLimiter = rateLimit({
   windowMs: 60 * 1000,
   limit: 25,
