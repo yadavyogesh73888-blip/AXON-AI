@@ -37,7 +37,6 @@
       touch-action: pan-y;
     }
 
-    /* Clean & Fixed Light Theme (Prevents Layout Breakage) */
     html.light-theme body {
       background-color: #f1f5f9 !important;
       background-image: none !important;
@@ -45,6 +44,7 @@
     }
     html.light-theme #app-screen,
     html.light-theme #view-chat,
+    html.light-theme #view-photo-studio,
     html.light-theme #view-apps,
     html.light-theme #view-settings,
     html.light-theme #chat-messages,
@@ -80,6 +80,7 @@
     html.light-theme .bg-slate-900\/60,
     html.light-theme .bg-slate-900,
     html.light-theme select,
+    html.light-theme textarea,
     html.light-theme input[type="text"],
     html.light-theme input[type="email"],
     html.light-theme input[type="password"] {
@@ -92,11 +93,11 @@
     html.light-theme #btn-camera-capture,
     html.light-theme #btn-end-call,
     html.light-theme #btn-confirm-ok,
-    html.light-theme #btn-launch-yt-ext {
+    html.light-theme #btn-launch-yt-ext,
+    html.light-theme #studio-ai-generate-btn {
       color: #ffffff !important;
     }
 
-    /* Cosmic Neon Glass Settings Cards (Matching Reference Image) */
     .axon-glass-card {
       background: rgba(15, 23, 48, 0.78);
       backdrop-filter: blur(18px);
@@ -199,7 +200,7 @@
 </head>
 <body class="mesh-bg antialiased selection:bg-cyan-500/30 selection:text-cyan-100">
 
-  <!-- ==================== 1. SPLASH SCREEN (UNCHANGED) ==================== -->
+  <!-- ==================== 1. SPLASH SCREEN ==================== -->
   <section id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070b14] mesh-bg transition-opacity duration-500">
     <div class="relative flex flex-col items-center">
       <div class="relative flex items-center justify-center w-28 h-28 mb-6">
@@ -223,7 +224,7 @@
     </div>
   </section>
 
-  <!-- ==================== 2. LOGIN SCREEN (UNCHANGED) ==================== -->
+  <!-- ==================== 2. LOGIN SCREEN ==================== -->
   <section id="login-screen" class="hidden fixed inset-0 z-40 overflow-y-auto px-4 py-8 flex items-center justify-center">
     <div class="w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/50 animate-fade-up">
       <div class="flex flex-col items-center text-center mb-6">
@@ -312,11 +313,7 @@
         <button id="btn-new-chat" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500/15 to-indigo-500/15 hover:from-cyan-500/25 hover:to-indigo-500/25 border border-cyan-400/30 text-cyan-200 text-sm font-semibold transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           New Chat
-          
-<button id="nav-photo-studio" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
-  <span class="text-lg">🎨</span>
-  Photo Studio
-</button
+        </button>
       </div>
 
       <div class="px-3 py-1 flex items-center justify-between">
@@ -329,6 +326,10 @@
         <button id="nav-chat" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition">
           <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           AI Chat
+        </button>
+        <button id="nav-photo-studio" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
+          <span class="text-base leading-none">🎨</span>
+          Photo Studio
         </button>
         <button id="nav-apps" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
           <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
@@ -378,7 +379,7 @@
         </div>
       </header>
 
-      <!-- ==================== VIEW 1: CHAT INTERFACE (UNCHANGED) ==================== -->
+      <!-- ==================== VIEW 1: CHAT INTERFACE ==================== -->
       <div id="view-chat" class="flex-1 flex flex-col min-h-0">
         <div id="chat-messages" class="flex-1 overflow-y-auto px-3 sm:px-6 py-5 space-y-5 scroll-smooth"></div>
 
@@ -479,140 +480,90 @@
           </div>
         </div>
       </div>
-<section id="view-photo-studio" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <div>
-        <h2 class="text-xl font-bold text-white">Photo Studio</h2>
-        <p class="text-sm text-slate-400">Upload, filter, preview, and download images directly in AXON AI.</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <label for="studio-file-input" class="cursor-pointer px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium">
-          Choose Photo
-        </label>
-        <input id="studio-file-input" type="file" accept="image/*" class="hidden" />
-        <button id="studio-download-btn" type="button" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium border border-slate-700">
-          Download
-        </button>
-      </div>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 flex items-center justify-center min-h-[300px]">
-        <canvas id="studio-canvas" class="max-w-full max-h-[420px] rounded-xl hidden"></canvas>
-        <p id="studio-placeholder" class="text-sm text-slate-400 text-center">
-          Koi photo select karein ya camera/gallery se upload karein.
-        </p>
-      </div>
+      <!-- ==================== VIEW PHOTO STUDIO ==================== -->
+      <section id="view-photo-studio" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
+        <div class="max-w-5xl mx-auto space-y-6 pb-10">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-xl font-bold text-white">AXON Photo Studio</h2>
+              <p class="text-sm text-slate-400">AI Scene / CGI / Background Editing + Live Adjustments &amp; Download.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label for="studio-file-input" class="cursor-pointer px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs sm:text-sm font-medium transition">
+                Choose Photo
+              </label>
+              <input id="studio-file-input" type="file" accept="image/*" class="hidden" />
+              <button id="studio-download-btn" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs sm:text-sm font-medium border border-slate-700 transition">
+                Download
+              </button>
+            </div>
+          </div>
 
-      <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-4">
-        <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Adjustments</h3>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 flex flex-col items-center justify-center min-h-[300px]">
+              <canvas id="studio-canvas" class="max-w-full max-h-[420px] rounded-xl hidden"></canvas>
+              <p id="studio-placeholder" class="text-sm text-slate-400 text-center">
+                Koi photo select karein ya camera/gallery se upload karein.
+              </p>
+              <p id="studio-status" class="mt-3 text-xs text-cyan-300 text-center"></p>
+            </div>
 
-        <div class="space-y-1">
-          <label for="studio-brightness" class="text-xs text-slate-300 flex justify-between">
-            <span>Brightness</span>
-            <span id="studio-brightness-val">100%</span>
-          </label>
-          <input id="studio-brightness" type="range" min="20" max="200" value="100" class="w-full" />
+            <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-4">
+              <h3 class="text-sm font-semibold text-white uppercase tracking-wider">AI Scene / CGI Edit</h3>
+
+              <div class="space-y-1">
+                <label for="studio-ai-mode" class="text-xs text-slate-300 block">Edit Mode</label>
+                <select id="studio-ai-mode" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                  <option value="cgi">3D / CGI Cinematic Look</option>
+                  <option value="background">Background &amp; Scene Swap</option>
+                  <option value="style">Stylized / VFX Transform</option>
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label for="studio-ai-prompt" class="text-xs text-slate-300 block">Prompt</label>
+                <textarea id="studio-ai-prompt" rows="2" placeholder="e.g. Cyberpunk city night background with neon glow" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white resize-none"></textarea>
+              </div>
+
+              <button id="studio-ai-generate-btn" type="button" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-xs font-semibold text-white shadow transition">
+                Generate AI Edit
+              </button>
+
+              <hr class="border-slate-800" />
+              <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Adjustments</h3>
+
+              <div class="space-y-1">
+                <label for="studio-brightness" class="text-xs text-slate-300 flex justify-between">
+                  <span>Brightness</span>
+                  <span id="studio-brightness-val">100%</span>
+                </label>
+                <input id="studio-brightness" type="range" min="20" max="200" value="100" class="w-full" />
+              </div>
+
+              <div class="space-y-1">
+                <label for="studio-contrast" class="text-xs text-slate-300 flex justify-between">
+                  <span>Contrast</span>
+                  <span id="studio-contrast-val">100%</span>
+                </label>
+                <input id="studio-contrast" type="range" min="20" max="200" value="100" class="w-full" />
+              </div>
+
+              <div class="space-y-1">
+                <label for="studio-grayscale" class="text-xs text-slate-300 flex justify-between">
+                  <span>Grayscale</span>
+                  <span id="studio-grayscale-val">0%</span>
+                </label>
+                <input id="studio-grayscale" type="range" min="0" max="100" value="0" class="w-full" />
+              </div>
+
+              <button id="studio-reset-btn" type="button" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">
+                Reset Filters
+              </button>
+            </div>
+          </div>
         </div>
-
-        <div class="space-y-1">
-          <label for="studio-contrast" class="text-xs text-slate-300 flex justify-between">
-            <span>Contrast</span>
-            <span id="studio-contrast-val">100%</span>
-          </label>
-          <input id="studio-contrast" type="range" min="20" max="200" value="100" class="w-full" />
-        </div>
-
-        <div class="space-y-1">
-          <label for="studio-grayscale" class="text-xs text-slate-300 flex justify-between">
-            <span>Grayscale</span>
-            <span id="studio-grayscale-val">0%</span>
-          </label>
-          <input id="studio-grayscale" type="range" min="0" max="100" value="0" class="w-full" />
-        </div>
-
-        <button id="studio-reset-btn" type="button" class="w-full py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700">
-          Reset Filters
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<script>
-  (function () {
-    const fileInput = document.getElementById('studio-file-input');
-    const canvas = document.getElementById('studio-canvas');
-    const placeholder = document.getElementById('studio-placeholder');
-    const brightnessInput = document.getElementById('studio-brightness');
-    const contrastInput = document.getElementById('studio-contrast');
-    const grayscaleInput = document.getElementById('studio-grayscale');
-    const brightnessVal = document.getElementById('studio-brightness-val');
-    const contrastVal = document.getElementById('studio-contrast-val');
-    const grayscaleVal = document.getElementById('studio-grayscale-val');
-    const resetBtn = document.getElementById('studio-reset-btn');
-    const downloadBtn = document.getElementById('studio-download-btn');
-
-    if (!fileInput || !canvas) return;
-    const ctx = canvas.getContext('2d');
-    let img = new Image();
-    let hasImage = false;
-
-    function renderStudioImage() {
-      if (!hasImage) return;
-      const b = brightnessInput.value;
-      const c = contrastInput.value;
-      const g = grayscaleInput.value;
-
-      brightnessVal.textContent = `${b}%`;
-      contrastVal.textContent = `${c}%`;
-      grayscaleVal.textContent = `${g}%`;
-
-      canvas.width = img.naturalWidth || img.width;
-      canvas.height = img.naturalHeight || img.height;
-      ctx.filter = `brightness(${b}%) contrast(${c}%) grayscale(${g}%)`;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    }
-
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        img = new Image();
-        img.onload = () => {
-          hasImage = true;
-          placeholder.classList.add('hidden');
-          canvas.classList.remove('hidden');
-          renderStudioImage();
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    [brightnessInput, contrastInput, grayscaleInput].forEach((input) => {
-      input.addEventListener('input', renderStudioImage);
-    });
-
-    resetBtn.addEventListener('click', () => {
-      brightnessInput.value = 100;
-      contrastInput.value = 100;
-      grayscaleInput.value = 0;
-      renderStudioImage();
-    });
-
-    downloadBtn.addEventListener('click', () => {
-      if (!hasImage) return;
-      const link = document.createElement('a');
-      link.download = 'axon-photo-studio.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    });
-  })();
-</script>
+      </section>
 
       <!-- ==================== VIEW 2: APP HUB & YOUTUBE ==================== -->
       <div id="view-apps" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
@@ -635,11 +586,10 @@
         </div>
       </div>
 
-      <!-- ==================== VIEW 3: PROFESSIONAL AXON AI SETTINGS ==================== -->
+      <!-- ==================== VIEW 3: SETTINGS ==================== -->
       <div id="view-settings" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
         <div class="max-w-3xl mx-auto space-y-5 pb-12">
 
-          <!-- Top Header Matching Reference Image -->
           <div class="flex items-center justify-between gap-3">
             <button id="btn-settings-back" type="button" title="Back to Chat" class="w-10 h-10 rounded-full axon-glass-card axon-neon-btn flex items-center justify-center text-white hover:scale-105 transition">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -653,13 +603,11 @@
             </button>
           </div>
 
-          <!-- 1. ACCOUNT & PROFILE -->
           <div class="axon-glass-card axon-featured-card rounded-3xl overflow-hidden settings-section" data-search="account profile name photo email information edit management">
             <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-300">
               1. Account &amp; Profile
             </div>
 
-            <!-- Profile Name, Photo & Email -->
             <button id="row-edit-profile" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-700/40 hover:bg-white/5 transition text-left">
               <div class="flex items-center gap-3 min-w-0">
                 <div id="settings-profile-avatar" class="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 flex items-center justify-center text-sm font-bold text-white shrink-0 overflow-hidden border border-cyan-300/50">
@@ -679,7 +627,6 @@
               </div>
             </button>
 
-            <!-- Profile Photo -->
             <button id="row-profile-photo" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-700/40 hover:bg-white/5 transition text-left">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">🖼️</span>
@@ -695,7 +642,6 @@
             </button>
             <input id="input-profile-photo" type="file" accept="image/*" class="hidden" />
 
-            <!-- Account Information -->
             <button id="row-account-info" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-700/40 hover:bg-white/5 transition text-left">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center shrink-0">🪪</span>
@@ -710,7 +656,6 @@
               </div>
             </button>
 
-            <!-- Account Management -->
             <button id="row-account-management" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-white/5 transition text-left">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">🔐</span>
@@ -723,13 +668,11 @@
             </button>
           </div>
 
-          <!-- 2. GENERAL SETTINGS -->
           <div class="axon-glass-card rounded-3xl overflow-hidden settings-section" data-search="general language default ai model chat mode auto save history startup reset">
             <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
               2. General Settings
             </div>
 
-            <!-- App Language -->
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0">🌐</span>
@@ -745,7 +688,6 @@
               </select>
             </div>
 
-            <!-- Default AI Model -->
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-300 flex items-center justify-center shrink-0">⚡</span>
@@ -761,7 +703,6 @@
               </select>
             </div>
 
-            <!-- Default Chat Mode -->
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-300 flex items-center justify-center shrink-0">💬</span>
@@ -778,7 +719,6 @@
               </select>
             </div>
 
-            <!-- Auto Save Chats -->
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">💾</span>
@@ -792,7 +732,6 @@
               </button>
             </div>
 
-            <!-- Chat History -->
             <div class="px-4 py-3.5 space-y-3 border-b border-slate-800/70">
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-3 min-w-0">
@@ -811,7 +750,6 @@
               <div id="settings-history-list" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
             </div>
 
-            <!-- Startup Preferences -->
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">🚀</span>
@@ -826,7 +764,6 @@
               </select>
             </div>
 
-            <!-- Reset Settings -->
             <button id="btn-reset-settings" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-white/5 transition text-left">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center shrink-0">🔄</span>
@@ -839,13 +776,11 @@
             </button>
           </div>
 
-          <!-- 3. AI & MODEL SETTINGS -->
           <div class="axon-glass-card rounded-3xl overflow-hidden settings-section" data-search="ai model selection information intelligence engine">
             <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
               3. AI &amp; Model Settings
             </div>
 
-            <!-- AI Model Selection -->
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-300 flex items-center justify-center shrink-0">✨</span>
@@ -862,7 +797,6 @@
               </select>
             </div>
 
-            <!-- Model Information -->
             <button id="row-model-info" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-white/5 transition text-left">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0">🧠</span>
@@ -875,7 +809,6 @@
             </button>
           </div>
 
-          <!-- 4. VOICE & TTS CONTROLLER (6 VOICES + AUTO STOP AFTER FULL TEXT) -->
           <div class="axon-glass-card rounded-3xl overflow-hidden settings-section" data-search="voice control tts speech controller 6 voices audio">
             <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
               Voice &amp; Audio Controller (6 Voices)
@@ -907,7 +840,6 @@
               </button>
             </div>
 
-            <!-- Total 6 Voices Selector -->
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-300 flex items-center justify-center shrink-0">🎚️</span>
@@ -941,7 +873,6 @@
             </div>
           </div>
 
-          <!-- 5. APPEARANCE & DISPLAY -->
           <div class="axon-glass-card rounded-3xl overflow-hidden settings-section" data-search="appearance display theme dark light text size autoscroll">
             <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
               Appearance &amp; Display
@@ -978,7 +909,6 @@
             </div>
           </div>
 
-          <!-- Bottom Search Settings Pill Bar (Matching Reference Image) -->
           <div class="relative pt-1">
             <svg class="w-4 h-4 text-cyan-400 absolute left-4 top-1/2 -translate-y-1/2 mt-0.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input id="search-settings-input" type="text" placeholder="Search settings" class="w-full pl-11 pr-4 py-3 rounded-full axon-glass-card axon-neon-btn text-sm text-white placeholder-slate-400 focus:outline-none" />
@@ -1527,19 +1457,22 @@
       function switchView(view) {
         state.activeView = view;
         $('view-chat').classList.toggle('hidden', view !== 'chat');
+        $('view-photo-studio').classList.toggle('hidden', view !== 'photo-studio');
         $('view-apps').classList.toggle('hidden', view !== 'apps');
         $('view-settings').classList.toggle('hidden', view !== 'settings');
 
         const titles = {
           chat: getActiveChat()?.title || 'AXON AI Chat',
+          'photo-studio': 'AXON Photo Studio',
           apps: 'App Hub & YouTube',
           settings: 'Settings'
         };
-        $('header-title').textContent = titles[view];
+        $('header-title').textContent = titles[view] || 'AXON AI';
 
         const activeCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium bg-slate-800/80 text-white transition';
         const idleCls = 'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition';
         $('nav-chat').className = view === 'chat' ? activeCls : idleCls;
+        if ($('nav-photo-studio')) $('nav-photo-studio').className = view === 'photo-studio' ? activeCls : idleCls;
         $('nav-apps').className = view === 'apps' ? activeCls : idleCls;
         $('nav-settings').className = view === 'settings' ? activeCls : idleCls;
 
@@ -2492,6 +2425,11 @@
             return;
           }
         }
+        if (lower.includes('photo studio')) {
+          switchView('photo-studio');
+          $('voice-hud-action').textContent = 'Action: Opened Photo Studio';
+          return;
+        }
         if (lower.includes('scroll down') || lower.includes('scroll the video')) {
           const target = state.activeView === 'apps' ? $('view-apps') : state.activeView === 'settings' ? $('view-settings') : $('chat-messages');
           target.scrollBy({ top: 340, behavior: 'smooth' });
@@ -2591,6 +2529,130 @@
         $('settings-detail-modal').classList.add('hidden');
       }
 
+      function initPhotoStudio() {
+        const fileInput = $('studio-file-input');
+        const canvas = $('studio-canvas');
+        const placeholder = $('studio-placeholder');
+        const statusEl = $('studio-status');
+        const brightnessInput = $('studio-brightness');
+        const contrastInput = $('studio-contrast');
+        const grayscaleInput = $('studio-grayscale');
+        const brightnessVal = $('studio-brightness-val');
+        const contrastVal = $('studio-contrast-val');
+        const grayscaleVal = $('studio-grayscale-val');
+        const resetBtn = $('studio-reset-btn');
+        const downloadBtn = $('studio-download-btn');
+        const aiModeSelect = $('studio-ai-mode');
+        const aiPromptInput = $('studio-ai-prompt');
+        const aiGenerateBtn = $('studio-ai-generate-btn');
+
+        if (!fileInput || !canvas) return;
+        const ctx = canvas.getContext('2d');
+        let img = new Image();
+        let hasImage = false;
+        let currentDataUrl = '';
+
+        function setStudioImageFromDataUrl(dataUrl, statusMsg = '') {
+          img = new Image();
+          img.onload = () => {
+            currentDataUrl = dataUrl;
+            hasImage = true;
+            placeholder.classList.add('hidden');
+            canvas.classList.remove('hidden');
+            renderStudioImage();
+            if (statusEl && statusMsg) statusEl.textContent = statusMsg;
+          };
+          img.src = dataUrl;
+        }
+
+        function renderStudioImage() {
+          if (!hasImage) return;
+          const b = brightnessInput.value;
+          const c = contrastInput.value;
+          const g = grayscaleInput.value;
+
+          brightnessVal.textContent = `${b}%`;
+          contrastVal.textContent = `${c}%`;
+          grayscaleVal.textContent = `${g}%`;
+
+          canvas.width = img.naturalWidth || img.width;
+          canvas.height = img.naturalHeight || img.height;
+          ctx.filter = `brightness(${b}%) contrast(${c}%) grayscale(${g}%)`;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            setStudioImageFromDataUrl(ev.target.result, 'Image loaded.');
+          };
+          reader.readAsDataURL(file);
+        });
+
+        [brightnessInput, contrastInput, grayscaleInput].forEach((input) => {
+          input.addEventListener('input', renderStudioImage);
+        });
+
+        resetBtn.addEventListener('click', () => {
+          brightnessInput.value = 100;
+          contrastInput.value = 100;
+          grayscaleInput.value = 0;
+          renderStudioImage();
+        });
+
+        downloadBtn.addEventListener('click', () => {
+          if (!hasImage) return;
+          const link = document.createElement('a');
+          link.download = 'axon-photo-studio.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+
+        if (aiGenerateBtn) {
+          aiGenerateBtn.addEventListener('click', async () => {
+            const prompt = (aiPromptInput?.value || '').trim();
+            const mode = aiModeSelect?.value || 'cgi';
+            if (!hasImage || !currentDataUrl) {
+              if (statusEl) statusEl.textContent = 'Pehle koi photo select karein.';
+              return;
+            }
+            if (!prompt) {
+              if (statusEl) statusEl.textContent = 'Kripya edit prompt likhein.';
+              return;
+            }
+
+            aiGenerateBtn.disabled = true;
+            aiGenerateBtn.textContent = 'Generating...';
+            if (statusEl) statusEl.textContent = 'AI image transform ho rahi hai...';
+
+            try {
+              const res = await fetch('/api/photo-studio-edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  imageBase64: currentDataUrl,
+                  prompt,
+                  mode
+                })
+              });
+              const data = await res.json();
+              if (!res.ok || !data.editedImage) {
+                throw new Error(data.error || 'AI edit fail ho gayi.');
+              }
+              setStudioImageFromDataUrl(data.editedImage, 'AI edit complete!');
+            } catch (err) {
+              if (statusEl) statusEl.textContent = err.message || 'AI edit error.';
+            } finally {
+              aiGenerateBtn.disabled = false;
+              aiGenerateBtn.textContent = 'Generate AI Edit';
+            }
+          });
+        }
+      }
+
       function bindEvents() {
         $('tab-signin').addEventListener('click', () => setAuthMode('signin'));
         $('tab-signup').addEventListener('click', () => setAuthMode('signup'));
@@ -2678,6 +2740,7 @@
         $('sidebar-backdrop').addEventListener('click', closeSidebarMobile);
         $('btn-new-chat').addEventListener('click', () => createNewChat(true));
         $('nav-chat').addEventListener('click', () => switchView('chat'));
+        if ($('nav-photo-studio')) $('nav-photo-studio').addEventListener('click', () => switchView('photo-studio'));
         $('nav-apps').addEventListener('click', () => switchView('apps'));
         $('nav-settings').addEventListener('click', () => switchView('settings'));
         $('btn-header-settings').addEventListener('click', () => switchView('settings'));
@@ -3115,6 +3178,7 @@
       loadState();
       initializeFirebaseAuth();
       bindEvents();
+      initPhotoStudio();
       runSplash();
     })();
   </script>
