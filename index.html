@@ -144,11 +144,19 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes splashLoadBar {
+      0% { width: 12%; }
+      50% { width: 72%; }
+      100% { width: 100%; }
+    }
     .animate-float-orb {
       animation: floatOrb 3.5s ease-in-out infinite;
     }
     .animate-fade-up {
       animation: fadeSlideUp 0.25s ease-out forwards;
+    }
+    .splash-progress-fill {
+      animation: splashLoadBar 1.8s ease-in-out forwards;
     }
     .wave-bar {
       width: 4px;
@@ -203,93 +211,121 @@
 </head>
 <body class="mesh-bg antialiased selection:bg-cyan-500/30 selection:text-cyan-100">
 
-  <!-- ==================== 1. REDESIGNED LOGIN SCREEN (DIRECT ENTRY) ==================== -->
-  <section id="login-screen" class="fixed inset-0 z-40 overflow-y-auto px-4 py-6 flex items-center justify-center bg-[#060a13] mesh-bg">
-    <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden glass-panel border border-cyan-500/30 shadow-2xl shadow-cyan-950/50 animate-fade-up">
-      <!-- Left Branding Wall -->
-      <div class="p-7 sm:p-9 bg-gradient-to-br from-[#0d1936] via-[#101e42] to-[#081024] flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800/80">
-        <div>
-          <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-semibold mb-6">
-            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-            AXON AI Neural Workspace
-          </div>
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-xl shadow-cyan-500/30 flex items-center justify-center mb-5 animate-float-orb">
-            <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
-          </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
-            Next-Gen AI Chat, Photo &amp; Video Studio
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-            Natural human-like voice, dedicated code canvas, Xone Photo &amp; Video Studio, quick command palette, and live AI video calls in one workspace.
-          </p>
+  <!-- ==================== 0. SPLASH SCREEN (MATCHING SCREENSHOT 1) ==================== -->
+  <section id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 bg-gradient-to-b from-[#071326] via-[#060d1c] to-[#050811]">
+    <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-2xl shadow-cyan-500/25 flex items-center justify-center mb-7 animate-float-orb">
+      <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 3 3 8 12 13 21 8 12 3"/>
+        <polyline points="3 12.5 12 17.5 21 12.5"/>
+        <polyline points="3 17 12 22 21 17"/>
+      </svg>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-wide text-center">
+      AXON AI
+    </h1>
+    <p class="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.26em] text-slate-300/90 mt-2.5 text-center">
+      NEURAL INTELLIGENCE WORKSPACE
+    </p>
+    <div class="w-44 h-1 rounded-full bg-slate-800/90 overflow-hidden mt-8">
+      <div class="h-full bg-gradient-to-r from-cyan-400 to-indigo-500 splash-progress-fill"></div>
+    </div>
+    <p class="text-xs text-slate-400 mt-4 tracking-wide">
+      Initializing neural core...
+    </p>
+  </section>
+
+  <!-- ==================== 1. LOGIN SCREEN (MATCHING SCREENSHOT 2) ==================== -->
+  <section id="login-screen" class="hidden fixed inset-0 z-40 overflow-y-auto px-4 py-6 flex items-center justify-center bg-gradient-to-b from-[#08162a] via-[#060c1a] to-[#050811]">
+    <div class="w-full max-w-md rounded-3xl p-6 sm:p-7 bg-[#0b1326]/95 border border-slate-800/90 shadow-2xl shadow-black/70 animate-fade-up">
+      <!-- Top Icon + Welcome Header -->
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-lg shadow-cyan-500/25 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 3 3 8 12 13 21 8 12 3"/>
+            <polyline points="3 12.5 12 17.5 21 12.5"/>
+            <polyline points="3 17 12 22 21 17"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-extrabold text-white tracking-tight">
+          Welcome to AXON AI
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed max-w-xs">
+          Sign in to access your AI assistant, voice control &amp; history
+        </p>
+      </div>
+
+      <!-- Sign In / Create Account Tabs -->
+      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-[#070d1b] border border-slate-800/90 mb-5">
+        <button id="tab-signin" type="button" class="py-2 text-xs sm:text-sm font-semibold rounded-lg bg-[#1c263b] text-white shadow transition">
+          Sign In
+        </button>
+        <button id="tab-signup" type="button" class="py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition">
+          Create Account
+        </button>
+      </div>
+
+      <form id="auth-form" class="space-y-4" novalidate>
+        <div id="name-field-wrap" class="hidden">
+          <label for="auth-name" class="block text-xs font-medium text-slate-300 mb-1.5">Full Name</label>
+          <input id="auth-name" type="text" placeholder="Your Name" class="w-full px-4 py-2.5 rounded-xl bg-[#111b30] border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition" />
         </div>
 
-        <div class="mt-6 pt-5 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-          <span>AXON AI Engine v3.2</span>
-          <span id="demo-countdown-badge" class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-400/30 font-mono">
-            Demo Window: 20s
-          </span>
+        <div>
+          <label for="auth-email" class="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
+          <input id="auth-email" type="email" placeholder="you@axon.ai" class="w-full px-4 py-2.5 rounded-xl bg-[#111b30] border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition" />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="auth-password" class="block text-xs font-medium text-slate-300">Password</label>
+            <button id="btn-forgot-pw" type="button" class="text-xs font-medium text-cyan-400 hover:text-cyan-300 transition">
+              Forgot password?
+            </button>
+          </div>
+          <div class="relative">
+            <input id="auth-password" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 pr-11 rounded-xl bg-[#111b30] border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition" />
+            <button id="btn-toggle-pw" type="button" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <p id="auth-error" class="hidden text-xs text-rose-300 bg-rose-950/60 border border-rose-500/30 rounded-xl px-3.5 py-2.5"></p>
+
+        <button id="btn-auth-submit" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#06b6d4] via-[#3b82f6] to-[#6366f1] hover:opacity-95 text-white font-semibold text-sm shadow-lg shadow-blue-600/25 transition transform active:scale-[0.99]">
+          Sign In to AXON AI
+        </button>
+      </form>
+
+      <div class="relative my-5">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-slate-800"></div>
+        </div>
+        <div class="relative flex justify-center text-xs">
+          <span class="px-3 bg-[#0b1326] text-slate-500">or continue with</span>
         </div>
       </div>
 
-      <!-- Right Auth Controls (Email-Password, Sign in with Google, Timed Demo) -->
-      <div class="p-6 sm:p-8 flex flex-col justify-center bg-[#090e1c]/90">
-        <div class="mb-5">
-          <h2 class="text-xl font-bold text-white">Sign In to AXON AI</h2>
-          <p class="text-xs text-slate-400 mt-1">Use Email &amp; Password, Google Account, or Quick Demo</p>
-        </div>
+      <div id="social-auth-grid" class="grid grid-cols-2 gap-3">
+        <button id="btn-google-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#10192d] hover:bg-[#16223c] border border-slate-800 text-xs sm:text-sm font-semibold text-slate-100 transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/>
+            <path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/>
+            <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/>
+          </svg>
+          <span>Google</span>
+        </button>
 
-        <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800 mb-4">
-          <button id="tab-signin" type="button" class="py-2 text-xs sm:text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition">Sign In</button>
-          <button id="tab-signup" type="button" class="py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition">Create Account</button>
-        </div>
-
-        <form id="auth-form" class="space-y-3.5" novalidate>
-          <div id="name-field-wrap" class="hidden">
-            <label for="auth-name" class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
-            <input id="auth-name" type="text" placeholder="Your Name" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition" />
-          </div>
-
-          <div>
-            <label for="auth-email" class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-            <input id="auth-email" type="email" placeholder="you@axon.ai" class="w-full px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition" />
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label for="auth-password" class="block text-xs font-medium text-slate-300">Password</label>
-              <button id="btn-forgot-pw" type="button" class="text-xs text-cyan-400 hover:text-cyan-300 transition">Forgot password?</button>
-            </div>
-            <div class="relative">
-              <input id="auth-password" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 pr-11 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition" />
-              <button id="btn-toggle-pw" type="button" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <p id="auth-error" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-lg px-3 py-2"></p>
-
-          <button id="btn-auth-submit" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-cyan-500/20 transition transform active:scale-[0.99]">
-            Sign In with Email
-          </button>
-        </form>
-
-        <div class="relative my-4">
-          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-800"></div></div>
-          <div class="relative flex justify-center text-xs"><span class="px-3 bg-[#090e1c] text-slate-500">or continue with</span></div>
-        </div>
-
-        <div id="social-auth-grid" class="grid grid-cols-2 gap-3">
-          <button id="btn-google-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-100 transition">
-            <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 10.9 0 13s.6 4 1.6 6l3.7-2.2z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
-            Sign in with Google
-          </button>
-          <button id="btn-guest-login" type="button" class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-xs font-semibold text-cyan-300 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            <span id="demo-btn-label">Demo (20s)</span>
-          </button>
-        </div>
+        <button id="btn-guest-login" type="button" class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#10192d] hover:bg-[#16223c] border border-slate-800 text-xs sm:text-sm font-semibold text-slate-100 transition">
+          <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+          <span id="demo-btn-label">Quick Demo</span>
+        </button>
       </div>
     </div>
   </section>
@@ -392,7 +428,7 @@
         </div>
       </header>
 
-      <!-- AI WALL BANNER (ALWAYS ACTIVE ON TOP OF WORKSPACE) -->
+      <!-- AI WALL BANNER -->
       <div id="ai-wall-strip" class="ai-wall-banner px-3 sm:px-6 py-1.5 flex items-center justify-between text-[11px] shrink-0">
         <div class="flex items-center gap-2 truncate">
           <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold tracking-wider">AI WALL</span>
@@ -419,7 +455,7 @@
             </div>
             <div class="flex items-center gap-2">
               <button id="btn-copy-pure-code" type="button" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white font-medium">Copy Code</button>
-              <button id="btn-close-pure-code" type="button" class="px-2 py-1 rounded text-xs text-slate-400 hover:text-white">✕</button>
+              <button id="btn-close-pure-code" type="button" class="px-2.5 py-1 rounded text-xs text-slate-400 hover:text-white">✕</button>
             </div>
           </div>
           <pre id="pure-code-content" class="p-4 max-h-52 overflow-auto text-xs font-mono text-emerald-300 bg-black leading-relaxed whitespace-pre-wrap"></pre>
@@ -523,7 +559,7 @@
         </div>
       </div>
 
-      <!-- ==================== VIEW: XONE PHOTO STUDIO + TIME PASS MINI GAME + PHOTO STORAGE ==================== -->
+      <!-- ==================== VIEW: XONE PHOTO STUDIO + TIME PASS MINI GAME (BOTTOM LEFT/RIGHT PADDLE) + PHOTO STORAGE ==================== -->
       <section id="view-photo-studio" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
         <div class="max-w-5xl mx-auto space-y-6 pb-12">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -556,7 +592,7 @@
                 <p class="text-xs text-slate-300">AI Image Rendering... <span id="studio-progress-sub">20%</span> complete</p>
               </div>
 
-              <!-- Time Pass Mini-Game Area (Inside Image Upload Zone) -->
+              <!-- Time Pass Mini-Game Area (Bottom Paddle Left / Right) -->
               <div id="timepass-game-wrap" class="hidden w-full flex flex-col items-center justify-center space-y-3">
                 <div class="w-full flex items-center justify-between px-2">
                   <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">AXON Time Pass Game</span>
@@ -576,8 +612,8 @@
                   </div>
                 </div>
                 <div class="flex items-center gap-3 w-full max-w-[360px]">
-                  <button id="tp-left-btn" type="button" class="flex-1 py-2.5 rounded-xl bg-slate-800 active:bg-cyan-600 text-xs font-bold text-white border border-slate-700 select-none">◀ Left Bar</button>
-                  <button id="tp-right-btn" type="button" class="flex-1 py-2.5 rounded-xl bg-slate-800 active:bg-cyan-600 text-xs font-bold text-white border border-slate-700 select-none">Right Bar ▶</button>
+                  <button id="tp-left-btn" type="button" class="flex-1 py-2.5 rounded-xl bg-slate-800 active:bg-cyan-600 text-xs font-bold text-white border border-slate-700 select-none">◀ Move Left</button>
+                  <button id="tp-right-btn" type="button" class="flex-1 py-2.5 rounded-xl bg-slate-800 active:bg-cyan-600 text-xs font-bold text-white border border-slate-700 select-none">Move Right ▶</button>
                 </div>
               </div>
 
@@ -605,7 +641,6 @@
                 </select>
               </div>
 
-              <!-- Quick Prompt Presets (Update) -->
               <div class="flex flex-wrap gap-1.5">
                 <button type="button" data-studio-preset="Cyberpunk night street with glowing cyan and indigo neon lights" class="studio-preset-chip px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-cyan-200 border border-slate-700">Neon Cyberpunk</button>
                 <button type="button" data-studio-preset="Ultra-detailed 3D CGI studio render with dramatic rim lighting" class="studio-preset-chip px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-indigo-200 border border-slate-700">3D CGI Render</button>
@@ -668,10 +703,9 @@
         </div>
       </section>
 
-      <!-- ==================== VIEW: XONE VIDEO STUDIO (VFX, GENERATED WITH AI, MENU, UPLOAD, DOWNLOAD + AXON AI AD) ==================== -->
+      <!-- ==================== VIEW: XONE VIDEO STUDIO ==================== -->
       <section id="view-video-editing" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
         <div class="max-w-5xl mx-auto space-y-5 pb-12">
-          <!-- Top Bar: VFX & Generated with AI -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-xl font-bold text-white">Xone Video Studio</h2>
@@ -691,7 +725,6 @@
             <div class="lg:col-span-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 flex flex-col items-center justify-center min-h-[320px] relative">
               <div class="relative w-full flex items-center justify-center">
                 <video id="vedit-player" controls playsinline class="max-w-full max-h-[400px] rounded-xl hidden bg-black"></video>
-                <!-- Center AI Watermark Preview -->
                 <div id="vedit-watermark-badge" class="hidden pointer-events-none absolute inset-0 flex items-center justify-center">
                   <span class="px-3 py-1 rounded-lg bg-black/45 border border-white/20 text-white/75 text-xs sm:text-sm font-bold tracking-widest uppercase">
                     AXON AI • Generated with AI
@@ -705,7 +738,6 @@
               <p id="vedit-status" class="mt-2 text-xs text-cyan-300 text-center"></p>
               <div id="vedit-ai-result" class="hidden mt-3 w-full p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed"></div>
 
-              <!-- Bottom 3 Buttons (1. Menu [Multiple Languages], 2. Upload, 3. Download) + Prompt Box -->
               <div class="w-full mt-4 pt-4 border-t border-slate-800 space-y-3">
                 <div class="flex flex-wrap items-center gap-2">
                   <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5">
@@ -1161,7 +1193,7 @@
     </main>
   </div>
 
-  <!-- ==================== NEW UPDATE: QUICK COMMAND PALETTE (CTRL+K) ==================== -->
+  <!-- ==================== QUICK COMMAND PALETTE (CTRL+K) ==================== -->
   <div id="cmdk-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-start justify-center pt-16 p-4">
     <div class="w-full max-w-md glass-panel rounded-2xl border border-cyan-400/40 shadow-2xl overflow-hidden animate-fade-up">
       <div class="p-3 border-b border-slate-800 flex items-center justify-between">
@@ -1416,8 +1448,26 @@
       let firebaseAuth = null;
       let firebaseReady = false;
       let demoSession = false;
-      let demoTimeRemaining = 20;
-      let demoTimerInterval = null;
+      let splashDismissed = false;
+
+      const $ = (id) => document.getElementById(id);
+
+      function showToast(msg, duration = 2800) {
+        const toast = $('toast');
+        toast.textContent = msg;
+        toast.classList.remove('hidden');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.add('hidden'), duration);
+      }
+
+      function dismissSplashToLogin() {
+        if (splashDismissed) return;
+        splashDismissed = true;
+        const splash = $('splash-screen');
+        const login = $('login-screen');
+        if (splash) splash.classList.add('hidden');
+        if (!state.user && login) login.classList.remove('hidden');
+      }
 
       function initializeFirebaseAuth() {
         const hasConfig = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_') &&
@@ -1435,7 +1485,8 @@
               completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '');
             }
           }).catch((err) => {
-            if (err && err.code && err.code !== 'auth/popup-closed-by-user') {
+            if (err && err.code) {
+              dismissSplashToLogin();
               showAuthError(firebaseErrorMessage(err));
             }
           });
@@ -1443,12 +1494,14 @@
           firebaseAuth.onAuthStateChanged((user) => {
             if (user) {
               demoSession = false;
-              completeLogin(user.displayName || user.email?.split('@')[0] || 'AXON User', user.email || '', user.photoURL || '');
+              const splash = $('splash-screen');
+              if (splash) splash.classList.add('hidden');
+              const u = user;
+              completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '');
             } else if (!demoSession) {
               state.user = null;
               $('app-screen').classList.add('hidden');
-              $('login-screen').classList.remove('hidden');
-              startDemoButtonTimer();
+              if (splashDismissed) $('login-screen').classList.remove('hidden');
             }
           });
           return true;
@@ -1456,38 +1509,6 @@
           console.error('Firebase initialization failed:', error);
           return false;
         }
-      }
-
-      function startDemoButtonTimer() {
-        const demoBtn = $('btn-guest-login');
-        const demoLabel = $('demo-btn-label');
-        const demoBadge = $('demo-countdown-badge');
-        const grid = $('social-auth-grid');
-        if (!demoBtn) return;
-
-        clearInterval(demoTimerInterval);
-        demoTimeRemaining = 20;
-        demoBtn.classList.remove('hidden');
-        if (grid) grid.className = 'grid grid-cols-2 gap-3';
-        if (demoLabel) demoLabel.textContent = `Demo (${demoTimeRemaining}s)`;
-        if (demoBadge) demoBadge.textContent = `Demo Window: ${demoTimeRemaining}s`;
-
-        demoTimerInterval = setInterval(() => {
-          if (!$('login-screen') || $('login-screen').classList.contains('hidden')) {
-            clearInterval(demoTimerInterval);
-            return;
-          }
-          demoTimeRemaining--;
-          if (demoTimeRemaining > 0) {
-            if (demoLabel) demoLabel.textContent = `Demo (${demoTimeRemaining}s)`;
-            if (demoBadge) demoBadge.textContent = `Demo Window: ${demoTimeRemaining}s`;
-          } else {
-            clearInterval(demoTimerInterval);
-            demoBtn.classList.add('hidden');
-            if (grid) grid.className = 'grid grid-cols-1 gap-3';
-            if (demoBadge) demoBadge.textContent = 'Sign In Required';
-          }
-        }, 1000);
       }
 
       function showAuthError(message) {
@@ -1649,16 +1670,6 @@
         } catch (e) {}
       }
 
-      const $ = (id) => document.getElementById(id);
-
-      function showToast(msg, duration = 2800) {
-        const toast = $('toast');
-        toast.textContent = msg;
-        toast.classList.remove('hidden');
-        clearTimeout(toast._timer);
-        toast._timer = setTimeout(() => toast.classList.add('hidden'), duration);
-      }
-
       function isSignedInUser() {
         return Boolean(state.user && (state.user.email || demoSession));
       }
@@ -1751,16 +1762,17 @@
         $('name-field-wrap').classList.toggle('hidden', !isSignup);
         $('tab-signin').className = isSignup
           ? 'py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition'
-          : 'py-2 text-xs sm:text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition';
+          : 'py-2 text-xs sm:text-sm font-semibold rounded-lg bg-[#1c263b] text-white shadow transition';
         $('tab-signup').className = isSignup
-          ? 'py-2 text-xs sm:text-sm font-semibold rounded-lg bg-slate-800 text-white shadow transition'
+          ? 'py-2 text-xs sm:text-sm font-semibold rounded-lg bg-[#1c263b] text-white shadow transition'
           : 'py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition';
-        $('btn-auth-submit').textContent = isSignup ? 'Create AXON Account' : 'Sign In with Email';
+        $('btn-auth-submit').textContent = isSignup ? 'Create AXON Account' : 'Sign In to AXON AI';
         $('auth-error').classList.add('hidden');
       }
 
       function completeLogin(name, email, photo = '') {
-        clearInterval(demoTimerInterval);
+        splashDismissed = true;
+        if ($('splash-screen')) $('splash-screen').classList.add('hidden');
         const cleanName = (name || '').trim() || (email || '').split('@')[0] || 'AXON User';
         const cleanEmail = (email || '').trim() || state.settings.profileEmail || 'user@axon.ai';
         const initials = cleanName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
@@ -1965,7 +1977,7 @@
         }
 
         const lastIndex = chat.messages.length - 1;
-        container.innerHTML = chat.messages.map((m, idx) => {
+        container.innerHTML = chat.messages.map((m) => {
           const isUser = m.role === 'user';
           let attachHtml = '';
           if (m.attachment) {
@@ -2051,16 +2063,16 @@
       }
 
       function renderToggles() {
-        setSwitchUI($('toggle-voice-control'), state.settings.voiceControl, 'bg-cyan-500', true);
-        setSwitchUI($('toggle-voice-tts'), state.settings.voiceTTS, 'bg-cyan-500', true);
-        setSwitchUI($('toggle-history'), state.settings.saveHistory, 'bg-indigo-500', true);
+        setSwitchUI($('toggle-voice-control'), state.settings.voiceControl, 'bg-cyan-500');
+        setSwitchUI($('toggle-voice-tts'), state.settings.voiceTTS, 'bg-cyan-500');
+        setSwitchUI($('toggle-history'), state.settings.saveHistory, 'bg-indigo-500');
 
         $('header-voice-label').textContent = state.settings.voiceControl ? 'Voice On' : 'Voice Off';
         $('btn-header-voice').className = state.settings.voiceControl
           ? 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 transition'
           : 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 transition';
         $('voice-hud').classList.toggle('hidden', !state.settings.voiceControl);
-        setSwitchUI($('toggle-autoscroll'), state.settings.autoScroll, 'bg-cyan-500', true);
+        setSwitchUI($('toggle-autoscroll'), state.settings.autoScroll, 'bg-cyan-500');
         $('setting-font-size').value = state.settings.fontSize;
         if ($('setting-voice-select')) {
           $('setting-voice-select').value = String(state.settings.selectedVoiceIndex ?? 0);
@@ -2068,7 +2080,7 @@
         applyAppearance();
       }
 
-      function setSwitchUI(btn, on, activeBg, small = true) {
+      function setSwitchUI(btn, on, activeBg) {
         if (!btn) return;
         btn.setAttribute('aria-checked', String(on));
         const knob = btn.querySelector('span');
@@ -2977,6 +2989,7 @@
       let tpAnimId = null;
       let tpRunning = false;
 
+      // Bottom paddle moves LEFT / RIGHT; side walls stay fixed (no up/down movement)
       function startTimePassGame() {
         const wrap = $('timepass-game-wrap');
         const canvas = $('timepass-canvas');
@@ -2997,39 +3010,37 @@
         let score = 0;
         scoreEl.textContent = '0';
 
-        let targetW = 130;
-        const targetH = 14;
-        const targetY = H - 36;
+        // Fixed side walls (left & right walls, stationary)
+        const wallThick = 10;
 
-        let leftBarY = H / 2 - 28;
-        let rightBarY = H / 2 - 28;
-        const barW = 10;
-        const barH = 56;
+        // Bottom controllable dandi (paddle) moving LEFT / RIGHT
+        let paddleW = 110;
+        const paddleH = 14;
+        const paddleY = H - 30;
+        let paddleX = (W - paddleW) / 2;
 
         let ballX = W / 2;
-        let ballY = 30;
+        let ballY = 34;
         let vx = (Math.random() > 0.5 ? 1 : -1) * 2.4;
         let vy = 2.6;
         const ballR = 7;
 
-        let moveLeft = 0;
-        let moveRight = 0;
+        let moveDirX = 0;
 
         const keyDownHandler = (e) => {
-          if (e.key === 'ArrowLeft' || e.key === 'a') moveLeft = -5;
-          if (e.key === 'ArrowRight' || e.key === 'd') moveRight = -5;
+          if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') moveDirX = -5.5;
+          if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveDirX = 5.5;
         };
         const keyUpHandler = (e) => {
-          if (e.key === 'ArrowLeft' || e.key === 'a') moveLeft = 0;
-          if (e.key === 'ArrowRight' || e.key === 'd') moveRight = 0;
+          if (['ArrowLeft', 'ArrowRight', 'a', 'A', 'd', 'D'].includes(e.key)) moveDirX = 0;
         };
         window.addEventListener('keydown', keyDownHandler);
         window.addEventListener('keyup', keyUpHandler);
 
-        $('tp-left-btn').onpointerdown = () => { moveLeft = -6; };
-        $('tp-left-btn').onpointerup = () => { moveLeft = 0; };
-        $('tp-right-btn').onpointerdown = () => { moveRight = -6; };
-        $('tp-right-btn').onpointerup = () => { moveRight = 0; };
+        $('tp-left-btn').onpointerdown = () => { moveDirX = -6; };
+        $('tp-left-btn').onpointerup = () => { moveDirX = 0; };
+        $('tp-right-btn').onpointerdown = () => { moveDirX = 6; };
+        $('tp-right-btn').onpointerup = () => { moveDirX = 0; };
 
         cancelAnimationFrame(tpAnimId);
         tpRunning = true;
@@ -3049,56 +3060,57 @@
           ctx.fillStyle = '#070b14';
           ctx.fillRect(0, 0, W, H);
 
-          leftBarY = Math.max(12, Math.min(H - barH - 12, leftBarY + moveLeft));
-          rightBarY = Math.max(12, Math.min(H - barH - 12, rightBarY + moveRight));
-          if (moveLeft === 0 && leftBarY < H / 2 - 28) leftBarY += 1.5;
-          if (moveRight === 0 && rightBarY < H / 2 - 28) rightBarY += 1.5;
+          // Stationary left & right boundary walls
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(0, 0, wallThick, H);
+          ctx.fillRect(W - wallThick, 0, wallThick, H);
+
+          // Move bottom paddle left/right within walls
+          paddleX = Math.max(wallThick + 2, Math.min(W - wallThick - paddleW - 2, paddleX + moveDirX));
 
           ctx.fillStyle = '#22d3ee';
-          ctx.fillRect(14, leftBarY, barW, barH);
-          ctx.fillStyle = '#818cf8';
-          ctx.fillRect(W - 14 - barW, rightBarY, barW, barH);
-
-          const targetX = (W - targetW) / 2;
-          ctx.fillStyle = '#111a2e';
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+          ctx.strokeStyle = '#67e8f9';
           ctx.lineWidth = 1.5;
-          ctx.fillRect(targetX, targetY, targetW, targetH);
-          ctx.strokeRect(targetX, targetY, targetW, targetH);
+          ctx.beginPath();
+          ctx.roundRect(paddleX, paddleY, paddleW, paddleH, 7);
+          ctx.fill();
+          ctx.stroke();
 
           ballX += vx;
           ballY += vy;
 
+          // Top boundary bounce
           if (ballY - ballR <= 6) {
             ballY = 6 + ballR;
             vy = Math.abs(vy);
           }
 
-          if (ballX - ballR <= 24 && ballY >= leftBarY && ballY <= leftBarY + barH) {
-            vx = Math.abs(vx) + 0.15;
-            vy = -Math.abs(vy);
-          } else if (ballX - ballR <= 6) {
+          // Left & right wall bounce
+          if (ballX - ballR <= wallThick) {
+            ballX = wallThick + ballR;
             vx = Math.abs(vx);
-          }
-
-          if (ballX + ballR >= W - 24 && ballY >= rightBarY && ballY <= rightBarY + barH) {
-            vx = -(Math.abs(vx) + 0.15);
-            vy = -Math.abs(vy);
-          } else if (ballX + ballR >= W - 6) {
+          } else if (ballX + ballR >= W - wallThick) {
+            ballX = W - wallThick - ballR;
             vx = -Math.abs(vx);
           }
 
+          // Bottom paddle bounce & score
           if (
-            ballY + ballR >= targetY &&
-            ballY - ballR <= targetY + targetH &&
-            ballX >= targetX &&
-            ballX <= targetX + targetW
+            ballY + ballR >= paddleY &&
+            ballY - ballR <= paddleY + paddleH &&
+            ballX >= paddleX &&
+            ballX <= paddleX + paddleW &&
+            vy > 0
           ) {
             score++;
             scoreEl.textContent = String(score);
-            vy = -(Math.abs(vy) + 0.12);
-            ballY = targetY - ballR - 1;
-            targetW = Math.max(36, targetW - 8);
+            const hitOffset = (ballX - (paddleX + paddleW / 2)) / (paddleW / 2);
+            vx = hitOffset * 3.4;
+            if (Math.abs(vx) < 1.2) vx = vx >= 0 ? 1.5 : -1.5;
+            vy = -(Math.min(5.2, Math.abs(vy) + 0.14));
+            ballY = paddleY - ballR - 1;
+            paddleW = Math.max(54, paddleW - 4);
+            paddleX = Math.max(wallThick + 2, Math.min(W - wallThick - paddleW - 2, paddleX));
           }
 
           if (ballY - ballR > H) {
@@ -3762,7 +3774,6 @@
           completeLogin('AXON Demo User', 'demo@axon.ai');
         });
 
-        // Quick Command Palette (Ctrl+K / Button)
         const toggleCmdk = (force = null) => {
           const modal = $('cmdk-modal');
           if (!modal) return;
@@ -3793,155 +3804,215 @@
           }
         });
 
-        // Pure Code Area Controls
         $('btn-close-pure-code')?.addEventListener('click', () => {
           $('pure-code-drawer')?.classList.add('hidden');
         });
         $('btn-copy-pure-code')?.addEventListener('click', () => {
           const code = $('pure-code-content')?.textContent || '';
           if (code && navigator.clipboard) {
-            navigator.clipboard.writeText(code).then(() => showToast('Code copied to clipboard!'));
+            navigator.clipboard.writeText(code).then(() => showToast('Code copied!'));
           }
         });
         $('btn-open-code-vault')?.addEventListener('click', () => {
-          if (state.pureCodeHistory.length) {
-            $('pure-code-content').textContent = state.pureCodeHistory[0].code;
-            $('pure-code-drawer').classList.remove('hidden');
-            switchView('chat');
-          } else {
-            showToast('No code blocks captured yet.');
+          if (!state.pureCodeHistory.length) {
+            showToast('No code blocks saved yet.');
+            return;
           }
+          $('pure-code-content').textContent = state.pureCodeHistory[0].code;
+          $('pure-code-drawer').classList.remove('hidden');
+          switchView('chat');
         });
 
         $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
         $('btn-close-sidebar').addEventListener('click', closeSidebarMobile);
         $('sidebar-backdrop').addEventListener('click', closeSidebarMobile);
+
         $('btn-new-chat').addEventListener('click', () => createNewChat(true));
         $('nav-chat').addEventListener('click', () => switchView('chat'));
-        if ($('nav-photo-studio')) $('nav-photo-studio').addEventListener('click', () => switchView('photo-studio'));
-        if ($('nav-video-editing')) $('nav-video-editing').addEventListener('click', () => switchView('video-editing'));
+        $('nav-photo-studio')?.addEventListener('click', () => switchView('photo-studio'));
+        $('nav-video-editing')?.addEventListener('click', () => switchView('video-editing'));
         $('nav-apps').addEventListener('click', () => switchView('apps'));
         $('nav-settings').addEventListener('click', () => switchView('settings'));
         $('btn-header-settings').addEventListener('click', () => switchView('settings'));
-        $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
-        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
-
         $('btn-settings-back').addEventListener('click', () => switchView('chat'));
+
         $('btn-settings-info').addEventListener('click', () => {
-          openDetailModal('AXON AI Workspace Info', `
-            <p><strong class="text-white">Version:</strong> AXON AI v3.2 (Command Palette + A-to-Z Studio)</p>
-            <p><strong class="text-white">Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
-            <p><strong class="text-white">Voice Engine:</strong> 6 Natural Human Profiles + Emoji-Free TTS</p>
-            <p><strong class="text-white">Saved Chats:</strong> ${state.chats.filter(c => c.messages.length > 0).length}</p>
-          `);
+          openDetailModal(
+            'AXON AI Workspace Info',
+            `<p><strong>AXON AI</strong> Intelligent Neural Workspace with 6 natural TTS voices, separate Pure Code Area, Xone Photo &amp; Video Studio, and live AI video calls.</p>`
+          );
         });
 
         $('row-edit-profile').addEventListener('click', () => {
-          openDetailModal('Edit Profile', `
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Display Name</label>
-              <input id="modal-edit-name" type="text" value="${escapeHtml(state.user?.name || state.settings.profileName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Email Address</label>
-              <input id="modal-edit-email" type="email" value="${escapeHtml(state.user?.email || state.settings.profileEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
-            </div>
-          `, `
-            <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
-            <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
-          `);
-          $('btn-save-profile-modal').addEventListener('click', () => {
-            const nextName = $('modal-edit-name').value.trim() || 'AXON User';
-            const nextEmail = $('modal-edit-email').value.trim() || 'user@axon.ai';
-            state.settings.profileName = nextName;
-            state.settings.profileEmail = nextEmail;
-            if (state.user) {
-              state.user.name = nextName;
-              state.user.email = nextEmail;
-              state.user.initials = nextName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
-              $('user-display-name').textContent = state.user.name;
-              $('user-display-email').textContent = state.user.email;
-              renderUserAvatarElement($('user-avatar'), state.user);
+          const curName = state.user?.name || state.settings.profileName || 'AXON User';
+          const curEmail = state.user?.email || state.settings.profileEmail || 'user@axon.ai';
+          openDetailModal(
+            'Edit Profile',
+            `
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1">Display Name</label>
+                  <input id="modal-edit-name" type="text" value="${escapeHtml(curName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
+                </div>
+                <div>
+                  <label class="block text-xs text-slate-400 mb-1">Email Address</label>
+                  <input id="modal-edit-email" type="email" value="${escapeHtml(curEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
+                </div>
+              </div>
+            `,
+            `
+              <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
+              <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Changes</button>
+            `
+          );
+          $('btn-save-profile-modal').addEventListener('click', async () => {
+            const newName = ($('modal-edit-name').value || '').trim() || 'AXON User';
+            const newEmail = ($('modal-edit-email').value || '').trim() || curEmail;
+            const initials = newName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
+            state.settings.profileName = newName;
+            state.settings.profileEmail = newEmail;
+            state.user = { ...(state.user || {}), name: newName, email: newEmail, initials, photo: state.settings.profilePhoto };
+            $('user-display-name').textContent = newName;
+            $('user-display-email').textContent = newEmail;
+            renderUserAvatarElement($('user-avatar'), state.user);
+            if (firebaseReady && firebaseAuth && firebaseAuth.currentUser) {
+              try { await firebaseAuth.currentUser.updateProfile({ displayName: newName }); } catch (e) {}
             }
             saveState();
             renderSettingsPanel();
             closeDetailModal();
-            showToast('Profile updated!');
+            showToast('Profile updated.');
           });
         });
 
-        $('row-profile-photo').addEventListener('click', () => $('input-profile-photo').click());
+        $('row-profile-photo').addEventListener('click', () => {
+          if (!requireSignInForUpload()) return;
+          $('input-profile-photo').click();
+        });
         $('input-profile-photo').addEventListener('change', (e) => {
-          const file = e.target.files[0];
+          const file = e.target.files?.[0];
           if (!file) return;
+          if (!requireSignInForUpload()) {
+            e.target.value = '';
+            return;
+          }
           const reader = new FileReader();
           reader.onload = (ev) => {
-            state.settings.profilePhoto = ev.target.result;
-            if (state.user) {
-              state.user.photo = ev.target.result;
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const size = 256;
+              canvas.width = size;
+              canvas.height = size;
+              const ctx = canvas.getContext('2d');
+              const minSide = Math.min(img.width, img.height);
+              const sx = (img.width - minSide) / 2;
+              const sy = (img.height - minSide) / 2;
+              ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+              const avatarData = canvas.toDataURL('image/jpeg', 0.85);
+              state.settings.profilePhoto = avatarData;
+              if (state.user) state.user.photo = avatarData;
               renderUserAvatarElement($('user-avatar'), state.user);
-            }
-            saveState();
-            renderSettingsPanel();
-            showToast('Profile photo updated!');
+              renderUserAvatarElement($('settings-profile-avatar'), state.user);
+              saveState();
+              showToast('Profile photo updated.');
+            };
+            img.src = ev.target.result;
           };
           reader.readAsDataURL(file);
         });
 
         $('row-account-info').addEventListener('click', () => {
-          openDetailModal('Account Information', `
-            <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
-              <p><span class="text-slate-400">Name:</span> <strong class="text-white">${escapeHtml(state.user?.name || state.settings.profileName)}</strong></p>
-              <p><span class="text-slate-400">Email:</span> <strong class="text-white">${escapeHtml(state.user?.email || state.settings.profileEmail)}</strong></p>
-              <p><span class="text-slate-400">Mode:</span> <strong class="text-cyan-300">${demoSession ? 'Quick Demo' : 'Authenticated User'}</strong></p>
-            </div>
-          `);
+          const uName = state.user?.name || state.settings.profileName || 'AXON User';
+          const uEmail = state.user?.email || state.settings.profileEmail || 'user@axon.ai';
+          const uid = firebaseAuth?.currentUser?.uid || (demoSession ? 'DEMO-SESSION' : 'LOCAL-WORKSPACE');
+          openDetailModal(
+            'Account Information',
+            `
+              <div class="space-y-2 rounded-2xl bg-slate-900/80 p-3.5 border border-slate-800">
+                <p><strong class="text-white">Name:</strong> ${escapeHtml(uName)}</p>
+                <p><strong class="text-white">Email:</strong> ${escapeHtml(uEmail)}</p>
+                <p><strong class="text-white">Account ID:</strong> <span class="font-mono text-xs text-cyan-300">${escapeHtml(uid)}</span></p>
+                <p><strong class="text-white">Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+                <p><strong class="text-white">Language:</strong> ${escapeHtml(state.settings.appLanguage)}</p>
+              </div>
+            `
+          );
         });
 
         $('row-account-management').addEventListener('click', () => {
-          openDetailModal('Account Management', `
-            <p class="text-xs text-slate-400">Manage your session or send a password reset link to <strong class="text-slate-200">${escapeHtml(state.user?.email || state.settings.profileEmail)}</strong>.</p>
-            <div class="flex flex-col gap-2 pt-1">
-              <button id="modal-send-reset" type="button" class="w-full py-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 text-xs font-semibold transition">Send Password Reset Email</button>
-              <button id="modal-sign-out-now" type="button" class="w-full py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-200 text-xs font-semibold transition">Sign Out of AXON AI</button>
-            </div>
-          `);
-          $('modal-send-reset').addEventListener('click', async () => {
-            const targetEmail = state.user?.email || state.settings.profileEmail;
-            if (firebaseReady && firebaseAuth && targetEmail) {
-              try {
-                await firebaseAuth.sendPasswordResetEmail(targetEmail);
-                showToast('Password reset email sent!');
-              } catch (err) {
-                showToast(firebaseErrorMessage(err));
-              }
-            } else {
-              showToast('Reset link ready for ' + targetEmail);
+          const uEmail = state.user?.email || state.settings.profileEmail || '';
+          openDetailModal(
+            'Account Management',
+            `<p class="text-slate-300">Manage your password recovery or sign out of your current AXON AI session.</p>`,
+            `
+              <button id="btn-modal-reset-pw" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/30 text-xs font-semibold">Send Password Reset</button>
+              <button id="btn-modal-signout" type="button" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold">Sign Out</button>
+            `
+          );
+          $('btn-modal-reset-pw').addEventListener('click', async () => {
+            if (!uEmail || !firebaseReady || !firebaseAuth) {
+              showToast('Password reset requires a signed-in email account.');
+              return;
+            }
+            try {
+              await firebaseAuth.sendPasswordResetEmail(uEmail);
+              showToast(`Reset link sent to ${uEmail}`);
+            } catch (err) {
+              showToast(firebaseErrorMessage(err));
             }
           });
-          $('modal-sign-out-now').addEventListener('click', () => {
+          $('btn-modal-signout').addEventListener('click', async () => {
             closeDetailModal();
-            $('btn-logout').click();
+            demoSession = false;
+            stopTTSController();
+            stopSpeechRecognition();
+            if (firebaseReady && firebaseAuth) {
+              try { await firebaseAuth.signOut(); } catch (e) {}
+            }
+            state.user = null;
+            $('app-screen').classList.add('hidden');
+            $('login-screen').classList.remove('hidden');
+            showToast('Signed out.');
           });
+        });
+
+        $('row-model-info').addEventListener('click', () => {
+          openDetailModal(
+            state.settings.aiModel,
+            `
+              <div class="space-y-2 rounded-2xl bg-slate-900/80 p-3.5 border border-slate-800">
+                <p><strong class="text-white">Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+                <p><strong class="text-white">Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
+                <p><strong class="text-white">Capabilities:</strong> Multi-turn reasoning, voice commands, 6-voice natural TTS, Xone Photo &amp; Video Studio, and live video calls.</p>
+              </div>
+            `
+          );
+        });
+
+        $('settings-detail-modal').addEventListener('click', (e) => {
+          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn') || e.target.id === 'btn-detail-close') {
+            closeDetailModal();
+          }
         });
 
         $('setting-app-language').addEventListener('change', (e) => {
           state.settings.appLanguage = e.target.value;
           saveState();
-          showToast(`Language set to ${state.settings.appLanguage}`);
+          showToast(`App language set to ${state.settings.appLanguage}`);
         });
         $('setting-default-model').addEventListener('change', (e) => {
           state.settings.defaultModel = e.target.value;
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Default model: ${state.settings.defaultModel}`);
+          showToast(`Default model set to ${state.settings.defaultModel}`);
         });
         $('setting-ai-model').addEventListener('change', (e) => {
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Active AI model: ${state.settings.aiModel}`);
+          showToast(`Active model: ${state.settings.aiModel}`);
         });
         $('setting-chat-mode').addEventListener('change', (e) => {
           state.settings.chatMode = e.target.value;
@@ -3951,114 +4022,61 @@
         $('setting-startup').addEventListener('change', (e) => {
           state.settings.startupMode = e.target.value;
           saveState();
-          showToast('Startup preference saved');
         });
-        $('row-model-info').addEventListener('click', () => {
-          openDetailModal('Model Information', `
-            <p><strong class="text-white">Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
-            <p><strong class="text-white">Default Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
-            <p class="text-xs text-slate-400">Supports conversational chat, pure code extraction, photo &amp; video studio workflows, and live voice/video sessions.</p>
-          `);
-        });
-
         $('btn-reset-settings').addEventListener('click', () => {
-          const preservedName = state.settings.profileName;
-          const preservedEmail = state.settings.profileEmail;
-          const preservedPhoto = state.settings.profilePhoto;
-          state.settings = {
-            ...defaultSettings,
-            profileName: preservedName,
-            profileEmail: preservedEmail,
-            profilePhoto: preservedPhoto
-          };
+          const keepName = state.settings.profileName;
+          const keepEmail = state.settings.profileEmail;
+          const keepPhoto = state.settings.profilePhoto;
+          state.settings = { ...defaultSettings, profileName: keepName, profileEmail: keepEmail, profilePhoto: keepPhoto };
           saveState();
-          renderAll();
+          renderToggles();
+          renderSettingsPanel();
           populateVoicesDropdown();
-          showToast('Settings reset to default!');
+          showToast('Settings reset to defaults.');
         });
 
         $('search-settings-input').addEventListener('input', (e) => {
           const q = e.target.value.trim().toLowerCase();
-          document.querySelectorAll('.settings-section').forEach((sec) => {
+          document.querySelectorAll('.settings-section').forEach(sec => {
             const hay = (sec.dataset.search || '') + ' ' + sec.textContent.toLowerCase();
-            sec.classList.toggle('hidden', Boolean(q) && !hay.includes(q));
+            sec.classList.toggle('hidden', Boolean(q && !hay.includes(q)));
           });
         });
 
-        $('settings-detail-modal').addEventListener('click', (e) => {
-          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn') || e.target.id === 'btn-close-detail-modal' || e.target.id === 'btn-detail-close') {
-            closeDetailModal();
-          }
-        });
-
         $('btn-logout').addEventListener('click', async () => {
-          stopSpeechRecognition();
-          stopTTSController();
           demoSession = false;
+          stopTTSController();
+          stopSpeechRecognition();
           if (firebaseReady && firebaseAuth) {
             try { await firebaseAuth.signOut(); } catch (e) {}
           }
           state.user = null;
           $('app-screen').classList.add('hidden');
           $('login-screen').classList.remove('hidden');
-          startDemoButtonTimer();
           showToast('Signed out.');
         });
 
-        $('sidebar-chat-list').addEventListener('click', (e) => {
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            const id = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
-              state.activeChatId = state.chats[0]?.id || null;
-              if (!state.activeChatId) createNewChat(false);
-            }
-            saveState();
-            renderAll();
-            return;
+        $('btn-send').addEventListener('click', () => sendMessage());
+        $('chat-input').addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
           }
-          const sel = e.target.closest('.select-chat-btn');
-          if (sel) {
-            state.activeChatId = sel.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-          }
+        });
+        $('chat-input').addEventListener('input', (e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = Math.min(e.target.scrollHeight, 144) + 'px';
         });
 
         $('chat-messages').addEventListener('click', (e) => {
           const starter = e.target.closest('.starter-prompt');
           if (starter) {
-            sendMessage(starter.dataset.prompt);
+            const p = starter.dataset.prompt;
+            if (p === 'Open WhatsApp') executeVoiceCommand('Open WhatsApp');
+            else sendMessage(p);
             return;
           }
-          const copyBtn = e.target.closest('.btn-copy-msg');
-          if (copyBtn) {
-            const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === copyBtn.dataset.msgId);
-            if (msg && navigator.clipboard) {
-              navigator.clipboard.writeText(msg.text).then(() => showToast('Message copied!'));
-            }
-            return;
-          }
-          const speakBtn = e.target.closest('.btn-speak-msg');
-          if (speakBtn) {
-            const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === speakBtn.dataset.msgId);
-            if (msg) {
-              speakText(msg.text);
-              showToast('Speaking message...');
-            }
-            return;
-          }
-          const codeBtn = e.target.closest('.btn-open-code-msg');
-          if (codeBtn) {
-            const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === codeBtn.dataset.msgId);
-            if (msg) extractAndShowPureCode(msg.text);
-            return;
-          }
+
           const zoomBtn = e.target.closest('.btn-zoom-toggle');
           if (zoomBtn) {
             const targetEl = document.getElementById(zoomBtn.dataset.target);
@@ -4066,28 +4084,44 @@
               const zoomed = targetEl.classList.toggle('zoomed-out-text');
               zoomBtn.textContent = zoomed ? 'Zoom In (1x)' : 'Zoom Out (2.5x)';
             }
+            return;
           }
-        });
 
-        const chatInput = $('chat-input');
-        chatInput.addEventListener('input', () => {
-          chatInput.style.height = 'auto';
-          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
-        });
-        chatInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
+          const copyBtn = e.target.closest('.btn-copy-msg');
+          if (copyBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === copyBtn.dataset.msgId);
+            if (msg && navigator.clipboard) {
+              navigator.clipboard.writeText(msg.text).then(() => showToast('Reply copied!'));
+            }
+            return;
+          }
+
+          const speakBtn = e.target.closest('.btn-speak-msg');
+          if (speakBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === speakBtn.dataset.msgId);
+            if (msg) {
+              speakText(msg.text);
+              showToast('Speaking reply...');
+            }
+            return;
+          }
+
+          const openCodeBtn = e.target.closest('.btn-open-code-msg');
+          if (openCodeBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === openCodeBtn.dataset.msgId);
+            if (msg) extractAndShowPureCode(msg.text);
           }
         });
-        $('btn-send').addEventListener('click', () => sendMessage());
 
         $('btn-plus-menu').addEventListener('click', (e) => {
           e.stopPropagation();
           $('plus-menu').classList.toggle('hidden');
         });
         document.addEventListener('click', (e) => {
-          if (!e.target.closest('#plus-menu') && !e.target.closest('#btn-plus-menu')) {
+          if (!$('plus-menu').contains(e.target) && e.target !== $('btn-plus-menu')) {
             $('plus-menu').classList.add('hidden');
           }
         });
@@ -4112,7 +4146,7 @@
           state.deepThink = !state.deepThink;
           $('deep-think-status').textContent = state.deepThink ? 'On — Deep reasoning active' : 'Off — Standard speed';
           $('plus-menu').classList.add('hidden');
-          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode off');
+          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode disabled');
         });
 
         $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'image'));
@@ -4123,8 +4157,7 @@
         $('btn-close-camera').addEventListener('click', closeCameraModal);
         $('btn-camera-upload-alt').addEventListener('click', () => {
           closeCameraModal();
-          if (!requireSignInForUpload()) return;
-          $('input-photo').click();
+          if (requireSignInForUpload()) $('input-photo').click();
         });
         $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
 
@@ -4133,12 +4166,9 @@
         $('btn-call-mic').addEventListener('click', () => {
           callMicMuted = !callMicMuted;
           $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
-          if (callStream) {
-            callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
-          }
+          if (callStream) callStream.getAudioTracks().forEach(t => t.enabled = !callMicMuted);
           if (callMicMuted) {
             stopCallVoiceCapture();
-            stopTTSController();
             $('call-voice-status').textContent = 'Mic Muted';
           } else {
             startCallVoiceCapture();
@@ -4148,81 +4178,64 @@
         $('btn-call-cam').addEventListener('click', () => {
           callCamOff = !callCamOff;
           $('btn-call-cam').classList.toggle('bg-rose-600', callCamOff);
-          if (callStream) {
-            callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
-          }
-          const hasTrack = Boolean(callStream && callStream.getVideoTracks().length > 0);
-          $('call-pip-video').classList.toggle('hidden', callCamOff || !hasTrack);
-          $('call-pip-off').classList.toggle('hidden', !callCamOff && hasTrack);
+          if (callStream) callStream.getVideoTracks().forEach(t => t.enabled = !callCamOff);
+          $('call-pip-video').classList.toggle('hidden', callCamOff);
+          $('call-pip-off').classList.toggle('hidden', !callCamOff);
           showToast(callCamOff ? 'Camera turned off' : 'Camera turned on');
         });
 
+        $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
+        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
         $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
+
         $('toggle-voice-tts').addEventListener('click', () => {
           state.settings.voiceTTS = !state.settings.voiceTTS;
           if (!state.settings.voiceTTS) stopTTSController();
           saveState();
           renderToggles();
-          showToast(state.settings.voiceTTS ? 'Spoken AI responses enabled' : 'Spoken AI responses muted');
+          showToast(state.settings.voiceTTS ? 'Natural AI voice speech enabled' : 'AI voice speech muted');
         });
-        if ($('setting-voice-select')) {
-          $('setting-voice-select').addEventListener('change', (e) => {
-            state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
-            saveState();
-            updateAIWallBanner();
-            const profile = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex] || SIX_VOICE_PROFILES[0];
-            showToast(`Selected voice: ${profile.name}`);
-            if (state.settings.voiceTTS) {
-              speakText(`Hello, I am ${profile.name.replace(/^\d+\.\s*/, '')}. Ready to assist you.`);
-            }
-          });
-        }
-        $('toggle-history').addEventListener('click', () => {
-          state.settings.saveHistory = !state.settings.saveHistory;
+
+        $('setting-voice-select')?.addEventListener('change', (e) => {
+          state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
           saveState();
-          renderAll();
-          showToast(state.settings.saveHistory ? 'Chat history recording enabled' : 'Chat history recording paused');
+          updateAIWallBanner();
+          const profile = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex] || SIX_VOICE_PROFILES[0];
+          speakText(`Hello, I am ${profile.name}. How can I help you today?`);
         });
 
         $('btn-run-voice-sim').addEventListener('click', () => {
           const val = $('voice-sim-input').value.trim();
           if (!val) return;
-          if (!state.settings.voiceControl) toggleVoiceControl(true);
           executeVoiceCommand(val);
-          $('voice-sim-input').value = '';
         });
         $('voice-sim-input').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') $('btn-run-voice-sim').click();
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = $('voice-sim-input').value.trim();
+            if (val) executeVoiceCommand(val);
+          }
         });
-        document.querySelectorAll('.voice-chip').forEach(btn => {
-          btn.addEventListener('click', () => {
-            if (!state.settings.voiceControl) toggleVoiceControl(true);
-            executeVoiceCommand(btn.dataset.voiceCmd);
+        document.querySelectorAll('.voice-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            const cmd = chip.dataset.voiceCmd;
+            $('voice-sim-input').value = cmd;
+            executeVoiceCommand(cmd);
           });
         });
 
-        $('history-search').addEventListener('input', renderSettingsHistory);
-        $('settings-history-list').addEventListener('click', (e) => {
-          const openBtn = e.target.closest('.open-history-chat');
-          if (openBtn) {
-            state.activeChatId = openBtn.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-            return;
+        $('toggle-history').addEventListener('click', () => {
+          state.settings.saveHistory = !state.settings.saveHistory;
+          if (!state.settings.saveHistory) {
+            const active = getActiveChat();
+            state.chats = active ? [active] : [];
           }
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            const id = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
-              state.activeChatId = state.chats[0]?.id || null;
-              if (!state.activeChatId) createNewChat(false);
-            }
-            saveState();
-            renderAll();
-          }
+          saveState();
+          renderAll();
+          showToast(state.settings.saveHistory ? 'Chat history recording enabled' : 'Chat history recording paused');
         });
+
+        $('history-search').addEventListener('input', renderSettingsHistory);
 
         $('btn-export-history').addEventListener('click', () => {
           const blob = new Blob([JSON.stringify(state.chats, null, 2)], { type: 'application/json' });
@@ -4236,16 +4249,53 @@
         });
 
         $('btn-clear-history').addEventListener('click', () => {
+          $('confirm-title').textContent = 'Clear All History?';
+          $('confirm-desc').textContent = 'This will permanently delete all saved conversations from this device.';
+          $('btn-confirm-ok').textContent = 'Delete All';
           $('confirm-modal').classList.remove('hidden');
+          $('btn-confirm-ok').onclick = () => {
+            state.chats = [];
+            state.activeChatId = null;
+            createNewChat(false);
+            $('confirm-modal').classList.add('hidden');
+            showToast('All chat history cleared.');
+          };
         });
         $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
-        $('btn-confirm-ok').addEventListener('click', () => {
-          state.chats = [];
-          state.activeChatId = null;
-          createNewChat(false);
-          $('confirm-modal').classList.add('hidden');
-          showToast('All chat history cleared.');
-        });
+
+        const handleChatListClick = (e) => {
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) {
+            e.stopPropagation();
+            const targetId = delBtn.dataset.chatId;
+            state.chats = state.chats.filter(c => c.id !== targetId);
+            if (state.activeChatId === targetId) {
+              state.activeChatId = state.chats[0]?.id || null;
+              if (!state.activeChatId) createNewChat(false);
+            }
+            saveState();
+            renderAll();
+            showToast('Chat deleted.');
+            return;
+          }
+          const openHist = e.target.closest('.open-history-chat');
+          if (openHist) {
+            state.activeChatId = openHist.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
+            return;
+          }
+          const selBtn = e.target.closest('.select-chat-btn');
+          if (selBtn) {
+            state.activeChatId = selBtn.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
+          }
+        };
+        $('sidebar-chat-list').addEventListener('click', handleChatListClick);
+        $('settings-history-list').addEventListener('click', handleChatListClick);
 
         $('btn-theme-dark').addEventListener('click', () => {
           state.settings.theme = 'dark';
@@ -4280,24 +4330,35 @@
           window.open(url, '_blank', 'noopener,noreferrer');
         });
         $('yt-feed-grid').addEventListener('click', (e) => {
-          const card = e.target.closest('.group');
-          if (!card) return;
-          const title = card.querySelector('h4')?.textContent || 'Video';
-          showToast(`Playing preview: ${title}`);
+          const card = e.target.closest('.glass-panel');
+          if (card) showToast('Playing preview in AXON Video Feed');
         });
       }
 
-      loadState();
-      populateVoicesDropdown();
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
+      function init() {
+        loadState();
+        setAuthMode('signin');
+        applyAppearance();
+        renderToggles();
+        initPhotoStudio();
+        initVideoEditing();
+        bindEvents();
+        populateVoicesDropdown();
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
+        }
+        initializeFirebaseAuth();
+
+        setTimeout(() => {
+          if (!state.user) dismissSplashToLogin();
+        }, 1900);
       }
-      bindEvents();
-      initPhotoStudio();
-      initVideoEditing();
-      renderAll();
-      startDemoButtonTimer();
-      initializeFirebaseAuth();
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
     })();
   </script>
 </body>
