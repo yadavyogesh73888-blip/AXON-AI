@@ -49,16 +49,29 @@ app.use((req, res, next) => {
   express.json({ limit: "2mb" })(req, res, next);
 });
 
+
 function sanitizeModel(val, fallback) {
   if (typeof val !== "string") return fallback;
   const cleaned = val.trim().replace(/^["']+|["']+$/g, "");
-  if (!cleaned || /qwen3\.8-27b/i.test(cleaned)) return fallback;
+  if (!cleaned) return fallback;
   return cleaned;
 }
 
-const CHAT_MODEL = sanitizeModel(process.env.GROQ_MODEL, 'openai/gpt-oss-120b):
-const VISION_MODEL = sanitizeModel(process.env.GROQ_VISION_MODEL, "llama-3.2-90b-vision-preview");
-const IMAGE_EDIT_MODEL = sanitizeModel(process.env.GEMINI_IMAGE_MODEL, "gemini-2.5-flash-image");
+const CHAT_MODEL = sanitizeModel(
+  process.env.GROQ_MODEL,
+  "openai/gpt-oss-120b"
+);
+
+const VISION_MODEL = sanitizeModel(
+  process.env.GROQ_VISION_MODEL,
+  "qwen/qwen3.8-27b"
+);
+
+const IMAGE_EDIT_MODEL = sanitizeModel(
+  process.env.GEMINI_IMAGE_MODEL,
+  "gemini-2.5-flash-image"
+);
+
 
 const chatLimiter = rateLimit({
   windowMs: 60 * 1000,
