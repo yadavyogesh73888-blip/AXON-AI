@@ -36,7 +36,7 @@ function sanitizeModel(val, fallback) {
   return cleaned || fallback;
 }
 
-const CHAT_MODEL = sanitizeModel(process.env.GROQ_MODEL, "openai/gpt-oss-120b");
+const CHAT_MODEL = sanitizeModel(process.env.GROQ_MODEL,  "openai/gpt-oss-120b";
 const VISION_MODEL = sanitizeModel(process.env.GROQ_VISION_MODEL, "qwen/qwen3.8-27b");
 const IMAGE_EDIT_MODEL = sanitizeModel(process.env.GEMINI_IMAGE_MODEL, "gemini-2.5-flash-image");
 
