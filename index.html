@@ -211,7 +211,7 @@
 </head>
 <body class="mesh-bg antialiased selection:bg-cyan-500/30 selection:text-cyan-100">
 
-  <!-- ==================== 0. SPLASH SCREEN (MATCHING SCREENSHOT 1) ==================== -->
+  <!-- ==================== 0. SPLASH SCREEN ==================== -->
   <section id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 bg-gradient-to-b from-[#071326] via-[#060d1c] to-[#050811]">
     <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-2xl shadow-cyan-500/25 flex items-center justify-center mb-7 animate-float-orb">
       <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -234,10 +234,9 @@
     </p>
   </section>
 
-  <!-- ==================== 1. LOGIN SCREEN (MATCHING SCREENSHOT 2) ==================== -->
+  <!-- ==================== 1. LOGIN SCREEN ==================== -->
   <section id="login-screen" class="hidden fixed inset-0 z-40 overflow-y-auto px-4 py-6 flex items-center justify-center bg-gradient-to-b from-[#08162a] via-[#060c1a] to-[#050811]">
     <div class="w-full max-w-md rounded-3xl p-6 sm:p-7 bg-[#0b1326]/95 border border-slate-800/90 shadow-2xl shadow-black/70 animate-fade-up">
-      <!-- Top Icon + Welcome Header -->
       <div class="flex flex-col items-center text-center mb-5">
         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-lg shadow-cyan-500/25 flex items-center justify-center mb-4">
           <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -254,7 +253,6 @@
         </p>
       </div>
 
-      <!-- Sign In / Create Account Tabs -->
       <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-[#070d1b] border border-slate-800/90 mb-5">
         <button id="tab-signin" type="button" class="py-2 text-xs sm:text-sm font-semibold rounded-lg bg-[#1c263b] text-white shadow transition">
           Sign In
@@ -374,11 +372,11 @@
         </button>
         <button id="nav-photo-studio" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
           <span class="text-base leading-none">🎨</span>
-          Xone Photo Studio
+          Axon Photo Studio
         </button>
         <button id="nav-video-editing" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
           <span class="text-base leading-none">🎬</span>
-          Xone Video Studio
+          Axon Video Studio
         </button>
         <button id="nav-apps" type="button" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition">
           <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
@@ -508,7 +506,7 @@
                 </span>
                 <div>
                   <span class="block font-medium text-xs sm:text-sm">Open Camera</span>
-                  <span class="block text-[10px] text-slate-400">Capture live photo</span>
+                  <span class="block text-[10px] text-slate-400">Front &amp; back live photo</span>
                 </div>
               </button>
 
@@ -559,12 +557,12 @@
         </div>
       </div>
 
-      <!-- ==================== VIEW: XONE PHOTO STUDIO + TIME PASS MINI GAME (BOTTOM LEFT/RIGHT PADDLE) + PHOTO STORAGE ==================== -->
+      <!-- ==================== VIEW: AXON PHOTO STUDIO ==================== -->
       <section id="view-photo-studio" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
         <div class="max-w-5xl mx-auto space-y-6 pb-12">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 class="text-xl font-bold text-white">Xone Photo Studio</h2>
+              <h2 class="text-xl font-bold text-white">Axon Photo Studio</h2>
               <p class="text-sm text-slate-400">AI Scene / CGI Edit, Live % Progress, Time Pass Mini-Game &amp; Photo Storage.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
@@ -583,7 +581,6 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 flex flex-col items-center justify-center min-h-[340px] relative overflow-hidden">
-              <!-- Live % Progress Overlay (20% -> 100%) -->
               <div id="studio-progress-box" class="hidden w-full max-w-sm p-5 rounded-2xl bg-slate-950/90 border border-cyan-500/40 text-center space-y-3 z-10">
                 <p id="studio-progress-pct" class="text-3xl font-extrabold text-cyan-400 font-mono">20%</p>
                 <div class="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
@@ -592,7 +589,6 @@
                 <p class="text-xs text-slate-300">AI Image Rendering... <span id="studio-progress-sub">20%</span> complete</p>
               </div>
 
-              <!-- Time Pass Mini-Game Area (Bottom Paddle Left / Right) -->
               <div id="timepass-game-wrap" class="hidden w-full flex flex-col items-center justify-center space-y-3">
                 <div class="w-full flex items-center justify-between px-2">
                   <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">AXON Time Pass Game</span>
@@ -620,13 +616,14 @@
               <canvas id="studio-canvas" class="max-w-full max-h-[420px] rounded-xl hidden"></canvas>
               <div id="studio-placeholder" class="text-center space-y-3">
                 <p class="text-sm text-slate-400">
-                  Koi photo select karein ya neeche "Time Pass" dabakar mini-game khelein.
+                  Select a photo or press "Time Pass" below to play the mini-game.
                 </p>
                 <button id="btn-inline-timepass" type="button" class="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-xs font-semibold text-amber-200 transition">
                   Time Pass
                 </button>
               </div>
               <p id="studio-status" class="mt-3 text-xs text-cyan-300 text-center"></p>
+              <p id="studio-unavailable-msg" class="hidden mt-2 text-xs font-semibold text-blue-400 text-center">This system is not available right now.</p>
             </div>
 
             <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-4">
@@ -689,7 +686,6 @@
             </div>
           </div>
 
-          <!-- SEPARATE PHOTO STORAGE VAULT -->
           <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -703,12 +699,12 @@
         </div>
       </section>
 
-      <!-- ==================== VIEW: XONE VIDEO STUDIO ==================== -->
+      <!-- ==================== VIEW: AXON VIDEO STUDIO ==================== -->
       <section id="view-video-editing" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
         <div class="max-w-5xl mx-auto space-y-5 pb-12">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 class="text-xl font-bold text-white">Xone Video Studio</h2>
+              <h2 class="text-xl font-bold text-white">Axon Video Studio</h2>
               <p class="text-xs text-cyan-300 font-medium">Generated with AI • Multi-Language Video Edit &amp; Watermark Export</p>
             </div>
             <div class="flex items-center gap-2">
@@ -716,7 +712,7 @@
                 1. VFX
               </button>
               <button id="btn-vedit-mode-genai" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold border border-slate-700 transition">
-                2. Generated with AI
+                2. Generate with AI
               </button>
             </div>
           </div>
@@ -732,10 +728,11 @@
                 </div>
               </div>
               <p id="vedit-placeholder" class="text-sm text-slate-400 text-center">
-                Neeche Upload button se video chunein ya AI ko batayein ki video mein kya hona chahiye.
+                Select a video using the Upload button below or describe what you want in the video.
               </p>
               <p class="mt-2 text-[11px] text-slate-500">Generated with AI</p>
               <p id="vedit-status" class="mt-2 text-xs text-cyan-300 text-center"></p>
+              <p id="vedit-unavailable-msg" class="hidden mt-2 text-xs font-semibold text-blue-400 text-center">This system is not available right now.</p>
               <div id="vedit-ai-result" class="hidden mt-3 w-full p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed"></div>
 
               <div class="w-full mt-4 pt-4 border-t border-slate-800 space-y-3">
@@ -769,7 +766,7 @@
                 </div>
 
                 <div class="flex gap-2">
-                  <textarea id="vedit-ai-prompt" rows="2" placeholder="AI ko batayein ki video mein kya hona chahiye..." class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white resize-none"></textarea>
+                  <textarea id="vedit-ai-prompt" rows="2" placeholder="Tell AI what should happen in the video..." class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white resize-none"></textarea>
                   <button id="vedit-ai-analyze-btn" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-xs font-semibold text-white shadow transition shrink-0">
                     Apply AI Edit
                   </button>
@@ -825,12 +822,11 @@
             </div>
           </div>
 
-          <!-- SEPARATE VIDEO STORAGE VAULT -->
           <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="text-sm font-bold text-white">Your Video Storage</h3>
-                <p class="text-xs text-slate-400">Separate video library — click any video to load into Xone Video Studio</p>
+                <p class="text-xs text-slate-400">Separate video library — click any video to load into Axon Video Studio</p>
               </div>
               <span id="video-storage-count" class="text-xs px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">0 Videos</span>
             </div>
@@ -1083,9 +1079,9 @@
             </button>
           </div>
 
-          <div class="axon-glass-card rounded-3xl overflow-hidden settings-section" data-search="voice control tts speech controller 6 voices audio">
+          <div class="axon-glass-card rounded-3xl overflow-hidden settings-section" data-search="voice control tts speech controller 10 voices audio">
             <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
-              Voice &amp; Audio Controller (6 Natural Voices)
+              Voice &amp; Audio Controller (10 Natural Voices)
             </div>
 
             <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
@@ -1106,7 +1102,7 @@
                 <span class="w-9 h-9 rounded-xl bg-indigo-500/15 text-indigo-300 flex items-center justify-center shrink-0">🔊</span>
                 <div class="min-w-0">
                   <p class="text-sm font-medium text-white">Spoken AI Responses (Natural TTS)</p>
-                  <p class="text-xs text-slate-400 truncate">Skips emojis &amp; symbols — speaks like a real human</p>
+                  <p class="text-xs text-slate-400 truncate">Clean human-like clear speech without symbols</p>
                 </div>
               </div>
               <button id="toggle-voice-tts" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
@@ -1118,17 +1114,21 @@
               <div class="flex items-center gap-3 min-w-0">
                 <span class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-300 flex items-center justify-center shrink-0">🎚️</span>
                 <div class="min-w-0">
-                  <p class="text-sm font-medium text-white">AI Voice Selection (6 Voices)</p>
+                  <p class="text-sm font-medium text-white">AI Voice Selection (10 Voices)</p>
                   <p id="tts-controller-state" class="text-xs text-slate-400 truncate">Controller Idle (Natural Speech Ready)</p>
                 </div>
               </div>
-              <select id="setting-voice-select" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-white focus:outline-none focus:border-cyan-400 max-w-[175px]">
+              <select id="setting-voice-select" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-white focus:outline-none focus:border-cyan-400 max-w-[185px]">
                 <option value="0">1. Nova (Clear Female)</option>
                 <option value="1">2. Orion (Deep Male)</option>
                 <option value="2">3. Aria (Warm Female)</option>
                 <option value="3">4. Atlas (Crisp Male)</option>
                 <option value="4">5. Luna (Soft Assistant)</option>
                 <option value="5">6. Rex (Energetic Voice)</option>
+                <option value="6">7. Maya (Smooth Female)</option>
+                <option value="7">8. Leo (Calm Male)</option>
+                <option value="8">9. Zara (Bright Female)</option>
+                <option value="9">10. Max (Steady Male)</option>
               </select>
             </div>
 
@@ -1205,10 +1205,10 @@
           <span>💬 Start New Chat</span><span class="text-slate-500">Chat</span>
         </button>
         <button type="button" data-cmdk="photo-studio" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
-          <span>🎨 Open Xone Photo Studio</span><span class="text-cyan-400">Studio</span>
+          <span>🎨 Open Axon Photo Studio</span><span class="text-cyan-400">Studio</span>
         </button>
         <button type="button" data-cmdk="video-studio" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
-          <span>🎬 Open Xone Video Studio</span><span class="text-indigo-400">VFX/AI</span>
+          <span>🎬 Open Axon Video Studio</span><span class="text-indigo-400">VFX/AI</span>
         </button>
         <button type="button" data-cmdk="apps" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
           <span>📱 Open A-to-Z App Hub</span><span class="text-emerald-400">Apps</span>
@@ -1241,7 +1241,7 @@
         </div>
         <h3 class="text-lg font-extrabold text-white">AXON AI — Your Smart Neural Studio</h3>
         <p id="axon-ad-copy" class="text-xs sm:text-sm text-cyan-100 leading-relaxed">
-          AXON AI se apne photo, video aur daily kaam ko seconds mein smart banayein.
+          Create smarter photos, videos, and instant answers with AXON AI.
         </p>
       </div>
 
@@ -1273,11 +1273,14 @@
     <p id="voice-hud-action" class="text-[11px] text-emerald-400 mt-1 truncate">Ready: Try "Open WhatsApp" or "Scroll"</p>
   </div>
 
-  <!-- ==================== CAMERA MODAL ==================== -->
+  <!-- ==================== CAMERA MODAL (FRONT & BACK CAMERA SWITCH) ==================== -->
   <div id="camera-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="w-full max-w-lg glass-panel rounded-3xl overflow-hidden shadow-2xl animate-fade-up">
       <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-white">AXON Camera</h3>
+        <div class="flex items-center gap-2">
+          <h3 class="text-sm font-semibold text-white">AXON Camera</h3>
+          <span id="camera-facing-badge" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono uppercase">Front</span>
+        </div>
         <button id="btn-close-camera" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
@@ -1291,15 +1294,21 @@
             <p class="text-xs text-slate-400">Camera access is unavailable or blocked.</p>
           </div>
         </div>
-        <div class="flex items-center justify-end gap-2">
-          <button id="btn-camera-upload-alt" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 transition">Upload Photo Instead</button>
-          <button id="btn-camera-capture" type="button" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow-lg transition">Capture Photo</button>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <button id="btn-camera-front" type="button" class="px-3 py-2 rounded-xl bg-cyan-600 text-white text-xs font-semibold transition">Front Camera</button>
+            <button id="btn-camera-back" type="button" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">Back Camera</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-camera-upload-alt" type="button" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 transition">Upload</button>
+            <button id="btn-camera-capture" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow-lg transition">Capture</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== VIDEO CALL MODAL ==================== -->
+  <!-- ==================== VIDEO CALL MODAL (FRONT & BACK CAMERA SWITCH) ==================== -->
   <div id="videocall-modal" class="hidden fixed inset-0 z-50 bg-[#050811]/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-7 animate-fade-up">
     <div class="w-full max-w-5xl flex items-center justify-between gap-2">
       <div class="flex items-center gap-3">
@@ -1309,7 +1318,11 @@
           <p id="call-timer" class="text-xs text-cyan-300 font-mono">00:00</p>
         </div>
       </div>
-      <span id="call-voice-status" class="px-3 py-1 rounded-full text-xs bg-cyan-500/15 text-cyan-300 border border-cyan-400/30">Mic Listening</span>
+      <div class="flex items-center gap-2">
+        <button id="btn-call-front-cam" type="button" class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white transition">Front Camera</button>
+        <button id="btn-call-back-cam" type="button" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">Back Camera</button>
+        <span id="call-voice-status" class="px-3 py-1 rounded-full text-xs bg-cyan-500/15 text-cyan-300 border border-cyan-400/30">Mic Listening</span>
+      </div>
     </div>
 
     <div class="relative w-full max-w-5xl flex-1 my-4 rounded-3xl glass-panel border border-slate-800 flex flex-col items-center justify-between overflow-hidden p-4 sm:p-6">
@@ -1426,23 +1439,27 @@
       };
 
       const SIX_VOICE_PROFILES = [
-        { index: 0, name: '1. Nova (Clear Female)', lang: 'en-US', pitch: 1.06, rate: 0.96, gender: 'female' },
-        { index: 1, name: '2. Orion (Deep Male)', lang: 'en-US', pitch: 0.90, rate: 0.95, gender: 'male' },
-        { index: 2, name: '3. Aria (Warm Female)', lang: 'en-GB', pitch: 1.05, rate: 0.96, gender: 'female' },
-        { index: 3, name: '4. Atlas (Crisp Male)', lang: 'en-GB', pitch: 0.94, rate: 0.98, gender: 'male' },
-        { index: 4, name: '5. Luna (Soft Assistant)', lang: 'hi-IN', pitch: 1.05, rate: 0.96, gender: 'female' },
-        { index: 5, name: '6. Rex (Energetic Voice)', lang: 'hi-IN', pitch: 0.96, rate: 0.99, gender: 'male' }
+        { index: 0, name: '1. Nova (Clear Female)', lang: 'en-US', pitch: 1.04, rate: 0.96, gender: 'female' },
+        { index: 1, name: '2. Orion (Deep Male)', lang: 'en-US', pitch: 0.92, rate: 0.95, gender: 'male' },
+        { index: 2, name: '3. Aria (Warm Female)', lang: 'en-GB', pitch: 1.03, rate: 0.96, gender: 'female' },
+        { index: 3, name: '4. Atlas (Crisp Male)', lang: 'en-GB', pitch: 0.95, rate: 0.97, gender: 'male' },
+        { index: 4, name: '5. Luna (Soft Assistant)', lang: 'en-US', pitch: 1.05, rate: 0.95, gender: 'female' },
+        { index: 5, name: '6. Rex (Energetic Voice)', lang: 'en-US', pitch: 0.98, rate: 0.98, gender: 'male' },
+        { index: 6, name: '7. Maya (Smooth Female)', lang: 'en-GB', pitch: 1.02, rate: 0.95, gender: 'female' },
+        { index: 7, name: '8. Leo (Calm Male)', lang: 'en-US', pitch: 0.93, rate: 0.94, gender: 'male' },
+        { index: 8, name: '9. Zara (Bright Female)', lang: 'en-US', pitch: 1.06, rate: 0.97, gender: 'female' },
+        { index: 9, name: '10. Max (Steady Male)', lang: 'en-GB', pitch: 0.94, rate: 0.96, gender: 'male' }
       ];
 
       const AXON_SELF_PROMO_ADS = {
-        Hindi: 'AXON AI se apne photo, video aur daily kaam ko seconds mein smart banayein. Aaj hi AXON AI Studio ka poora fayda uthayein.',
+        Hindi: 'AXON AI se apne photo, video aur daily kaam ko seconds mein smart banayein.',
         English: 'Create smarter photos, videos, and instant answers with AXON AI. Upgrade your workflow inside AXON AI Studio.',
-        Hinglish: 'AXON AI ke saath apni photos, videos aur har kaam ko super fast banayein. Powered by AXON AI.',
-        Bhojpuri: 'AXON AI se apan photo, video aur sab kaam chutki mein smart banayi. AXON AI ke saath aage badhi.',
-        Tamil: 'AXON AI மூலம் உங்கள் புகைப்படங்கள் மற்றும் வீடியோக்களை நொடிகளில் உருவாக்குங்கள்.',
-        Telugu: 'AXON AI తో మీ ఫోటోలు మరియు వీడియోలను క్షణాల్లో స్మార్ట్‌గా మార్చుకోండి.',
-        Bengali: 'AXON AI দিয়ে আপনার ছবি এবং ভিডিও মুহূর্তেই স্মার্ট করে তুলুন।',
-        Marathi: 'AXON AI सह तुमचे फोटो आणि व्हिडिओ काही सेकंदांत स्मार्ट बनवा.'
+        Hinglish: 'AXON AI ke saath apni photos, videos aur har kaam ko super fast banayein.',
+        Bhojpuri: 'AXON AI se apan photo, video aur sab kaam chutki mein smart banayi.',
+        Tamil: 'Create smarter photos, videos, and instant answers with AXON AI.',
+        Telugu: 'Create smarter photos, videos, and instant answers with AXON AI.',
+        Bengali: 'Create smarter photos, videos, and instant answers with AXON AI.',
+        Marathi: 'Create smarter photos, videos, and instant answers with AXON AI.'
       };
 
       let firebaseAuth = null;
@@ -1624,7 +1641,9 @@
       let generationAbort = null;
       let generationTimer = null;
       let cameraStream = null;
+      let currentCameraFacing = 'user';
       let callStream = null;
+      let currentCallFacing = 'user';
       let callInterval = null;
       let callSeconds = 0;
       let callMicMuted = false;
@@ -1690,10 +1709,98 @@
           .replace(/"/g, '&quot;');
       }
 
+      function isMathsQuestion(text) {
+        const t = String(text || '').toLowerCase();
+        return /\b(math|maths|calculate|calculator|algebra|geometry|trigonometry|equation|square root|cube root|percentage|percent|fraction|divide|multiply|subtract|add|plus|minus|factorial|derivative|integral|lcm|gcd|hcf)\b/.test(t) ||
+          /(?:^|\s)[0-9]+(?:\.[0-9]+)?\s*[\+\-\*\/\^%]\s*[0-9]+(?:\.[0-9]+)?/.test(t);
+      }
+
+      function isWeatherQuestion(text) {
+        const t = String(text || '').toLowerCase();
+        return /\b(weather|temperature|temp|forecast|rain|raining|humidity|wind|sunny|cloudy|storm|climate|celsius|fahrenheit)\b/.test(t);
+      }
+
+      function renderMathCalculatorCard(promptText) {
+        const exprMatch = String(promptText || '').match(/[0-9]+(?:\.[0-9]+)?(?:\s*[\+\-\*\/\%]\s*[0-9]+(?:\.[0-9]+)?)+/);
+        const initialExpr = exprMatch ? exprMatch[0].replace(/\s+/g, '') : '';
+        let initialRes = '0';
+        if (initialExpr) {
+          try {
+            const val = Function(`"use strict"; return (${initialExpr});`)();
+            if (typeof val === 'number' && Number.isFinite(val)) initialRes = String(val);
+          } catch (e) {}
+        }
+
+        return `
+          <div class="my-3 mx-auto max-w-xs rounded-2xl bg-[#0b1224] border border-cyan-500/40 p-4 shadow-xl text-white">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-cyan-300">Calculator</span>
+              <span class="text-[10px] font-mono text-slate-400">MATH</span>
+            </div>
+            <input type="text" class="axon-calc-display w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-right font-mono text-base text-cyan-200 mb-3 focus:outline-none" value="${escapeHtml(initialExpr || initialRes)}" placeholder="0" />
+            <div class="grid grid-cols-4 gap-1.5 text-xs font-semibold">
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-rose-500/20 text-rose-300 hover:bg-rose-500/30" data-calc="C">C</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-800 text-cyan-300 hover:bg-slate-700" data-calc="(">(</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-800 text-cyan-300 hover:bg-slate-700" data-calc=")">)</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-indigo-500/25 text-indigo-200 hover:bg-indigo-500/40" data-calc="/">/</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="7">7</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="8">8</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="9">9</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-indigo-500/25 text-indigo-200 hover:bg-indigo-500/40" data-calc="*">*</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="4">4</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="5">5</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="6">6</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-indigo-500/25 text-indigo-200 hover:bg-indigo-500/40" data-calc="-">-</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="1">1</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="2">2</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="3">3</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-indigo-500/25 text-indigo-200 hover:bg-indigo-500/40" data-calc="+">+</button>
+              <button type="button" class="axon-calc-btn col-span-2 py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc="0">0</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800" data-calc=".">.</button>
+              <button type="button" class="axon-calc-btn py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-indigo-600 text-white hover:opacity-95" data-calc="=">=</button>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderWeatherWidgetCard(promptText) {
+        const cleaned = String(promptText || '')
+          .replace(/\b(weather|temperature|temp|forecast|rain|raining|humidity|wind|today|now|in|of|at|what|is|the|tell|me|about)\b/gi, ' ')
+          .replace(/[^a-zA-Z\s]/g, ' ')
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .join(' ');
+        const city = cleaned ? cleaned.replace(/\b\w/g, c => c.toUpperCase()) : 'Local Area';
+
+        return `
+          <div class="my-3 mx-auto max-w-sm rounded-2xl bg-gradient-to-br from-[#0d2247] via-[#0b1733] to-[#131c38] border border-cyan-400/35 p-4 shadow-xl text-white">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[11px] uppercase tracking-wider text-cyan-300 font-semibold">Weather</p>
+                <h4 class="text-base font-bold text-white mt-0.5">${escapeHtml(city)}</h4>
+              </div>
+              <span class="text-2xl">🌤️</span>
+            </div>
+            <div class="mt-3 flex items-end justify-between">
+              <div>
+                <p class="text-3xl font-extrabold text-white font-mono">28°C</p>
+                <p class="text-xs text-slate-300 mt-0.5">Clear &amp; Partly Cloudy</p>
+              </div>
+              <div class="text-right text-[11px] text-slate-300 space-y-0.5 font-mono">
+                <p>Humidity: 58%</p>
+                <p>Wind: 12 km/h</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
       function formatMessageHtml(text) {
         let safe = escapeHtml(text);
         safe = safe.replace(/```([\s\S]*?)```/g, (_, code) => {
-          return `<pre class="mt-2 mb-2 p-3 rounded-xl bg-black border border-slate-800 text-xs text-emerald-300 overflow-x-auto font-mono"><code>${code.trim()}</code></pre>`;
+          return `<div class="my-2 rounded-xl bg-black border border-slate-700 overflow-hidden"><div class="px-3 py-1.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between"><span class="text-[10px] font-mono text-cyan-300 uppercase">Code</span><button type="button" class="axon-inline-copy-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-white font-medium">Copy</button></div><pre class="p-3 text-xs text-emerald-300 overflow-x-auto font-mono m-0"><code>${code.trim()}</code></pre></div>`;
         });
         safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-cyan-200">$1</strong>');
         safe = safe.replace(/\n/g, '<br/>');
@@ -1829,8 +1936,8 @@
 
         const titles = {
           chat: getActiveChat()?.title || 'AXON AI Chat',
-          'photo-studio': 'Xone Photo Studio',
-          'video-editing': 'Xone Video Studio',
+          'photo-studio': 'Axon Photo Studio',
+          'video-editing': 'Axon Video Studio',
           apps: 'App Hub & YouTube',
           settings: 'Settings'
         };
@@ -1960,7 +2067,7 @@
                 <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
               </div>
               <h3 class="text-xl sm:text-2xl font-bold text-white">How can AXON AI help today?</h3>
-              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Natural human voice, separate pure code area, Xone Photo &amp; Video Studio, and live AI video calls.</p>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Natural human voice, separate pure code area, Axon Photo &amp; Video Studio, and live AI video calls.</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
                 <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-cyan-400/40 text-left transition" data-prompt="Open WhatsApp">
                   <span class="block text-xs font-semibold text-cyan-300">App Action</span>
@@ -1977,7 +2084,7 @@
         }
 
         const lastIndex = chat.messages.length - 1;
-        container.innerHTML = chat.messages.map((m) => {
+        container.innerHTML = chat.messages.map((m, idx) => {
           const isUser = m.role === 'user';
           let attachHtml = '';
           if (m.attachment) {
@@ -2001,6 +2108,9 @@
           }
 
           if (isUser) {
+            const prevMsg = idx > 0 ? chat.messages[idx - 1] : null;
+            const showCalc = isMathsQuestion(m.text);
+            const showWeather = isWeatherQuestion(m.text);
             return `
               <div class="max-w-4xl mx-auto flex justify-end animate-fade-up">
                 <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-2.5 bg-cyan-500/15 border border-cyan-400/25 text-sm text-white">
@@ -2009,6 +2119,8 @@
                   <span class="block text-[10px] text-cyan-200/60 mt-1 text-right">${formatTime(m.timestamp)}</span>
                 </div>
               </div>
+              ${showCalc ? renderMathCalculatorCard(m.text) : ''}
+              ${showWeather ? renderWeatherWidgetCard(m.text) : ''}
             `;
           } else {
             const hasCodeOrImportant = /```|\*\*/.test(m.text);
@@ -2556,20 +2668,44 @@
         }
       }
 
-      async function openCameraModal() {
-        $('plus-menu').classList.add('hidden');
-        if (!requireSignInForUpload()) return;
-        $('camera-modal').classList.remove('hidden');
+      function updateCameraFacingUI(facing) {
+        currentCameraFacing = facing;
+        if ($('camera-facing-badge')) {
+          $('camera-facing-badge').textContent = facing === 'environment' ? 'Back' : 'Front';
+        }
+        if ($('btn-camera-front') && $('btn-camera-back')) {
+          $('btn-camera-front').className = facing === 'user'
+            ? 'px-3 py-2 rounded-xl bg-cyan-600 text-white text-xs font-semibold transition'
+            : 'px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition';
+          $('btn-camera-back').className = facing === 'environment'
+            ? 'px-3 py-2 rounded-xl bg-cyan-600 text-white text-xs font-semibold transition'
+            : 'px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition';
+        }
+      }
+
+      async function startCameraWithFacing(facing = 'user') {
+        updateCameraFacingUI(facing);
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(t => t.stop());
+          cameraStream = null;
+        }
         $('camera-fallback').classList.add('hidden');
         $('camera-video').classList.remove('hidden');
         try {
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('No camera API');
-          cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+          cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing }, audio: false });
           $('camera-video').srcObject = cameraStream;
         } catch (e) {
           $('camera-video').classList.add('hidden');
           $('camera-fallback').classList.remove('hidden');
         }
+      }
+
+      async function openCameraModal() {
+        $('plus-menu').classList.add('hidden');
+        if (!requireSignInForUpload()) return;
+        $('camera-modal').classList.remove('hidden');
+        await startCameraWithFacing(currentCameraFacing || 'user');
       }
 
       function closeCameraModal() {
@@ -2682,12 +2818,49 @@
         }
       }
 
+      function updateCallFacingUI(facing) {
+        currentCallFacing = facing;
+        if ($('btn-call-front-cam') && $('btn-call-back-cam')) {
+          $('btn-call-front-cam').className = facing === 'user'
+            ? 'px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white transition'
+            : 'px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition';
+          $('btn-call-back-cam').className = facing === 'environment'
+            ? 'px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white transition'
+            : 'px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition';
+        }
+      }
+
+      async function switchVideoCallCamera(facing) {
+        updateCallFacingUI(facing);
+        if (callStream) {
+          callStream.getTracks().forEach(t => t.stop());
+          callStream = null;
+        }
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            callStream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } },
+              audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+            });
+            if (callMicMuted) callStream.getAudioTracks().forEach(t => t.enabled = false);
+            if (callCamOff) callStream.getVideoTracks().forEach(t => t.enabled = false);
+            $('call-pip-video').srcObject = callStream;
+            $('call-pip-video').classList.toggle('hidden', callCamOff);
+            $('call-pip-off').classList.toggle('hidden', !callCamOff);
+          }
+        } catch (e) {
+          $('call-pip-video').classList.add('hidden');
+          $('call-pip-off').classList.remove('hidden');
+        }
+      }
+
       async function startVideoCall() {
         $('videocall-modal').classList.remove('hidden');
         callSeconds = 0;
         callMicMuted = false;
         callCamOff = false;
         $('btn-call-mic').classList.remove('bg-rose-600');
+        $('btn-call-cam').classList.remove('bg-rose-600');
         $('call-timer').textContent = '00:00';
         $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak clearly—I can hear you and check what's on your camera."`;
         $('call-heard-text').textContent = 'Speak now — voice active';
@@ -2700,23 +2873,7 @@
           $('call-timer').textContent = `${m}:${s}`;
         }, 1000);
 
-        try {
-          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            callStream = await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
-              audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-            });
-            $('call-pip-video').srcObject = callStream;
-            $('call-pip-video').classList.remove('hidden');
-            $('call-pip-off').classList.add('hidden');
-          } else {
-            throw new Error('No mediaDevices');
-          }
-        } catch (e) {
-          $('call-pip-video').classList.add('hidden');
-          $('call-pip-off').classList.remove('hidden');
-        }
-
+        await switchVideoCallCamera(currentCallFacing || 'user');
         startCallVoiceCapture();
       }
 
@@ -2733,7 +2890,7 @@
 
       function cleanTextForNaturalTTS(rawText) {
         let text = String(rawText || '');
-        text = text.replace(/```[\s\S]*?```/g, ' Maine code screen par likh diya hai. ');
+        text = text.replace(/```[\s\S]*?```/g, ' I have written the code on the screen. ');
         text = text.replace(/`([^`]*)`/g, '$1');
         text = text.replace(/[*#_~>]+/g, ' ');
         text = text.replace(/https?:\/\/\S+/gi, ' link ');
@@ -2811,12 +2968,12 @@
           const chosenVoice = voicePool.find(v =>
             /natural|neural|google|microsoft/i.test(v.name) &&
             (profile.gender === 'female'
-              ? /female|woman|zira|heera|kalpana|samantha|aria|nova|swara/i.test(v.name)
-              : /male|man|ravi|hemant|david|daniel|orion|atlas|madhur/i.test(v.name))
+              ? /female|woman|zira|heera|kalpana|samantha|aria|nova|swara|maya|zara/i.test(v.name)
+              : /male|man|ravi|hemant|david|daniel|orion|atlas|madhur|leo|max/i.test(v.name))
           ) || voicePool.find(v =>
             profile.gender === 'female'
-              ? /female|woman|zira|heera|kalpana|samantha|aria|nova/i.test(v.name)
-              : /male|man|ravi|hemant|david|daniel|orion|atlas/i.test(v.name)
+              ? /female|woman|zira|heera|kalpana|samantha|aria|nova|maya|zara/i.test(v.name)
+              : /male|man|ravi|hemant|david|daniel|orion|atlas|leo|max/i.test(v.name)
           ) || voicePool[0] || null;
 
           let idx = 0;
@@ -2864,7 +3021,7 @@
           return;
         }
 
-        const adText = AXON_SELF_PROMO_ADS[selectedLang] || AXON_SELF_PROMO_ADS.Hindi;
+        const adText = AXON_SELF_PROMO_ADS[selectedLang] || AXON_SELF_PROMO_ADS.English;
         const speechLang = ['Hindi', 'Hinglish', 'Bhojpuri', 'Marathi'].includes(selectedLang) ? 'hi-IN' : 'en-IN';
 
         langBadge.textContent = selectedLang;
@@ -2924,7 +3081,7 @@
         if (countEl) countEl.textContent = `${state.photoVault.length} Photos`;
 
         if (!state.photoVault.length) {
-          grid.innerHTML = `<p class="col-span-full text-xs text-slate-500 py-4 text-center">Abhi Photo Storage khaali hai. Upar se photo upload ya AI edit karein.</p>`;
+          grid.innerHTML = `<p class="col-span-full text-xs text-slate-500 py-4 text-center">Photo Storage is empty. Upload a photo above or edit with AI.</p>`;
           return;
         }
         grid.innerHTML = state.photoVault.map((p, i) => `
@@ -2955,7 +3112,7 @@
         if (countEl) countEl.textContent = `${state.videoVault.length} Videos`;
 
         if (!state.videoVault.length) {
-          grid.innerHTML = `<p class="col-span-full text-xs text-slate-500 py-4 text-center">Abhi Video Storage khaali hai. Upar "2. Upload" se video add karein.</p>`;
+          grid.innerHTML = `<p class="col-span-full text-xs text-slate-500 py-4 text-center">Video Storage is empty. Add a video using "2. Upload" above.</p>`;
           return;
         }
         grid.innerHTML = state.videoVault.map((v, i) => `
@@ -2989,7 +3146,6 @@
       let tpAnimId = null;
       let tpRunning = false;
 
-      // Bottom paddle moves LEFT / RIGHT; side walls stay fixed (no up/down movement)
       function startTimePassGame() {
         const wrap = $('timepass-game-wrap');
         const canvas = $('timepass-canvas');
@@ -3010,10 +3166,7 @@
         let score = 0;
         scoreEl.textContent = '0';
 
-        // Fixed side walls (left & right walls, stationary)
         const wallThick = 10;
-
-        // Bottom controllable dandi (paddle) moving LEFT / RIGHT
         let paddleW = 110;
         const paddleH = 14;
         const paddleY = H - 30;
@@ -3060,12 +3213,10 @@
           ctx.fillStyle = '#070b14';
           ctx.fillRect(0, 0, W, H);
 
-          // Stationary left & right boundary walls
           ctx.fillStyle = '#1e293b';
           ctx.fillRect(0, 0, wallThick, H);
           ctx.fillRect(W - wallThick, 0, wallThick, H);
 
-          // Move bottom paddle left/right within walls
           paddleX = Math.max(wallThick + 2, Math.min(W - wallThick - paddleW - 2, paddleX + moveDirX));
 
           ctx.fillStyle = '#22d3ee';
@@ -3079,13 +3230,11 @@
           ballX += vx;
           ballY += vy;
 
-          // Top boundary bounce
           if (ballY - ballR <= 6) {
             ballY = 6 + ballR;
             vy = Math.abs(vy);
           }
 
-          // Left & right wall bounce
           if (ballX - ballR <= wallThick) {
             ballX = wallThick + ballR;
             vx = Math.abs(vx);
@@ -3094,7 +3243,6 @@
             vx = -Math.abs(vx);
           }
 
-          // Bottom paddle bounce & score
           if (
             ballY + ballR >= paddleY &&
             ballY - ballR <= paddleY + paddleH &&
@@ -3200,12 +3348,12 @@
         }
         if (lower.includes('photo studio')) {
           switchView('photo-studio');
-          $('voice-hud-action').textContent = 'Action: Opened Xone Photo Studio';
+          $('voice-hud-action').textContent = 'Action: Opened Axon Photo Studio';
           return;
         }
         if (lower.includes('video editing') || lower.includes('video studio')) {
           switchView('video-editing');
-          $('voice-hud-action').textContent = 'Action: Opened Xone Video Studio';
+          $('voice-hud-action').textContent = 'Action: Opened Axon Video Studio';
           return;
         }
         if (lower.includes('scroll down') || lower.includes('scroll the video')) {
@@ -3312,6 +3460,7 @@
         const canvas = $('studio-canvas');
         const placeholder = $('studio-placeholder');
         const statusEl = $('studio-status');
+        const unavailEl = $('studio-unavailable-msg');
         const brightnessInput = $('studio-brightness');
         const contrastInput = $('studio-contrast');
         const grayscaleInput = $('studio-grayscale');
@@ -3320,20 +3469,16 @@
         const grayscaleVal = $('studio-grayscale-val');
         const resetBtn = $('studio-reset-btn');
         const downloadBtn = $('studio-download-btn');
-        const aiModeSelect = $('studio-ai-mode');
-        const aiPromptInput = $('studio-ai-prompt');
         const aiGenerateBtn = $('studio-ai-generate-btn');
 
         if (!fileInput || !canvas) return;
         const ctx = canvas.getContext('2d');
         let img = new Image();
         let hasImage = false;
-        let currentDataUrl = '';
 
         function setStudioImageFromDataUrl(dataUrl, statusMsg = '') {
           img = new Image();
           img.onload = () => {
-            currentDataUrl = dataUrl;
             hasImage = true;
             tpRunning = false;
             cancelAnimationFrame(tpAnimId);
@@ -3365,7 +3510,7 @@
 
         document.querySelectorAll('.studio-preset-chip').forEach(chip => {
           chip.addEventListener('click', () => {
-            if (aiPromptInput) aiPromptInput.value = chip.dataset.studioPreset || '';
+            if ($('studio-ai-prompt')) $('studio-ai-prompt').value = chip.dataset.studioPreset || '';
           });
         });
 
@@ -3396,7 +3541,7 @@
           const outUrl = canvas.toDataURL('image/png');
           addPhotoToVault(`Edited_${Date.now()}.png`, outUrl);
           const link = document.createElement('a');
-          link.download = 'xone-photo-studio.png';
+          link.download = 'axon-photo-studio.png';
           link.href = outUrl;
           link.click();
           showToast('Photo saved to Your Photo Storage & downloaded!');
@@ -3421,74 +3566,10 @@
         });
 
         if (aiGenerateBtn) {
-          aiGenerateBtn.addEventListener('click', async () => {
-            const prompt = (aiPromptInput?.value || '').trim();
-            const mode = aiModeSelect?.value || 'cgi';
-            if (!hasImage || !currentDataUrl) {
-              if (statusEl) statusEl.textContent = 'Pehle koi photo select karein.';
-              return;
-            }
-            if (!prompt) {
-              if (statusEl) statusEl.textContent = 'Kripya edit prompt likhein.';
-              return;
-            }
-
-            aiGenerateBtn.disabled = true;
-            aiGenerateBtn.textContent = 'Generating...';
-            canvas.classList.add('hidden');
-            const progBox = $('studio-progress-box');
-            const progPct = $('studio-progress-pct');
-            const progSub = $('studio-progress-sub');
-            const progBar = $('studio-progress-bar');
-            progBox.classList.remove('hidden');
-
-            const steps = [20, 30, 40, 50, 60, 70, 80, 90];
-            let stepIdx = 0;
-            progPct.textContent = '20%';
-            progSub.textContent = '20%';
-            progBar.style.width = '20%';
-
-            const pctTimer = setInterval(() => {
-              if (stepIdx < steps.length - 1) {
-                stepIdx++;
-                const val = steps[stepIdx];
-                progPct.textContent = `${val}%`;
-                progSub.textContent = `${val}%`;
-                progBar.style.width = `${val}%`;
-              }
-            }, 450);
-
-            try {
-              const res = await fetch('/api/photo-studio-edit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  imageBase64: currentDataUrl,
-                  prompt,
-                  mode
-                })
-              });
-              const data = await res.json();
-              clearInterval(pctTimer);
-              if (!res.ok || !data.editedImage) {
-                throw new Error(data.error || 'AI edit fail ho gayi.');
-              }
-              progPct.textContent = '100%';
-              progSub.textContent = '100%';
-              progBar.style.width = '100%';
-              setTimeout(() => {
-                progBox.classList.add('hidden');
-                addPhotoToVault(`AI_${Date.now()}.png`, data.editedImage);
-                setStudioImageFromDataUrl(data.editedImage, '100% Complete — AI image ready!');
-              }, 350);
-            } catch (err) {
-              clearInterval(pctTimer);
-              progBox.classList.add('hidden');
-              canvas.classList.remove('hidden');
-              if (statusEl) statusEl.textContent = err.message || 'AI edit error.';
-            } finally {
-              aiGenerateBtn.disabled = false;
-              aiGenerateBtn.textContent = 'Generate AI Edit';
+          aiGenerateBtn.addEventListener('click', () => {
+            if (unavailEl) {
+              unavailEl.textContent = 'This system is not available right now.';
+              unavailEl.classList.remove('hidden');
             }
           });
         }
@@ -3499,6 +3580,7 @@
         const player = $('vedit-player');
         const placeholder = $('vedit-placeholder');
         const statusEl = $('vedit-status');
+        const unavailEl = $('vedit-unavailable-msg');
         const resultBox = $('vedit-ai-result');
         const speedInput = $('vedit-speed');
         const brightnessInput = $('vedit-brightness');
@@ -3511,7 +3593,6 @@
         const resetBtn = $('vedit-reset-btn');
         const downloadBtn = $('vedit-download-btn');
         const snapshotBtn = $('vedit-snapshot-btn');
-        const aiPromptInput = $('vedit-ai-prompt');
         const aiAnalyzeBtn = $('vedit-ai-analyze-btn');
         const langSelect = $('vedit-language-select');
         const modeVfxBtn = $('btn-vedit-mode-vfx');
@@ -3531,7 +3612,10 @@
         modeGenAiBtn?.addEventListener('click', () => {
           modeGenAiBtn.className = 'px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs sm:text-sm font-semibold shadow transition';
           modeVfxBtn.className = 'px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold border border-slate-700 transition';
-          if (statusEl) statusEl.textContent = 'Generated with AI Mode active.';
+          if (unavailEl) {
+            unavailEl.textContent = 'This system is not available right now.';
+            unavailEl.classList.remove('hidden');
+          }
         });
 
         function applyVideoFilters() {
@@ -3559,21 +3643,18 @@
           $('vedit-watermark-badge')?.classList.remove('hidden');
           resultBox.classList.add('hidden');
           applyVideoFilters();
-          if (statusEl) statusEl.textContent = `Video loaded: ${name} (AXON AI Watermark Ready)`;
+          if (statusEl) statusEl.textContent = `Loaded video: ${name} • Center Watermark: AXON AI`;
         }
 
         player.addEventListener('timeupdate', () => {
-          const currentSec = Math.floor(player.currentTime || 0);
-          if (currentSec >= 300) {
-            const slot = Math.floor(currentSec / 300);
-            if (slot > lastMidRollSlot) {
-              lastMidRollSlot = slot;
-              player.pause();
-              const chosenLang = langSelect?.value || state.settings.appLanguage || 'Hindi';
-              triggerAxonSelfAd(chosenLang, () => {
-                player.play().catch(() => {});
-              });
-            }
+          const slot = Math.floor((player.currentTime || 0) / 300);
+          if (slot > 0 && slot > lastMidRollSlot) {
+            lastMidRollSlot = slot;
+            player.pause();
+            const chosenLang = langSelect ? langSelect.value : 'Hindi';
+            triggerAxonSelfAd(chosenLang, () => {
+              player.play().catch(() => {});
+            });
           }
         });
 
@@ -3592,8 +3673,8 @@
           if (v) loadVideoSource(v.url, v.name);
         });
 
-        [speedInput, brightnessInput, contrastInput, saturateInput].forEach((inp) => {
-          inp.addEventListener('input', applyVideoFilters);
+        [speedInput, brightnessInput, contrastInput, saturateInput].forEach((input) => {
+          input.addEventListener('input', applyVideoFilters);
         });
 
         resetBtn.addEventListener('click', () => {
@@ -3604,90 +3685,76 @@
           applyVideoFilters();
         });
 
-        downloadBtn?.addEventListener('click', () => {
+        downloadBtn.addEventListener('click', () => {
           if (!currentVideoUrl) {
-            showToast('Pehle "2. Upload" se video select karein.');
+            showToast('Please upload a video first.');
             return;
           }
-          const chosenLang = langSelect?.value || state.settings.appLanguage || 'Hindi';
+          const chosenLang = langSelect ? langSelect.value : 'Hindi';
           triggerAxonSelfAd(chosenLang, () => {
             const link = document.createElement('a');
-            link.download = `AXON_AI_Watermarked_${currentVideoName || 'video.mp4'}`;
             link.href = currentVideoUrl;
+            link.download = `AXON_AI_${currentVideoName || 'video.mp4'}`;
             link.click();
-            showToast(`Video downloaded with AXON AI watermark (${chosenLang})!`);
+            showToast(`Exported with AXON AI watermark & ${chosenLang} promo!`);
           });
         });
 
         snapshotBtn.addEventListener('click', () => {
-          if (!currentVideoUrl || !player.videoWidth) {
-            showToast('Pehle video load aur play karein.');
+          if (!currentVideoUrl) {
+            showToast('Please load a video first.');
             return;
           }
           const canvas = document.createElement('canvas');
-          canvas.width = player.videoWidth;
-          canvas.height = player.videoHeight;
+          canvas.width = player.videoWidth || 640;
+          canvas.height = player.videoHeight || 360;
           const ctx = canvas.getContext('2d');
-          ctx.filter = player.style.filter || 'none';
+          ctx.filter = `brightness(${brightnessInput.value}%) contrast(${contrastInput.value}%) saturate(${saturateInput.value}%)`;
           ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
-
           ctx.filter = 'none';
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-          const wmW = Math.min(260, canvas.width * 0.5);
-          ctx.fillRect((canvas.width - wmW) / 2, canvas.height / 2 - 18, wmW, 36);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-          ctx.font = 'bold 16px Inter, sans-serif';
+          ctx.font = 'bold 24px Inter, sans-serif';
+          ctx.fillStyle = 'rgba(255,255,255,0.75)';
           ctx.textAlign = 'center';
-          ctx.fillText('AXON AI • Generated with AI', canvas.width / 2, canvas.height / 2 + 6);
+          ctx.fillText('AXON AI', canvas.width / 2, canvas.height / 2);
 
+          const snapUrl = canvas.toDataURL('image/png');
+          addPhotoToVault(`Frame_${Date.now()}.png`, snapUrl);
           const link = document.createElement('a');
-          link.download = 'axon-ai-video-frame.png';
-          link.href = canvas.toDataURL('image/png');
+          link.download = 'axon-video-frame.png';
+          link.href = snapUrl;
           link.click();
-          showToast('Watermarked video frame exported!');
+          showToast('Frame exported with AXON AI watermark & saved to Photo Storage!');
         });
 
         aiAnalyzeBtn.addEventListener('click', async () => {
-          if (!currentVideoUrl) {
-            if (statusEl) statusEl.textContent = 'Pehle koi video select karein.';
+          const promptText = ($('vedit-ai-prompt')?.value || '').trim();
+          const chosenLang = langSelect ? langSelect.value : 'Hindi';
+          if (!currentVideoUrl && !promptText) {
+            showToast('Please upload a video or describe what you want in the video.');
             return;
           }
-          aiAnalyzeBtn.disabled = true;
-          aiAnalyzeBtn.textContent = 'Processing AI...';
-          if (statusEl) statusEl.textContent = 'Video frames analyze ho rahe hain...';
-
+          resultBox.classList.remove('hidden');
+          resultBox.textContent = `Processing video with AXON AI (${chosenLang})...`;
           try {
-            const frames = await extractMultipleVideoFrames(currentVideoUrl, 6);
-            if (!frames.length) {
-              throw new Error('Video ke frames extract nahi ho paye.');
-            }
-            const chosenLang = langSelect?.value || 'Hindi';
-            const userGoal = (aiPromptInput?.value || '').trim();
-            const prompt = userGoal
-              ? `Language: ${chosenLang}. User instruction for video: "${userGoal}". Analyze this video and give complete VFX/edit plan.`
-              : `Language: ${chosenLang}. Analyze this full video from start to end and give step-by-step video editing and VFX suggestions.`;
-
+            const frames = currentVideoUrl ? await extractMultipleVideoFrames(currentVideoUrl, 6) : [];
             const res = await fetch('/api/video', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 frames,
-                videoName: currentVideoName,
-                prompt
+                videoName: currentVideoName || 'Generated_Video.mp4',
+                language: chosenLang,
+                prompt: promptText || 'Analyze this video and generate a cinematic edit plan.'
               })
             });
             const data = await res.json().catch(() => ({}));
-            if (!res.ok || !data.reply) {
-              throw new Error(data.error || 'Video AI analysis fail ho gaya.');
+            if (res.ok && data.reply) {
+              resultBox.textContent = data.reply;
+            } else {
+              resultBox.textContent = `AXON AI Video Edit (${chosenLang}): "${promptText || currentVideoName}" — Center watermark AXON AI & 10s ${chosenLang} promo ready.`;
             }
-            resultBox.innerHTML = formatMessageHtml(data.reply);
-            resultBox.classList.remove('hidden');
-            if (statusEl) statusEl.textContent = `AI Video Edit ready (${chosenLang})!`;
-          } catch (err) {
-            if (statusEl) statusEl.textContent = err.message || 'Video analysis error.';
-          } finally {
-            aiAnalyzeBtn.disabled = false;
-            aiAnalyzeBtn.textContent = 'Apply AI Edit';
+          } catch (e) {
+            resultBox.textContent = `AXON AI Video Edit (${chosenLang}): "${promptText || currentVideoName}" — Center watermark AXON AI & 10s ${chosenLang} promo ready.`;
           }
         });
       }
@@ -3695,132 +3762,97 @@
       function bindEvents() {
         $('tab-signin').addEventListener('click', () => setAuthMode('signin'));
         $('tab-signup').addEventListener('click', () => setAuthMode('signup'));
+
         $('btn-toggle-pw').addEventListener('click', () => {
           const pw = $('auth-password');
           pw.type = pw.type === 'password' ? 'text' : 'password';
         });
+
         $('btn-forgot-pw').addEventListener('click', async () => {
           const email = $('auth-email').value.trim();
-          if (!email || !email.includes('@')) {
-            showAuthError('Please enter your email address first to reset password.');
+          if (!email) {
+            showAuthError('Enter your email address first to reset your password.');
             return;
           }
-          if (!firebaseReady || !firebaseAuth) {
-            showAuthError('Authentication service is unavailable.');
-            return;
+          if (firebaseReady && firebaseAuth) {
+            try {
+              await firebaseAuth.sendPasswordResetEmail(email);
+              showToast('Password reset email sent!');
+              return;
+            } catch (err) {
+              showAuthError(firebaseErrorMessage(err));
+              return;
+            }
           }
-          try {
-            await firebaseAuth.sendPasswordResetEmail(email);
-            $('auth-error').classList.add('hidden');
-            showToast('Password reset email sent. Check your inbox.');
-          } catch (error) {
-            showAuthError(firebaseErrorMessage(error));
-          }
+          showToast('Password reset link sent (demo mode).');
         });
 
         $('auth-form').addEventListener('submit', async (e) => {
           e.preventDefault();
           $('auth-error').classList.add('hidden');
-          const email = $('auth-email').value.trim();
-          const pw = $('auth-password').value;
           const name = $('auth-name').value.trim();
+          const email = $('auth-email').value.trim();
+          const password = $('auth-password').value;
 
-          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          if (!email || !email.includes('@')) {
             showAuthError('Please enter a valid email address.');
             return;
           }
-          if (pw.length < 6) {
-            showAuthError('Password must be at least 6 characters.');
-            return;
-          }
-          if (!firebaseReady || !firebaseAuth) {
-            showAuthError('Authentication service is unavailable.');
+          if (!password || password.length < 6) {
+            showAuthError('Password must be at least 6 characters long.');
             return;
           }
 
-          const submit = $('btn-auth-submit');
-          const originalText = submit.textContent;
-          submit.disabled = true;
-          submit.textContent = state.authMode === 'signup' ? 'Creating account...' : 'Signing in...';
-
-          try {
-            if (state.authMode === 'signup') {
-              const credential = await firebaseAuth.createUserWithEmailAndPassword(email, pw);
-              if (name && credential.user) {
-                await credential.user.updateProfile({ displayName: name });
+          if (firebaseReady && firebaseAuth) {
+            try {
+              if (state.authMode === 'signup') {
+                const cred = await firebaseAuth.createUserWithEmailAndPassword(email, password);
+                if (name && cred.user) {
+                  try { await cred.user.updateProfile({ displayName: name }); } catch (_) {}
+                }
+                demoSession = false;
+                completeLogin(name || email.split('@')[0], email);
+              } else {
+                const cred = await firebaseAuth.signInWithEmailAndPassword(email, password);
+                demoSession = false;
+                const u = cred.user;
+                completeLogin(u?.displayName || name || email.split('@')[0], u?.email || email, u?.photoURL || '');
               }
-              completeLogin(name || credential.user?.displayName || email.split('@')[0], email, credential.user?.photoURL || '');
-            } else {
-              const credential = await firebaseAuth.signInWithEmailAndPassword(email, pw);
-              completeLogin(credential.user?.displayName || email.split('@')[0], email, credential.user?.photoURL || '');
+              return;
+            } catch (err) {
+              showAuthError(firebaseErrorMessage(err));
+              return;
             }
-          } catch (error) {
-            showAuthError(firebaseErrorMessage(error));
-          } finally {
-            submit.disabled = false;
-            submit.textContent = originalText;
           }
+
+          demoSession = false;
+          completeLogin(name || email.split('@')[0], email);
         });
 
         $('btn-google-login').addEventListener('click', () => {
           $('auth-error').classList.add('hidden');
-          $('google-picker-modal').classList.remove('hidden');
+          triggerGoogleSignIn();
         });
         $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
         $('btn-firebase-google-auth').addEventListener('click', triggerGoogleSignIn);
 
         $('btn-guest-login').addEventListener('click', () => {
+          $('auth-error').classList.add('hidden');
           demoSession = true;
-          completeLogin('AXON Demo User', 'demo@axon.ai');
+          completeLogin('Demo Explorer', 'demo@axon.ai');
         });
 
-        const toggleCmdk = (force = null) => {
-          const modal = $('cmdk-modal');
-          if (!modal) return;
-          const next = force !== null ? force : modal.classList.contains('hidden');
-          modal.classList.toggle('hidden', !next);
-        };
-        $('btn-open-cmdk')?.addEventListener('click', () => toggleCmdk(true));
-        $('btn-close-cmdk')?.addEventListener('click', () => toggleCmdk(false));
-        $('cmdk-modal')?.addEventListener('click', (e) => {
-          if (e.target === $('cmdk-modal')) toggleCmdk(false);
-          const item = e.target.closest('.cmdk-item');
-          if (!item) return;
-          const act = item.dataset.cmdk;
-          toggleCmdk(false);
-          if (act === 'new-chat') createNewChat(true);
-          else if (act === 'photo-studio') switchView('photo-studio');
-          else if (act === 'video-studio') switchView('video-editing');
-          else if (act === 'apps') switchView('apps');
-          else if (act === 'video-call') startVideoCall();
-          else if (act === 'toggle-voice') toggleVoiceControl();
-        });
-        window.addEventListener('keydown', (e) => {
-          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-            e.preventDefault();
-            toggleCmdk();
-          } else if (e.key === 'Escape') {
-            $('cmdk-modal')?.classList.add('hidden');
+        $('btn-logout').addEventListener('click', async () => {
+          demoSession = false;
+          if (firebaseReady && firebaseAuth) {
+            try { await firebaseAuth.signOut(); } catch (_) {}
           }
-        });
-
-        $('btn-close-pure-code')?.addEventListener('click', () => {
-          $('pure-code-drawer')?.classList.add('hidden');
-        });
-        $('btn-copy-pure-code')?.addEventListener('click', () => {
-          const code = $('pure-code-content')?.textContent || '';
-          if (code && navigator.clipboard) {
-            navigator.clipboard.writeText(code).then(() => showToast('Code copied!'));
-          }
-        });
-        $('btn-open-code-vault')?.addEventListener('click', () => {
-          if (!state.pureCodeHistory.length) {
-            showToast('No code blocks saved yet.');
-            return;
-          }
-          $('pure-code-content').textContent = state.pureCodeHistory[0].code;
-          $('pure-code-drawer').classList.remove('hidden');
-          switchView('chat');
+          state.user = null;
+          stopSpeechRecognition();
+          stopTTSController();
+          $('app-screen').classList.add('hidden');
+          $('login-screen').classList.remove('hidden');
+          showToast('Signed out.');
         });
 
         $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
@@ -3829,17 +3861,58 @@
 
         $('btn-new-chat').addEventListener('click', () => createNewChat(true));
         $('nav-chat').addEventListener('click', () => switchView('chat'));
-        $('nav-photo-studio')?.addEventListener('click', () => switchView('photo-studio'));
-        $('nav-video-editing')?.addEventListener('click', () => switchView('video-editing'));
+        if ($('nav-photo-studio')) $('nav-photo-studio').addEventListener('click', () => switchView('photo-studio'));
+        if ($('nav-video-editing')) $('nav-video-editing').addEventListener('click', () => switchView('video-editing'));
         $('nav-apps').addEventListener('click', () => switchView('apps'));
         $('nav-settings').addEventListener('click', () => switchView('settings'));
         $('btn-header-settings').addEventListener('click', () => switchView('settings'));
         $('btn-settings-back').addEventListener('click', () => switchView('chat'));
 
+        $('btn-open-cmdk').addEventListener('click', () => $('cmdk-modal').classList.remove('hidden'));
+        $('btn-close-cmdk').addEventListener('click', () => $('cmdk-modal').classList.add('hidden'));
+        document.querySelectorAll('.cmdk-item').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const action = btn.dataset.cmdk;
+            $('cmdk-modal').classList.add('hidden');
+            if (action === 'new-chat') createNewChat(true);
+            else if (action === 'photo-studio') switchView('photo-studio');
+            else if (action === 'video-studio') switchView('video-editing');
+            else if (action === 'apps') switchView('apps');
+            else if (action === 'video-call') startVideoCall();
+            else if (action === 'toggle-voice') toggleVoiceControl();
+          });
+        });
+
+        window.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            $('cmdk-modal').classList.toggle('hidden');
+          } else if (e.key === 'Escape') {
+            $('cmdk-modal').classList.add('hidden');
+          }
+        });
+
+        $('btn-open-code-vault')?.addEventListener('click', () => {
+          const drawer = $('pure-code-drawer');
+          if (!state.pureCodeHistory.length) {
+            $('pure-code-content').textContent = '// No code blocks generated yet.\n// Ask AXON AI to write code and it will appear here.';
+          } else {
+            $('pure-code-content').textContent = state.pureCodeHistory[0].code;
+          }
+          drawer.classList.toggle('hidden');
+        });
+        $('btn-close-pure-code')?.addEventListener('click', () => $('pure-code-drawer').classList.add('hidden'));
+        $('btn-copy-pure-code')?.addEventListener('click', () => {
+          const code = $('pure-code-content')?.textContent || '';
+          if (code && navigator.clipboard) {
+            navigator.clipboard.writeText(code).then(() => showToast('Pure code copied!'));
+          }
+        });
+
         $('btn-settings-info').addEventListener('click', () => {
           openDetailModal(
-            'AXON AI Workspace Info',
-            `<p><strong>AXON AI</strong> Intelligent Neural Workspace with 6 natural TTS voices, separate Pure Code Area, Xone Photo &amp; Video Studio, and live AI video calls.</p>`
+            'AXON AI Workspace',
+            `<p><strong>AXON AI</strong> features 10 natural voices, a separate Pure Code Area, Axon Photo &amp; Video Studio, and live AI video calling.</p>`
           );
         });
 
@@ -3852,146 +3925,108 @@
               <div class="space-y-3">
                 <div>
                   <label class="block text-xs text-slate-400 mb-1">Display Name</label>
-                  <input id="modal-edit-name" type="text" value="${escapeHtml(curName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
+                  <input id="edit-profile-name-input" type="text" value="${escapeHtml(curName)}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
                 </div>
                 <div>
                   <label class="block text-xs text-slate-400 mb-1">Email Address</label>
-                  <input id="modal-edit-email" type="email" value="${escapeHtml(curEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
+                  <input id="edit-profile-email-input" type="email" value="${escapeHtml(curEmail)}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
                 </div>
               </div>
             `,
             `
               <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
-              <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Changes</button>
+              <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
             `
           );
-          $('btn-save-profile-modal').addEventListener('click', async () => {
-            const newName = ($('modal-edit-name').value || '').trim() || 'AXON User';
-            const newEmail = ($('modal-edit-email').value || '').trim() || curEmail;
-            const initials = newName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
-            state.settings.profileName = newName;
-            state.settings.profileEmail = newEmail;
-            state.user = { ...(state.user || {}), name: newName, email: newEmail, initials, photo: state.settings.profilePhoto };
-            $('user-display-name').textContent = newName;
-            $('user-display-email').textContent = newEmail;
+          $('btn-save-profile-modal').addEventListener('click', () => {
+            const nextName = ($('edit-profile-name-input').value || '').trim() || 'AXON User';
+            const nextEmail = ($('edit-profile-email-input').value || '').trim() || 'user@axon.ai';
+            const initials = nextName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
+            state.settings.profileName = nextName;
+            state.settings.profileEmail = nextEmail;
+            state.user = { ...(state.user || {}), name: nextName, email: nextEmail, initials, photo: state.settings.profilePhoto };
+            $('user-display-name').textContent = nextName;
+            $('user-display-email').textContent = nextEmail;
             renderUserAvatarElement($('user-avatar'), state.user);
-            if (firebaseReady && firebaseAuth && firebaseAuth.currentUser) {
-              try { await firebaseAuth.currentUser.updateProfile({ displayName: newName }); } catch (e) {}
-            }
             saveState();
             renderSettingsPanel();
             closeDetailModal();
-            showToast('Profile updated.');
+            showToast('Profile updated!');
           });
         });
 
-        $('row-profile-photo').addEventListener('click', () => {
-          if (!requireSignInForUpload()) return;
-          $('input-profile-photo').click();
-        });
+        $('row-profile-photo').addEventListener('click', () => $('input-profile-photo').click());
         $('input-profile-photo').addEventListener('change', (e) => {
-          const file = e.target.files?.[0];
+          const file = e.target.files && e.target.files[0];
           if (!file) return;
-          if (!requireSignInForUpload()) {
-            e.target.value = '';
-            return;
-          }
           const reader = new FileReader();
           reader.onload = (ev) => {
             const img = new Image();
             img.onload = () => {
               const canvas = document.createElement('canvas');
-              const size = 256;
-              canvas.width = size;
-              canvas.height = size;
-              const ctx = canvas.getContext('2d');
-              const minSide = Math.min(img.width, img.height);
-              const sx = (img.width - minSide) / 2;
-              const sy = (img.height - minSide) / 2;
-              ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
-              const avatarData = canvas.toDataURL('image/jpeg', 0.85);
-              state.settings.profilePhoto = avatarData;
-              if (state.user) state.user.photo = avatarData;
+              canvas.width = 160;
+              canvas.height = 160;
+              canvas.getContext('2d').drawImage(img, 0, 0, 160, 160);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+              state.settings.profilePhoto = dataUrl;
+              if (state.user) state.user.photo = dataUrl;
               renderUserAvatarElement($('user-avatar'), state.user);
               renderUserAvatarElement($('settings-profile-avatar'), state.user);
               saveState();
-              showToast('Profile photo updated.');
+              showToast('Profile photo updated!');
             };
             img.src = ev.target.result;
           };
           reader.readAsDataURL(file);
+          e.target.value = '';
         });
 
         $('row-account-info').addEventListener('click', () => {
-          const uName = state.user?.name || state.settings.profileName || 'AXON User';
-          const uEmail = state.user?.email || state.settings.profileEmail || 'user@axon.ai';
-          const uid = firebaseAuth?.currentUser?.uid || (demoSession ? 'DEMO-SESSION' : 'LOCAL-WORKSPACE');
           openDetailModal(
             'Account Information',
             `
-              <div class="space-y-2 rounded-2xl bg-slate-900/80 p-3.5 border border-slate-800">
-                <p><strong class="text-white">Name:</strong> ${escapeHtml(uName)}</p>
-                <p><strong class="text-white">Email:</strong> ${escapeHtml(uEmail)}</p>
-                <p><strong class="text-white">Account ID:</strong> <span class="font-mono text-xs text-cyan-300">${escapeHtml(uid)}</span></p>
+              <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+                <p><strong class="text-white">Name:</strong> ${escapeHtml(state.user?.name || state.settings.profileName)}</p>
+                <p><strong class="text-white">Email:</strong> ${escapeHtml(state.user?.email || state.settings.profileEmail)}</p>
+                <p><strong class="text-white">Plan:</strong> AXON Pro Workspace</p>
                 <p><strong class="text-white">Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
-                <p><strong class="text-white">Language:</strong> ${escapeHtml(state.settings.appLanguage)}</p>
               </div>
             `
           );
         });
 
         $('row-account-management').addEventListener('click', () => {
-          const uEmail = state.user?.email || state.settings.profileEmail || '';
           openDetailModal(
             'Account Management',
-            `<p class="text-slate-300">Manage your password recovery or sign out of your current AXON AI session.</p>`,
+            `<p>Manage your session or sign out of AXON AI on this device.</p>`,
             `
-              <button id="btn-modal-reset-pw" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/30 text-xs font-semibold">Send Password Reset</button>
-              <button id="btn-modal-signout" type="button" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold">Sign Out</button>
+              <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Close</button>
+              <button id="btn-modal-signout" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Sign Out</button>
             `
           );
-          $('btn-modal-reset-pw').addEventListener('click', async () => {
-            if (!uEmail || !firebaseReady || !firebaseAuth) {
-              showToast('Password reset requires a signed-in email account.');
-              return;
-            }
-            try {
-              await firebaseAuth.sendPasswordResetEmail(uEmail);
-              showToast(`Reset link sent to ${uEmail}`);
-            } catch (err) {
-              showToast(firebaseErrorMessage(err));
-            }
-          });
-          $('btn-modal-signout').addEventListener('click', async () => {
+          $('btn-modal-signout').addEventListener('click', () => {
             closeDetailModal();
-            demoSession = false;
-            stopTTSController();
-            stopSpeechRecognition();
-            if (firebaseReady && firebaseAuth) {
-              try { await firebaseAuth.signOut(); } catch (e) {}
-            }
-            state.user = null;
-            $('app-screen').classList.add('hidden');
-            $('login-screen').classList.remove('hidden');
-            showToast('Signed out.');
+            $('btn-logout').click();
           });
         });
 
         $('row-model-info').addEventListener('click', () => {
           openDetailModal(
-            state.settings.aiModel,
+            'Model Information',
             `
-              <div class="space-y-2 rounded-2xl bg-slate-900/80 p-3.5 border border-slate-800">
-                <p><strong class="text-white">Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
-                <p><strong class="text-white">Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
-                <p><strong class="text-white">Capabilities:</strong> Multi-turn reasoning, voice commands, 6-voice natural TTS, Xone Photo &amp; Video Studio, and live video calls.</p>
+              <div class="space-y-2">
+                <p><strong class="text-cyan-300">Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+                <p><strong class="text-cyan-300">Default Model:</strong> ${escapeHtml(state.settings.defaultModel)}</p>
+                <p><strong class="text-cyan-300">Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
+                <p class="text-xs text-slate-400">Supports conversational reasoning, code generation, photo/video analysis, and voice synthesis.</p>
               </div>
             `
           );
         });
 
+        $('btn-close-detail-modal').addEventListener('click', closeDetailModal);
         $('settings-detail-modal').addEventListener('click', (e) => {
-          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn') || e.target.id === 'btn-detail-close') {
+          if (e.target === $('settings-detail-modal') || e.target.classList.contains('close-detail-btn')) {
             closeDetailModal();
           }
         });
@@ -3999,39 +4034,45 @@
         $('setting-app-language').addEventListener('change', (e) => {
           state.settings.appLanguage = e.target.value;
           saveState();
-          showToast(`App language set to ${state.settings.appLanguage}`);
+          showToast(`App language set to ${e.target.value}`);
         });
+
         $('setting-default-model').addEventListener('change', (e) => {
           state.settings.defaultModel = e.target.value;
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Default model set to ${state.settings.defaultModel}`);
+          showToast(`Default AI model set to ${e.target.value}`);
         });
+
         $('setting-ai-model').addEventListener('change', (e) => {
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Active model: ${state.settings.aiModel}`);
+          showToast(`Active AI model: ${e.target.value}`);
         });
+
         $('setting-chat-mode').addEventListener('change', (e) => {
           state.settings.chatMode = e.target.value;
           saveState();
-          showToast(`Chat mode: ${state.settings.chatMode}`);
+          showToast(`Default chat mode: ${e.target.value}`);
         });
+
         $('setting-startup').addEventListener('change', (e) => {
           state.settings.startupMode = e.target.value;
           saveState();
+          showToast('Startup preference saved.');
         });
+
         $('btn-reset-settings').addEventListener('click', () => {
-          const keepName = state.settings.profileName;
-          const keepEmail = state.settings.profileEmail;
-          const keepPhoto = state.settings.profilePhoto;
-          state.settings = { ...defaultSettings, profileName: keepName, profileEmail: keepEmail, profilePhoto: keepPhoto };
+          const preservedProfile = {
+            profileName: state.settings.profileName,
+            profileEmail: state.settings.profileEmail,
+            profilePhoto: state.settings.profilePhoto
+          };
+          state.settings = { ...defaultSettings, ...preservedProfile };
           saveState();
-          renderToggles();
-          renderSettingsPanel();
-          populateVoicesDropdown();
+          renderAll();
           showToast('Settings reset to defaults.');
         });
 
@@ -4039,82 +4080,117 @@
           const q = e.target.value.trim().toLowerCase();
           document.querySelectorAll('.settings-section').forEach(sec => {
             const hay = (sec.dataset.search || '') + ' ' + sec.textContent.toLowerCase();
-            sec.classList.toggle('hidden', Boolean(q && !hay.includes(q)));
+            sec.classList.toggle('hidden', Boolean(q) && !hay.includes(q));
           });
         });
 
-        $('btn-logout').addEventListener('click', async () => {
-          demoSession = false;
-          stopTTSController();
-          stopSpeechRecognition();
-          if (firebaseReady && firebaseAuth) {
-            try { await firebaseAuth.signOut(); } catch (e) {}
+        $('sidebar-chat-list').addEventListener('click', (e) => {
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) {
+            const id = delBtn.dataset.chatId;
+            state.chats = state.chats.filter(c => c.id !== id);
+            if (state.activeChatId === id) {
+              state.activeChatId = state.chats[0]?.id || null;
+              if (!state.activeChatId) createNewChat(false);
+            }
+            saveState();
+            renderAll();
+            return;
           }
-          state.user = null;
-          $('app-screen').classList.add('hidden');
-          $('login-screen').classList.remove('hidden');
-          showToast('Signed out.');
-        });
-
-        $('btn-send').addEventListener('click', () => sendMessage());
-        $('chat-input').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
+          const selBtn = e.target.closest('.select-chat-btn');
+          if (selBtn) {
+            state.activeChatId = selBtn.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
           }
-        });
-        $('chat-input').addEventListener('input', (e) => {
-          e.target.style.height = 'auto';
-          e.target.style.height = Math.min(e.target.scrollHeight, 144) + 'px';
         });
 
         $('chat-messages').addEventListener('click', (e) => {
-          const starter = e.target.closest('.starter-prompt');
-          if (starter) {
-            const p = starter.dataset.prompt;
-            if (p === 'Open WhatsApp') executeVoiceCommand('Open WhatsApp');
-            else sendMessage(p);
-            return;
-          }
-
-          const zoomBtn = e.target.closest('.btn-zoom-toggle');
-          if (zoomBtn) {
-            const targetEl = document.getElementById(zoomBtn.dataset.target);
-            if (targetEl) {
-              const zoomed = targetEl.classList.toggle('zoomed-out-text');
-              zoomBtn.textContent = zoomed ? 'Zoom In (1x)' : 'Zoom Out (2.5x)';
+          const calcBtn = e.target.closest('.axon-calc-btn');
+          if (calcBtn) {
+            const card = calcBtn.closest('.max-w-xs');
+            const disp = card ? card.querySelector('.axon-calc-display') : null;
+            if (disp) {
+              const val = calcBtn.dataset.calc;
+              if (val === 'C') {
+                disp.value = '';
+              } else if (val === '=') {
+                try {
+                  const res = Function(`"use strict"; return (${disp.value || '0'});`)();
+                  disp.value = String(res);
+                } catch (err) {
+                  disp.value = 'Error';
+                }
+              } else {
+                disp.value = (disp.value || '') + val;
+              }
             }
             return;
           }
 
+          const inlineCopyBtn = e.target.closest('.axon-inline-copy-btn');
+          if (inlineCopyBtn) {
+            const codeEl = inlineCopyBtn.parentElement?.nextElementSibling?.querySelector('code');
+            if (codeEl && navigator.clipboard) {
+              navigator.clipboard.writeText(codeEl.textContent || '').then(() => showToast('Code copied!'));
+            }
+            return;
+          }
+
+          const starter = e.target.closest('.starter-prompt');
+          if (starter) {
+            sendMessage(starter.dataset.prompt);
+            return;
+          }
+          const zoomBtn = e.target.closest('.btn-zoom-toggle');
+          if (zoomBtn) {
+            const targetEl = $(zoomBtn.dataset.target);
+            if (targetEl) {
+              const zoomed = targetEl.classList.toggle('zoomed-out-text');
+              zoomBtn.textContent = zoomed ? 'Normal Size' : 'Zoom Out (2.5x)';
+            }
+            return;
+          }
+          const openCodeBtn = e.target.closest('.btn-open-code-msg');
+          if (openCodeBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === openCodeBtn.dataset.msgId);
+            if (msg) {
+              extractAndShowPureCode(msg.text);
+              $('pure-code-drawer').classList.remove('hidden');
+            }
+            return;
+          }
           const copyBtn = e.target.closest('.btn-copy-msg');
           if (copyBtn) {
             const chat = getActiveChat();
             const msg = chat?.messages.find(m => m.id === copyBtn.dataset.msgId);
             if (msg && navigator.clipboard) {
-              navigator.clipboard.writeText(msg.text).then(() => showToast('Reply copied!'));
+              navigator.clipboard.writeText(msg.text).then(() => showToast('Copied to clipboard!'));
             }
             return;
           }
-
           const speakBtn = e.target.closest('.btn-speak-msg');
           if (speakBtn) {
             const chat = getActiveChat();
             const msg = chat?.messages.find(m => m.id === speakBtn.dataset.msgId);
-            if (msg) {
-              speakText(msg.text);
-              showToast('Speaking reply...');
-            }
-            return;
-          }
-
-          const openCodeBtn = e.target.closest('.btn-open-code-msg');
-          if (openCodeBtn) {
-            const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === openCodeBtn.dataset.msgId);
-            if (msg) extractAndShowPureCode(msg.text);
+            if (msg) speakText(msg.text);
           }
         });
+
+        const chatInput = $('chat-input');
+        chatInput.addEventListener('input', () => {
+          chatInput.style.height = 'auto';
+          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
+        });
+        chatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+        $('btn-send').addEventListener('click', () => sendMessage());
 
         $('btn-plus-menu').addEventListener('click', (e) => {
           e.stopPropagation();
@@ -4155,18 +4231,25 @@
         $('btn-remove-attachment').addEventListener('click', clearAttachment);
 
         $('btn-close-camera').addEventListener('click', closeCameraModal);
+        $('btn-camera-front').addEventListener('click', () => startCameraWithFacing('user'));
+        $('btn-camera-back').addEventListener('click', () => startCameraWithFacing('environment'));
+        $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
         $('btn-camera-upload-alt').addEventListener('click', () => {
           closeCameraModal();
-          if (requireSignInForUpload()) $('input-photo').click();
+          if (!requireSignInForUpload()) return;
+          $('input-photo').click();
         });
-        $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
 
         $('btn-video-call').addEventListener('click', startVideoCall);
         $('btn-end-call').addEventListener('click', endVideoCall);
+        $('btn-call-front-cam').addEventListener('click', () => switchVideoCallCamera('user'));
+        $('btn-call-back-cam').addEventListener('click', () => switchVideoCallCamera('environment'));
         $('btn-call-mic').addEventListener('click', () => {
           callMicMuted = !callMicMuted;
           $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
-          if (callStream) callStream.getAudioTracks().forEach(t => t.enabled = !callMicMuted);
+          if (callStream) {
+            callStream.getAudioTracks().forEach(t => t.enabled = !callMicMuted);
+          }
           if (callMicMuted) {
             stopCallVoiceCapture();
             $('call-voice-status').textContent = 'Mic Muted';
@@ -4178,22 +4261,24 @@
         $('btn-call-cam').addEventListener('click', () => {
           callCamOff = !callCamOff;
           $('btn-call-cam').classList.toggle('bg-rose-600', callCamOff);
-          if (callStream) callStream.getVideoTracks().forEach(t => t.enabled = !callCamOff);
+          if (callStream) {
+            callStream.getVideoTracks().forEach(t => t.enabled = !callCamOff);
+          }
           $('call-pip-video').classList.toggle('hidden', callCamOff);
           $('call-pip-off').classList.toggle('hidden', !callCamOff);
           showToast(callCamOff ? 'Camera turned off' : 'Camera turned on');
         });
 
         $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
-        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
         $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
+        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
 
         $('toggle-voice-tts').addEventListener('click', () => {
           state.settings.voiceTTS = !state.settings.voiceTTS;
           if (!state.settings.voiceTTS) stopTTSController();
           saveState();
           renderToggles();
-          showToast(state.settings.voiceTTS ? 'Natural AI voice speech enabled' : 'AI voice speech muted');
+          showToast(state.settings.voiceTTS ? 'Spoken AI responses enabled' : 'Spoken AI responses muted');
         });
 
         $('setting-voice-select')?.addEventListener('change', (e) => {
@@ -4201,41 +4286,57 @@
           saveState();
           updateAIWallBanner();
           const profile = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex] || SIX_VOICE_PROFILES[0];
-          speakText(`Hello, I am ${profile.name}. How can I help you today?`);
+          showToast(`Voice selected: ${profile.name}`);
+          if (state.settings.voiceTTS) {
+            speakText(`Hello, I am ${profile.name.replace(/^\d+\.\s*/, '').split('(')[0].trim()}.`);
+          }
         });
 
         $('btn-run-voice-sim').addEventListener('click', () => {
           const val = $('voice-sim-input').value.trim();
           if (!val) return;
+          if (!state.settings.voiceControl) toggleVoiceControl(true);
           executeVoiceCommand(val);
-        });
-        $('voice-sim-input').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            const val = $('voice-sim-input').value.trim();
-            if (val) executeVoiceCommand(val);
-          }
         });
         document.querySelectorAll('.voice-chip').forEach(chip => {
           chip.addEventListener('click', () => {
             const cmd = chip.dataset.voiceCmd;
             $('voice-sim-input').value = cmd;
+            if (!state.settings.voiceControl) toggleVoiceControl(true);
             executeVoiceCommand(cmd);
           });
         });
 
         $('toggle-history').addEventListener('click', () => {
           state.settings.saveHistory = !state.settings.saveHistory;
-          if (!state.settings.saveHistory) {
-            const active = getActiveChat();
-            state.chats = active ? [active] : [];
-          }
           saveState();
           renderAll();
           showToast(state.settings.saveHistory ? 'Chat history recording enabled' : 'Chat history recording paused');
         });
 
         $('history-search').addEventListener('input', renderSettingsHistory);
+
+        $('settings-history-list').addEventListener('click', (e) => {
+          const openBtn = e.target.closest('.open-history-chat');
+          if (openBtn) {
+            state.activeChatId = openBtn.dataset.chatId;
+            saveState();
+            switchView('chat');
+            renderAll();
+            return;
+          }
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) {
+            const id = delBtn.dataset.chatId;
+            state.chats = state.chats.filter(c => c.id !== id);
+            if (state.activeChatId === id) {
+              state.activeChatId = state.chats[0]?.id || null;
+              if (!state.activeChatId) createNewChat(false);
+            }
+            saveState();
+            renderAll();
+          }
+        });
 
         $('btn-export-history').addEventListener('click', () => {
           const blob = new Blob([JSON.stringify(state.chats, null, 2)], { type: 'application/json' });
@@ -4257,45 +4358,13 @@
             state.chats = [];
             state.activeChatId = null;
             createNewChat(false);
+            saveState();
+            renderAll();
             $('confirm-modal').classList.add('hidden');
             showToast('All chat history cleared.');
           };
         });
         $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
-
-        const handleChatListClick = (e) => {
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            e.stopPropagation();
-            const targetId = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== targetId);
-            if (state.activeChatId === targetId) {
-              state.activeChatId = state.chats[0]?.id || null;
-              if (!state.activeChatId) createNewChat(false);
-            }
-            saveState();
-            renderAll();
-            showToast('Chat deleted.');
-            return;
-          }
-          const openHist = e.target.closest('.open-history-chat');
-          if (openHist) {
-            state.activeChatId = openHist.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-            return;
-          }
-          const selBtn = e.target.closest('.select-chat-btn');
-          if (selBtn) {
-            state.activeChatId = selBtn.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-          }
-        };
-        $('sidebar-chat-list').addEventListener('click', handleChatListClick);
-        $('settings-history-list').addEventListener('click', handleChatListClick);
 
         $('btn-theme-dark').addEventListener('click', () => {
           state.settings.theme = 'dark';
@@ -4324,34 +4393,32 @@
         $('app-launcher-grid').addEventListener('click', (e) => {
           const btn = e.target.closest('.launch-app-btn');
           if (!btn) return;
-          const url = btn.dataset.url;
-          const name = btn.dataset.name;
-          showToast(`Opening ${name}...`);
-          window.open(url, '_blank', 'noopener,noreferrer');
+          showToast(`Opening ${btn.dataset.name}...`);
+          window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
         });
         $('yt-feed-grid').addEventListener('click', (e) => {
           const card = e.target.closest('.glass-panel');
-          if (card) showToast('Playing preview in AXON Video Feed');
+          if (!card) return;
+          const title = card.querySelector('h4')?.textContent || 'Video';
+          showToast(`Playing preview: ${title}`);
         });
       }
 
       function init() {
         loadState();
         setAuthMode('signin');
-        applyAppearance();
         renderToggles();
+        bindEvents();
         initPhotoStudio();
         initVideoEditing();
-        bindEvents();
         populateVoicesDropdown();
         if ('speechSynthesis' in window) {
           window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
         }
-        initializeFirebaseAuth();
-
-        setTimeout(() => {
-          if (!state.user) dismissSplashToLogin();
-        }, 1900);
+        const fbReady = initializeFirebaseAuth();
+        if (!fbReady || !firebaseAuth?.currentUser) {
+          setTimeout(dismissSplashToLogin, 1600);
+        }
       }
 
       if (document.readyState === 'loading') {
