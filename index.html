@@ -102,6 +102,36 @@
       color: #ffffff !important;
     }
 
+    /* User message: single color, no extra inner background */
+    .axon-user-bubble {
+      background-color: #2563eb !important;
+      background-image: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #ffffff !important;
+    }
+    .axon-user-bubble * {
+      background: transparent !important;
+      background-image: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    /* AI reply: no card/box background */
+    .axon-ai-plain {
+      background: transparent !important;
+      background-image: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .axon-ai-conv-text {
+      background: transparent !important;
+      background-image: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 2px 0 !important;
+    }
+
     .axon-glass-card {
       background: rgba(15, 23, 48, 0.78);
       backdrop-filter: blur(18px);
@@ -476,7 +506,7 @@
                 <i data-lucide="plus" class="w-5 h-5"></i>
               </button>
 
-              <textarea id="chat-input" rows="1" placeholder="Message AXON AI (math, map, %, call, search, code, song, edit)..." class="flex-1 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-500 resize-none py-2.5 px-2 max-h-36 focus:outline-none leading-relaxed"></textarea>
+              <textarea id="chat-input" rows="1" placeholder="Ask To Axon Ai" class="flex-1 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-500 resize-none py-2.5 px-2 max-h-36 focus:outline-none leading-relaxed"></textarea>
 
               <div class="flex items-center gap-1.5 shrink-0">
                 <button id="btn-video-call" type="button" title="Start AI Video Call" class="w-10 h-10 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-300 flex items-center justify-center transition">
@@ -523,7 +553,7 @@
               </div>
               <canvas id="studio-canvas" class="max-w-full max-h-[440px] rounded-xl hidden"></canvas>
               <p id="studio-placeholder" class="text-sm text-slate-400 text-center py-10">
-                Koi photo select karein ya chat se bheji gayi photo par edit karein.
+                Select a photo or open an image from chat to start editing.
               </p>
               <p id="studio-status" class="mt-3 text-xs text-cyan-300 text-center"></p>
             </div>
@@ -637,7 +667,7 @@
               <div class="relative aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
                 <video id="vstudio-source-video" playsinline class="hidden"></video>
                 <canvas id="vstudio-canvas" class="w-full h-full object-contain"></canvas>
-                <p id="vstudio-placeholder" class="text-sm text-slate-500">MP4, MOV, or WebM select karein</p>
+                <p id="vstudio-placeholder" class="text-sm text-slate-500">Select MP4, MOV, or WebM</p>
               </div>
 
               <div class="flex items-center gap-3 pt-1">
@@ -1012,7 +1042,7 @@
                 </span>
                 <div class="min-w-0">
                   <p class="text-sm font-medium text-white">Spoken AI Responses (TTS)</p>
-                  <p class="text-xs text-slate-400 truncate">Reads text only (skips emojis) &amp; stops cleanly</p>
+                  <p class="text-xs text-slate-400 truncate">Clean speech without symbols &amp; instant Stop</p>
                 </div>
               </div>
               <button id="toggle-voice-tts" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
@@ -1272,7 +1302,7 @@
     (() => {
       'use strict';
 
-      const STORAGE_KEY = 'axon_ai_workspace_v3';
+      const STORAGE_KEY = 'axon_ai_workspace_v4';
 
       const firebaseConfig = {
         apiKey: "AIzaSyA-YnGuAr8BdGt8xbo0Eq06lijQEPoeTC8",
@@ -1477,6 +1507,7 @@
       let callCamOff = false;
       let availableVoices = [];
       let ttsKeepAliveTimer = null;
+      let ttsStopFlag = false;
       let activeSpeakingMsgId = null;
 
       let studioExternalSetter = null;
@@ -1520,7 +1551,7 @@
 
       function requireSignInForUpload() {
         if (!isSignedInUser()) {
-          showToast('Please sign in this app');
+          showToast('Please sign in to this app');
           return false;
         }
         return true;
@@ -1534,18 +1565,21 @@
           .replace(/"/g, '&quot;');
       }
 
-      function stripEmojisForSpeech(text) {
-        return String(text || '')
-          .replace(/```[\s\S]*?```/g, ' Code block provided. ')
-          .replace(/`([^`]+)`/g, '$1')
+      // Clean text for TTS without reading symbols like (), /, +, -, *, =, `, etc.
+      function cleanTextForTTS(text) {
+        if (!text) return '';
+        return String(text)
+          .replace(/```[\s\S]*?```/g, ' ')
+          .replace(/`+/g, ' ')
           .replace(/\*\*([^*]+)\*\*/g, '$1')
-          .replace(/#+\s*/g, '')
+          .replace(/#+\s*/g, ' ')
+          .replace(/[()\/+\-*=<>[\]{}|\\^~_@#$%&:;?!"'.]/g, ' ')
           .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}\u{1F900}-\u{1F9FF}]/gu, ' ')
-          .replace(/\s{2,}/g, ' ')
+          .replace(/\s+/g, ' ')
           .trim();
       }
 
-      // Separate conversation blocks and dedicated A-Z code + live preview blocks
+      // Separate conversation text (no background box) from dedicated code + preview box
       function formatMessageHtml(text, msgId = '') {
         const raw = String(text || '');
         const tokenRegex = /```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g;
@@ -1604,7 +1638,7 @@
             .replace(/\n/g, '<br/>');
 
           if (!safe.trim()) return '';
-          return `<div class="rounded-xl bg-slate-900/55 border border-slate-800/80 px-3.5 py-2.5 my-1.5 leading-relaxed">${safe}</div>`;
+          return `<div class="axon-ai-conv-text leading-relaxed">${safe}</div>`;
         }).join('');
       }
 
@@ -1619,6 +1653,7 @@
       }
 
       function createNewChat(switchToChat = true) {
+        stopTTSController();
         const id = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
         state.settings.aiModel = state.settings.defaultModel;
         const chat = {
@@ -1652,7 +1687,7 @@
         select.value = String(state.settings.selectedVoiceIndex ?? 0);
       }
 
-      // ==================== SMART CHAT WIDGETS (PERMISSION YES/NO -> CALCULATOR / MAP) ====================
+      // ==================== SMART CHAT WIDGETS (ENGLISH PERMISSION -> CALCULATOR / MAP / %) ====================
       function clearSmartWidgets() {
         const box = $('smart-widgets-container');
         if (box) box.innerHTML = '';
@@ -1676,8 +1711,8 @@
         card.className = 'glass-panel rounded-2xl p-3 border border-cyan-400/35 animate-fade-up flex items-center justify-between gap-3';
         card.innerHTML = `
           <div class="text-xs text-slate-200">
-            <span class="font-semibold text-cyan-300">Chhota Calculator kholna hai?</span>
-            <span class="block text-[11px] text-slate-400">Permission: Yes ya No chunein</span>
+            <span class="font-semibold text-cyan-300">Open Mini Calculator?</span>
+            <span class="block text-[11px] text-slate-400">Choose Yes or No to continue.</span>
           </div>
           <div class="flex items-center gap-2 shrink-0">
             <button id="btn-math-yes" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white">Yes</button>
@@ -1708,7 +1743,7 @@
             <button type="button" class="close-widget-btn text-xs text-slate-400 hover:text-rose-400">Close</button>
           </div>
           <div class="flex flex-col sm:flex-row gap-2">
-            <input id="calc-expr-input" type="text" value="${escapeHtml(initialExpr)}" placeholder="e.g. 5+5 or 50+50" class="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white font-mono" />
+            <input id="calc-expr-input" type="text" value="${escapeHtml(initialExpr)}" placeholder="e.g. 5+5 or 607-77" class="flex-1 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white font-mono" />
             <button id="calc-run-btn" type="button" class="px-4 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-xs font-semibold text-white">Calculate</button>
             <div id="calc-result-out" class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm font-bold text-emerald-400 font-mono min-w-[90px] text-center">
               ${initialAns !== null ? initialAns : '—'}
@@ -1774,7 +1809,7 @@
           <div class="flex flex-wrap items-center gap-2">
             <div class="flex items-center gap-1.5">
               <input id="pct-total-input" type="number" value="${Number(prefillTotal) || 100}" class="w-24 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
-              <span class="text-xs text-slate-400">ka</span>
+              <span class="text-xs text-slate-400">of</span>
               <input id="pct-rate-input" type="number" value="${Number(prefillPct) || 25}" class="w-20 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono" />
               <span class="text-xs text-slate-400">%</span>
             </div>
@@ -1847,7 +1882,6 @@
         }
       }
 
-      // ==================== ACTION / WEB / CALL HELPER ====================
       function handleSpecialWebOrDeviceActions(text) {
         const raw = (text || '').trim();
         const lower = raw.toLowerCase();
@@ -1857,7 +1891,7 @@
           const target = (callMatch[1] || callMatch[2] || 'contact').trim();
           window.location.href = `tel:${encodeURIComponent(target.replace(/\D/g, ''))}`;
           showToast(`Dialing ${target}...`);
-          return `Call action triggered for **${escapeHtml(target)}**. Agar aapke phone/browser mein dialer linked hai to call screen open hogi, warna aap directly dialer se **${escapeHtml(target)}** search karke call kar sakte hain.`;
+          return `Call action triggered for **${escapeHtml(target)}**.`;
         }
 
         const urlMatch = raw.match(/(https?:\/\/[^\s]+|www\.[^\s]+|[a-z0-9-]+\.(?:com|in|org|net|io|co)\b[^\s]*)/i);
@@ -1870,7 +1904,7 @@
             targetUrl = 'https://' + targetUrl;
           }
           try { window.open(targetUrl, '_blank', 'noopener,noreferrer'); } catch (e) {}
-          return `Web link open kiya gaya hai: **${escapeHtml(targetUrl)}**.`;
+          return `Opened link: **${escapeHtml(targetUrl)}**.`;
         }
 
         return null;
@@ -1924,6 +1958,7 @@
       }
 
       function completeLogin(name, email, photo = '') {
+        stopTTSController();
         const cleanName = (name || '').trim() || (email || '').split('@')[0] || 'AXON User';
         const cleanEmail = (email || '').trim() || state.settings.profileEmail || 'user@axon.ai';
         const initials = cleanName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
@@ -1954,6 +1989,10 @@
 
       function enterApp() {
         $('app-screen').classList.remove('hidden');
+        if ($('chat-input')) {
+          $('chat-input').placeholder = 'Ask To Axon Ai';
+          $('chat-input').disabled = false;
+        }
         if (state.user) {
           $('user-display-name').textContent = state.user.name;
           $('user-display-email').textContent = state.user.email;
@@ -1966,12 +2005,14 @@
         } else if (!state.activeChatId) {
           state.activeChatId = state.chats[0].id;
         }
+        switchView('chat');
         renderAll();
         populateVoicesDropdown();
         refreshIcons();
       }
 
       function switchView(view) {
+        stopTTSController();
         state.activeView = view;
         $('view-chat').classList.toggle('hidden', view !== 'chat');
         $('view-photo-studio').classList.toggle('hidden', view !== 'photo-studio');
@@ -2162,27 +2203,27 @@
             if (m.attachment.type === 'image') {
               attachHtml = `
                 <div class="mt-2 space-y-1.5">
-                  <img src="${m.attachment.dataUrl}" alt="${escapeHtml(m.attachment.name)}" class="max-h-56 rounded-xl border border-slate-700/80 object-cover" />
-                  <div class="flex items-center justify-between text-[11px] text-cyan-200/80">
+                  <img src="${m.attachment.dataUrl}" alt="${escapeHtml(m.attachment.name)}" class="max-h-56 rounded-xl object-cover" />
+                  <div class="flex items-center justify-between text-[11px] text-white/80">
                     <span>${escapeHtml(m.attachment.name)} • ${escapeHtml(m.attachment.size || '')}</span>
-                    <button type="button" data-studio-img="${m.id}" class="send-to-photo-studio-btn underline text-cyan-300 hover:text-white">Edit in Photo Studio</button>
+                    <button type="button" data-studio-img="${m.id}" class="send-to-photo-studio-btn underline text-white hover:text-cyan-200">Edit in Photo Studio</button>
                   </div>
                 </div>
               `;
             } else if (m.attachment.type === 'video' && m.attachment.dataUrl) {
               attachHtml = `
                 <div class="mt-2 space-y-1.5">
-                  <video src="${m.attachment.dataUrl}" controls playsinline class="max-h-60 w-full rounded-xl border border-slate-700/80 bg-slate-950"></video>
-                  <div class="flex items-center justify-between text-[11px] text-cyan-200/80">
+                  <video src="${m.attachment.dataUrl}" controls playsinline class="max-h-60 w-full rounded-xl bg-slate-950"></video>
+                  <div class="flex items-center justify-between text-[11px] text-white/80">
                     <span>${escapeHtml(m.attachment.name)} • ${escapeHtml(m.attachment.size || '')}${m.attachment.duration ? ` • ${escapeHtml(m.attachment.duration)}` : ''}</span>
-                    <button type="button" data-studio-vid="${m.id}" class="send-to-video-studio-btn underline text-amber-300 hover:text-white">Edit in Video Studio</button>
+                    <button type="button" data-studio-vid="${m.id}" class="send-to-video-studio-btn underline text-amber-200 hover:text-white">Edit in Video Studio</button>
                   </div>
                 </div>
               `;
             } else {
               attachHtml = `
-                <div class="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-xs text-slate-200">
-                  <i data-lucide="file-text" class="w-4 h-4 text-indigo-400"></i>
+                <div class="mt-2 inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-white">
+                  <i data-lucide="file-text" class="w-4 h-4"></i>
                   <span>${escapeHtml(m.attachment.name)} (${escapeHtml(m.attachment.size || '')})</span>
                 </div>
               `;
@@ -2192,10 +2233,10 @@
           if (isUser) {
             return `
               <div class="max-w-4xl mx-auto flex justify-end animate-fade-up">
-                <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-3 bg-gradient-to-br from-cyan-600/30 to-indigo-600/30 border border-cyan-400/25 text-sm text-white shadow-md">
+                <div class="axon-user-bubble max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-3 text-sm text-white">
                   <div class="leading-relaxed">${formatMessageHtml(m.text, m.id)}</div>
                   ${attachHtml}
-                  <span class="block text-[10px] text-cyan-200/60 mt-1.5 text-right">${formatTime(m.timestamp)}</span>
+                  <span class="block text-[10px] text-white/75 mt-1.5 text-right">${formatTime(m.timestamp)}</span>
                 </div>
               </div>
             `;
@@ -2203,13 +2244,16 @@
             const isSpeakingThis = activeSpeakingMsgId === m.id;
             return `
               <div class="max-w-4xl mx-auto flex justify-start animate-fade-up" data-msg-id="${m.id}">
-                <div class="w-full sm:max-w-[85%] rounded-2xl rounded-tl-sm px-4 py-3 glass-panel text-sm text-slate-200 shadow-md">
+                <div class="axon-ai-plain w-full sm:max-w-[85%] px-2 py-2 text-sm text-slate-200">
                   <div class="leading-relaxed">${formatMessageHtml(m.text, m.id)}</div>
-                  <div class="mt-2.5 pt-2 border-t border-slate-800/70 flex flex-wrap items-center justify-between gap-2">
-                    <button type="button" data-tts-msg-id="${m.id}" class="tts-speak-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition ${isSpeakingThis ? 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/40' : 'bg-slate-800/80 hover:bg-slate-700 text-cyan-300 border border-slate-700/70'}">
-                      <i data-lucide="${isSpeakingThis ? 'square' : 'volume-2'}" class="w-3.5 h-3.5"></i>
-                      <span>${isSpeakingThis ? 'Stop Speak' : 'Speak'}</span>
-                    </button>
+                  <div class="mt-2.5 pt-2 border-t border-slate-800/50 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-tts-msg-id="${m.id}" class="tts-speak-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition ${isSpeakingThis ? 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/40' : 'bg-slate-800/80 hover:bg-slate-700 text-cyan-300 border border-slate-700/70'}">
+                        <i data-lucide="${isSpeakingThis ? 'square' : 'volume-2'}" class="w-3.5 h-3.5"></i>
+                        <span>${isSpeakingThis ? 'Stop' : 'Speak'}</span>
+                      </button>
+                      ${isSpeakingThis ? `<button type="button" class="tts-force-stop-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white">Stop TTS</button>` : ''}
+                    </div>
                     <div class="flex items-center gap-2">
                       <button type="button" data-copy-msg-id="${m.id}" class="copy-msg-btn px-2 py-1 rounded-lg text-[11px] text-slate-400 hover:text-white hover:bg-slate-800">Copy</button>
                       <button type="button" data-share-msg-id="${m.id}" class="share-msg-btn px-2 py-1 rounded-lg text-[11px] text-slate-400 hover:text-white hover:bg-slate-800">Share</button>
@@ -2225,7 +2269,7 @@
         if (state.isGenerating) {
           container.innerHTML += `
             <div class="max-w-4xl mx-auto flex justify-start">
-              <div class="px-4 py-3 rounded-2xl glass-panel flex items-center gap-1.5">
+              <div class="px-4 py-3 flex items-center gap-1.5">
                 <span class="typing-dot" style="animation-delay:0s"></span>
                 <span class="typing-dot" style="animation-delay:0.2s"></span>
                 <span class="typing-dot" style="animation-delay:0.4s"></span>
@@ -2316,8 +2360,9 @@
         refreshIcons();
       }
 
-      // Stop button outputs strictly "STOP"
+      // Stop button outputs strictly "STOP" and immediately halts TTS
       function stopGeneration() {
+        stopTTSController();
         if (!state.isGenerating) return;
         if (generationAbort) {
           try { generationAbort.abort(); } catch (e) {}
@@ -2526,6 +2571,7 @@
           stopGeneration();
           return;
         }
+        stopTTSController();
         const input = $('chat-input');
         const text = (overrideText !== null ? overrideText : input.value).trim();
         const attachment = state.pendingAttachment;
@@ -2962,8 +3008,9 @@
         showToast('Video call ended.');
       }
 
-      // ==================== TTS CONTROLLER ====================
+      // ==================== TTS CONTROLLER (NO SYMBOLS + RELIABLE STOP) ====================
       function stopTTSController() {
+        ttsStopFlag = true;
         if (ttsKeepAliveTimer) {
           clearInterval(ttsKeepAliveTimer);
           ttsKeepAliveTimer = null;
@@ -2972,10 +3019,13 @@
         try {
           if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
+            setTimeout(() => {
+              try { window.speechSynthesis.cancel(); } catch (e) {}
+            }, 30);
           }
         } catch (e) {}
         if ($('tts-controller-state')) {
-          $('tts-controller-state').textContent = 'Controller Idle • Text-Only TTS';
+          $('tts-controller-state').textContent = 'Controller Idle • Clean Speech';
         }
         renderMessages();
       }
@@ -2989,21 +3039,26 @@
           }
           stopTTSController();
 
-          const clean = stripEmojisForSpeech(text);
+          const clean = cleanTextForTTS(text);
           if (!clean) return;
 
+          ttsStopFlag = false;
           activeSpeakingMsgId = msgId;
           renderMessages();
 
           const profile = TEN_VOICE_PROFILES[Number(state.settings.selectedVoiceIndex) || 0] || TEN_VOICE_PROFILES[0];
-          const chunks = clean.match(/[^.!?।\n]+[.!?।\n]*/g) || [clean];
-          const cleanChunks = chunks.map(c => c.trim()).filter(Boolean);
+          const chunks = clean.split(/(?<=[।.!?])\s+|\n+/).map(c => c.trim()).filter(Boolean);
+          const speechQueue = chunks.length ? chunks : [clean];
 
           if ($('tts-controller-state')) {
             $('tts-controller-state').textContent = `Speaking • ${profile.name}`;
           }
 
           ttsKeepAliveTimer = setInterval(() => {
+            if (ttsStopFlag) {
+              clearInterval(ttsKeepAliveTimer);
+              return;
+            }
             if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
               window.speechSynthesis.pause();
               window.speechSynthesis.resume();
@@ -3021,28 +3076,33 @@
 
           let idx = 0;
           const speakNext = () => {
-            if (idx >= cleanChunks.length) {
+            if (ttsStopFlag || idx >= speechQueue.length) {
               stopTTSController();
               return;
             }
-            const utter = new SpeechSynthesisUtterance(cleanChunks[idx]);
+            const utter = new SpeechSynthesisUtterance(speechQueue[idx]);
             utter.lang = profile.lang;
             utter.pitch = profile.pitch;
             utter.rate = profile.rate;
             if (chosenVoice) utter.voice = chosenVoice;
 
             utter.onend = () => {
+              if (ttsStopFlag) {
+                stopTTSController();
+                return;
+              }
               idx++;
               speakNext();
             };
             utter.onerror = () => {
-              idx++;
-              speakNext();
+              stopTTSController();
             };
             window.speechSynthesis.speak(utter);
           };
 
-          speakNext();
+          setTimeout(() => {
+            if (!ttsStopFlag) speakNext();
+          }, 40);
         } catch (e) {
           stopTTSController();
         }
@@ -3432,11 +3492,11 @@
           const prompt = (aiPromptInput?.value || '').trim();
           const mode = aiModeSelect?.value || 'cgi';
           if (!hasImage || !currentDataUrl) {
-            if (statusEl) statusEl.textContent = 'Pehle koi photo select karein.';
+            if (statusEl) statusEl.textContent = 'Please select a photo first.';
             return;
           }
           if (!prompt) {
-            if (statusEl) statusEl.textContent = 'Kripya edit prompt likhein.';
+            if (statusEl) statusEl.textContent = 'Please enter an edit prompt.';
             return;
           }
 
@@ -3642,7 +3702,7 @@
 
         analyzeBtn.addEventListener('click', async () => {
           if (!currentUrl) {
-            statusEl.textContent = 'Pehle koi video upload karein.';
+            statusEl.textContent = 'Please upload a video first.';
             return;
           }
           analyzeBtn.disabled = true;
@@ -3865,6 +3925,7 @@
           }
           const sel = e.target.closest('.select-chat-btn');
           if (sel) {
+            stopTTSController();
             state.activeChatId = sel.dataset.chatId;
             saveState();
             switchView('chat');
@@ -3876,6 +3937,13 @@
           const starter = e.target.closest('.starter-prompt');
           if (starter) {
             sendMessage(starter.dataset.prompt);
+            return;
+          }
+
+          const forceStopBtn = e.target.closest('.tts-force-stop-btn');
+          if (forceStopBtn) {
+            stopTTSController();
+            showToast('TTS Stopped');
             return;
           }
 
@@ -3957,6 +4025,7 @@
         });
 
         const chatInput = $('chat-input');
+        chatInput.placeholder = 'Ask To Axon Ai';
         chatInput.addEventListener('input', () => {
           chatInput.style.height = 'auto';
           chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
@@ -4067,7 +4136,10 @@
 
         $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
         $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
-        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
+        $('btn-hud-stop-voice').addEventListener('click', () => {
+          stopTTSController();
+          toggleVoiceControl(false);
+        });
 
         $('toggle-voice-tts').addEventListener('click', () => {
           state.settings.voiceTTS = !state.settings.voiceTTS;
@@ -4211,7 +4283,7 @@
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Active AI model: ${e.target.value}`);
+          showToast(`Active model: ${e.target.value}`);
         });
         $('setting-chat-mode').addEventListener('change', (e) => {
           state.settings.chatMode = e.target.value;
@@ -4230,22 +4302,55 @@
             `<p><strong>Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
              <p><strong>Default Model:</strong> ${escapeHtml(state.settings.defaultModel)}</p>
              <p><strong>Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
-             <p><strong>Capabilities:</strong> Conversational AI, Vision &amp; Video Frame Analysis, Photo Studio, A-Z App &amp; Voice Actions.</p>`
+             <p><strong>Capabilities:</strong> Streaming chat, vision analysis, code previews, voice control &amp; 10-voice TTS.</p>`
           );
+        });
+
+        $('btn-reset-settings').addEventListener('click', () => {
+          $('confirm-title').textContent = 'Reset All Settings?';
+          $('confirm-desc').textContent = 'Restore voice, display, model, and startup preferences back to default?';
+          $('btn-confirm-ok').textContent = 'Reset Settings';
+          $('confirm-modal').classList.remove('hidden');
+          $('confirm-modal')._action = () => {
+            const keepName = state.settings.profileName;
+            const keepEmail = state.settings.profileEmail;
+            const keepPhoto = state.settings.profilePhoto;
+            state.settings = { ...defaultSettings, profileName: keepName, profileEmail: keepEmail, profilePhoto: keepPhoto };
+            stopTTSController();
+            saveState();
+            renderAll();
+            populateVoicesDropdown();
+            showToast('Settings reset to default.');
+          };
+        });
+
+        $('search-settings-input').addEventListener('input', (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          document.querySelectorAll('.settings-section').forEach(sec => {
+            const hay = (sec.dataset.search || '') + ' ' + sec.innerText.toLowerCase();
+            sec.classList.toggle('hidden', Boolean(q && !hay.includes(q)));
+          });
+        });
+
+        $('btn-close-detail-modal').addEventListener('click', closeDetailModal);
+        $('settings-detail-modal').addEventListener('click', (e) => {
+          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn')) {
+            closeDetailModal();
+          }
         });
 
         $('toggle-history').addEventListener('click', () => {
           state.settings.saveHistory = !state.settings.saveHistory;
           saveState();
-          renderAll();
-          showToast(state.settings.saveHistory ? 'Chat history recording enabled' : 'Chat history recording paused');
+          renderToggles();
+          showToast(state.settings.saveHistory ? 'Chat history recording ON' : 'Chat history recording PAUSED');
         });
 
         $('history-search').addEventListener('input', renderSettingsHistory);
         $('settings-history-list').addEventListener('click', (e) => {
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            const id = delBtn.dataset.chatId;
+          const del = e.target.closest('.delete-chat-btn');
+          if (del) {
+            const id = del.dataset.chatId;
             state.chats = state.chats.filter(c => c.id !== id);
             if (state.activeChatId === id) {
               state.activeChatId = state.chats[0]?.id || null;
@@ -4253,11 +4358,11 @@
             }
             saveState();
             renderAll();
-            showToast('Conversation deleted.');
             return;
           }
           const openBtn = e.target.closest('.open-history-chat');
           if (openBtn) {
+            stopTTSController();
             state.activeChatId = openBtn.dataset.chatId;
             saveState();
             switchView('chat');
@@ -4273,62 +4378,29 @@
           a.download = `axon-ai-history-${new Date().toISOString().slice(0, 10)}.json`;
           a.click();
           URL.revokeObjectURL(url);
-          showToast('Chat history exported!');
+          showToast('Chat history exported as JSON!');
         });
 
         $('btn-clear-history').addEventListener('click', () => {
-          $('confirm-title').textContent = 'Clear All Chat History?';
-          $('confirm-desc').textContent = 'This will permanently delete all saved conversations from this browser.';
+          $('confirm-title').textContent = 'Clear All History?';
+          $('confirm-desc').textContent = 'This will permanently delete all saved conversations from this device.';
           $('btn-confirm-ok').textContent = 'Delete All';
           $('confirm-modal').classList.remove('hidden');
-          $('btn-confirm-ok').onclick = () => {
+          $('confirm-modal')._action = () => {
+            stopTTSController();
             state.chats = [];
             state.activeChatId = null;
             createNewChat(false);
             saveState();
             renderAll();
-            $('confirm-modal').classList.add('hidden');
             showToast('All chat history cleared.');
           };
         });
 
-        $('btn-reset-settings').addEventListener('click', () => {
-          $('confirm-title').textContent = 'Reset All Settings?';
-          $('confirm-desc').textContent = 'This will restore all workspace settings back to their default values.';
-          $('btn-confirm-ok').textContent = 'Reset';
-          $('confirm-modal').classList.remove('hidden');
-          $('btn-confirm-ok').onclick = () => {
-            const keepName = state.settings.profileName;
-            const keepEmail = state.settings.profileEmail;
-            const keepPhoto = state.settings.profilePhoto;
-            state.settings = {
-              ...defaultSettings,
-              profileName: keepName,
-              profileEmail: keepEmail,
-              profilePhoto: keepPhoto
-            };
-            saveState();
-            renderAll();
-            populateVoicesDropdown();
-            $('confirm-modal').classList.add('hidden');
-            showToast('Settings reset to defaults.');
-          };
-        });
-
         $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
-        $('btn-close-detail-modal').addEventListener('click', closeDetailModal);
-        $('settings-detail-modal').addEventListener('click', (e) => {
-          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn')) {
-            closeDetailModal();
-          }
-        });
-
-        $('search-settings-input').addEventListener('input', (e) => {
-          const q = e.target.value.trim().toLowerCase();
-          document.querySelectorAll('.settings-section').forEach(sec => {
-            const hay = (sec.dataset.search || '') + ' ' + sec.innerText.toLowerCase();
-            sec.classList.toggle('hidden', Boolean(q && !hay.includes(q)));
-          });
+        $('btn-confirm-ok').addEventListener('click', () => {
+          $('confirm-modal').classList.add('hidden');
+          if (typeof $('confirm-modal')._action === 'function') $('confirm-modal')._action();
         });
 
         $('btn-theme-dark').addEventListener('click', () => {
@@ -4352,32 +4424,43 @@
           renderToggles();
         });
 
+        $('btn-launch-yt-ext').addEventListener('click', () => {
+          try { window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer'); } catch (e) {}
+          showToast('Opened YouTube.com');
+        });
         $('app-launcher-grid').addEventListener('click', (e) => {
-          const btn = e.target.closest('.launch-app-btn');
-          if (!btn) return;
-          const name = btn.dataset.name;
-          const url = btn.dataset.url;
+          const card = e.target.closest('.launch-app-btn');
+          if (!card) return;
+          const url = card.dataset.url;
+          const name = card.dataset.name;
           showToast(`Opening ${name}...`);
           try { window.open(url, '_blank', 'noopener,noreferrer'); } catch (err) {}
         });
-        $('btn-launch-yt-ext').addEventListener('click', () => {
-          try { window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer'); } catch (e) {}
+        $('yt-feed-grid').addEventListener('click', (e) => {
+          const card = e.target.closest('.glass-panel');
+          if (!card) return;
+          const title = card.querySelector('h4')?.textContent || 'Video';
+          showToast(`Playing: ${title}`);
+          if (state.settings.voiceTTS) speakText(`Playing ${title}`);
         });
       }
 
-      loadState();
-      setAuthMode('signin');
-      initializeFirebaseAuth();
-      bindEvents();
-      initPhotoStudio();
-      initVideoStudio();
-      renderAppHub();
-      populateVoicesDropdown();
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
-      }
-      refreshIcons();
-      runSplash();
+      document.addEventListener('DOMContentLoaded', () => {
+        loadState();
+        if ('speechSynthesis' in window) {
+          populateVoicesDropdown();
+          window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
+        }
+        initializeFirebaseAuth();
+        initPhotoStudio();
+        initVideoStudio();
+        bindEvents();
+        setAuthMode('signin');
+        renderToggles();
+        renderAppHub();
+        refreshIcons();
+        runSplash();
+      });
     })();
   </script>
 </body>
