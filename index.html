@@ -220,12 +220,12 @@
             Next-Gen AI Chat, Photo &amp; Video Studio
           </h1>
           <p class="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-            Natural human-like voice, dedicated code canvas, Xone Photo &amp; Video Studio, and live AI video calls in one workspace.
+            Natural human-like voice, dedicated code canvas, Xone Photo &amp; Video Studio, quick command palette, and live AI video calls in one workspace.
           </p>
         </div>
 
         <div class="mt-6 pt-5 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-          <span>AXON AI Engine v3.0</span>
+          <span>AXON AI Engine v3.2</span>
           <span id="demo-countdown-badge" class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-400/30 font-mono">
             Demo Window: 20s
           </span>
@@ -314,10 +314,14 @@
         </button>
       </div>
 
-      <div class="p-3">
+      <div class="p-3 space-y-2">
         <button id="btn-new-chat" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500/15 to-indigo-500/15 hover:from-cyan-500/25 hover:to-indigo-500/25 border border-cyan-400/30 text-cyan-200 text-sm font-semibold transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           New Chat
+        </button>
+        <button id="btn-open-cmdk" type="button" class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 transition">
+          <span>Quick Commands</span>
+          <span class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] font-mono text-cyan-300">Ctrl+K</span>
         </button>
       </div>
 
@@ -394,9 +398,12 @@
           <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold tracking-wider">AI WALL</span>
           <span id="ai-wall-voice-info" class="text-slate-300 truncate">Active Voice: 1. Nova (Clear Female) • Natural Human Speech</span>
         </div>
-        <button id="btn-open-code-vault" type="button" class="px-2.5 py-0.5 rounded-lg bg-black/70 hover:bg-black text-cyan-300 border border-slate-700 font-mono text-[10px] shrink-0">
-          Code Area (<span id="code-vault-count">0</span>)
-        </button>
+        <div class="flex items-center gap-2 shrink-0">
+          <span id="telemetry-mem-badge" class="hidden md:inline-block px-2 py-0.5 rounded bg-slate-900/80 text-slate-400 font-mono text-[10px]">Storage: 0 KB</span>
+          <button id="btn-open-code-vault" type="button" class="px-2.5 py-0.5 rounded-lg bg-black/70 hover:bg-black text-cyan-300 border border-slate-700 font-mono text-[10px]">
+            Code Area (<span id="code-vault-count">0</span>)
+          </button>
+        </div>
       </div>
 
       <!-- ==================== VIEW 1: CHAT INTERFACE ==================== -->
@@ -511,7 +518,7 @@
                 </button>
               </div>
             </div>
-            <p class="text-[11px] text-slate-500 text-center mt-2">AXON AI can make mistakes. Verify important details.</p>
+            <p class="text-[11px] text-slate-500 text-center mt-2">AXON AI can make mistakes. Press Ctrl+K for Quick Commands.</p>
           </div>
         </div>
       </div>
@@ -596,6 +603,13 @@
                   <option value="background">Background &amp; Scene Swap</option>
                   <option value="style">Stylized / VFX Transform</option>
                 </select>
+              </div>
+
+              <!-- Quick Prompt Presets (Update) -->
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" data-studio-preset="Cyberpunk night street with glowing cyan and indigo neon lights" class="studio-preset-chip px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-cyan-200 border border-slate-700">Neon Cyberpunk</button>
+                <button type="button" data-studio-preset="Ultra-detailed 3D CGI studio render with dramatic rim lighting" class="studio-preset-chip px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-indigo-200 border border-slate-700">3D CGI Render</button>
+                <button type="button" data-studio-preset="Golden hour cinematic mountain landscape background" class="studio-preset-chip px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-amber-200 border border-slate-700">Golden Hour</button>
               </div>
 
               <div class="space-y-1">
@@ -1147,6 +1161,36 @@
     </main>
   </div>
 
+  <!-- ==================== NEW UPDATE: QUICK COMMAND PALETTE (CTRL+K) ==================== -->
+  <div id="cmdk-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-start justify-center pt-16 p-4">
+    <div class="w-full max-w-md glass-panel rounded-2xl border border-cyan-400/40 shadow-2xl overflow-hidden animate-fade-up">
+      <div class="p-3 border-b border-slate-800 flex items-center justify-between">
+        <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider">AXON Quick Command Palette</span>
+        <button id="btn-close-cmdk" type="button" class="text-xs text-slate-400 hover:text-white">ESC</button>
+      </div>
+      <div class="p-2 space-y-1 max-h-80 overflow-y-auto">
+        <button type="button" data-cmdk="new-chat" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
+          <span>💬 Start New Chat</span><span class="text-slate-500">Chat</span>
+        </button>
+        <button type="button" data-cmdk="photo-studio" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
+          <span>🎨 Open Xone Photo Studio</span><span class="text-cyan-400">Studio</span>
+        </button>
+        <button type="button" data-cmdk="video-studio" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
+          <span>🎬 Open Xone Video Studio</span><span class="text-indigo-400">VFX/AI</span>
+        </button>
+        <button type="button" data-cmdk="apps" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
+          <span>📱 Open A-to-Z App Hub</span><span class="text-emerald-400">Apps</span>
+        </button>
+        <button type="button" data-cmdk="video-call" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
+          <span>📹 Start AI Live Video Call</span><span class="text-amber-400">Live</span>
+        </button>
+        <button type="button" data-cmdk="toggle-voice" class="cmdk-item w-full px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left text-xs font-medium text-white flex items-center justify-between">
+          <span>🎙️ Toggle Voice Control</span><span class="text-cyan-300">Mic</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== AXON AI 10-SECOND SELF-PROMO AD MODAL ==================== -->
   <div id="axon-ad-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
     <div class="w-full max-w-lg rounded-3xl overflow-hidden border border-cyan-400/50 bg-gradient-to-br from-[#0c1836] via-[#091126] to-[#140d2e] shadow-2xl p-6 space-y-5 animate-fade-up">
@@ -1243,7 +1287,6 @@
           <span class="text-xs sm:text-sm text-slate-400">Your Camera is Off</span>
         </div>
 
-        <!-- AXON AI Live Avatar & Speaking Indicator -->
         <div id="call-ai-avatar-card" class="absolute top-3 left-3 flex items-center gap-3 px-3.5 py-2 rounded-2xl bg-[#070b14]/90 backdrop-blur-md border border-cyan-400/40 shadow-lg transition-all">
           <div class="w-11 h-11 rounded-full bg-gradient-to-br from-cyan-400 via-indigo-500 to-purple-600 p-0.5 animate-float-orb">
             <div class="w-full h-full rounded-full bg-[#070b14] flex items-center justify-center gap-0.5">
@@ -1568,6 +1611,16 @@
       let availableVoices = [];
       let ttsKeepAliveTimer = null;
 
+      function updateTelemetryBadge() {
+        const el = $('telemetry-mem-badge');
+        if (!el) return;
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY) || '';
+          const kb = (new Blob([raw]).size / 1024).toFixed(1);
+          el.textContent = `Storage: ${kb} KB`;
+        } catch (e) {}
+      }
+
       function saveState() {
         try {
           const payload = {
@@ -1578,6 +1631,7 @@
             pureCodeHistory: state.pureCodeHistory.slice(0, 15)
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+          updateTelemetryBadge();
         } catch (e) {}
       }
 
@@ -1591,6 +1645,7 @@
           if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
           if (Array.isArray(parsed.photoVault)) state.photoVault = parsed.photoVault;
           if (Array.isArray(parsed.pureCodeHistory)) state.pureCodeHistory = parsed.pureCodeHistory;
+          updateTelemetryBadge();
         } catch (e) {}
       }
 
@@ -1674,6 +1729,7 @@
         if ($('code-vault-count')) {
           $('code-vault-count').textContent = String(state.pureCodeHistory.length);
         }
+        updateTelemetryBadge();
       }
 
       function populateVoicesDropdown() {
@@ -1959,6 +2015,8 @@
                   <div id="${msgDomId}" class="leading-relaxed transition-all">${formatMessageHtml(m.text)}</div>
                   <div class="flex flex-wrap items-center gap-2 mt-1.5">
                     <span class="text-[10px] text-slate-500">${formatTime(m.timestamp)}</span>
+                    <button type="button" class="btn-copy-msg px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-[10px] text-slate-200 border border-slate-700" data-msg-id="${m.id}">Copy</button>
+                    <button type="button" class="btn-speak-msg px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-[10px] text-cyan-300 border border-slate-700" data-msg-id="${m.id}">Speak</button>
                     ${isVeryLong ? `<button type="button" class="btn-zoom-toggle px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-[10px] text-cyan-300 border border-slate-700" data-target="${msgDomId}">Zoom Out (2.5x)</button>` : ''}
                     ${/```/.test(m.text) ? `<button type="button" class="btn-open-code-msg px-2 py-0.5 rounded bg-black hover:bg-slate-900 text-[10px] text-emerald-300 border border-slate-700 font-mono" data-msg-id="${m.id}">Open in Code Area</button>` : ''}
                   </div>
@@ -2661,25 +2719,18 @@
         showToast('Video call ended.');
       }
 
-      // ==================== HUMAN-LIKE NATURAL TTS SANITIZER ====================
       function cleanTextForNaturalTTS(rawText) {
         let text = String(rawText || '');
-        // Replace code blocks with human-friendly phrasing
         text = text.replace(/```[\s\S]*?```/g, ' Maine code screen par likh diya hai. ');
-        // Remove inline backticks, markdown bold/headers/lists
         text = text.replace(/`([^`]*)`/g, '$1');
         text = text.replace(/[*#_~>]+/g, ' ');
-        // Remove URLs so TTS doesn't spell out https slash slash
         text = text.replace(/https?:\/\/\S+/gi, ' link ');
-        // Strip ALL emojis & pictographs (Unicode Extended Pictographic + Variation Selectors + ZWJ)
         try {
           text = text.replace(/[\p{Extended_Pictographic}\p{Emoji_Presentation}\uFE0F\u200D]/gu, ' ');
         } catch (e) {
           text = text.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, ' ');
         }
-        // Strip special math/currency/trademark/decorative symbols (= π ` ° { ^ ¥ © | ™ etc.)
         text = text.replace(/[=π`°{}\\^¥©|™®℠§¶†‡•◦▪▫■□▲△▼▽◆◇○●★☆✓✔✕✖✗✘+<>~@$%&[\]]/g, ' ');
-        // Collapse repeated punctuation & extra spaces for smooth human breathing pauses
         text = text.replace(/([.!?,।])\1+/g, '$1');
         text = text.replace(/\s+/g, ' ').trim();
         return text;
@@ -2745,7 +2796,6 @@
           const langPrefix = effectiveLang.split('-')[0].toLowerCase();
           const matchingVoices = availableVoices.filter(v => v.lang.toLowerCase().startsWith(langPrefix));
           const voicePool = matchingVoices.length ? matchingVoices : availableVoices;
-          // Prefer natural/neural/Google human-sounding system voices
           const chosenVoice = voicePool.find(v =>
             /natural|neural|google|microsoft/i.test(v.name) &&
             (profile.gender === 'female'
@@ -2772,7 +2822,7 @@
 
             utter.onend = () => {
               idx++;
-              setTimeout(speakNext, 90); // Natural micro-pause between sentences
+              setTimeout(speakNext, 90);
             };
             utter.onerror = () => {
               idx++;
@@ -2788,7 +2838,6 @@
         }
       }
 
-      // ==================== AXON AI 10-SECOND SELF-PROMO AD PLAYER ====================
       let axonAdTimer = null;
 
       function triggerAxonSelfAd(selectedLang = 'Hindi', onAdComplete = null) {
@@ -2844,7 +2893,6 @@
         }, 1000);
       }
 
-      // ==================== SEPARATE PHOTO & VIDEO STORAGE VAULTS ====================
       function addPhotoToVault(name, dataUrl) {
         if (!dataUrl) return;
         state.photoVault.unshift({
@@ -2907,7 +2955,6 @@
         `).join('');
       }
 
-      // ==================== TIME PASS MINI GAME (SHRINKING TARGET + PADDLES + SOUND) ====================
       function playGameOverTone() {
         try {
           const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -2950,18 +2997,15 @@
         let score = 0;
         scoreEl.textContent = '0';
 
-        // Target zone at bottom center matching background blend, shrinks as score increases
         let targetW = 130;
         const targetH = 14;
         const targetY = H - 36;
 
-        // Left & Right paddles/bars
         let leftBarY = H / 2 - 28;
         let rightBarY = H / 2 - 28;
         const barW = 10;
         const barH = 56;
 
-        // Small ball
         let ballX = W / 2;
         let ballY = 30;
         let vx = (Math.random() > 0.5 ? 1 : -1) * 2.4;
@@ -3005,19 +3049,16 @@
           ctx.fillStyle = '#070b14';
           ctx.fillRect(0, 0, W, H);
 
-          // Move left & right bars (smooth oscillation + manual nudge)
           leftBarY = Math.max(12, Math.min(H - barH - 12, leftBarY + moveLeft));
           rightBarY = Math.max(12, Math.min(H - barH - 12, rightBarY + moveRight));
           if (moveLeft === 0 && leftBarY < H / 2 - 28) leftBarY += 1.5;
           if (moveRight === 0 && rightBarY < H / 2 - 28) rightBarY += 1.5;
 
-          // Draw Left & Right Bars
           ctx.fillStyle = '#22d3ee';
           ctx.fillRect(14, leftBarY, barW, barH);
           ctx.fillStyle = '#818cf8';
           ctx.fillRect(W - 14 - barW, rightBarY, barW, barH);
 
-          // Draw Shrinking Target Zone (subtle background-blended tone)
           const targetX = (W - targetW) / 2;
           ctx.fillStyle = '#111a2e';
           ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
@@ -3025,17 +3066,14 @@
           ctx.fillRect(targetX, targetY, targetW, targetH);
           ctx.strokeRect(targetX, targetY, targetW, targetH);
 
-          // Update ball
           ballX += vx;
           ballY += vy;
 
-          // Top bounce
           if (ballY - ballR <= 6) {
             ballY = 6 + ballR;
             vy = Math.abs(vy);
           }
 
-          // Left bar bounce
           if (ballX - ballR <= 24 && ballY >= leftBarY && ballY <= leftBarY + barH) {
             vx = Math.abs(vx) + 0.15;
             vy = -Math.abs(vy);
@@ -3043,7 +3081,6 @@
             vx = Math.abs(vx);
           }
 
-          // Right bar bounce
           if (ballX + ballR >= W - 24 && ballY >= rightBarY && ballY <= rightBarY + barH) {
             vx = -(Math.abs(vx) + 0.15);
             vy = -Math.abs(vy);
@@ -3051,7 +3088,6 @@
             vx = -Math.abs(vx);
           }
 
-          // Target hit check
           if (
             ballY + ballR >= targetY &&
             ballY - ballR <= targetY + targetH &&
@@ -3062,17 +3098,14 @@
             scoreEl.textContent = String(score);
             vy = -(Math.abs(vy) + 0.12);
             ballY = targetY - ballR - 1;
-            // Shrink target area gradually
             targetW = Math.max(36, targetW - 8);
           }
 
-          // Bottom miss -> Game Over
           if (ballY - ballR > H) {
             endGame();
             return;
           }
 
-          // Draw small ball
           ctx.beginPath();
           ctx.arc(ballX, ballY, ballR, 0, Math.PI * 2);
           ctx.fillStyle = '#f59e0b';
@@ -3318,6 +3351,12 @@
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         }
 
+        document.querySelectorAll('.studio-preset-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            if (aiPromptInput) aiPromptInput.value = chip.dataset.studioPreset || '';
+          });
+        });
+
         fileInput.addEventListener('change', (e) => {
           const file = e.target.files && e.target.files[0];
           if (!file) return;
@@ -3351,7 +3390,6 @@
           showToast('Photo saved to Your Photo Storage & downloaded!');
         });
 
-        // Photo Vault item click -> load into studio
         $('photo-storage-grid')?.addEventListener('click', (e) => {
           const item = e.target.closest('.vault-photo-item');
           if (!item) return;
@@ -3359,7 +3397,6 @@
           if (p) setStudioImageFromDataUrl(p.dataUrl, `Loaded from Photo Storage: ${p.name}`);
         });
 
-        // Time Pass mini-game triggers
         $('btn-toggle-timepass')?.addEventListener('click', startTimePassGame);
         $('btn-inline-timepass')?.addEventListener('click', startTimePassGame);
         $('btn-replay-timepass')?.addEventListener('click', startTimePassGame);
@@ -3513,7 +3550,6 @@
           if (statusEl) statusEl.textContent = `Video loaded: ${name} (AXON AI Watermark Ready)`;
         }
 
-        // Trigger 10s AXON AI Ad every 5:00 min (300s) during playback of long videos
         player.addEventListener('timeupdate', () => {
           const currentSec = Math.floor(player.currentTime || 0);
           if (currentSec >= 300) {
@@ -3556,7 +3592,6 @@
           applyVideoFilters();
         });
 
-        // Download with AXON AI Center Watermark + 10s AXON AI Promo Ad in user's selected language
         downloadBtn?.addEventListener('click', () => {
           if (!currentVideoUrl) {
             showToast('Pehle "2. Upload" se video select karein.');
@@ -3584,7 +3619,6 @@
           ctx.filter = player.style.filter || 'none';
           ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
 
-          // Burn center AXON AI watermark onto exported frame
           ctx.filter = 'none';
           ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
           const wmW = Math.min(260, canvas.width * 0.5);
@@ -3728,21 +3762,54 @@
           completeLogin('AXON Demo User', 'demo@axon.ai');
         });
 
-        // Pure Code Drawer controls
-        $('btn-open-code-vault')?.addEventListener('click', () => {
-          const drawer = $('pure-code-drawer');
-          if (!state.pureCodeHistory.length) {
-            $('pure-code-content').textContent = '// Ask AXON AI to write code — it will appear here in this Pure Code Area.';
-          } else if (!$('pure-code-content').textContent.trim()) {
-            $('pure-code-content').textContent = state.pureCodeHistory[0].code;
-          }
-          drawer.classList.toggle('hidden');
+        // Quick Command Palette (Ctrl+K / Button)
+        const toggleCmdk = (force = null) => {
+          const modal = $('cmdk-modal');
+          if (!modal) return;
+          const next = force !== null ? force : modal.classList.contains('hidden');
+          modal.classList.toggle('hidden', !next);
+        };
+        $('btn-open-cmdk')?.addEventListener('click', () => toggleCmdk(true));
+        $('btn-close-cmdk')?.addEventListener('click', () => toggleCmdk(false));
+        $('cmdk-modal')?.addEventListener('click', (e) => {
+          if (e.target === $('cmdk-modal')) toggleCmdk(false);
+          const item = e.target.closest('.cmdk-item');
+          if (!item) return;
+          const act = item.dataset.cmdk;
+          toggleCmdk(false);
+          if (act === 'new-chat') createNewChat(true);
+          else if (act === 'photo-studio') switchView('photo-studio');
+          else if (act === 'video-studio') switchView('video-editing');
+          else if (act === 'apps') switchView('apps');
+          else if (act === 'video-call') startVideoCall();
+          else if (act === 'toggle-voice') toggleVoiceControl();
         });
-        $('btn-close-pure-code')?.addEventListener('click', () => $('pure-code-drawer').classList.add('hidden'));
+        window.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            toggleCmdk();
+          } else if (e.key === 'Escape') {
+            $('cmdk-modal')?.classList.add('hidden');
+          }
+        });
+
+        // Pure Code Area Controls
+        $('btn-close-pure-code')?.addEventListener('click', () => {
+          $('pure-code-drawer')?.classList.add('hidden');
+        });
         $('btn-copy-pure-code')?.addEventListener('click', () => {
-          const txt = $('pure-code-content').textContent || '';
-          if (txt && navigator.clipboard) {
-            navigator.clipboard.writeText(txt).then(() => showToast('Code copied!'));
+          const code = $('pure-code-content')?.textContent || '';
+          if (code && navigator.clipboard) {
+            navigator.clipboard.writeText(code).then(() => showToast('Code copied to clipboard!'));
+          }
+        });
+        $('btn-open-code-vault')?.addEventListener('click', () => {
+          if (state.pureCodeHistory.length) {
+            $('pure-code-content').textContent = state.pureCodeHistory[0].code;
+            $('pure-code-drawer').classList.remove('hidden');
+            switchView('chat');
+          } else {
+            showToast('No code blocks captured yet.');
           }
         });
 
@@ -3756,44 +3823,42 @@
         $('nav-apps').addEventListener('click', () => switchView('apps'));
         $('nav-settings').addEventListener('click', () => switchView('settings'));
         $('btn-header-settings').addEventListener('click', () => switchView('settings'));
-        $('btn-settings-back').addEventListener('click', () => switchView('chat'));
+        $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
+        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
 
+        $('btn-settings-back').addEventListener('click', () => switchView('chat'));
         $('btn-settings-info').addEventListener('click', () => {
-          openDetailModal(
-            'AXON AI Workspace',
-            `<p><strong>AXON AI</strong> — Intelligent Neural Workspace.</p><p class="text-slate-400">Natural human TTS, pure code area, Xone Photo &amp; Video Studio, and chat history are synced locally.</p>`
-          );
+          openDetailModal('AXON AI Workspace Info', `
+            <p><strong class="text-white">Version:</strong> AXON AI v3.2 (Command Palette + A-to-Z Studio)</p>
+            <p><strong class="text-white">Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+            <p><strong class="text-white">Voice Engine:</strong> 6 Natural Human Profiles + Emoji-Free TTS</p>
+            <p><strong class="text-white">Saved Chats:</strong> ${state.chats.filter(c => c.messages.length > 0).length}</p>
+          `);
         });
 
         $('row-edit-profile').addEventListener('click', () => {
-          const curName = state.user?.name || state.settings.profileName || '';
-          const curEmail = state.user?.email || state.settings.profileEmail || '';
-          openDetailModal(
-            'Edit Profile',
-            `
-              <div>
-                <label class="block text-xs text-slate-400 mb-1">Profile Name</label>
-                <input id="modal-profile-name" type="text" value="${escapeHtml(curName)}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white" />
-              </div>
-              <div>
-                <label class="block text-xs text-slate-400 mb-1">Email Address</label>
-                <input id="modal-profile-email" type="email" value="${escapeHtml(curEmail)}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white" />
-              </div>
-            `,
-            `
-              <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
-              <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
-            `
-          );
+          openDetailModal('Edit Profile', `
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Display Name</label>
+              <input id="modal-edit-name" type="text" value="${escapeHtml(state.user?.name || state.settings.profileName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Email Address</label>
+              <input id="modal-edit-email" type="email" value="${escapeHtml(state.user?.email || state.settings.profileEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
+            </div>
+          `, `
+            <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
+            <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
+          `);
           $('btn-save-profile-modal').addEventListener('click', () => {
-            const newName = $('modal-profile-name').value.trim();
-            const newEmail = $('modal-profile-email').value.trim();
-            if (newName) state.settings.profileName = newName;
-            if (newEmail) state.settings.profileEmail = newEmail;
+            const nextName = $('modal-edit-name').value.trim() || 'AXON User';
+            const nextEmail = $('modal-edit-email').value.trim() || 'user@axon.ai';
+            state.settings.profileName = nextName;
+            state.settings.profileEmail = nextEmail;
             if (state.user) {
-              state.user.name = state.settings.profileName;
-              state.user.email = state.settings.profileEmail;
-              state.user.initials = state.user.name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
+              state.user.name = nextName;
+              state.user.email = nextEmail;
+              state.user.initials = nextName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
               $('user-display-name').textContent = state.user.name;
               $('user-display-email').textContent = state.user.email;
               renderUserAvatarElement($('user-avatar'), state.user);
@@ -3801,75 +3866,63 @@
             saveState();
             renderSettingsPanel();
             closeDetailModal();
-            showToast('Profile updated.');
+            showToast('Profile updated!');
           });
         });
 
-        $('row-profile-photo').addEventListener('click', () => {
-          if (!requireSignInForUpload()) return;
-          $('input-profile-photo').click();
-        });
-
+        $('row-profile-photo').addEventListener('click', () => $('input-profile-photo').click());
         $('input-profile-photo').addEventListener('change', (e) => {
-          if (!requireSignInForUpload()) {
-            e.target.value = '';
-            return;
-          }
           const file = e.target.files[0];
           if (!file) return;
           const reader = new FileReader();
           reader.onload = (ev) => {
             state.settings.profilePhoto = ev.target.result;
-            if (state.user) state.user.photo = ev.target.result;
+            if (state.user) {
+              state.user.photo = ev.target.result;
+              renderUserAvatarElement($('user-avatar'), state.user);
+            }
             saveState();
             renderSettingsPanel();
-            renderUserAvatarElement($('user-avatar'), state.user);
-            showToast('Profile photo updated.');
+            showToast('Profile photo updated!');
           };
           reader.readAsDataURL(file);
         });
 
         $('row-account-info').addEventListener('click', () => {
-          openDetailModal(
-            'Account Information',
-            `
-              <div class="space-y-1.5">
-                <p><strong class="text-white">Profile Name:</strong> ${escapeHtml(state.user?.name || state.settings.profileName)}</p>
-                <p><strong class="text-white">Email Address:</strong> ${escapeHtml(state.user?.email || state.settings.profileEmail)}</p>
-                <p><strong class="text-white">Workspace Plan:</strong> AXON Pro Workspace</p>
-                <p><strong class="text-white">Session Mode:</strong> ${demoSession ? 'Quick Demo Session' : 'Authenticated Account'}</p>
-              </div>
-            `
-          );
+          openDetailModal('Account Information', `
+            <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <p><span class="text-slate-400">Name:</span> <strong class="text-white">${escapeHtml(state.user?.name || state.settings.profileName)}</strong></p>
+              <p><span class="text-slate-400">Email:</span> <strong class="text-white">${escapeHtml(state.user?.email || state.settings.profileEmail)}</strong></p>
+              <p><span class="text-slate-400">Mode:</span> <strong class="text-cyan-300">${demoSession ? 'Quick Demo' : 'Authenticated User'}</strong></p>
+            </div>
+          `);
         });
 
         $('row-account-management').addEventListener('click', () => {
-          openDetailModal(
-            'Account Management',
-            `<p class="text-slate-300">Manage your AXON AI sign-in credentials or sign out of this device.</p>`,
-            `
-              <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Close</button>
-              <button id="btn-modal-signout" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Sign Out</button>
-            `
-          );
-          $('btn-modal-signout').addEventListener('click', () => {
+          openDetailModal('Account Management', `
+            <p class="text-xs text-slate-400">Manage your session or send a password reset link to <strong class="text-slate-200">${escapeHtml(state.user?.email || state.settings.profileEmail)}</strong>.</p>
+            <div class="flex flex-col gap-2 pt-1">
+              <button id="modal-send-reset" type="button" class="w-full py-2.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 text-xs font-semibold transition">Send Password Reset Email</button>
+              <button id="modal-sign-out-now" type="button" class="w-full py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-200 text-xs font-semibold transition">Sign Out of AXON AI</button>
+            </div>
+          `);
+          $('modal-send-reset').addEventListener('click', async () => {
+            const targetEmail = state.user?.email || state.settings.profileEmail;
+            if (firebaseReady && firebaseAuth && targetEmail) {
+              try {
+                await firebaseAuth.sendPasswordResetEmail(targetEmail);
+                showToast('Password reset email sent!');
+              } catch (err) {
+                showToast(firebaseErrorMessage(err));
+              }
+            } else {
+              showToast('Reset link ready for ' + targetEmail);
+            }
+          });
+          $('modal-sign-out-now').addEventListener('click', () => {
             closeDetailModal();
             $('btn-logout').click();
           });
-        });
-
-        $('row-model-info').addEventListener('click', () => {
-          openDetailModal(
-            'Model Information',
-            `
-              <div class="space-y-1.5">
-                <p><strong class="text-white">Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
-                <p><strong class="text-white">Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
-                <p><strong class="text-white">Language:</strong> ${escapeHtml(state.settings.appLanguage)}</p>
-                <p><strong class="text-white">Capabilities:</strong> Natural Voice, Pure Code Area, Photo Studio, Video Studio, Live Video Call</p>
-              </div>
-            `
-          );
         });
 
         $('setting-app-language').addEventListener('change', (e) => {
@@ -3877,60 +3930,63 @@
           saveState();
           showToast(`Language set to ${state.settings.appLanguage}`);
         });
-
         $('setting-default-model').addEventListener('change', (e) => {
           state.settings.defaultModel = e.target.value;
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Default model set to ${e.target.value}`);
+          showToast(`Default model: ${state.settings.defaultModel}`);
         });
-
         $('setting-ai-model').addEventListener('change', (e) => {
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Active model switched to ${e.target.value}`);
+          showToast(`Active AI model: ${state.settings.aiModel}`);
         });
-
         $('setting-chat-mode').addEventListener('change', (e) => {
           state.settings.chatMode = e.target.value;
           saveState();
-          showToast(`Chat mode set to ${e.target.value}`);
+          showToast(`Chat mode: ${state.settings.chatMode}`);
         });
-
         $('setting-startup').addEventListener('change', (e) => {
           state.settings.startupMode = e.target.value;
           saveState();
-          showToast('Startup preference updated.');
+          showToast('Startup preference saved');
+        });
+        $('row-model-info').addEventListener('click', () => {
+          openDetailModal('Model Information', `
+            <p><strong class="text-white">Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+            <p><strong class="text-white">Default Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
+            <p class="text-xs text-slate-400">Supports conversational chat, pure code extraction, photo &amp; video studio workflows, and live voice/video sessions.</p>
+          `);
         });
 
         $('btn-reset-settings').addEventListener('click', () => {
-          const keepName = state.settings.profileName;
-          const keepEmail = state.settings.profileEmail;
-          const keepPhoto = state.settings.profilePhoto;
+          const preservedName = state.settings.profileName;
+          const preservedEmail = state.settings.profileEmail;
+          const preservedPhoto = state.settings.profilePhoto;
           state.settings = {
             ...defaultSettings,
-            profileName: keepName,
-            profileEmail: keepEmail,
-            profilePhoto: keepPhoto
+            profileName: preservedName,
+            profileEmail: preservedEmail,
+            profilePhoto: preservedPhoto
           };
           saveState();
           renderAll();
-          showToast('Settings restored to default.');
+          populateVoicesDropdown();
+          showToast('Settings reset to default!');
         });
 
         $('search-settings-input').addEventListener('input', (e) => {
-          const q = (e.target.value || '').trim().toLowerCase();
+          const q = e.target.value.trim().toLowerCase();
           document.querySelectorAll('.settings-section').forEach((sec) => {
-            const hay = ((sec.getAttribute('data-search') || '') + ' ' + sec.textContent).toLowerCase();
-            sec.classList.toggle('hidden', q !== '' && !hay.includes(q));
+            const hay = (sec.dataset.search || '') + ' ' + sec.textContent.toLowerCase();
+            sec.classList.toggle('hidden', Boolean(q) && !hay.includes(q));
           });
         });
 
-        $('btn-close-detail-modal').addEventListener('click', closeDetailModal);
         $('settings-detail-modal').addEventListener('click', (e) => {
-          if (e.target.closest('.close-detail-btn') || e.target === $('settings-detail-modal')) {
+          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn') || e.target.id === 'btn-close-detail-modal' || e.target.id === 'btn-detail-close') {
             closeDetailModal();
           }
         });
@@ -3950,10 +4006,9 @@
         });
 
         $('sidebar-chat-list').addEventListener('click', (e) => {
-          const del = e.target.closest('.delete-chat-btn');
-          if (del) {
-            e.stopPropagation();
-            const id = del.dataset.chatId;
+          const delBtn = e.target.closest('.delete-chat-btn');
+          if (delBtn) {
+            const id = delBtn.dataset.chatId;
             state.chats = state.chats.filter(c => c.id !== id);
             if (state.activeChatId === id) {
               state.activeChatId = state.chats[0]?.id || null;
@@ -3961,7 +4016,6 @@
             }
             saveState();
             renderAll();
-            showToast('Chat deleted.');
             return;
           }
           const sel = e.target.closest('.select-chat-btn');
@@ -3976,41 +4030,51 @@
         $('chat-messages').addEventListener('click', (e) => {
           const starter = e.target.closest('.starter-prompt');
           if (starter) {
-            const p = starter.dataset.prompt;
-            if (p.toLowerCase().startsWith('open ')) {
-              executeVoiceCommand(p);
-            } else {
-              sendMessage(p);
+            sendMessage(starter.dataset.prompt);
+            return;
+          }
+          const copyBtn = e.target.closest('.btn-copy-msg');
+          if (copyBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === copyBtn.dataset.msgId);
+            if (msg && navigator.clipboard) {
+              navigator.clipboard.writeText(msg.text).then(() => showToast('Message copied!'));
             }
             return;
           }
-
-          const zoomBtn = e.target.closest('.btn-zoom-toggle');
-          if (zoomBtn) {
-            const target = document.getElementById(zoomBtn.dataset.target);
-            if (target) {
-              const zoomed = target.classList.toggle('zoomed-out-text');
-              zoomBtn.textContent = zoomed ? 'Reset Zoom (1x)' : 'Zoom Out (2.5x)';
+          const speakBtn = e.target.closest('.btn-speak-msg');
+          if (speakBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === speakBtn.dataset.msgId);
+            if (msg) {
+              speakText(msg.text);
+              showToast('Speaking message...');
             }
             return;
           }
-
           const codeBtn = e.target.closest('.btn-open-code-msg');
           if (codeBtn) {
             const chat = getActiveChat();
             const msg = chat?.messages.find(m => m.id === codeBtn.dataset.msgId);
-            if (msg) {
-              extractAndShowPureCode(msg.text);
+            if (msg) extractAndShowPureCode(msg.text);
+            return;
+          }
+          const zoomBtn = e.target.closest('.btn-zoom-toggle');
+          if (zoomBtn) {
+            const targetEl = document.getElementById(zoomBtn.dataset.target);
+            if (targetEl) {
+              const zoomed = targetEl.classList.toggle('zoomed-out-text');
+              zoomBtn.textContent = zoomed ? 'Zoom In (1x)' : 'Zoom Out (2.5x)';
             }
           }
         });
 
-        const input = $('chat-input');
-        input.addEventListener('input', () => {
-          input.style.height = 'auto';
-          input.style.height = Math.min(input.scrollHeight, 144) + 'px';
+        const chatInput = $('chat-input');
+        chatInput.addEventListener('input', () => {
+          chatInput.style.height = 'auto';
+          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
         });
-        input.addEventListener('keydown', (e) => {
+        chatInput.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
@@ -4046,9 +4110,9 @@
         });
         $('menu-deep-think').addEventListener('click', () => {
           state.deepThink = !state.deepThink;
-          $('deep-think-status').textContent = state.deepThink ? 'Active — Detailed reasoning' : 'Off — Standard speed';
+          $('deep-think-status').textContent = state.deepThink ? 'On — Deep reasoning active' : 'Off — Standard speed';
           $('plus-menu').classList.add('hidden');
-          showToast(state.deepThink ? 'Deep Think Mode ON' : 'Deep Think Mode OFF');
+          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode off');
         });
 
         $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'image'));
@@ -4057,21 +4121,24 @@
         $('btn-remove-attachment').addEventListener('click', clearAttachment);
 
         $('btn-close-camera').addEventListener('click', closeCameraModal);
-        $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
         $('btn-camera-upload-alt').addEventListener('click', () => {
           closeCameraModal();
           if (!requireSignInForUpload()) return;
           $('input-photo').click();
         });
+        $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
 
         $('btn-video-call').addEventListener('click', startVideoCall);
         $('btn-end-call').addEventListener('click', endVideoCall);
         $('btn-call-mic').addEventListener('click', () => {
           callMicMuted = !callMicMuted;
-          if (callStream) callStream.getAudioTracks().forEach(t => t.enabled = !callMicMuted);
           $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
+          if (callStream) {
+            callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
+          }
           if (callMicMuted) {
             stopCallVoiceCapture();
+            stopTTSController();
             $('call-voice-status').textContent = 'Mic Muted';
           } else {
             startCallVoiceCapture();
@@ -4080,51 +4147,60 @@
         });
         $('btn-call-cam').addEventListener('click', () => {
           callCamOff = !callCamOff;
-          if (callStream) callStream.getVideoTracks().forEach(t => t.enabled = !callCamOff);
-          $('call-pip-video').classList.toggle('hidden', callCamOff);
-          $('call-pip-off').classList.toggle('hidden', !callCamOff);
+          $('btn-call-cam').classList.toggle('bg-rose-600', callCamOff);
+          if (callStream) {
+            callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
+          }
+          const hasTrack = Boolean(callStream && callStream.getVideoTracks().length > 0);
+          $('call-pip-video').classList.toggle('hidden', callCamOff || !hasTrack);
+          $('call-pip-off').classList.toggle('hidden', !callCamOff && hasTrack);
+          showToast(callCamOff ? 'Camera turned off' : 'Camera turned on');
         });
 
-        $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
         $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
-        $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
         $('toggle-voice-tts').addEventListener('click', () => {
           state.settings.voiceTTS = !state.settings.voiceTTS;
           if (!state.settings.voiceTTS) stopTTSController();
           saveState();
           renderToggles();
+          showToast(state.settings.voiceTTS ? 'Spoken AI responses enabled' : 'Spoken AI responses muted');
         });
-        $('setting-voice-select').addEventListener('change', (e) => {
-          state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
-          saveState();
-          updateAIWallBanner();
-          const profile = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex];
-          if (profile) showToast(`Voice selected: ${profile.name}`);
-        });
-
-        $('btn-run-voice-sim').addEventListener('click', () => {
-          const val = $('voice-sim-input').value.trim();
-          if (val) {
-            executeVoiceCommand(val);
-            $('voice-sim-input').value = '';
-          }
-        });
-        $('voice-sim-input').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            $('btn-run-voice-sim').click();
-          }
-        });
-        document.querySelectorAll('.voice-chip').forEach(btn => {
-          btn.addEventListener('click', () => executeVoiceCommand(btn.dataset.voiceCmd));
-        });
-
+        if ($('setting-voice-select')) {
+          $('setting-voice-select').addEventListener('change', (e) => {
+            state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
+            saveState();
+            updateAIWallBanner();
+            const profile = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex] || SIX_VOICE_PROFILES[0];
+            showToast(`Selected voice: ${profile.name}`);
+            if (state.settings.voiceTTS) {
+              speakText(`Hello, I am ${profile.name.replace(/^\d+\.\s*/, '')}. Ready to assist you.`);
+            }
+          });
+        }
         $('toggle-history').addEventListener('click', () => {
           state.settings.saveHistory = !state.settings.saveHistory;
           saveState();
           renderAll();
-          showToast(state.settings.saveHistory ? 'Chat History Recording ON' : 'Chat History Recording OFF');
+          showToast(state.settings.saveHistory ? 'Chat history recording enabled' : 'Chat history recording paused');
         });
+
+        $('btn-run-voice-sim').addEventListener('click', () => {
+          const val = $('voice-sim-input').value.trim();
+          if (!val) return;
+          if (!state.settings.voiceControl) toggleVoiceControl(true);
+          executeVoiceCommand(val);
+          $('voice-sim-input').value = '';
+        });
+        $('voice-sim-input').addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') $('btn-run-voice-sim').click();
+        });
+        document.querySelectorAll('.voice-chip').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (!state.settings.voiceControl) toggleVoiceControl(true);
+            executeVoiceCommand(btn.dataset.voiceCmd);
+          });
+        });
+
         $('history-search').addEventListener('input', renderSettingsHistory);
         $('settings-history-list').addEventListener('click', (e) => {
           const openBtn = e.target.closest('.open-history-chat');
@@ -4145,7 +4221,6 @@
             }
             saveState();
             renderAll();
-            showToast('Conversation removed.');
           }
         });
 
@@ -4160,14 +4235,15 @@
           showToast('Chat history exported!');
         });
 
-        $('btn-clear-history').addEventListener('click', () => $('confirm-modal').classList.remove('hidden'));
+        $('btn-clear-history').addEventListener('click', () => {
+          $('confirm-modal').classList.remove('hidden');
+        });
         $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
         $('btn-confirm-ok').addEventListener('click', () => {
-          $('confirm-modal').classList.add('hidden');
           state.chats = [];
+          state.activeChatId = null;
           createNewChat(false);
-          saveState();
-          renderAll();
+          $('confirm-modal').classList.add('hidden');
           showToast('All chat history cleared.');
         });
 
@@ -4197,24 +4273,31 @@
         });
         $('app-launcher-grid').addEventListener('click', (e) => {
           const btn = e.target.closest('.launch-app-btn');
-          if (btn) {
-            showToast(`Opening ${btn.dataset.name}...`);
-            window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
-          }
+          if (!btn) return;
+          const url = btn.dataset.url;
+          const name = btn.dataset.name;
+          showToast(`Opening ${name}...`);
+          window.open(url, '_blank', 'noopener,noreferrer');
+        });
+        $('yt-feed-grid').addEventListener('click', (e) => {
+          const card = e.target.closest('.group');
+          if (!card) return;
+          const title = card.querySelector('h4')?.textContent || 'Video';
+          showToast(`Playing preview: ${title}`);
         });
       }
 
+      loadState();
+      populateVoicesDropdown();
       if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
       }
-
-      loadState();
       bindEvents();
       initPhotoStudio();
       initVideoEditing();
-      initializeFirebaseAuth();
+      renderAll();
       startDemoButtonTimer();
-      populateVoicesDropdown();
+      initializeFirebaseAuth();
     })();
   </script>
 </body>
