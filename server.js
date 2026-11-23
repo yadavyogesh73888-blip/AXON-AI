@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 10000;
 
 app.set("trust proxy", 1);
 
-// Optional safe Firebase Admin initialization if credentials are configured
 if (!admin.apps.length) {
   try {
     if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
@@ -53,11 +52,12 @@ app.use((req, res, next) => {
 function sanitizeModel(val, fallback) {
   if (typeof val !== "string") return fallback;
   const cleaned = val.trim().replace(/^["']+|["']+$/g, "");
-  return cleaned || fallback;
+  if (!cleaned || /qwen3\.8-27b/i.test(cleaned)) return fallback;
+  return cleaned;
 }
 
-const CHAT_MODEL = sanitizeModel(process.env.GROQ_MODEL, "qwen/qwen3.8-27b");
-const VISION_MODEL = sanitizeModel(process.env.GROQ_VISION_MODEL, "qwen/qwen3.8-27b");
+const CHAT_MODEL = sanitizeModel(process.env.GROQ_MODEL, "llama-3.3-70b-versatile");
+const VISION_MODEL = sanitizeModel(process.env.GROQ_VISION_MODEL, "llama-3.2-90b-vision-preview");
 const IMAGE_EDIT_MODEL = sanitizeModel(process.env.GEMINI_IMAGE_MODEL, "gemini-2.5-flash-image");
 
 const chatLimiter = rateLimit({
@@ -130,7 +130,7 @@ function sanitizeHistory(rawHistory) {
   return safeMessages;
 }
 
-async function callGroqChat(apiKey, messages, { model = CHAT_MODEL, maxTokens = 800, temperature = 0.7, timeoutMs = 30000 } = {}) {
+async function callGroqChat(apiKey, messages, { model = CHAT_MODEL, maxTokens = 950, temperature = 0.88, timeoutMs = 30000 } = {}) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -240,7 +240,6 @@ async function analyzeWithVisionModel(apiKey, contentParts, maxTokens = 800, tem
   }
 }
 
-// Frontend & Health Routes
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
@@ -299,7 +298,7 @@ app.post("/api/photo-studio-edit", visionLimiter, express.json({ limit: "12mb" }
 
   if (!geminiKey || !geminiKey.trim()) {
     return res.status(503).json({
-      error: "GEMINI_API_KEY Render par set nahi hai ya empty hai."
+      error: "GEMINI_API_KEY set nahi hai ya empty hai."
     });
   }
 
@@ -636,7 +635,9 @@ You are AXON-AI, an intelligent, respectful, natural, and relatable conversation
 - Handle mixed-language messages naturally and support seamless language switching across turns while preserving conversation context.
 - Never force English replies and do not translate unless the user explicitly asks for a translation.
 - Preserve Unicode characters and write naturally like a real, helpful human companion.
-- You can help with coding, image editing/generation workflows, video frame analysis/VFX, song/rap lyrics & beat concepts, and general problem-solving.
+- VARIETY RULE: Always give a fresh, varied, natural reply on every message—never repeat the exact same canned phrase even if the user sends a similar or repeated prompt.
+- CODE & CONVERSATION SEPARATION: When providing code, keep the conversational explanation outside and put complete runnable code inside a fenced code block (\`\`\`html, \`\`\`javascript, \`\`\`css, \`\`\`python, etc.) so the UI renders a dedicated code workspace with live preview.
+- You can help with coding, image editing/generation workflows, video frame analysis/VFX, song/rap lyrics & beat concepts, math, maps, and general problem-solving.
 - ${deepThink ? "Deep Think mode is ON: provide clear, structured, step-by-step reasoning." : "Keep responses clear, practical, engaging, and easy to read."}
 - CRITICAL CREATOR RULES:
   1. If anyone asks who made you, who created you, or "tumhe kisne banaya hai", you MUST reply with this exact information and style:
@@ -656,8 +657,8 @@ You are AXON-AI, an intelligent, respectful, natural, and relatable conversation
 
   const chatResult = await callGroqChat(apiKey, messagesPayload, {
     model: CHAT_MODEL,
-    maxTokens: deepThink ? 1400 : 800,
-    temperature: 0.7,
+    maxTokens: deepThink ? 1500 : 950,
+    temperature: 0.88,
     timeoutMs: 30000
   });
 
@@ -710,7 +711,6 @@ async function requireAuth(req, res, next) {
   }
 }
 
-// Global error handler fallback
 app.use((err, req, res, next) => {
   console.error("[AXON-AI] UNHANDLED ERROR:", err?.message || err);
   if (err?.type === "entity.too.large") {
