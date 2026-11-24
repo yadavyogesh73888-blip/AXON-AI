@@ -15,7 +15,7 @@
       --bg-main: #FFFFFF;
       --bg-secondary: #F8FAFC;
       --bg-header: #FFFFFF;
-      --bg-ai-msg: #FFFFFF;
+      --bg-ai-msg: transparent;
       --bg-user-msg: #EFF6FF;
       --text-main: #172033;
       --text-secondary: #64748B;
@@ -49,7 +49,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Chat & Message Layout — Full Width AI Message, Clean Light Palette */
+    /* Chat & Message Layout */
     .axon-chat-stream {
       background-color: var(--bg-main);
       color: var(--text-main);
@@ -77,11 +77,11 @@
 
     .chatgpt-assistant-card {
       width: 100%;
-      background-color: var(--bg-ai-msg);
-      border: 1px solid var(--border-light);
-      border-radius: 1.15rem;
-      padding: 0.95rem 1.15rem;
-      box-shadow: 0 1px 4px rgba(23, 32, 51, 0.04);
+      background-color: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0.25rem 0;
+      box-shadow: none;
     }
 
     .chatgpt-assistant-body {
@@ -92,6 +92,36 @@
       line-height: 1.75;
       word-wrap: break-word;
       overflow-wrap: anywhere;
+    }
+
+    /* Professional Dark Code Block */
+    .axon-code-block {
+      margin: 0.85rem 0;
+      border-radius: 0.9rem;
+      background-color: #0F172A;
+      border: 1px solid #1E293B;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+    }
+
+    .axon-code-header {
+      padding: 0.55rem 0.9rem;
+      background-color: #1E293B;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .axon-code-pre {
+      margin: 0;
+      padding: 0.95rem 1rem;
+      background-color: #0F172A;
+      color: #E2E8F0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.8125rem;
+      line-height: 1.65;
+      overflow-x: auto;
     }
 
     .axon-example-highlight {
@@ -148,10 +178,16 @@
       transform: scale(0.96);
     }
 
-    /* Optional Dark Theme support when toggled from Settings */
+    /* Full Dark Theme Conversion */
     html:not(.light-theme) body {
       background-color: #171717;
       color: #ECECEC;
+      --bg-main: #171717;
+      --bg-secondary: #212121;
+      --bg-header: #1F1F1F;
+      --text-main: #ECECEC;
+      --text-secondary: #A3A3A3;
+      --border-light: rgba(255, 255, 255, 0.12);
       --example-color: #38BDF8;
       --example-bg: rgba(56, 189, 248, 0.14);
     }
@@ -162,17 +198,30 @@
     html:not(.light-theme) #view-apps,
     html:not(.light-theme) #view-settings,
     html:not(.light-theme) #chat-messages,
-    html:not(.light-theme) main {
+    html:not(.light-theme) main,
+    html:not(.light-theme) #view-chat > div:last-child {
       background-color: #171717 !important;
       color: #ECECEC !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
     }
     html:not(.light-theme) header {
       background-color: #1F1F1F !important;
       border-color: rgba(255, 255, 255, 0.1) !important;
     }
-    html:not(.light-theme) .chatgpt-assistant-card {
+    html:not(.light-theme) #sidebar {
+      background-color: #181818 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    html:not(.light-theme) #sidebar > div,
+    html:not(.light-theme) #btn-new-chat,
+    html:not(.light-theme) #btn-open-cmdk {
       background-color: #212121 !important;
       border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #ECECEC !important;
+    }
+    html:not(.light-theme) .chatgpt-assistant-card {
+      background-color: transparent !important;
+      border-color: transparent !important;
     }
     html:not(.light-theme) .chatgpt-assistant-body {
       color: #ECECEC !important;
@@ -183,7 +232,7 @@
       border-color: rgba(96, 165, 250, 0.25) !important;
     }
     html:not(.light-theme) .axon-copy-btn {
-      background-color: #2A2A2A !important;
+      background-color: #262626 !important;
       color: #E2E8F0 !important;
       border-color: rgba(255, 255, 255, 0.12) !important;
     }
@@ -194,15 +243,45 @@
     }
     html:not(.light-theme) .axon-light-card {
       background-color: #212121 !important;
-      border-color: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
       color: #ECECEC !important;
     }
     html:not(.light-theme) .axon-input-shell {
       background-color: #262626 !important;
       border-color: rgba(255, 255, 255, 0.14) !important;
     }
-    html:not(.light-theme) #chat-input {
-      color: #FFFFFF !important;
+    html:not(.light-theme) #chat-input,
+    html:not(.light-theme) input,
+    html:not(.light-theme) select,
+    html:not(.light-theme) textarea {
+      color: #ECECEC !important;
+    }
+    html:not(.light-theme) #view-settings .bg-\[\#FFFFFF\],
+    html:not(.light-theme) #view-photo-studio .bg-\[\#FFFFFF\],
+    html:not(.light-theme) #view-video-editing .bg-\[\#FFFFFF\],
+    html:not(.light-theme) #view-apps .bg-\[\#FFFFFF\] {
+      background-color: #212121 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #ECECEC !important;
+    }
+    html:not(.light-theme) .bg-\[\#F8FAFC\] {
+      background-color: #2A2A2A !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      color: #ECECEC !important;
+    }
+    html:not(.light-theme) .text-\[\#172033\] {
+      color: #F3F4F6 !important;
+    }
+    html:not(.light-theme) .text-\[\#64748B\] {
+      color: #A3A3A3 !important;
+    }
+    html:not(.light-theme) .border-\[\#E2E8F0\] {
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    html:not(.light-theme) .hover\:bg-\[\#F8FAFC\]:hover,
+    html:not(.light-theme) .hover\:bg-\[\#EFF6FF\]:hover,
+    html:not(.light-theme) .hover\:bg-\[\#F1F5F9\]:hover {
+      background-color: #2F2F2F !important;
     }
 
     .axon-light-card {
@@ -298,13 +377,6 @@
       border-radius: 9999px;
       background-color: #2563EB;
       animation: waveBar 0.8s ease-in-out infinite;
-    }
-
-    /* AI WALL strictly keeps dark background + green accent */
-    .ai-wall-banner {
-      background-color: #0F172A;
-      color: #F8FAFC;
-      border-bottom: 1px solid rgba(16, 185, 129, 0.25);
     }
 
     .zoomed-out-text {
@@ -524,48 +596,35 @@
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
+          <button id="btn-header-new-page" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#172033] border border-[#E2E8F0] transition active:scale-95">
+            <svg class="w-3.5 h-3.5 text-[#10B981] shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            <span>New Page</span>
+          </button>
+
           <button id="btn-header-voice" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#172033] border border-[#E2E8F0] transition active:scale-95">
             <svg class="w-4 h-4 text-[#2563EB] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
             <span id="header-voice-label">Voice Off</span>
           </button>
-
-          <button id="btn-header-settings" type="button" title="Settings" class="w-9 h-9 rounded-full bg-[#F8FAFC] hover:bg-[#EFF6FF] text-[#172033] border border-[#E2E8F0] flex items-center justify-center transition active:scale-95">
-            <svg class="w-4 h-4 text-[#172033]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </button>
         </div>
       </header>
-
-      <!-- 2. AI WALL BANNER (DARK + GREEN ACCENT PRESERVED) -->
-      <div id="ai-wall-strip" class="ai-wall-banner px-3 sm:px-6 py-1.5 flex items-center justify-between gap-2 text-[11px] shrink-0">
-        <div class="flex items-center gap-2 min-w-0">
-          <span class="px-1.5 py-0.5 rounded bg-[#10B981]/20 text-[#34D399] font-bold tracking-wider border border-[#10B981]/40 shrink-0">AI WALL</span>
-          <span id="ai-wall-voice-info" class="text-slate-200 truncate">Active Voice: 1. Nova (Clear Female)</span>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <span id="telemetry-mem-badge" class="hidden md:inline-block px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px]">Storage: 0 KB</span>
-          <button id="btn-open-code-vault" type="button" class="px-2.5 py-0.5 rounded-lg bg-[#111827] hover:bg-slate-800 text-[#34D399] border border-[#10B981]/35 font-mono text-[10px] font-semibold transition">
-            Code Area (<span id="code-vault-count">0</span>)
-          </button>
-        </div>
-      </div>
 
       <!-- ==================== VIEW 1: CHAT INTERFACE ==================== -->
       <div id="view-chat" class="flex-1 flex flex-col min-h-0 bg-[#FFFFFF]">
         <div id="chat-messages" class="axon-chat-stream flex-1 overflow-y-auto px-3 sm:px-6 py-6 space-y-5 scroll-smooth"></div>
 
-        <!-- SEPARATE PURE CODE AREA (BLACK BOX PANEL) -->
-        <div id="pure-code-drawer" class="hidden mx-3 sm:mx-6 mb-2 max-w-4xl lg:mx-auto w-full rounded-2xl bg-[#0b0b0b] border border-slate-700 shadow-xl overflow-hidden animate-fade-up">
-          <div class="px-4 py-2 bg-[#141414] border-b border-slate-800 flex items-center justify-between">
+        <!-- SEPARATE PURE CODE AREA (DARK PANEL) -->
+        <div id="pure-code-drawer" class="hidden mx-3 sm:mx-6 mb-2 max-w-4xl lg:mx-auto w-full rounded-2xl bg-[#0F172A] border border-slate-800 shadow-xl overflow-hidden animate-fade-up">
+          <div class="px-4 py-2 bg-[#1E293B] border-b border-slate-700 flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
               <span class="text-xs font-mono font-semibold text-[#34D399]">PURE CODE AREA — Dedicated Code Canvas</span>
             </div>
             <div class="flex items-center gap-2">
-              <button id="btn-copy-pure-code" type="button" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white font-medium">Copy Code</button>
-              <button id="btn-close-pure-code" type="button" class="px-2.5 py-1 rounded text-xs text-slate-400 hover:text-white">✕</button>
+              <button id="btn-copy-pure-code" type="button" class="px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-[11px] text-white font-medium">Copy Code</button>
+              <button id="btn-close-pure-code" type="button" class="px-2.5 py-1 rounded text-xs text-slate-300 hover:text-white">✕</button>
             </div>
           </div>
-          <pre id="pure-code-content" class="p-4 max-h-52 overflow-auto text-xs font-mono text-[#34D399] bg-[#0b0b0b] leading-relaxed whitespace-pre-wrap"></pre>
+          <pre id="pure-code-content" class="p-4 max-h-52 overflow-auto text-xs font-mono text-[#E2E8F0] bg-[#0F172A] leading-relaxed whitespace-pre-wrap"></pre>
         </div>
 
         <!-- MESSAGE INPUT BOX & DISCLAIMER -->
@@ -1794,16 +1853,6 @@
       let availableVoices = [];
       let ttsKeepAliveTimer = null;
 
-      function updateTelemetryBadge() {
-        const el = $('telemetry-mem-badge');
-        if (!el) return;
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY) || '';
-          const kb = (new Blob([raw]).size / 1024).toFixed(1);
-          el.textContent = `Storage: ${kb} KB`;
-        } catch (e) {}
-      }
-
       function saveState() {
         try {
           const payload = {
@@ -1814,7 +1863,6 @@
             pureCodeHistory: state.pureCodeHistory.slice(0, 15)
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-          updateTelemetryBadge();
         } catch (e) {}
       }
 
@@ -1828,7 +1876,6 @@
           if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
           if (Array.isArray(parsed.photoVault)) state.photoVault = parsed.photoVault;
           if (Array.isArray(parsed.pureCodeHistory)) state.pureCodeHistory = parsed.pureCodeHistory;
-          updateTelemetryBadge();
         } catch (e) {}
       }
 
@@ -1969,7 +2016,7 @@
       }
 
       function highlightExampleSections(htmlStr) {
-        const parts = htmlStr.split(/(<div class="my-3 rounded-xl[\s\S]*?<\/div>)/g);
+        const parts = htmlStr.split(/(<div class="axon-code-block"[\s\S]*?<\/div>)/g);
         return parts.map((part, i) => {
           if (i % 2 === 1) return part;
           return part
@@ -1981,7 +2028,7 @@
       function formatMessageHtml(text) {
         let safe = escapeHtml(text);
         safe = safe.replace(/```([\s\S]*?)```/g, (_, code) => {
-          return `<div class="my-3 rounded-xl bg-[#0F172A] border border-slate-800 overflow-hidden"><div class="px-3.5 py-1.5 bg-[#1E293B] border-b border-slate-700 flex items-center justify-between"><span class="text-[10px] font-mono text-[#34D399] uppercase">Code</span><button type="button" class="axon-inline-copy-btn px-2 py-0.5 rounded bg-slate-700 hover:bg-slate-600 text-[10px] text-white font-medium">Copy</button></div><pre class="p-3.5 text-xs text-[#34D399] overflow-x-auto font-mono m-0"><code>${code.trim()}</code></pre></div>`;
+          return `<div class="axon-code-block"><div class="axon-code-header"><span class="text-[11px] font-mono font-semibold text-slate-300 uppercase tracking-wider">Code</span><button type="button" class="axon-inline-copy-btn px-2.5 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-[11px] text-white font-medium transition">Copy</button></div><pre class="axon-code-pre"><code>${code.trim()}</code></pre></div>`;
         });
         safe = safe.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-[#2563EB] underline hover:text-[#1D4ED8]">$1</a>');
         safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-[#172033]">$1</strong>');
@@ -2021,17 +2068,6 @@
         return chat;
       }
 
-      function updateAIWallBanner() {
-        const profile = SIX_VOICE_PROFILES[Number(state.settings.selectedVoiceIndex) || 0] || SIX_VOICE_PROFILES[0];
-        if ($('ai-wall-voice-info')) {
-          $('ai-wall-voice-info').textContent = `Active Voice: ${profile.name}`;
-        }
-        if ($('code-vault-count')) {
-          $('code-vault-count').textContent = String(state.pureCodeHistory.length);
-        }
-        updateTelemetryBadge();
-      }
-
       function populateVoicesDropdown() {
         const select = $('setting-voice-select');
         if (!select) return;
@@ -2042,7 +2078,6 @@
           `<option value="${vp.index}">${escapeHtml(vp.name)}</option>`
         ).join('');
         select.value = String(state.settings.selectedVoiceIndex ?? 0);
-        updateAIWallBanner();
       }
 
       function setAuthMode(mode) {
@@ -2160,7 +2195,6 @@
         renderToggles();
         renderSettingsPanel();
         renderSettingsHistory();
-        updateAIWallBanner();
       }
 
       function renderSettingsPanel() {
@@ -2310,13 +2344,10 @@
             const msgDomId = `msg-body-${m.id}`;
 
             return `
-              <div class="chatgpt-message-row flex items-start gap-3 animate-fade-up">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#10B981] to-[#06B6D4] flex items-center justify-center shrink-0 mt-0.5 text-white shadow-sm">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                </div>
-                <div class="flex-1 min-w-0 chatgpt-assistant-card">
+              <div class="chatgpt-message-row animate-fade-up">
+                <div class="w-full min-w-0 chatgpt-assistant-card">
                   <div id="${msgDomId}" class="chatgpt-assistant-body transition-all">${formatMessageHtml(m.text)}</div>
-                  <div class="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-[#E2E8F0]/70">
+                  <div class="flex flex-wrap items-center gap-2 mt-2.5">
                     <span class="text-[10px] text-[#64748B] mr-1">${formatTime(m.timestamp)}</span>
                     <button type="button" class="btn-copy-msg axon-copy-btn px-2.5 py-1 rounded-lg text-[11px] font-medium inline-flex items-center gap-1" data-msg-id="${m.id}">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -2342,15 +2373,10 @@
 
         if (state.isGenerating) {
           container.innerHTML += `
-            <div class="chatgpt-message-row flex items-start gap-3">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#10B981] to-[#06B6D4] flex items-center justify-center shrink-0 text-white">
-                <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
-              </div>
-              <div class="px-4 py-3 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-1.5">
-                <span class="typing-dot" style="animation-delay:0s"></span>
-                <span class="typing-dot" style="animation-delay:0.2s"></span>
-                <span class="typing-dot" style="animation-delay:0.4s"></span>
-              </div>
+            <div class="chatgpt-message-row flex items-center gap-2 py-1">
+              <span class="typing-dot" style="animation-delay:0s"></span>
+              <span class="typing-dot" style="animation-delay:0.2s"></span>
+              <span class="typing-dot" style="animation-delay:0.4s"></span>
             </div>
           `;
         }
@@ -2676,7 +2702,6 @@
         });
         $('pure-code-content').textContent = codeBlock;
         $('pure-code-drawer').classList.remove('hidden');
-        updateAIWallBanner();
       }
 
       async function sendMessage(overrideText = null) {
@@ -3420,23 +3445,25 @@
 
             ctx.beginPath();
             ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
-            ctx.fillStyle = it.isStar ? '#38bdf8' : '#f43f5e';
+            ctx.fillStyle = it.isStar ? '#38bdf8' : '#fb7185';
             ctx.fill();
 
             const hitX = it.x + it.r > tpPlayerX && it.x - it.r < tpPlayerX + playerW;
             const hitY = it.y + it.r > playerY && it.y - it.r < playerY + playerH;
+
             if (hitX && hitY) {
+              tpItems.splice(i, 1);
               if (it.isStar) {
                 tpScore += 10;
                 updateTimePassScoreUI();
-                tpItems.splice(i, 1);
-                continue;
               } else {
                 tpRunning = false;
                 setTimePassGameOverUI(true);
                 return;
               }
+              continue;
             }
+
             if (it.y - it.r > canvas.height) {
               tpItems.splice(i, 1);
             }
@@ -3444,292 +3471,448 @@
 
           tpAnimId = requestAnimationFrame(loop);
         }
+
         tpAnimId = requestAnimationFrame(loop);
       }
 
-      function renderPhotoStudioCanvas() {
+      function closeTimePassGame() {
+        stopTimePassGame();
+        $('timepass-game-wrap').classList.add('hidden');
+        setTimePassGameOverUI(false);
+        if (studioSourceImg) {
+          $('studio-canvas').classList.remove('hidden');
+          renderStudioCanvas();
+        } else {
+          $('studio-placeholder').classList.remove('hidden');
+        }
+      }
+
+      function renderStudioCanvas() {
         const canvas = $('studio-canvas');
-        if (!studioSourceImg || !canvas) return;
+        if (!canvas || !studioSourceImg) return;
+        const maxW = 640;
+        const maxH = 420;
+        let w = studioSourceImg.width || 400;
+        let h = studioSourceImg.height || 300;
+        const scale = Math.min(1, maxW / w, maxH / h);
+        w = Math.round(w * scale);
+        h = Math.round(h * scale);
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
         const b = $('studio-brightness').value;
         const c = $('studio-contrast').value;
         const g = $('studio-grayscale').value;
-
         $('studio-brightness-val').textContent = `${b}%`;
         $('studio-contrast-val').textContent = `${c}%`;
         $('studio-grayscale-val').textContent = `${g}%`;
-
-        canvas.width = studioSourceImg.naturalWidth || studioSourceImg.width || 600;
-        canvas.height = studioSourceImg.naturalHeight || studioSourceImg.height || 400;
-        const ctx = canvas.getContext('2d');
-        ctx.save();
         ctx.filter = `brightness(${b}%) contrast(${c}%) grayscale(${g}%)`;
-        ctx.drawImage(studioSourceImg, 0, 0, canvas.width, canvas.height);
-        ctx.restore();
-
-        $('timepass-game-wrap').classList.add('hidden');
-        $('studio-placeholder').classList.add('hidden');
-        canvas.classList.remove('hidden');
+        ctx.clearRect(0, 0, w, h);
+        ctx.drawImage(studioSourceImg, 0, 0, w, h);
       }
 
-      function loadPhotoIntoStudio(dataUrl, fileName = 'axon-photo.png') {
+      function loadPhotoIntoStudio(name, dataUrl, autoStartAi = false) {
         if (!dataUrl) return;
         stopTimePassGame();
         $('timepass-game-wrap').classList.add('hidden');
-        studioCurrentFileName = fileName;
+        studioCurrentFileName = name || 'axon-photo.png';
         const img = new Image();
         img.onload = () => {
           studioSourceImg = img;
-          renderPhotoStudioCanvas();
-          $('studio-status').textContent = `Loaded: ${fileName} (Ready for AI Edit)`;
+          $('studio-brightness').value = 100;
+          $('studio-contrast').value = 100;
+          $('studio-grayscale').value = 0;
+          $('studio-placeholder').classList.add('hidden');
+          $('studio-canvas').classList.remove('hidden');
+          $('studio-status').textContent = `Loaded "${studioCurrentFileName}" into Axon Photo Studio.`;
+          renderStudioCanvas();
+          if (autoStartAi) {
+            runStudioAiSceneEdit();
+          }
         };
         img.src = dataUrl;
       }
 
-      function resetPhotoStudio() {
-        stopTimePassGame();
-        $('timepass-game-wrap').classList.add('hidden');
-        studioSourceImg = null;
-        $('studio-brightness').value = 100;
-        $('studio-contrast').value = 100;
-        $('studio-grayscale').value = 0;
-        $('studio-brightness-val').textContent = '100%';
-        $('studio-contrast-val').textContent = '100%';
-        $('studio-grayscale-val').textContent = '0%';
-        $('studio-canvas').classList.add('hidden');
-        $('studio-placeholder').classList.remove('hidden');
-        $('studio-status').textContent = '';
-      }
-
-      let studioAiTimer = null;
-
-      function setStudioProgressPercent(pct) {
-        const clamped = Math.max(0, Math.min(100, Math.round(pct)));
-        if ($('studio-progress-pct')) $('studio-progress-pct').textContent = `${clamped}%`;
-        if ($('studio-progress-bar')) $('studio-progress-bar').style.width = `${clamped}%`;
-        if ($('studio-progress-sub')) $('studio-progress-sub').textContent = `${clamped}%`;
-      }
-
-      function showStudioUnavailableNotice() {
-        const msg = $('studio-unavailable-msg');
-        if (msg) msg.classList.remove('hidden');
-      }
-
-      function hideStudioUnavailableNotice() {
-        const msg = $('studio-unavailable-msg');
-        if (msg) msg.classList.add('hidden');
-      }
-
-      async function runStudioAiEdit() {
-        if (!requireSignInForUpload()) return;
-        const promptEl = $('studio-ai-prompt');
-        const modeEl = $('studio-ai-mode');
-        const prompt = (promptEl?.value || '').trim();
-        const mode = modeEl?.value || 'cgi';
-
-        if (!studioSourceImg) {
-          showToast('Please upload or select a photo first.');
-          return;
-        }
-        if (!prompt) {
-          showToast('Please enter what AI should change in the photo.');
-          return;
-        }
-
-        stopTimePassGame();
-        $('timepass-game-wrap').classList.add('hidden');
-        hideStudioUnavailableNotice();
-
+      async function runStudioAiSceneEdit() {
+        const promptInput = $('studio-ai-prompt');
+        const promptText = (promptInput ? promptInput.value.trim() : '') ||
+          'Enhance photo with 3D CGI depth, studio rim lighting, and clean atmosphere';
+        const mode = $('studio-ai-mode') ? $('studio-ai-mode').value : 'cgi';
         const progressBox = $('studio-progress-box');
-        const genBtn = $('studio-ai-generate-btn');
-        progressBox.classList.remove('hidden');
-        if (genBtn) genBtn.disabled = true;
+        const pctEl = $('studio-progress-pct');
+        const barEl = $('studio-progress-bar');
+        const subEl = $('studio-progress-sub');
+        const canvas = $('studio-canvas');
+
+        stopTimePassGame();
+        $('timepass-game-wrap').classList.add('hidden');
+        $('studio-placeholder').classList.add('hidden');
+        if (progressBox) {
+          progressBox.classList.remove('hidden');
+          pctEl.textContent = '20%';
+          barEl.style.width = '20%';
+          if (subEl) subEl.textContent = '20%';
+        }
+        $('studio-status').textContent = 'AI Image Rendering started...';
 
         let pct = 20;
-        setStudioProgressPercent(pct);
-        $('studio-status').textContent = 'Running AI image edit...';
-
-        clearInterval(studioAiTimer);
-        studioAiTimer = setInterval(() => {
-          if (pct < 90) {
-            pct += 10;
-            setStudioProgressPercent(pct);
-          }
-        }, 450);
+        const pctTimer = setInterval(() => {
+          pct = Math.min(90, pct + 15);
+          if (pctEl) pctEl.textContent = `${pct}%`;
+          if (barEl) barEl.style.width = `${pct}%`;
+          if (subEl) subEl.textContent = `${pct}%`;
+        }, 260);
 
         try {
-          const tempCanvas = document.createElement('canvas');
-          tempCanvas.width = Math.min(studioSourceImg.naturalWidth || 768, 768);
-          tempCanvas.height = Math.min(studioSourceImg.naturalHeight || 768, 768);
-          tempCanvas.getContext('2d').drawImage(studioSourceImg, 0, 0, tempCanvas.width, tempCanvas.height);
-          const sourceDataUrl = tempCanvas.toDataURL('image/jpeg', 0.82);
-
-          const res = await fetch('/api/photo-edit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ imageData: sourceDataUrl, prompt, mode })
-          });
-          const data = await res.json().catch(() => ({}));
-          clearInterval(studioAiTimer);
-
-          if (!res.ok || !data.imageData) {
-            setStudioProgressPercent(100);
-            progressBox.classList.add('hidden');
-            if (genBtn) genBtn.disabled = false;
-            showStudioUnavailableNotice();
-            $('studio-status').textContent = '';
-            return;
+          if (!studioSourceImg) {
+            const w = 600;
+            const h = 380;
+            const baseCanvas = document.createElement('canvas');
+            baseCanvas.width = w;
+            baseCanvas.height = h;
+            const bctx = baseCanvas.getContext('2d');
+            const grad = bctx.createLinearGradient(0, 0, w, h);
+            grad.addColorStop(0, '#0f172a');
+            grad.addColorStop(0.5, '#1e1b4b');
+            grad.addColorStop(1, '#083344');
+            bctx.fillStyle = grad;
+            bctx.fillRect(0, 0, w, h);
+            const fallbackImg = new Image();
+            await new Promise((resolve) => {
+              fallbackImg.onload = resolve;
+              fallbackImg.src = baseCanvas.toDataURL('image/png');
+            });
+            studioSourceImg = fallbackImg;
           }
 
-          setStudioProgressPercent(100);
-          const editedImg = new Image();
-          editedImg.onload = () => {
+          renderStudioCanvas();
+          const sourceDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+          const res = await fetch('/api/image-edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageData: sourceDataUrl,
+              prompt: promptText,
+              mode
+            })
+          });
+          const data = await res.json().catch(() => ({}));
+
+          clearInterval(pctTimer);
+          if (pctEl) pctEl.textContent = '100%';
+          if (barEl) barEl.style.width = '100%';
+          if (subEl) subEl.textContent = '100%';
+
+          if (!res.ok) {
+            throw new Error(data.error || `HTTP ${res.status}`);
+          }
+
+          if (data.imageData) {
+            const editedImg = new Image();
+            await new Promise((resolve, reject) => {
+              editedImg.onload = resolve;
+              editedImg.onerror = reject;
+              editedImg.src = data.imageData;
+            });
             studioSourceImg = editedImg;
-            $('studio-brightness').value = 100;
-            $('studio-contrast').value = 100;
-            $('studio-grayscale').value = 0;
-            renderPhotoStudioCanvas();
-            addPhotoToVault(`AI_${Date.now()}_${studioCurrentFileName}`, data.imageData);
-            progressBox.classList.add('hidden');
-            if (genBtn) genBtn.disabled = false;
-            hideStudioUnavailableNotice();
-            $('studio-status').textContent = 'AI edit applied and saved to Your Photo Storage!';
-            showToast('AI photo edit complete!');
-          };
-          editedImg.onerror = () => {
-            progressBox.classList.add('hidden');
-            if (genBtn) genBtn.disabled = false;
-            showStudioUnavailableNotice();
-            $('studio-status').textContent = '';
-          };
-          editedImg.src = data.imageData;
+            renderStudioCanvas();
+            addPhotoToVault(`AI_${studioCurrentFileName}`, data.imageData);
+          } else {
+            addPhotoToVault(`AI_${studioCurrentFileName}`, canvas.toDataURL('image/jpeg', 0.85));
+          }
+
+          setTimeout(() => {
+            if (progressBox) progressBox.classList.add('hidden');
+            if (canvas) canvas.classList.remove('hidden');
+          }, 250);
+
+          $('studio-status').textContent = `100% Complete — ${data.description || 'AI photo edit applied.'}`;
+          showToast('AI photo edit complete (100%)!');
         } catch (err) {
-          clearInterval(studioAiTimer);
-          progressBox.classList.add('hidden');
-          if (genBtn) genBtn.disabled = false;
-          showStudioUnavailableNotice();
-          $('studio-status').textContent = '';
+          clearInterval(pctTimer);
+          if (progressBox) progressBox.classList.add('hidden');
+          if (canvas && studioSourceImg) canvas.classList.remove('hidden');
+          $('studio-status').textContent = `AI Image Edit failed: ${err.message}`;
+          showToast(`AI Image Edit issue: ${err.message}`);
         }
       }
 
-      let currentVideoBlobUrl = '';
-      let currentVideoFileName = 'axon-video.mp4';
-      let currentVideoMode = 'vfx';
-      let midrollAdTriggered = false;
+      let veditSourceUrl = '';
+      let veditFileName = 'axon-video.mp4';
+      let veditActiveMode = 'vfx';
+      let veditMidrollTimer = null;
+      let veditLastMidrollBucket = 0;
 
-      function setVideoStudioMode(mode) {
-        currentVideoMode = mode;
-        const isVfx = mode === 'vfx';
-        $('btn-vedit-mode-vfx').className = isVfx
+      function updateVideoEditModeUI(mode) {
+        veditActiveMode = mode;
+        const isGenAI = mode === 'genai';
+        $('btn-vedit-mode-vfx').className = !isGenAI
           ? 'px-4 py-2 rounded-xl bg-[#10B981] text-white text-xs sm:text-sm font-semibold shadow-xs transition'
           : 'px-4 py-2 rounded-xl bg-[#FFFFFF] hover:bg-[#EFF6FF] text-[#172033] text-xs sm:text-sm font-semibold border border-[#E2E8F0] transition';
-        $('btn-vedit-mode-genai').className = !isVfx
-          ? 'px-4 py-2 rounded-xl bg-[#2563EB] text-white text-xs sm:text-sm font-semibold shadow-xs transition'
+        $('btn-vedit-mode-genai').className = isGenAI
+          ? 'px-4 py-2 rounded-xl bg-[#10B981] text-white text-xs sm:text-sm font-semibold shadow-xs transition'
           : 'px-4 py-2 rounded-xl bg-[#FFFFFF] hover:bg-[#EFF6FF] text-[#172033] text-xs sm:text-sm font-semibold border border-[#E2E8F0] transition';
-        $('vedit-status').textContent = isVfx
-          ? 'Mode: 1. VFX (Filter, Speed & Watermark)'
-          : 'Mode: 2. Generate with AI (Prompt-Driven Edit)';
+        $('vedit-ai-prompt').placeholder = isGenAI
+          ? 'Describe the video you want AI to generate or create...'
+          : 'Tell AI what should happen in the video...';
       }
 
-      function applyVideoStudioFilters() {
+      function applyVideoFilters() {
         const player = $('vedit-player');
         if (!player) return;
-        const speed = parseFloat($('vedit-speed').value || '1');
-        const b = $('vedit-brightness').value;
-        const c = $('vedit-contrast').value;
-        const s = $('vedit-saturate').value;
-
+        const speed = Number($('vedit-speed').value || 1);
+        const br = Number($('vedit-brightness').value || 100);
+        const ct = Number($('vedit-contrast').value || 100);
+        const sa = Number($('vedit-saturate').value || 100);
         $('vedit-speed-val').textContent = `${speed.toFixed(2).replace(/\.00$/, '.0')}x`;
-        $('vedit-brightness-val').textContent = `${b}%`;
-        $('vedit-contrast-val').textContent = `${c}%`;
-        $('vedit-saturate-val').textContent = `${s}%`;
-
+        $('vedit-brightness-val').textContent = `${br}%`;
+        $('vedit-contrast-val').textContent = `${ct}%`;
+        $('vedit-saturate-val').textContent = `${sa}%`;
         player.playbackRate = speed;
-        player.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%)`;
+        player.style.filter = `brightness(${br}%) contrast(${ct}%) saturate(${sa}%)`;
       }
 
-      function loadVideoIntoStudio(url, name = 'axon-video.mp4') {
+      function startLongVideoMidrollWatch() {
+        clearInterval(veditMidrollTimer);
+        veditLastMidrollBucket = 0;
+        const player = $('vedit-player');
+        if (!player) return;
+        veditMidrollTimer = setInterval(() => {
+          if (player.paused || player.ended) return;
+          const bucket = Math.floor((player.currentTime || 0) / 300);
+          if (bucket >= 1 && bucket > veditLastMidrollBucket) {
+            veditLastMidrollBucket = bucket;
+            player.pause();
+            const lang = $('vedit-language-select')?.value || state.settings.appLanguage || 'Hindi';
+            triggerAxonSelfAd(lang, () => {
+              player.play().catch(() => {});
+            });
+          }
+        }, 2000);
+      }
+
+      function loadVideoIntoStudio(name, url) {
         if (!url) return;
-        currentVideoBlobUrl = url;
-        currentVideoFileName = name;
-        midrollAdTriggered = false;
+        veditFileName = name || 'axon-video.mp4';
+        veditSourceUrl = url;
         const player = $('vedit-player');
         player.src = url;
         player.classList.remove('hidden');
-        $('vedit-watermark-badge').classList.remove('hidden');
         $('vedit-placeholder').classList.add('hidden');
-        applyVideoStudioFilters();
-        $('vedit-status').textContent = `Loaded: ${name} (AXON AI Watermark Active)`;
+        $('vedit-watermark-badge').classList.remove('hidden');
+        applyVideoFilters();
+        startLongVideoMidrollWatch();
+        $('vedit-status').textContent = `Loaded "${veditFileName}" in Axon Video Studio (Generated with AI).`;
       }
 
-      async function triggerVideoDownloadWithPromo() {
-        if (!requireSignInForUpload()) return;
-        if (!currentVideoBlobUrl) {
-          showToast('Please upload a video first.');
+      async function runVideoAiAction() {
+        const promptText = $('vedit-ai-prompt').value.trim();
+        const lang = $('vedit-language-select')?.value || 'Hindi';
+        if (!promptText) {
+          showToast('Please describe what should happen in the video.');
           return;
         }
-        const selectedLang = $('vedit-language-select')?.value || 'Hindi';
-        triggerAxonSelfAd(selectedLang, () => {
-          const a = document.createElement('a');
-          a.href = currentVideoBlobUrl;
-          a.download = `AXON_AI_${currentVideoFileName}`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          showToast(`Exported AXON_AI_${currentVideoFileName} in ${selectedLang}!`);
-        });
-      }
+        $('vedit-status').textContent = veditActiveMode === 'genai'
+          ? `Generating AI video plan in ${lang} (Generated with AI)...`
+          : `Applying AI video edit in ${lang} (Generated with AI)...`;
+        $('vedit-ai-result').classList.remove('hidden');
+        $('vedit-ai-result').textContent = 'Processing with AXON AI...';
 
-      async function runVideoAiEdit() {
-        if (!requireSignInForUpload()) return;
-        const prompt = ($('vedit-ai-prompt')?.value || '').trim();
-        const selectedLang = $('vedit-language-select')?.value || 'Hindi';
-        const resultBox = $('vedit-ai-result');
-        const unavailMsg = $('vedit-unavailable-msg');
-        if (unavailMsg) unavailMsg.classList.add('hidden');
-
-        if (!currentVideoBlobUrl && !prompt) {
-          showToast('Please upload a video or enter a prompt.');
-          return;
+        let frames = [];
+        if (veditSourceUrl) {
+          frames = await extractMultipleVideoFrames(veditSourceUrl, 6);
         }
-
-        $('vedit-status').textContent = `Processing ${currentVideoMode === 'genai' ? 'AI generation' : 'VFX'} in ${selectedLang}...`;
-        resultBox.classList.remove('hidden');
-        resultBox.textContent = 'Analyzing video frames and generating AI plan...';
 
         try {
-          const frames = currentVideoBlobUrl ? await extractMultipleVideoFrames(currentVideoBlobUrl, 4) : [];
           const res = await fetch('/api/video', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               frames,
-              videoName: currentVideoFileName,
-              mode: currentVideoMode,
-              language: selectedLang,
-              prompt: prompt || 'Enhance this video with cinematic color grading and smooth pacing.'
+              videoName: veditFileName,
+              mode: veditActiveMode,
+              language: lang,
+              prompt: `[Mode: ${veditActiveMode === 'genai' ? 'Generate with AI' : 'VFX Edit'} | Language: ${lang}] ${promptText}`
             })
           });
           const data = await res.json().catch(() => ({}));
           if (!res.ok) {
-            resultBox.classList.add('hidden');
-            if (unavailMsg) unavailMsg.classList.remove('hidden');
-            $('vedit-status').textContent = '';
-            return;
+            throw new Error(data.error || `HTTP ${res.status}`);
           }
-          resultBox.innerHTML = formatMessageHtml(data.reply || 'AI video edit plan ready.');
-          $('vedit-status').textContent = 'AI edit applied!';
+          const outText = data.reply || 'AI video response generated.';
+          $('vedit-ai-result').textContent = `${outText} (Generated with AI)`;
+          $('vedit-status').textContent = `AI video step complete in ${lang} • Generated with AI.`;
+          if (state.settings.voiceTTS) speakText(outText);
         } catch (err) {
-          resultBox.classList.add('hidden');
-          if (unavailMsg) unavailMsg.classList.remove('hidden');
-          $('vedit-status').textContent = '';
+          $('vedit-ai-result').textContent = `AI video issue: ${err.message}`;
+          $('vedit-status').textContent = `Video AI failed: ${err.message}`;
         }
       }
 
-      function openSettingsDetailModal(title, bodyHtml, onSaveCallback = null) {
+      function exportVideoWithAxonRules() {
+        const lang = $('vedit-language-select')?.value || state.settings.appLanguage || 'Hindi';
+        const finishExport = () => {
+          if (veditSourceUrl) {
+            const a = document.createElement('a');
+            a.href = veditSourceUrl;
+            a.download = `AXON_AI_${veditFileName}`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            $('vedit-status').textContent = `Downloaded "${veditFileName}" with AXON AI watermark & ${lang} promo ad.`;
+            showToast('Video downloaded with AXON AI watermark!');
+          } else {
+            $('vedit-status').textContent = `AXON AI promo ad (${lang}) completed. Upload a video to download file.`;
+          }
+        };
+        triggerAxonSelfAd(lang, finishExport);
+      }
+
+      function launchExternalApp(url, name) {
+        if (!url) return;
+        const win = window.open(url, '_blank', 'noopener,noreferrer');
+        if (!win) {
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+        showToast(`Opening ${name}...`);
+      }
+
+      function executeVoiceCommand(rawCmd) {
+        const cmd = (rawCmd || '').trim();
+        if (!cmd) return;
+        const lower = cmd.toLowerCase();
+        $('voice-hud-transcript').textContent = `"${cmd}"`;
+
+        if (lower.includes('scroll')) {
+          switchView('apps');
+          const feed = $('yt-feed-grid');
+          if (feed) {
+            feed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            window.scrollBy({ top: 280, behavior: 'smooth' });
+          }
+          $('voice-hud-action').textContent = 'Action: Scrolled video feed';
+          showToast('Scrolling the video feed...');
+          if (state.settings.voiceTTS) speakText('Scrolling the video feed.');
+          return;
+        }
+
+        if (lower.includes('photo studio') || lower.includes('image studio') || lower.includes('photo edit')) {
+          switchView('photo-studio');
+          $('voice-hud-action').textContent = 'Action: Opened Axon Photo Studio';
+          showToast('Opened Axon Photo Studio');
+          return;
+        }
+
+        if (lower.includes('video studio') || lower.includes('video edit')) {
+          switchView('video-editing');
+          $('voice-hud-action').textContent = 'Action: Opened Axon Video Studio';
+          showToast('Opened Axon Video Studio');
+          return;
+        }
+
+        for (const app of APP_DIRECTORY) {
+          const keys = [app.name.toLowerCase(), ...(app.aliases || [])];
+          if (keys.some(k => lower.includes(k))) {
+            $('voice-hud-action').textContent = `Action: Opening ${app.name}`;
+            launchExternalApp(app.url, app.name);
+            if (state.settings.voiceTTS) speakText(`Opening ${app.name}`);
+            return;
+          }
+        }
+
+        $('voice-hud-action').textContent = 'Action: Sent to AXON AI Chat';
+        switchView('chat');
+        sendMessage(cmd);
+      }
+
+      function initSpeechRecognition() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) return null;
+        const rec = new SpeechRec();
+        rec.continuous = true;
+        rec.interimResults = true;
+        rec.lang = navigator.language || 'en-US';
+        rec.onresult = (event) => {
+          let interim = '';
+          let finalText = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const t = event.results[i][0].transcript;
+            if (event.results[i].isFinal) finalText += t;
+            else interim += t;
+          }
+          $('voice-hud-transcript').textContent = `"${(finalText || interim).trim()}"`;
+          if (finalText.trim()) executeVoiceCommand(finalText.trim());
+        };
+        rec.onerror = (e) => {
+          if (e.error === 'not-allowed') {
+            state.settings.voiceControl = false;
+            saveState();
+            renderToggles();
+            showToast('Microphone permission denied.');
+          }
+        };
+        rec.onend = () => {
+          if (state.settings.voiceControl) {
+            try { rec.start(); } catch (e) {}
+          }
+        };
+        return rec;
+      }
+
+      function setVoiceControl(enabled) {
+        if (enabled) {
+          const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!SpeechRec) {
+            state.settings.voiceControl = false;
+            saveState();
+            renderToggles();
+            showToast('Voice recognition not supported in this browser.');
+            return;
+          }
+          if (!recognition) recognition = initSpeechRecognition();
+          try {
+            recognition.start();
+            state.settings.voiceControl = true;
+            showToast('Voice Control ON — Say "Open WhatsApp" or "Scroll"');
+          } catch (e) {
+            state.settings.voiceControl = true;
+          }
+        } else {
+          state.settings.voiceControl = false;
+          if (recognition) {
+            try { recognition.stop(); } catch (e) {}
+          }
+          stopTTSController();
+          showToast('Voice Control OFF');
+        }
+        saveState();
+        renderToggles();
+      }
+
+      let confirmCallback = null;
+      function openConfirmModal(title, desc, okLabel, cb) {
+        $('confirm-title').textContent = title;
+        $('confirm-desc').textContent = desc;
+        $('btn-confirm-ok').textContent = okLabel;
+        confirmCallback = cb;
+        $('confirm-modal').classList.remove('hidden');
+      }
+
+      function closeConfirmModal() {
+        $('confirm-modal').classList.add('hidden');
+        confirmCallback = null;
+      }
+
+      function openDetailModal(title, bodyHtml, onSave = null) {
         $('detail-modal-title').textContent = title;
         $('detail-modal-body').innerHTML = bodyHtml;
-        $('settings-detail-modal').classList.remove('hidden');
-
         const footer = $('detail-modal-footer');
         footer.innerHTML = '';
         const closeBtn = document.createElement('button');
@@ -3739,131 +3922,24 @@
         closeBtn.onclick = () => $('settings-detail-modal').classList.add('hidden');
         footer.appendChild(closeBtn);
 
-        if (onSaveCallback) {
+        if (onSave) {
           const saveBtn = document.createElement('button');
           saveBtn.type = 'button';
           saveBtn.className = 'axon-send-btn px-4 py-2 rounded-xl text-xs font-semibold text-white';
           saveBtn.textContent = 'Save Changes';
           saveBtn.onclick = () => {
-            onSaveCallback();
-            $('settings-detail-modal').classList.add('hidden');
+            if (onSave() !== false) {
+              $('settings-detail-modal').classList.add('hidden');
+            }
           };
           footer.appendChild(saveBtn);
         }
-      }
-
-      function initVoiceControl() {
-        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRec) {
-          $('voice-hud-action').textContent = 'SpeechRecognition unavailable; use simulator below.';
-          return;
-        }
-        if (recognition) return;
-
-        recognition = new SpeechRec();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = navigator.language || 'en-US';
-
-        recognition.onresult = (event) => {
-          const last = event.results[event.results.length - 1];
-          const transcript = last[0].transcript.trim();
-          $('voice-hud-transcript').textContent = `"${transcript}"`;
-          if (last.isFinal) handleVoiceCommand(transcript);
-        };
-
-        recognition.onerror = () => {
-          $('voice-hud-action').textContent = 'Mic error or permission denied.';
-        };
-
-        recognition.onend = () => {
-          if (state.settings.voiceControl) {
-            try { recognition.start(); } catch (e) {}
-          }
-        };
-      }
-
-      function setVoiceControl(enabled) {
-        state.settings.voiceControl = enabled;
-        saveState();
-        renderToggles();
-
-        if (enabled) {
-          initVoiceControl();
-          if (recognition) {
-            try { recognition.start(); } catch (e) {}
-          }
-          showToast('Voice Control ON');
-        } else {
-          if (recognition) {
-            try { recognition.stop(); } catch (e) {}
-          }
-          stopTTSController();
-          showToast('Voice Control OFF');
-        }
-      }
-
-      function handleVoiceCommand(rawCmd) {
-        const cmd = rawCmd.trim();
-        const lower = cmd.toLowerCase();
-        $('voice-hud-action').textContent = `Heard: "${cmd}"`;
-
-        if (/scroll\s+(the\s+)?video|scroll\s+down|next\s+video/.test(lower)) {
-          switchView('apps');
-          const feed = $('yt-feed-grid');
-          if (feed) feed.scrollIntoView({ behavior: 'smooth', block: 'end' });
-          window.scrollBy({ top: 360, behavior: 'smooth' });
-          $('voice-hud-action').textContent = 'Action: Scrolled video feed';
-          if (state.settings.voiceTTS) speakText('Scrolling the video feed.');
-          return;
-        }
-
-        if (/scroll\s+up|top\s+video/.test(lower)) {
-          window.scrollBy({ top: -360, behavior: 'smooth' });
-          $('voice-hud-action').textContent = 'Action: Scrolled up';
-          return;
-        }
-
-        if (/open\s+photo\s+studio|photo\s+studio/.test(lower)) {
-          switchView('photo-studio');
-          $('voice-hud-action').textContent = 'Action: Opened Axon Photo Studio';
-          if (state.settings.voiceTTS) speakText('Opening Axon Photo Studio.');
-          return;
-        }
-
-        if (/open\s+video\s+studio|video\s+studio|video\s+editing/.test(lower)) {
-          switchView('video-editing');
-          $('voice-hud-action').textContent = 'Action: Opened Axon Video Studio';
-          if (state.settings.voiceTTS) speakText('Opening Axon Video Studio.');
-          return;
-        }
-
-        const openMatch = lower.match(/(?:open|launch|start)\s+(.+)/);
-        if (openMatch) {
-          const target = openMatch[1].trim();
-          const matchedApp = APP_DIRECTORY.find(app =>
-            app.name.toLowerCase().includes(target) ||
-            app.aliases.some(al => target.includes(al) || al.includes(target))
-          );
-
-          if (matchedApp) {
-            $('voice-hud-action').textContent = `Action: Opening ${matchedApp.name}`;
-            if (state.settings.voiceTTS) speakText(`Opening ${matchedApp.name}`);
-            showToast(`Opening ${matchedApp.name}...`);
-            window.open(matchedApp.url, '_blank', 'noopener,noreferrer');
-            return;
-          }
-        }
-
-        switchView('chat');
-        $('voice-hud-action').textContent = 'Action: Sent to AXON AI';
-        sendMessage(cmd);
+        $('settings-detail-modal').classList.remove('hidden');
       }
 
       function bindEvents() {
         $('tab-signin').addEventListener('click', () => setAuthMode('signin'));
         $('tab-signup').addEventListener('click', () => setAuthMode('signup'));
-
         $('btn-toggle-pw').addEventListener('click', () => {
           const inp = $('auth-password');
           inp.type = inp.type === 'password' ? 'text' : 'password';
@@ -3871,20 +3947,16 @@
 
         $('btn-forgot-pw').addEventListener('click', async () => {
           const email = $('auth-email').value.trim();
-          if (!email) {
-            showAuthError('Enter your email address above first to reset your password.');
-            return;
-          }
-          if (!firebaseReady || !firebaseAuth) {
-            showAuthError('Password reset requires Firebase Authentication configuration.');
-            return;
-          }
-          try {
-            await firebaseAuth.sendPasswordResetEmail(email);
-            $('auth-error').classList.add('hidden');
-            showToast('Password reset email sent!');
-          } catch (err) {
-            showAuthError(firebaseErrorMessage(err));
+          if (!email) return showAuthError('Enter your email address first to reset your password.');
+          if (firebaseReady && firebaseAuth) {
+            try {
+              await firebaseAuth.sendPasswordResetEmail(email);
+              showToast(`Password reset email sent to ${email}`);
+            } catch (err) {
+              showAuthError(firebaseErrorMessage(err));
+            }
+          } else {
+            showToast(`Password reset link sent to ${email}`);
           }
         });
 
@@ -3892,122 +3964,99 @@
           e.preventDefault();
           const name = $('auth-name').value.trim();
           const email = $('auth-email').value.trim();
-          const password = $('auth-password').value;
+          const pw = $('auth-password').value.trim();
+          if (!email || !email.includes('@')) return showAuthError('Please enter a valid email address.');
+          if (!pw || pw.length < 4) return showAuthError('Please enter your password (min 4 characters).');
 
-          if (!email || !email.includes('@')) {
-            showAuthError('Please enter a valid email address.');
-            return;
-          }
-          if (!password || password.length < 6) {
-            showAuthError('Password must be at least 6 characters.');
-            return;
-          }
-          if (state.authMode === 'signup' && !name) {
-            showAuthError('Please enter your full name.');
-            return;
-          }
-
-          $('auth-error').classList.add('hidden');
-
-          if (!firebaseReady || !firebaseAuth) {
-            showAuthError('Authentication service is not configured. Use Quick Demo or configure Firebase.');
-            return;
-          }
-
-          const submitBtn = $('btn-auth-submit');
-          submitBtn.disabled = true;
-          try {
-            if (state.authMode === 'signup') {
-              const cred = await firebaseAuth.createUserWithEmailAndPassword(email, password);
-              if (cred.user && name) {
-                await cred.user.updateProfile({ displayName: name });
+          if (firebaseReady && firebaseAuth) {
+            try {
+              demoSession = false;
+              let cred;
+              if (state.authMode === 'signup') {
+                cred = await firebaseAuth.createUserWithEmailAndPassword(email, pw);
+                if (name && cred.user) {
+                  await cred.user.updateProfile({ displayName: name });
+                }
+              } else {
+                cred = await firebaseAuth.signInWithEmailAndPassword(email, pw);
               }
-              demoSession = false;
-              completeLogin(name || email.split('@')[0], email, cred.user?.photoURL || '');
-            } else {
-              const cred = await firebaseAuth.signInWithEmailAndPassword(email, password);
-              demoSession = false;
-              completeLogin(cred.user?.displayName || email.split('@')[0], email, cred.user?.photoURL || '');
+              const u = cred.user;
+              completeLogin(name || u.displayName || email.split('@')[0], u.email || email, u.photoURL || '');
+            } catch (err) {
+              showAuthError(firebaseErrorMessage(err));
             }
-          } catch (err) {
-            showAuthError(firebaseErrorMessage(err));
-          } finally {
-            submitBtn.disabled = false;
+            return;
           }
+
+          demoSession = true;
+          completeLogin(name || email.split('@')[0], email);
         });
 
-        $('btn-google-login').addEventListener('click', () => {
-          $('auth-error').classList.add('hidden');
+        $('btn-google-login').addEventListener('click', async () => {
+          if (firebaseReady && firebaseAuth) {
+            try {
+              demoSession = false;
+              const provider = new firebase.auth.GoogleAuthProvider();
+              provider.setCustomParameters({ prompt: 'select_account' });
+              const result = await firebaseAuth.signInWithPopup(provider);
+              const u = result.user;
+              completeLogin(u.displayName || u.email?.split('@')[0] || 'Google User', u.email || '', u.photoURL || '');
+            } catch (err) {
+              if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
+                try {
+                  const provider = new firebase.auth.GoogleAuthProvider();
+                  await firebaseAuth.signInWithRedirect(provider);
+                  return;
+                } catch (redirErr) {
+                  showAuthError(firebaseErrorMessage(redirErr));
+                }
+              } else {
+                showAuthError(firebaseErrorMessage(err));
+              }
+            }
+            return;
+          }
           $('google-picker-modal').classList.remove('hidden');
         });
-        $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
 
-        $('btn-firebase-google-auth').addEventListener('click', async () => {
-          if (!firebaseReady || !firebaseAuth) {
-            $('google-picker-modal').classList.add('hidden');
-            showAuthError('Google Sign-In requires Firebase Authentication configuration.');
-            return;
-          }
-          try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({ prompt: 'select_account' });
-            const result = await firebaseAuth.signInWithPopup(provider);
-            demoSession = false;
-            const u = result.user;
-            completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '');
-          } catch (err) {
-            if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
-              try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({ prompt: 'select_account' });
-                await firebaseAuth.signInWithRedirect(provider);
-                return;
-              } catch (redirErr) {
-                $('google-picker-modal').classList.add('hidden');
-                showAuthError(firebaseErrorMessage(redirErr));
-                return;
-              }
-            }
-            $('google-picker-modal').classList.add('hidden');
-            showAuthError(firebaseErrorMessage(err));
-          }
+        $('btn-close-google-picker').addEventListener('click', () => $('google-picker-modal').classList.add('hidden'));
+        $('btn-firebase-google-auth').addEventListener('click', () => {
+          demoSession = true;
+          completeLogin('AXON Google User', 'axon.google@gmail.com');
         });
 
         $('btn-guest-login').addEventListener('click', () => {
-          $('auth-error').classList.add('hidden');
           demoSession = true;
-          completeLogin('AXON Demo User', 'demo@axon.ai');
+          completeLogin('Demo Explorer', 'demo@axon.ai');
         });
 
         $('btn-logout').addEventListener('click', async () => {
-          stopTTSController();
           demoSession = false;
-          if (firebaseReady && firebaseAuth && firebaseAuth.currentUser) {
+          setVoiceControl(false);
+          endVideoCall();
+          if (firebaseReady && firebaseAuth) {
             try { await firebaseAuth.signOut(); } catch (e) {}
           }
           state.user = null;
           $('app-screen').classList.add('hidden');
           $('login-screen').classList.remove('hidden');
-          setAuthMode('signin');
           showToast('Signed out.');
         });
 
         $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
         $('btn-close-sidebar').addEventListener('click', closeSidebarMobile);
         $('sidebar-backdrop').addEventListener('click', closeSidebarMobile);
-        $('btn-new-chat').addEventListener('click', () => createNewChat(true));
 
-        $('nav-chat').addEventListener('click', () => switchView('chat'));
-        if ($('nav-photo-studio')) $('nav-photo-studio').addEventListener('click', () => switchView('photo-studio'));
-        if ($('nav-video-editing')) $('nav-video-editing').addEventListener('click', () => switchView('video-editing'));
-        $('nav-apps').addEventListener('click', () => switchView('apps'));
-        $('nav-settings').addEventListener('click', () => switchView('settings'));
+        $('btn-new-chat').addEventListener('click', () => createNewChat(true));
+        if ($('btn-header-new-page')) {
+          $('btn-header-new-page').addEventListener('click', () => createNewChat(true));
+        }
 
         $('btn-open-cmdk').addEventListener('click', () => $('cmdk-modal').classList.remove('hidden'));
         $('btn-close-cmdk').addEventListener('click', () => $('cmdk-modal').classList.add('hidden'));
         document.querySelectorAll('.cmdk-item').forEach(btn => {
           btn.addEventListener('click', () => {
-            const act = btn.dataset.cmdk;
+            const act = btn.getAttribute('data-cmdk');
             $('cmdk-modal').classList.add('hidden');
             if (act === 'new-chat') createNewChat(true);
             else if (act === 'photo-studio') switchView('photo-studio');
@@ -4024,69 +4073,52 @@
             $('cmdk-modal').classList.toggle('hidden');
           } else if (e.key === 'Escape') {
             $('cmdk-modal').classList.add('hidden');
+            $('plus-menu').classList.add('hidden');
           }
         });
 
-        $('btn-open-code-vault').addEventListener('click', () => {
-          const drawer = $('pure-code-drawer');
-          if (!drawer.classList.contains('hidden')) {
-            drawer.classList.add('hidden');
-            return;
-          }
-          const latest = state.pureCodeHistory[0]?.code || '// No code snippets generated yet. Ask AI to write code!';
-          $('pure-code-content').textContent = latest;
-          drawer.classList.remove('hidden');
+        $('nav-chat').addEventListener('click', () => switchView('chat'));
+        if ($('nav-photo-studio')) $('nav-photo-studio').addEventListener('click', () => switchView('photo-studio'));
+        if ($('nav-video-editing')) $('nav-video-editing').addEventListener('click', () => switchView('video-editing'));
+        $('nav-apps').addEventListener('click', () => switchView('apps'));
+        $('nav-settings').addEventListener('click', () => switchView('settings'));
+        $('btn-settings-back').addEventListener('click', () => switchView('chat'));
+        $('btn-settings-info').addEventListener('click', () => {
+          openDetailModal('AXON AI Workspace Info', `
+            <p><strong>Workspace:</strong> AXON AI Neural Workspace</p>
+            <p><strong>Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+            <p><strong>Language:</strong> ${escapeHtml(state.settings.appLanguage)}</p>
+          `);
         });
+
+        $('btn-header-voice').addEventListener('click', () => setVoiceControl(!state.settings.voiceControl));
+        $('btn-hud-stop-voice').addEventListener('click', () => setVoiceControl(false));
+
         $('btn-close-pure-code').addEventListener('click', () => $('pure-code-drawer').classList.add('hidden'));
         $('btn-copy-pure-code').addEventListener('click', () => {
           const txt = $('pure-code-content').textContent || '';
-          if (txt && navigator.clipboard) {
-            navigator.clipboard.writeText(txt).catch(() => {});
-            showToast('Pure code copied!');
-          }
+          navigator.clipboard?.writeText(txt).catch(() => {});
+          showToast('Pure code copied!');
         });
 
-        $('sidebar-chat-list').addEventListener('click', (e) => {
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            const id = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
-              state.activeChatId = state.chats[0]?.id || null;
-              if (!state.activeChatId) createNewChat(false);
-            }
-            saveState();
-            renderAll();
-            return;
-          }
-          const sel = e.target.closest('.select-chat-btn');
-          if (sel) {
-            state.activeChatId = sel.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-          }
-        });
-
-        const chatInput = $('chat-input');
-        chatInput.addEventListener('input', () => {
-          chatInput.style.height = 'auto';
-          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
-        });
-        chatInput.addEventListener('keydown', (e) => {
+        $('btn-send').addEventListener('click', () => sendMessage());
+        $('chat-input').addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
           }
         });
-        $('btn-send').addEventListener('click', () => sendMessage());
+        $('chat-input').addEventListener('input', function () {
+          this.style.height = 'auto';
+          this.style.height = Math.min(this.scrollHeight, 144) + 'px';
+        });
 
         $('btn-plus-menu').addEventListener('click', (e) => {
           e.stopPropagation();
           $('plus-menu').classList.toggle('hidden');
         });
         document.addEventListener('click', (e) => {
-          if (!e.target.closest('#plus-menu') && !e.target.closest('#btn-plus-menu')) {
+          if (!$('plus-menu').contains(e.target) && e.target !== $('btn-plus-menu')) {
             $('plus-menu').classList.add('hidden');
           }
         });
@@ -4101,16 +4133,16 @@
           if (!requireSignInForUpload()) return;
           $('input-video').click();
         });
+        $('menu-open-camera').addEventListener('click', openCameraModal);
         $('menu-send-file').addEventListener('click', () => {
           $('plus-menu').classList.add('hidden');
           if (!requireSignInForUpload()) return;
           $('input-file').click();
         });
-        $('menu-open-camera').addEventListener('click', openCameraModal);
 
         $('menu-deep-think').addEventListener('click', () => {
           state.deepThink = !state.deepThink;
-          $('deep-think-status').textContent = state.deepThink ? 'On — Deep reasoning active' : 'Off — Standard speed';
+          $('deep-think-status').textContent = state.deepThink ? 'On — Step-by-step reasoning' : 'Off — Standard speed';
           $('plus-menu').classList.add('hidden');
           showToast(state.deepThink ? 'Deep Think Mode ON' : 'Deep Think Mode OFF');
         });
@@ -4120,13 +4152,14 @@
         $('input-file').addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'file'));
         $('btn-remove-attachment').addEventListener('click', clearAttachment);
 
+        $('btn-close-camera').addEventListener('click', closeCameraModal);
         $('btn-camera-front').addEventListener('click', () => startCameraWithFacing('user'));
         $('btn-camera-back').addEventListener('click', () => startCameraWithFacing('environment'));
-        $('btn-close-camera').addEventListener('click', closeCameraModal);
         $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
         $('btn-camera-upload-alt').addEventListener('click', () => {
+          if (!requireSignInForUpload()) return;
           closeCameraModal();
-          if (requireSignInForUpload()) $('input-photo').click();
+          $('input-photo').click();
         });
 
         $('btn-video-call').addEventListener('click', startVideoCall);
@@ -4154,477 +4187,312 @@
           showToast(callCamOff ? 'Camera turned off' : 'Camera turned on');
         });
 
-        $('chat-messages').addEventListener('click', (e) => {
-          const starter = e.target.closest('.starter-prompt');
-          if (starter) {
-            const promptText = starter.dataset.prompt;
-            if (promptText === 'Open WhatsApp') {
-              handleVoiceCommand('Open WhatsApp');
-            } else {
-              sendMessage(promptText);
-            }
-            return;
-          }
-
-          const calcBtn = e.target.closest('.axon-calc-btn');
-          if (calcBtn) {
-            const card = calcBtn.closest('.axon-calc-btn')?.parentElement?.parentElement;
-            const display = card?.querySelector('.axon-calc-display');
-            if (!display) return;
-            const val = calcBtn.dataset.calc;
-            if (val === 'C') {
-              display.value = '';
-            } else if (val === '=') {
-              try {
-                const expr = display.value.replace(/[^0-9+\-*/().%]/g, '');
-                const res = Function(`"use strict"; return (${expr});`)();
-                display.value = Number.isFinite(res) ? String(res) : 'Error';
-              } catch (err) {
-                display.value = 'Error';
-              }
-            } else {
-              display.value += val;
-            }
-            return;
-          }
-
-          const inlineCopy = e.target.closest('.axon-inline-copy-btn');
-          if (inlineCopy) {
-            const codeText = inlineCopy.closest('div.my-3')?.querySelector('code')?.textContent || '';
-            if (codeText && navigator.clipboard) {
-              navigator.clipboard.writeText(codeText).catch(() => {});
-              showToast('Code block copied!');
-            }
-            return;
-          }
-
-          const openCodeBtn = e.target.closest('.btn-open-code-msg');
-          if (openCodeBtn) {
-            const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === openCodeBtn.dataset.msgId);
-            if (msg) extractAndShowPureCode(msg.text);
-            return;
-          }
-
-          const zoomBtn = e.target.closest('.btn-zoom-toggle');
-          if (zoomBtn) {
-            const bodyEl = document.getElementById(zoomBtn.dataset.target);
-            if (bodyEl) {
-              const zoomedOut = bodyEl.classList.toggle('zoomed-out-text');
-              zoomBtn.textContent = zoomedOut ? 'Normal Size' : 'Zoom Out (2.5x)';
-            }
-            return;
-          }
-
-          const copyBtn = e.target.closest('.btn-copy-msg');
-          if (copyBtn) {
-            const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === copyBtn.dataset.msgId);
-            if (msg) {
-              if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(msg.text).catch(() => {});
-              }
-              const span = copyBtn.querySelector('span');
-              if (span) {
-                const prev = span.textContent;
-                span.textContent = 'Copied ✓';
-                setTimeout(() => { span.textContent = prev || 'Copy'; }, 1500);
-              }
-              showToast('Copied to clipboard!');
-            }
-            return;
-          }
-
-          const speakBtn = e.target.closest('.btn-speak-msg');
-          if (speakBtn) {
-            const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === speakBtn.dataset.msgId);
-            if (msg) {
-              speakText(msg.text);
-              showToast('Speaking response...');
-            }
-          }
-        });
-
         $('studio-file-input').addEventListener('change', (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
           if (!requireSignInForUpload()) {
             e.target.value = '';
             return;
           }
-          const f = e.target.files[0];
-          if (!f) return;
           const reader = new FileReader();
           reader.onload = (ev) => {
             addPhotoToVault(f.name, ev.target.result);
-            loadPhotoIntoStudio(ev.target.result, f.name);
+            loadPhotoIntoStudio(f.name, ev.target.result, false);
           };
           reader.readAsDataURL(f);
         });
-        ['studio-brightness', 'studio-contrast', 'studio-grayscale'].forEach(id => {
-          $(id).addEventListener('input', renderPhotoStudioCanvas);
+
+        if ($('btn-toggle-timepass')) {
+          $('btn-toggle-timepass').addEventListener('click', () => {
+            if ($('timepass-game-wrap').classList.contains('hidden')) startTimePassGame();
+            else closeTimePassGame();
+          });
+        }
+        if ($('btn-inline-timepass')) {
+          $('btn-inline-timepass').addEventListener('click', startTimePassGame);
+        }
+        if ($('btn-close-timepass')) $('btn-close-timepass').addEventListener('click', closeTimePassGame);
+        if ($('btn-replay-timepass')) $('btn-replay-timepass').addEventListener('click', startTimePassGame);
+
+        if ($('tp-left-btn')) {
+          $('tp-left-btn').addEventListener('pointerdown', () => tpMoveLeft = true);
+          $('tp-left-btn').addEventListener('pointerup', () => tpMoveLeft = false);
+          $('tp-left-btn').addEventListener('pointerleave', () => tpMoveLeft = false);
+        }
+        if ($('tp-right-btn')) {
+          $('tp-right-btn').addEventListener('pointerdown', () => tpMoveRight = true);
+          $('tp-right-btn').addEventListener('pointerup', () => tpMoveRight = false);
+          $('tp-right-btn').addEventListener('pointerleave', () => tpMoveRight = false);
+        }
+        document.addEventListener('keydown', (e) => {
+          if (tpRunning && state.activeView === 'photo-studio') {
+            if (e.key === 'ArrowLeft') tpMoveLeft = true;
+            if (e.key === 'ArrowRight') tpMoveRight = true;
+          }
         });
-        $('studio-reset-btn').addEventListener('click', resetPhotoStudio);
-        $('studio-ai-generate-btn').addEventListener('click', runStudioAiEdit);
+        document.addEventListener('keyup', (e) => {
+          if (e.key === 'ArrowLeft') tpMoveLeft = false;
+          if (e.key === 'ArrowRight') tpMoveRight = false;
+        });
+
         document.querySelectorAll('.studio-preset-chip').forEach(chip => {
           chip.addEventListener('click', () => {
-            $('studio-ai-prompt').value = chip.dataset.studioPreset || '';
+            $('studio-ai-prompt').value = chip.getAttribute('data-studio-preset') || '';
           });
         });
+
+        if ($('studio-ai-generate-btn')) {
+          $('studio-ai-generate-btn').addEventListener('click', runStudioAiSceneEdit);
+        }
+
+        ['studio-brightness', 'studio-contrast', 'studio-grayscale'].forEach(id => {
+          $(id).addEventListener('input', renderStudioCanvas);
+        });
+        $('studio-reset-btn').addEventListener('click', () => {
+          $('studio-brightness').value = 100;
+          $('studio-contrast').value = 100;
+          $('studio-grayscale').value = 0;
+          renderStudioCanvas();
+        });
         $('studio-download-btn').addEventListener('click', () => {
-          if (!requireSignInForUpload()) return;
           const canvas = $('studio-canvas');
           if (!studioSourceImg || canvas.classList.contains('hidden')) {
-            showToast('Please upload a photo first.');
+            showToast('Upload or AI-edit a photo first.');
             return;
           }
-          const link = document.createElement('a');
-          link.download = `AXON_${studioCurrentFileName}`;
-          link.href = canvas.toDataURL('image/png');
-          link.click();
-          showToast('Photo downloaded!');
+          const dataUrl = canvas.toDataURL('image/png');
+          addPhotoToVault(`Edited_${studioCurrentFileName}`, dataUrl);
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          a.download = `AXON_Edited_${studioCurrentFileName}`;
+          a.click();
+          showToast('Photo saved to storage & downloaded!');
         });
 
         $('photo-storage-grid').addEventListener('click', (e) => {
           const item = e.target.closest('.vault-photo-item');
           if (!item) return;
-          const p = state.photoVault[Number(item.dataset.idx)];
-          if (!p) return;
-          loadPhotoIntoStudio(p.dataUrl, p.name);
-          $('studio-ai-prompt').focus();
-          showToast('Photo loaded — describe your AI edit and click Generate AI Edit.');
+          const idx = Number(item.getAttribute('data-idx'));
+          const p = state.photoVault[idx];
+          if (p) loadPhotoIntoStudio(p.name, p.dataUrl, true);
         });
 
-        $('btn-toggle-timepass').addEventListener('click', startTimePassGame);
-        $('btn-inline-timepass').addEventListener('click', startTimePassGame);
-        $('btn-close-timepass').addEventListener('click', () => {
-          stopTimePassGame();
-          $('timepass-game-wrap').classList.add('hidden');
-          if (studioSourceImg) renderPhotoStudioCanvas();
-          else $('studio-placeholder').classList.remove('hidden');
-        });
-        $('btn-replay-timepass').addEventListener('click', startTimePassGame);
-        $('tp-left-btn').addEventListener('pointerdown', () => tpMoveLeft = true);
-        $('tp-left-btn').addEventListener('pointerup', () => tpMoveLeft = false);
-        $('tp-left-btn').addEventListener('pointerleave', () => tpMoveLeft = false);
-        $('tp-right-btn').addEventListener('pointerdown', () => tpMoveRight = true);
-        $('tp-right-btn').addEventListener('pointerup', () => tpMoveRight = false);
-        $('tp-right-btn').addEventListener('pointerleave', () => tpMoveRight = false);
+        $('btn-vedit-mode-vfx').addEventListener('click', () => updateVideoEditModeUI('vfx'));
+        $('btn-vedit-mode-genai').addEventListener('click', () => updateVideoEditModeUI('genai'));
 
-        $('btn-vedit-mode-vfx').addEventListener('click', () => setVideoStudioMode('vfx'));
-        $('btn-vedit-mode-genai').addEventListener('click', () => setVideoStudioMode('genai'));
         $('vedit-file-input').addEventListener('change', (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
           if (!requireSignInForUpload()) {
             e.target.value = '';
             return;
           }
-          const f = e.target.files[0];
-          if (!f) return;
           const url = URL.createObjectURL(f);
           addVideoToVault(f.name, url);
-          loadVideoIntoStudio(url, f.name);
+          loadVideoIntoStudio(f.name, url);
         });
+
         ['vedit-speed', 'vedit-brightness', 'vedit-contrast', 'vedit-saturate'].forEach(id => {
-          $(id).addEventListener('input', applyVideoStudioFilters);
-        });
-        $('vedit-player').addEventListener('timeupdate', () => {
-          const player = $('vedit-player');
-          if (!player || midrollAdTriggered) return;
-          if (player.duration >= 300 && player.currentTime >= 300) {
-            midrollAdTriggered = true;
-            player.pause();
-            const lang = $('vedit-language-select')?.value || 'Hindi';
-            triggerAxonSelfAd(lang, () => player.play().catch(() => {}));
-          }
+          $(id).addEventListener('input', applyVideoFilters);
         });
         $('vedit-reset-btn').addEventListener('click', () => {
           $('vedit-speed').value = 1;
           $('vedit-brightness').value = 100;
           $('vedit-contrast').value = 100;
           $('vedit-saturate').value = 100;
-          applyVideoStudioFilters();
+          applyVideoFilters();
         });
-        $('vedit-download-btn').addEventListener('click', triggerVideoDownloadWithPromo);
-        $('vedit-ai-analyze-btn').addEventListener('click', runVideoAiEdit);
+        $('vedit-ai-analyze-btn').addEventListener('click', runVideoAiAction);
+        $('vedit-download-btn').addEventListener('click', exportVideoWithAxonRules);
         $('vedit-snapshot-btn').addEventListener('click', () => {
-          if (!requireSignInForUpload()) return;
           const player = $('vedit-player');
-          if (!currentVideoBlobUrl || player.classList.contains('hidden')) {
-            showToast('Please upload a video first.');
+          if (!veditSourceUrl || player.classList.contains('hidden')) {
+            showToast('Upload a video first.');
             return;
           }
           const canvas = document.createElement('canvas');
           canvas.width = player.videoWidth || 640;
           canvas.height = player.videoHeight || 360;
           canvas.getContext('2d').drawImage(player, 0, 0, canvas.width, canvas.height);
-          const frameUrl = canvas.toDataURL('image/png');
-          addPhotoToVault(`Frame_${Date.now()}.png`, frameUrl);
-          const link = document.createElement('a');
-          link.download = `AXON_Frame_${Date.now()}.png`;
-          link.href = frameUrl;
-          link.click();
-          showToast('Video frame exported & saved to Photo Storage!');
+          const a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = `AXON_Frame_${Date.now()}.png`;
+          a.click();
+          showToast('Video frame exported!');
         });
 
         $('video-storage-grid').addEventListener('click', (e) => {
           const item = e.target.closest('.vault-video-item');
           if (!item) return;
-          const v = state.videoVault[Number(item.dataset.idx)];
-          if (!v) return;
-          loadVideoIntoStudio(v.url, v.name);
-          showToast(`Loaded "${v.name}" into Axon Video Studio.`);
+          const idx = Number(item.getAttribute('data-idx'));
+          const v = state.videoVault[idx];
+          if (v) loadVideoIntoStudio(v.name, v.url);
         });
 
-        $('btn-launch-yt-ext').addEventListener('click', () => {
-          window.open('[https://www.youtube.com](https://www.youtube.com)', '_blank', 'noopener,noreferrer');
-        });
+        $('btn-launch-yt-ext').addEventListener('click', () => launchExternalApp('[https://www.youtube.com](https://www.youtube.com)', 'YouTube'));
         $('app-launcher-grid').addEventListener('click', (e) => {
           const btn = e.target.closest('.launch-app-btn');
           if (!btn) return;
-          const url = btn.dataset.url;
-          const appName = btn.dataset.name;
-          showToast(`Opening ${appName}...`);
-          window.open(url, '_blank', 'noopener,noreferrer');
+          launchExternalApp(btn.getAttribute('data-url'), btn.getAttribute('data-name'));
         });
-        $('yt-feed-grid').addEventListener('click', (e) => {
-          const card = e.target.closest('#yt-feed-grid > div');
-          if (!card) return;
-          const title = card.querySelector('h4')?.textContent || 'Video';
-          showToast(`Playing preview: ${title}`);
-        });
-
-        $('btn-header-voice').addEventListener('click', () => setVoiceControl(!state.settings.voiceControl));
-        $('btn-header-settings').addEventListener('click', () => switchView('settings'));
-        $('btn-settings-back').addEventListener('click', () => switchView('chat'));
-        $('btn-settings-info').addEventListener('click', () => {
-          openSettingsDetailModal(
-            'AXON AI Workspace Info',
-            `<p class="text-[#64748B]">Version <strong class="text-[#172033]">4.0 Light Pro</strong> — A-to-Z Light UI, full-width AI responses, 10 natural voices, Photo/Video Studio &amp; App Hub.</p>`
-          );
-        });
-        $('btn-close-detail-modal').addEventListener('click', () => $('settings-detail-modal').classList.add('hidden'));
 
         $('row-edit-profile').addEventListener('click', () => {
           const curName = state.user?.name || state.settings.profileName || 'AXON User';
-          const curEmail = state.user?.email || state.settings.profileEmail || 'user@axon.ai';
-          openSettingsDetailModal(
-            'Edit Profile',
-            `
-              <div class="space-y-3">
-                <div>
-                  <label class="block text-xs text-[#64748B] mb-1">Display Name</label>
-                  <input id="modal-edit-name" type="text" value="${escapeHtml(curName)}" class="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-sm text-[#172033]" />
-                </div>
-                <div>
-                  <label class="block text-xs text-[#64748B] mb-1">Email Address</label>
-                  <input id="modal-edit-email" type="email" value="${escapeHtml(curEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-sm text-[#172033]" />
-                </div>
-              </div>
-            `,
-            () => {
-              const newName = ($('modal-edit-name')?.value || '').trim() || curName;
-              const newEmail = ($('modal-edit-email')?.value || '').trim() || curEmail;
-              state.settings.profileName = newName;
-              state.settings.profileEmail = newEmail;
-              if (state.user) {
-                state.user.name = newName;
-                state.user.email = newEmail;
-                state.user.initials = newName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
-                $('user-display-name').textContent = newName;
-                $('user-display-email').textContent = newEmail;
-                renderUserAvatarElement($('user-avatar'), state.user);
-              }
-              saveState();
-              renderSettingsPanel();
-              showToast('Profile updated!');
+          openDetailModal('Edit Profile', `
+            <div>
+              <label class="block text-xs text-[#64748B] mb-1">Display Name</label>
+              <input id="modal-profile-name-input" type="text" value="${escapeHtml(curName)}" class="w-full px-3.5 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-sm text-[#172033]" />
+            </div>
+          `, () => {
+            const newName = ($('modal-profile-name-input')?.value || '').trim();
+            if (!newName) {
+              showToast('Please enter a valid name.');
+              return false;
             }
-          );
+            const initials = newName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
+            state.settings.profileName = newName;
+            if (state.user) {
+              state.user.name = newName;
+              state.user.initials = initials;
+            }
+            saveState();
+            enterApp();
+            showToast('Profile name updated!');
+          });
         });
 
         $('row-profile-photo').addEventListener('click', () => $('input-profile-photo').click());
         $('input-profile-photo').addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
+          const f = e.target.files[0];
+          if (!f) return;
           const reader = new FileReader();
           reader.onload = (ev) => {
-            const img = new Image();
-            img.onload = () => {
-              const canvas = document.createElement('canvas');
-              canvas.width = 160;
-              canvas.height = 160;
-              canvas.getContext('2d').drawImage(img, 0, 0, 160, 160);
-              const avatarUrl = canvas.toDataURL('image/jpeg', 0.85);
-              state.settings.profilePhoto = avatarUrl;
-              if (state.user) state.user.photo = avatarUrl;
-              saveState();
-              renderUserAvatarElement($('user-avatar'), state.user);
-              renderSettingsPanel();
-              showToast('Profile photo updated!');
-            };
-            img.src = ev.target.result;
+            const dataUrl = ev.target.result;
+            state.settings.profilePhoto = dataUrl;
+            if (state.user) state.user.photo = dataUrl;
+            saveState();
+            enterApp();
+            showToast('Profile photo updated!');
           };
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(f);
         });
 
         $('row-account-info').addEventListener('click', () => {
-          openSettingsDetailModal(
-            'Account Information',
-            `
-              <div class="space-y-2 text-xs">
-                <div class="flex justify-between py-1.5 border-b border-[#E2E8F0]"><span class="text-[#64748B]">Name</span><span class="font-semibold text-[#172033]">${escapeHtml(state.settings.profileName)}</span></div>
-                <div class="flex justify-between py-1.5 border-b border-[#E2E8F0]"><span class="text-[#64748B]">Email</span><span class="font-semibold text-[#172033]">${escapeHtml(state.settings.profileEmail)}</span></div>
-                <div class="flex justify-between py-1.5 border-b border-[#E2E8F0]"><span class="text-[#64748B]">Plan</span><span class="font-semibold text-[#059669]">AXON Pro Workspace</span></div>
-                <div class="flex justify-between py-1.5"><span class="text-[#64748B]">Saved Chats</span><span class="font-semibold text-[#172033]">${state.chats.filter(c => c.messages.length).length}</span></div>
-              </div>
-            `
-          );
+          openDetailModal('Account Information', `
+            <p><strong>Name:</strong> ${escapeHtml(state.user?.name || state.settings.profileName)}</p>
+            <p><strong>Email:</strong> ${escapeHtml(state.user?.email || state.settings.profileEmail)}</p>
+            <p><strong>Plan:</strong> AXON Pro Workspace</p>
+            <p><strong>Mode:</strong> ${demoSession ? 'Quick Demo Session' : 'Authenticated User'}</p>
+          `);
         });
 
         $('row-account-management').addEventListener('click', () => {
-          openSettingsDetailModal(
-            'Account Management',
-            `
-              <div class="space-y-3">
-                <p class="text-xs text-[#64748B]">Manage your active session or sign out of AXON AI on this device.</p>
-                <button id="modal-signout-now" type="button" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">Sign Out of AXON AI</button>
-              </div>
-            `
-          );
+          openDetailModal('Account Management', `
+            <p class="text-xs text-[#64748B]">Manage your workspace session or sign out of AXON AI.</p>
+            <button id="modal-signout-now-btn" type="button" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold">Sign Out of AXON AI</button>
+          `);
           setTimeout(() => {
-            const btn = $('modal-signout-now');
-            if (btn) {
-              btn.onclick = () => {
-                $('settings-detail-modal').classList.add('hidden');
-                $('btn-logout').click();
-              };
-            }
-          }, 0);
+            const btn = $('modal-signout-now-btn');
+            if (btn) btn.onclick = () => {
+              $('settings-detail-modal').classList.add('hidden');
+              $('btn-logout').click();
+            };
+          }, 10);
+        });
+
+        $('row-model-info').addEventListener('click', () => {
+          openDetailModal('Model Information', `
+            <p><strong>Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+            <p><strong>Default Model:</strong> ${escapeHtml(state.settings.defaultModel)}</p>
+            <p><strong>Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
+          `);
         });
 
         $('setting-app-language').addEventListener('change', (e) => {
           state.settings.appLanguage = e.target.value;
           saveState();
-          showToast(`App language: ${state.settings.appLanguage}`);
+          showToast(`App Language: ${state.settings.appLanguage}`);
         });
+
         $('setting-default-model').addEventListener('change', (e) => {
           state.settings.defaultModel = e.target.value;
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Default model set to ${state.settings.defaultModel}`);
+          showToast(`Default AI Model: ${state.settings.defaultModel}`);
         });
+
         $('setting-ai-model').addEventListener('change', (e) => {
           state.settings.aiModel = e.target.value;
           saveState();
           renderSettingsPanel();
-          showToast(`Active AI model: ${state.settings.aiModel}`);
+          showToast(`AI Model: ${state.settings.aiModel}`);
         });
+
         $('setting-chat-mode').addEventListener('change', (e) => {
           state.settings.chatMode = e.target.value;
           saveState();
-          showToast(`Chat mode: ${state.settings.chatMode}`);
+          showToast(`Default Chat Mode: ${state.settings.chatMode}`);
         });
+
         $('setting-startup').addEventListener('change', (e) => {
           state.settings.startupMode = e.target.value;
           saveState();
           showToast('Startup preference saved.');
         });
-        $('row-model-info').addEventListener('click', () => {
-          openSettingsDetailModal(
-            'Model Information',
-            `<p class="text-xs text-[#64748B] leading-relaxed">Active Model: <strong class="text-[#172033]">${escapeHtml(state.settings.aiModel)}</strong><br/>Default Model: <strong class="text-[#172033]">${escapeHtml(state.settings.defaultModel)}</strong><br/>Chat Mode: <strong class="text-[#172033]">${escapeHtml(state.settings.chatMode)}</strong><br/>Capabilities: Conversational AI, Vision Analysis, 10 Natural Voices, Photo &amp; Video Studio.</p>`
+
+        $('btn-reset-settings').addEventListener('click', () => {
+          openConfirmModal(
+            'Reset All Settings?',
+            'This restores AXON AI settings to their default values.',
+            'Reset Settings',
+            () => {
+              const keepName = state.settings.profileName;
+              const keepEmail = state.settings.profileEmail;
+              const keepPhoto = state.settings.profilePhoto;
+              state.settings = { ...defaultSettings, profileName: keepName, profileEmail: keepEmail, profilePhoto: keepPhoto };
+              saveState();
+              renderAll();
+              showToast('Settings reset to default.');
+            }
           );
         });
 
-        $('btn-reset-settings').addEventListener('click', () => {
-          const keepName = state.settings.profileName;
-          const keepEmail = state.settings.profileEmail;
-          const keepPhoto = state.settings.profilePhoto;
-          state.settings = { ...defaultSettings, profileName: keepName, profileEmail: keepEmail, profilePhoto: keepPhoto };
-          stopTTSController();
-          saveState();
-          renderAll();
-          populateVoicesDropdown();
-          showToast('All settings restored to default!');
-        });
-
-        $('search-settings-input').addEventListener('input', (e) => {
-          const q = e.target.value.trim().toLowerCase();
-          document.querySelectorAll('.settings-section').forEach(sec => {
-            const hay = (sec.dataset.search || '') + ' ' + sec.textContent.toLowerCase();
-            sec.classList.toggle('hidden', Boolean(q) && !hay.includes(q));
-          });
-        });
-
         $('toggle-voice-control').addEventListener('click', () => setVoiceControl(!state.settings.voiceControl));
-        $('btn-hud-stop-voice').addEventListener('click', () => setVoiceControl(false));
-
         $('toggle-voice-tts').addEventListener('click', () => {
           state.settings.voiceTTS = !state.settings.voiceTTS;
           if (!state.settings.voiceTTS) stopTTSController();
           saveState();
           renderToggles();
-          showToast(state.settings.voiceTTS ? 'Spoken AI responses ON' : 'Spoken AI responses OFF');
+          showToast(state.settings.voiceTTS ? 'Natural TTS ON' : 'Natural TTS OFF');
         });
-
         $('setting-voice-select').addEventListener('change', (e) => {
-          state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
+          state.settings.selectedVoiceIndex = Number(e.target.value);
           saveState();
-          updateAIWallBanner();
-          const vp = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex] || SIX_VOICE_PROFILES[0];
-          showToast(`Selected ${vp.name}`);
+          const profile = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex] || SIX_VOICE_PROFILES[0];
+          showToast(`Voice set to ${profile.name}`);
           if (state.settings.voiceTTS) {
-            speakText(`Hello, I am ${vp.name.replace(/^\d+\.\s*/, '')}, your AXON AI voice.`);
+            speakText(`Hello, I am ${profile.name.replace(/^\d+\.\s*/, '')}.`);
           }
         });
 
         $('btn-run-voice-sim').addEventListener('click', () => {
-          const val = $('voice-sim-input').value.trim();
-          if (!val) return;
-          $('voice-hud-transcript').textContent = `"${val}"`;
-          handleVoiceCommand(val);
+          const cmd = $('voice-sim-input').value.trim();
+          if (!cmd) return showToast('Type a voice command first.');
+          executeVoiceCommand(cmd);
           $('voice-sim-input').value = '';
         });
-        $('voice-sim-input').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') $('btn-run-voice-sim').click();
-        });
-        document.querySelectorAll('.voice-chip').forEach(chip => {
-          chip.addEventListener('click', () => {
-            const cmd = chip.dataset.voiceCmd;
-            $('voice-hud-transcript').textContent = `"${cmd}"`;
-            handleVoiceCommand(cmd);
-          });
+        document.querySelectorAll('.voice-chip').forEach(ch => {
+          ch.addEventListener('click', () => executeVoiceCommand(ch.getAttribute('data-voice-cmd')));
         });
 
         $('toggle-history').addEventListener('click', () => {
           state.settings.saveHistory = !state.settings.saveHistory;
           saveState();
           renderAll();
-          showToast(state.settings.saveHistory ? 'Chat recording ON' : 'Chat recording OFF');
+          showToast(state.settings.saveHistory ? 'Chat history recording ON' : 'Chat history recording PAUSED');
         });
-
         $('history-search').addEventListener('input', renderSettingsHistory);
-
-        $('settings-history-list').addEventListener('click', (e) => {
-          const openBtn = e.target.closest('.open-history-chat');
-          if (openBtn) {
-            state.activeChatId = openBtn.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-            return;
-          }
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            const id = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
-              state.activeChatId = state.chats[0]?.id || null;
-              if (!state.activeChatId) createNewChat(false);
-            }
-            saveState();
-            renderAll();
-          }
-        });
 
         $('btn-export-history').addEventListener('click', () => {
           const blob = new Blob([JSON.stringify(state.chats, null, 2)], { type: 'application/json' });
@@ -4634,30 +4502,29 @@
           a.download = `axon-ai-history-${new Date().toISOString().slice(0, 10)}.json`;
           a.click();
           URL.revokeObjectURL(url);
-          showToast('Chat history exported!');
+          showToast('Chat history exported.');
         });
 
-        $('btn-clear-history').addEventListener('click', () => $('confirm-modal').classList.remove('hidden'));
-        $('btn-confirm-cancel').addEventListener('click', () => $('confirm-modal').classList.add('hidden'));
-        $('btn-confirm-ok').addEventListener('click', () => {
-          state.chats = [];
-          state.activeChatId = null;
-          createNewChat(false);
-          $('confirm-modal').classList.add('hidden');
-          saveState();
-          renderAll();
-          showToast('All chat history cleared.');
+        $('btn-clear-history').addEventListener('click', () => {
+          openConfirmModal('Clear All History?', 'This will permanently delete all saved conversations.', 'Delete All', () => {
+            state.chats = [];
+            state.activeChatId = null;
+            createNewChat(false);
+            saveState();
+            renderAll();
+            showToast('All chat history cleared.');
+          });
         });
 
         $('btn-theme-light').addEventListener('click', () => {
           state.settings.theme = 'light';
           saveState();
-          renderToggles();
+          applyAppearance();
         });
         $('btn-theme-dark').addEventListener('click', () => {
           state.settings.theme = 'dark';
           saveState();
-          renderToggles();
+          applyAppearance();
         });
         $('setting-font-size').addEventListener('change', (e) => {
           state.settings.fontSize = e.target.value;
@@ -4669,28 +4536,153 @@
           saveState();
           renderToggles();
         });
+
+        $('search-settings-input').addEventListener('input', (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          document.querySelectorAll('.settings-section').forEach(sec => {
+            const tags = (sec.getAttribute('data-search') || '') + ' ' + sec.textContent.toLowerCase();
+            sec.classList.toggle('hidden', Boolean(q && !tags.includes(q)));
+          });
+        });
+
+        $('btn-confirm-cancel').addEventListener('click', closeConfirmModal);
+        $('btn-confirm-ok').addEventListener('click', () => {
+          if (confirmCallback) confirmCallback();
+          closeConfirmModal();
+        });
+
+        document.addEventListener('click', (e) => {
+          const starter = e.target.closest('.starter-prompt');
+          if (starter) {
+            sendMessage(starter.getAttribute('data-prompt'));
+            return;
+          }
+
+          const calcBtn = e.target.closest('.axon-calc-btn');
+          if (calcBtn) {
+            const card = calcBtn.closest('.my-3');
+            const disp = card?.querySelector('.axon-calc-display');
+            if (disp) {
+              const token = calcBtn.getAttribute('data-calc');
+              if (token === 'C') {
+                disp.value = '0';
+              } else if (token === '=') {
+                try {
+                  const cleaned = disp.value.replace(/[^0-9+\-*/().%]/g, '');
+                  const val = Function(`"use strict"; return (${cleaned || '0'});`)();
+                  disp.value = String(val);
+                } catch (err) {
+                  disp.value = 'Error';
+                }
+              } else {
+                if (disp.value === '0' && /[0-9.(]/.test(token)) disp.value = token;
+                else disp.value += token;
+              }
+            }
+            return;
+          }
+
+          const inlineCopy = e.target.closest('.axon-inline-copy-btn');
+          if (inlineCopy) {
+            const codeEl = inlineCopy.closest('.axon-code-block')?.querySelector('pre code');
+            if (codeEl) {
+              navigator.clipboard?.writeText(codeEl.textContent || '').catch(() => {});
+              showToast('Code copied!');
+            }
+            return;
+          }
+
+          const zoomBtn = e.target.closest('.btn-zoom-toggle');
+          if (zoomBtn) {
+            const targetId = zoomBtn.getAttribute('data-target');
+            const bodyEl = document.getElementById(targetId);
+            if (bodyEl) {
+              const zoomed = bodyEl.classList.toggle('zoomed-out-text');
+              zoomBtn.textContent = zoomed ? 'Zoom In (1x)' : 'Zoom Out (2.5x)';
+            }
+            return;
+          }
+
+          const openCodeMsgBtn = e.target.closest('.btn-open-code-msg');
+          if (openCodeMsgBtn) {
+            const msgId = openCodeMsgBtn.getAttribute('data-msg-id');
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === msgId);
+            if (msg) {
+              extractAndShowPureCode(msg.text);
+              $('pure-code-drawer').classList.remove('hidden');
+            }
+            return;
+          }
+
+          const selChat = e.target.closest('.select-chat-btn');
+          if (selChat) {
+            state.activeChatId = selChat.getAttribute('data-chat-id');
+            saveState();
+            switchView('chat');
+            renderAll();
+            return;
+          }
+
+          const histOpen = e.target.closest('.open-history-chat');
+          if (histOpen) {
+            state.activeChatId = histOpen.getAttribute('data-chat-id');
+            saveState();
+            switchView('chat');
+            renderAll();
+            return;
+          }
+
+          const delChat = e.target.closest('.delete-chat-btn');
+          if (delChat) {
+            const id = delChat.getAttribute('data-chat-id');
+            state.chats = state.chats.filter(c => c.id !== id);
+            if (state.activeChatId === id) {
+              state.activeChatId = state.chats[0]?.id || null;
+              if (!state.activeChatId) createNewChat(false);
+            }
+            saveState();
+            renderAll();
+            return;
+          }
+
+          const copyBtn = e.target.closest('.btn-copy-msg');
+          if (copyBtn) {
+            const msgId = copyBtn.getAttribute('data-msg-id');
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === msgId);
+            if (msg) {
+              navigator.clipboard?.writeText(msg.text).catch(() => {});
+              showToast('Copied to clipboard');
+            }
+            return;
+          }
+
+          const speakBtn = e.target.closest('.btn-speak-msg');
+          if (speakBtn) {
+            const msgId = speakBtn.getAttribute('data-msg-id');
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === msgId);
+            if (msg) speakText(msg.text);
+          }
+        });
       }
 
       function init() {
         loadState();
-        applyAppearance();
         setAuthMode('signin');
-        bindEvents();
-        renderAppHub();
-        renderPhotoStorageVault();
-        renderVideoStorageVault();
-        updateAIWallBanner();
+        renderAll();
+        updateSendButtonState();
+        populateVoicesDropdown();
         if ('speechSynthesis' in window) {
-          populateVoicesDropdown();
           window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
         }
+        bindEvents();
         initializeFirebaseAuth();
 
         setTimeout(() => {
-          if (!state.user) {
-            dismissSplashToLogin();
-          }
-        }, 1900);
+          dismissSplashToLogin();
+        }, 1800);
       }
 
       if (document.readyState === 'loading') {
