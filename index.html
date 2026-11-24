@@ -37,6 +37,46 @@
       touch-action: pan-y;
     }
 
+    /* Long message & code overflow protection */
+    .axon-msg-body,
+    .axon-msg-body p,
+    .axon-msg-body div,
+    .axon-msg-body span,
+    .axon-msg-body code {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-width: 100%;
+    }
+    .axon-msg-body pre {
+      max-width: 100%;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Smooth ChatGPT-inspired streaming writing animation */
+    @keyframes streamWordFade {
+      0% {
+        opacity: 0.35;
+        transform: translateY(2px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .streaming-caret::after {
+      content: '▍';
+      display: inline-block;
+      margin-left: 3px;
+      color: #22d3ee;
+      animation: caretPulse 0.8s steps(2, start) infinite;
+    }
+    @keyframes caretPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.15; }
+    }
+
+    /* Light Theme fixes — no dark/black buttons */
     html.light-theme body {
       background-color: #f1f5f9 !important;
       background-image: none !important;
@@ -80,14 +120,27 @@
     html.light-theme .bg-slate-900\/75,
     html.light-theme .bg-slate-900\/60,
     html.light-theme .bg-slate-900,
+    html.light-theme .bg-slate-800,
+    html.light-theme .bg-slate-800\/80,
+    html.light-theme .bg-slate-800\/90,
     html.light-theme select,
     html.light-theme textarea,
     html.light-theme input[type="text"],
     html.light-theme input[type="email"],
     html.light-theme input[type="password"] {
-      background-color: #f1f5f9 !important;
+      background-color: #e2e8f0 !important;
       color: #0f172a !important;
       border-color: #cbd5e1 !important;
+    }
+    html.light-theme .btn-copy-msg,
+    html.light-theme .btn-speak-msg,
+    html.light-theme .btn-open-code-msg,
+    html.light-theme .voice-chip,
+    html.light-theme .studio-preset-chip,
+    html.light-theme .starter-prompt {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+      border-color: #94a3b8 !important;
     }
     html.light-theme #btn-send,
     html.light-theme #btn-auth-submit,
@@ -141,7 +194,7 @@
       50% { height: 28px; }
     }
     @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes splashLoadBar {
@@ -153,7 +206,7 @@
       animation: floatOrb 3.5s ease-in-out infinite;
     }
     .animate-fade-up {
-      animation: fadeSlideUp 0.25s ease-out forwards;
+      animation: fadeSlideUp 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
     .splash-progress-fill {
       animation: splashLoadBar 1.8s ease-in-out forwards;
@@ -198,20 +251,11 @@
     .btn-stop-blink {
       animation: stopBlink 0.9s ease-in-out infinite;
     }
-    .ai-wall-banner {
-      background: linear-gradient(90deg, rgba(34, 211, 238, 0.12), rgba(99, 102, 241, 0.16), rgba(34, 211, 238, 0.12));
-      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
-    }
-    .zoomed-out-text {
-      font-size: 0.65rem !important;
-      line-height: 1.35 !important;
-      transform-origin: top left;
-    }
   </style>
 </head>
 <body class="mesh-bg antialiased selection:bg-cyan-500/30 selection:text-cyan-100">
 
-  <!-- ==================== 0. SPLASH SCREEN ==================== -->
+  <!-- ==================== 0. SPLASH SCREEN (PRESERVED) ==================== -->
   <section id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 bg-gradient-to-b from-[#071326] via-[#060d1c] to-[#050811]">
     <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#3b82f6] via-[#2563eb] to-[#06b6d4] shadow-2xl shadow-cyan-500/25 flex items-center justify-center mb-7 animate-float-orb">
       <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -234,7 +278,7 @@
     </p>
   </section>
 
-  <!-- ==================== 1. LOGIN SCREEN ==================== -->
+  <!-- ==================== 1. LOGIN SCREEN (PRESERVED) ==================== -->
   <section id="login-screen" class="hidden fixed inset-0 z-40 overflow-y-auto px-4 py-6 flex items-center justify-center bg-gradient-to-b from-[#08162a] via-[#060c1a] to-[#050811]">
     <div class="w-full max-w-md rounded-3xl p-6 sm:p-7 bg-[#0b1326]/95 border border-slate-800/90 shadow-2xl shadow-black/70 animate-fade-up">
       <div class="flex flex-col items-center text-center mb-5">
@@ -329,10 +373,10 @@
   </section>
 
   <!-- ==================== 2. MAIN APPLICATION ==================== -->
-  <div id="app-screen" class="hidden h-full w-full flex overflow-hidden">
+  <div id="app-screen" class="hidden h-full w-full max-w-full flex overflow-hidden">
     <div id="sidebar-backdrop" class="hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"></div>
 
-    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-[#0a0f1d] border-r border-slate-800/80 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-[#0a0f1d] border-r border-slate-800/80 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0">
       <div class="p-4 flex items-center justify-between border-b border-slate-800/80">
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-md shadow-cyan-500/20 flex items-center justify-center">
@@ -402,8 +446,8 @@
       </div>
     </aside>
 
-    <main class="flex-1 flex flex-col min-w-0 h-full relative">
-      <header class="h-14 shrink-0 px-3 sm:px-5 border-b border-slate-800/80 bg-[#0a0f1d]/80 backdrop-blur-md flex items-center justify-between gap-2 z-20">
+    <main class="flex-1 flex flex-col w-full max-w-full min-w-0 h-full relative overflow-hidden">
+      <header class="h-14 shrink-0 w-full px-3 sm:px-5 border-b border-slate-800/80 bg-[#0a0f1d]/80 backdrop-blur-md flex items-center justify-between gap-2 z-20">
         <div class="flex items-center gap-2.5 min-w-0">
           <button id="btn-open-sidebar" type="button" class="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -426,39 +470,28 @@
         </div>
       </header>
 
-      <div id="ai-wall-strip" class="ai-wall-banner px-3 sm:px-6 py-1.5 flex items-center justify-between text-[11px] shrink-0">
-        <div class="flex items-center gap-2 truncate">
-          <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold tracking-wider">AI WALL</span>
-          <span id="ai-wall-voice-info" class="text-slate-300 truncate">Active Voice: 1. Nova (Clear Female) • Natural Human Speech</span>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <span id="telemetry-mem-badge" class="hidden md:inline-block px-2 py-0.5 rounded bg-slate-900/80 text-slate-400 font-mono text-[10px]">Storage: 0 KB</span>
-          <button id="btn-open-code-vault" type="button" class="px-2.5 py-0.5 rounded-lg bg-black/70 hover:bg-black text-cyan-300 border border-slate-700 font-mono text-[10px]">
-            Code Area (<span id="code-vault-count">0</span>)
-          </button>
-        </div>
-      </div>
+      <!-- ==================== VIEW 1: CHAT INTERFACE (100% WIDTH) ==================== -->
+      <div id="view-chat" class="flex-1 flex flex-col w-full max-w-full min-h-0">
+        <div id="chat-messages" class="flex-1 overflow-y-auto w-full max-w-full px-3 sm:px-6 py-5 space-y-5 scroll-smooth"></div>
 
-      <!-- ==================== VIEW 1: CHAT INTERFACE ==================== -->
-      <div id="view-chat" class="flex-1 flex flex-col min-h-0">
-        <div id="chat-messages" class="flex-1 overflow-y-auto px-3 sm:px-6 py-5 space-y-5 scroll-smooth"></div>
-
-        <div id="pure-code-drawer" class="hidden mx-3 sm:mx-6 mb-2 rounded-2xl bg-[#03050a] border border-slate-700/90 shadow-2xl overflow-hidden animate-fade-up">
-          <div class="px-4 py-2 bg-black border-b border-slate-800 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span class="text-xs font-mono font-semibold text-cyan-300">PURE CODE AREA — Dedicated Code Canvas</span>
+        <div id="pure-code-drawer" class="hidden w-full max-w-full px-3 sm:px-6 mb-2 animate-fade-up">
+          <div class="w-full rounded-2xl bg-[#03050a] border border-slate-700/90 shadow-2xl overflow-hidden">
+            <div class="px-4 py-2 bg-black border-b border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-xs font-mono font-semibold text-cyan-300">PURE CODE AREA — Dedicated Code Canvas</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btn-copy-pure-code" type="button" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white font-medium">Copy Code</button>
+                <button id="btn-close-pure-code" type="button" class="px-2.5 py-1 rounded text-xs text-slate-400 hover:text-white">✕</button>
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <button id="btn-copy-pure-code" type="button" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white font-medium">Copy Code</button>
-              <button id="btn-close-pure-code" type="button" class="px-2.5 py-1 rounded text-xs text-slate-400 hover:text-white">✕</button>
-            </div>
+            <pre id="pure-code-content" class="p-4 max-h-52 overflow-auto text-xs font-mono text-emerald-300 bg-black leading-relaxed whitespace-pre-wrap"></pre>
           </div>
-          <pre id="pure-code-content" class="p-4 max-h-52 overflow-auto text-xs font-mono text-emerald-300 bg-black leading-relaxed whitespace-pre-wrap"></pre>
         </div>
 
-        <div class="shrink-0 px-3 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-[#070b14] via-[#070b14]/95 to-transparent">
-          <div class="max-w-4xl mx-auto relative">
+        <div class="shrink-0 w-full max-w-full px-3 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-[#070b14] via-[#070b14]/95 to-transparent">
+          <div class="w-full max-w-full relative">
             <div id="attachment-preview" class="hidden mb-2 p-2.5 rounded-2xl glass-panel flex items-center justify-between gap-3 animate-fade-up">
               <div class="flex items-center gap-3 min-w-0">
                 <img id="attachment-thumb" src="" alt="Preview" class="hidden w-12 h-12 rounded-xl object-cover border border-slate-700" />
@@ -532,12 +565,12 @@
             <input id="input-video" type="file" accept="video/*" class="hidden" />
             <input id="input-file" type="file" accept=".pdf,.txt,.csv,.json,.md,.js,.py,.html,.doc,.docx" class="hidden" />
 
-            <div class="glass-panel rounded-2xl p-2 flex items-end gap-2 shadow-xl shadow-black/40 border border-slate-700/70 focus-within:border-cyan-400/50 transition">
+            <div class="w-full glass-panel rounded-2xl p-2 flex items-end gap-2 shadow-xl shadow-black/40 border border-slate-700/70 focus-within:border-cyan-400/50 transition">
               <button id="btn-plus-menu" type="button" title="Attach Photo, Video, Camera, or File" class="shrink-0 w-10 h-10 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
 
-              <textarea id="chat-input" rows="1" placeholder="Message AXON AI..." class="flex-1 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-500 resize-none py-2.5 px-2 max-h-36 focus:outline-none leading-relaxed"></textarea>
+              <textarea id="chat-input" rows="1" placeholder="Message AXON AI..." class="flex-1 min-w-0 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-500 resize-none py-2.5 px-2 max-h-36 focus:outline-none leading-relaxed"></textarea>
 
               <div class="flex items-center gap-1.5 shrink-0">
                 <button id="btn-video-call" type="button" title="Start AI Video Call" class="w-10 h-10 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/30 border border-indigo-400/30 text-indigo-300 flex items-center justify-center transition">
@@ -1622,16 +1655,11 @@
       let callCamOff = false;
       let availableVoices = [];
       let ttsKeepAliveTimer = null;
-
-      function updateTelemetryBadge() {
-        const el = $('telemetry-mem-badge');
-        if (!el) return;
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY) || '';
-          const kb = (new Blob([raw]).size / 1024).toFixed(1);
-          el.textContent = `Storage: ${kb} KB`;
-        } catch (e) {}
-      }
+      let lockedVoiceObj = null;
+      let ttsQueue = [];
+      let ttsQueueIndex = 0;
+      let ttsPaused = false;
+      let activeSpeakingMsgId = null;
 
       function saveState() {
         try {
@@ -1643,7 +1671,6 @@
             pureCodeHistory: state.pureCodeHistory.slice(0, 15)
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-          updateTelemetryBadge();
         } catch (e) {}
       }
 
@@ -1657,7 +1684,6 @@
           if (parsed.activeChatId) state.activeChatId = parsed.activeChatId;
           if (Array.isArray(parsed.photoVault)) state.photoVault = parsed.photoVault;
           if (Array.isArray(parsed.pureCodeHistory)) state.pureCodeHistory = parsed.pureCodeHistory;
-          updateTelemetryBadge();
         } catch (e) {}
       }
 
@@ -1686,7 +1712,7 @@
         safe = safe.replace(/```([\s\S]*?)```/g, (_, code) => {
           return `<pre class="mt-2 mb-2 p-3 rounded-xl bg-black border border-slate-800 text-xs text-emerald-300 overflow-x-auto font-mono"><code>${code.trim()}</code></pre>`;
         });
-        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-cyan-200">$1</strong>');
+        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-cyan-300">$1</strong>');
         safe = safe.replace(/\n/g, '<br/>');
         return safe;
       }
@@ -1723,15 +1749,26 @@
         return chat;
       }
 
-      function updateAIWallBanner() {
-        const profile = SIX_VOICE_PROFILES[Number(state.settings.selectedVoiceIndex) || 0] || SIX_VOICE_PROFILES[0];
-        if ($('ai-wall-voice-info')) {
-          $('ai-wall-voice-info').textContent = `Active Voice: ${profile.name} • Natural Human Speech`;
+      function resolveAndLockVoice(profile, forceLang = null) {
+        if ('speechSynthesis' in window) {
+          const fresh = window.speechSynthesis.getVoices();
+          if (fresh && fresh.length) availableVoices = fresh;
         }
-        if ($('code-vault-count')) {
-          $('code-vault-count').textContent = String(state.pureCodeHistory.length);
-        }
-        updateTelemetryBadge();
+        const effectiveLang = forceLang || profile.lang;
+        const langPrefix = effectiveLang.split('-')[0].toLowerCase();
+        const matchingVoices = availableVoices.filter(v => v.lang.toLowerCase().startsWith(langPrefix));
+        const pool = matchingVoices.length ? matchingVoices : availableVoices;
+
+        return pool.find(v =>
+          /natural|neural|google|microsoft/i.test(v.name) &&
+          (profile.gender === 'female'
+            ? /female|woman|zira|heera|kalpana|samantha|aria|nova|swara/i.test(v.name)
+            : /male|man|ravi|hemant|david|daniel|orion|atlas|madhur/i.test(v.name))
+        ) || pool.find(v =>
+          profile.gender === 'female'
+            ? /female|woman|zira|heera|kalpana|samantha|aria|nova/i.test(v.name)
+            : /male|man|ravi|hemant|david|daniel|orion|atlas/i.test(v.name)
+        ) || pool[0] || null;
       }
 
       function populateVoicesDropdown() {
@@ -1744,7 +1781,8 @@
           `<option value="${vp.index}">${escapeHtml(vp.name)}</option>`
         ).join('');
         select.value = String(state.settings.selectedVoiceIndex ?? 0);
-        updateAIWallBanner();
+        const profile = SIX_VOICE_PROFILES[Number(state.settings.selectedVoiceIndex) || 0] || SIX_VOICE_PROFILES[0];
+        lockedVoiceObj = resolveAndLockVoice(profile);
       }
 
       function setAuthMode(mode) {
@@ -1862,7 +1900,6 @@
         renderToggles();
         renderSettingsPanel();
         renderSettingsHistory();
-        updateAIWallBanner();
       }
 
       function renderSettingsPanel() {
@@ -1924,21 +1961,25 @@
       function animateTextReveal(elementId, fullText) {
         const el = document.getElementById(elementId);
         if (!el) return;
+        const words = String(fullText || '').split(/(\s+)/);
         let idx = 0;
-        const step = Math.max(2, Math.ceil(fullText.length / 75));
+        el.classList.add('streaming-caret');
+
         const timer = setInterval(() => {
-          idx += step;
-          if (idx >= fullText.length) {
+          idx += 3;
+          if (idx >= words.length) {
             el.innerHTML = formatMessageHtml(fullText);
+            el.classList.remove('streaming-caret');
             clearInterval(timer);
           } else {
-            el.innerHTML = formatMessageHtml(fullText.slice(0, idx));
+            const partial = words.slice(0, idx).join('');
+            el.innerHTML = formatMessageHtml(partial);
           }
           if (state.settings.autoScroll) {
             const box = $('chat-messages');
             if (box) box.scrollTop = box.scrollHeight;
           }
-        }, 18);
+        }, 22);
       }
 
       function renderMessages(animateLastAssistant = false) {
@@ -1993,8 +2034,8 @@
 
           if (isUser) {
             return `
-              <div class="max-w-4xl mx-auto flex justify-end animate-fade-up">
-                <div class="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-sm px-4 py-2.5 bg-cyan-500/15 border border-cyan-400/25 text-sm text-white">
+              <div class="w-full max-w-full flex justify-end animate-fade-up">
+                <div class="max-w-[92%] sm:max-w-[80%] rounded-2xl rounded-tr-sm px-4 py-2.5 bg-cyan-500/15 border border-cyan-400/25 text-sm text-white axon-msg-body">
                   <div class="leading-relaxed">${formatMessageHtml(m.text)}</div>
                   ${attachHtml}
                   <span class="block text-[10px] text-cyan-200/60 mt-1 text-right">${formatTime(m.timestamp)}</span>
@@ -2003,25 +2044,26 @@
             `;
           } else {
             const hasCodeOrImportant = /```|\*\*/.test(m.text);
-            const isVeryLong = m.text.length > 520;
             const bubbleStyle = hasCodeOrImportant
               ? 'bg-[#0b0e17] border border-slate-800/90 rounded-2xl rounded-tl-sm px-4 py-3 shadow-md'
               : 'bg-transparent px-1 py-1';
             const msgDomId = `msg-body-${m.id}`;
+            const isSpeakingThis = activeSpeakingMsgId === m.id;
+            const speakLabel = isSpeakingThis ? (ttsPaused ? 'Resume' : 'Pause') : 'Speak';
 
             return `
-              <div class="max-w-4xl mx-auto flex items-start gap-3 animate-fade-up">
+              <div class="w-full max-w-full flex items-start gap-3 animate-fade-up">
                 <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#3b82f6] to-[#06b6d4] shadow-sm shadow-cyan-500/20 flex items-center justify-center shrink-0 mt-0.5">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
                 </div>
-                <div class="max-w-[88%] sm:max-w-[82%] ${bubbleStyle} text-sm text-slate-200">
+                <div class="flex-1 min-w-0 max-w-[92%] sm:max-w-[88%] ${bubbleStyle} text-sm text-slate-200 axon-msg-body">
                   <div id="${msgDomId}" class="leading-relaxed transition-all">${formatMessageHtml(m.text)}</div>
-                  <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                  <div class="flex flex-wrap items-center gap-2 mt-2">
                     <span class="text-[10px] text-slate-500">${formatTime(m.timestamp)}</span>
-                    <button type="button" class="btn-copy-msg px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-[10px] text-slate-200 border border-slate-700" data-msg-id="${m.id}">Copy</button>
-                    <button type="button" class="btn-speak-msg px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-[10px] text-cyan-300 border border-slate-700" data-msg-id="${m.id}">Speak</button>
-                    ${isVeryLong ? `<button type="button" class="btn-zoom-toggle px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-[10px] text-cyan-300 border border-slate-700" data-target="${msgDomId}">Zoom Out (2.5x)</button>` : ''}
-                    ${/```/.test(m.text) ? `<button type="button" class="btn-open-code-msg px-2 py-0.5 rounded bg-black hover:bg-slate-900 text-[10px] text-emerald-300 border border-slate-700 font-mono" data-msg-id="${m.id}">Open in Code Area</button>` : ''}
+                    <button type="button" class="btn-copy-msg px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-medium text-slate-200 border border-slate-700" data-msg-id="${m.id}">Copy</button>
+                    <button type="button" class="btn-speak-msg px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] font-medium text-cyan-300 border border-slate-700" data-msg-id="${m.id}">${speakLabel}</button>
+                    ${isSpeakingThis ? `<button type="button" class="btn-stop-speak px-2 py-0.5 rounded bg-rose-600/25 hover:bg-rose-600/40 text-[10px] font-medium text-rose-300 border border-rose-500/40" data-msg-id="${m.id}">Stop</button>` : ''}
+                    ${/```/.test(m.text) ? `<button type="button" class="btn-open-code-msg px-2.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-emerald-300 border border-slate-700 font-mono" data-msg-id="${m.id}">Open in Code Area</button>` : ''}
                   </div>
                 </div>
               </div>
@@ -2036,7 +2078,7 @@
 
         if (state.isGenerating) {
           container.innerHTML += `
-            <div class="max-w-4xl mx-auto flex items-start gap-3">
+            <div class="w-full max-w-full flex items-start gap-3">
               <div class="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center shrink-0">
                 <svg class="w-4 h-4 text-cyan-400 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
               </div>
@@ -2368,7 +2410,6 @@
         });
         $('pure-code-content').textContent = codeBlock;
         $('pure-code-drawer').classList.remove('hidden');
-        updateAIWallBanner();
       }
 
       async function sendMessage(overrideText = null) {
@@ -2601,7 +2642,7 @@
           callRecognition = new SpeechRec();
           callRecognition.continuous = true;
           callRecognition.interimResults = true;
-          callRecognition.lang = navigator.language || 'en-US';
+          callRecognition.lang = navigator.language || 'hi-IN';
 
           callRecognition.onresult = async (event) => {
             if (callMicMuted) return;
@@ -2614,7 +2655,7 @@
             if (res.isFinal) {
               $('call-voice-status').textContent = 'Sending to AI...';
               const lower = transcript.toLowerCase();
-              const asksAboutCamera = /camera|see|look|watch|show|screen|face|what is this/.test(lower);
+              const asksAboutCamera = /camera|see|look|watch|show|screen|face|what is this|dikhao|kya hai/.test(lower);
               const liveFrame = asksAboutCamera ? captureLiveCallFrameDataUrl() : null;
 
               let reply = '';
@@ -2680,7 +2721,7 @@
         callCamOff = false;
         $('btn-call-mic').classList.remove('bg-rose-600');
         $('call-timer').textContent = '00:00';
-        $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak clearly—I can hear you and check what's on your camera."`;
+        $('call-caption').textContent = `"Hi ${state.user?.name || 'there'}! I'm AXON AI. Speak clearly—your mic audio is active and sent to me."`;
         $('call-heard-text').textContent = 'Speak now — voice active';
 
         clearInterval(callInterval);
@@ -2697,6 +2738,7 @@
               video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
               audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
             });
+            callStream.getAudioTracks().forEach(t => { t.enabled = true; });
             $('call-pip-video').srcObject = callStream;
             $('call-pip-video').classList.remove('hidden');
             $('call-pip-off').classList.add('hidden');
@@ -2739,6 +2781,24 @@
         return text;
       }
 
+      function splitTextIntoSpeechChunks(cleanText, maxLen = 220) {
+        const sentences = cleanText.match(/[^.!?।\n]+[.!?।\n]*/g) || [cleanText];
+        const chunks = [];
+        let buf = '';
+        for (const s of sentences) {
+          const part = s.trim();
+          if (!part) continue;
+          if ((buf + ' ' + part).trim().length > maxLen && buf.trim()) {
+            chunks.push(buf.trim());
+            buf = part;
+          } else {
+            buf = (buf + ' ' + part).trim();
+          }
+        }
+        if (buf.trim()) chunks.push(buf.trim());
+        return chunks;
+      }
+
       function setCallSpeakingIndicator(isSpeaking) {
         const pill = $('call-ai-speaking-pill');
         const card = $('call-ai-avatar-card');
@@ -2749,11 +2809,16 @@
         }
       }
 
-      function stopTTSController() {
+      function stopTTSController(rerender = true) {
         if (ttsKeepAliveTimer) {
           clearInterval(ttsKeepAliveTimer);
           ttsKeepAliveTimer = null;
         }
+        ttsQueue = [];
+        ttsQueueIndex = 0;
+        ttsPaused = false;
+        const hadMsg = activeSpeakingMsgId !== null;
+        activeSpeakingMsgId = null;
         setCallSpeakingIndicator(false);
         try {
           if ('speechSynthesis' in window) {
@@ -2763,15 +2828,33 @@
         if ($('tts-controller-state')) {
           $('tts-controller-state').textContent = 'Controller Idle (Natural Speech Ready)';
         }
+        if (rerender && hadMsg && state.activeView === 'chat') {
+          renderMessages(false);
+        }
       }
 
-      function speakText(text, forceLang = null, onComplete = null) {
+      function togglePauseResumeTTS() {
+        if (!('speechSynthesis' in window)) return;
+        if (!ttsPaused) {
+          try { window.speechSynthesis.pause(); } catch (e) {}
+          ttsPaused = true;
+          if ($('tts-controller-state')) $('tts-controller-state').textContent = 'Speech Paused';
+          renderMessages(false);
+        } else {
+          try { window.speechSynthesis.resume(); } catch (e) {}
+          ttsPaused = false;
+          if ($('tts-controller-state')) $('tts-controller-state').textContent = 'Resumed Speech';
+          renderMessages(false);
+        }
+      }
+
+      function speakText(text, forceLang = null, onComplete = null, msgId = null) {
         try {
           if (!('speechSynthesis' in window)) {
             if (onComplete) onComplete();
             return;
           }
-          stopTTSController();
+          stopTTSController(false);
 
           const clean = cleanTextForNaturalTTS(text);
           if (!clean) {
@@ -2780,55 +2863,49 @@
           }
 
           const profile = SIX_VOICE_PROFILES[Number(state.settings.selectedVoiceIndex) || 0] || SIX_VOICE_PROFILES[0];
-          const chunks = clean.match(/[^.!?।\n]+[.!?।\n]*/g) || [clean];
-          const cleanChunks = chunks.map(c => c.trim()).filter(Boolean);
+          const chosenVoice = resolveAndLockVoice(profile, forceLang);
+          lockedVoiceObj = chosenVoice;
+
+          ttsQueue = splitTextIntoSpeechChunks(clean, 220);
+          ttsQueueIndex = 0;
+          ttsPaused = false;
+          activeSpeakingMsgId = msgId;
 
           setCallSpeakingIndicator(true);
           if ($('tts-controller-state')) {
             $('tts-controller-state').textContent = `Speaking Naturally • ${profile.name}`;
           }
+          if (msgId && state.activeView === 'chat') {
+            renderMessages(false);
+          }
 
           ttsKeepAliveTimer = setInterval(() => {
-            if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+            if (window.speechSynthesis.speaking && !window.speechSynthesis.paused && !ttsPaused) {
               window.speechSynthesis.pause();
               window.speechSynthesis.resume();
             }
-          }, 10000);
+          }, 9000);
 
-          const effectiveLang = forceLang || profile.lang;
-          const langPrefix = effectiveLang.split('-')[0].toLowerCase();
-          const matchingVoices = availableVoices.filter(v => v.lang.toLowerCase().startsWith(langPrefix));
-          const voicePool = matchingVoices.length ? matchingVoices : availableVoices;
-          const chosenVoice = voicePool.find(v =>
-            /natural|neural|google|microsoft/i.test(v.name) &&
-            (profile.gender === 'female'
-              ? /female|woman|zira|heera|kalpana|samantha|aria|nova|swara/i.test(v.name)
-              : /male|man|ravi|hemant|david|daniel|orion|atlas|madhur/i.test(v.name))
-          ) || voicePool.find(v =>
-            profile.gender === 'female'
-              ? /female|woman|zira|heera|kalpana|samantha|aria|nova/i.test(v.name)
-              : /male|man|ravi|hemant|david|daniel|orion|atlas/i.test(v.name)
-          ) || voicePool[0] || null;
+          const effectiveLang = forceLang || (chosenVoice && chosenVoice.lang) || profile.lang;
 
-          let idx = 0;
           const speakNext = () => {
-            if (idx >= cleanChunks.length) {
-              stopTTSController();
+            if (!ttsQueue.length || ttsQueueIndex >= ttsQueue.length) {
+              stopTTSController(true);
               if (onComplete) onComplete();
               return;
             }
-            const utter = new SpeechSynthesisUtterance(cleanChunks[idx]);
+            const utter = new SpeechSynthesisUtterance(ttsQueue[ttsQueueIndex]);
             utter.lang = effectiveLang;
             utter.pitch = profile.pitch;
             utter.rate = profile.rate;
-            if (chosenVoice) utter.voice = chosenVoice;
+            if (lockedVoiceObj) utter.voice = lockedVoiceObj;
 
             utter.onend = () => {
-              idx++;
-              setTimeout(speakNext, 90);
+              ttsQueueIndex++;
+              setTimeout(speakNext, 70);
             };
             utter.onerror = () => {
-              idx++;
+              ttsQueueIndex++;
               speakNext();
             };
             window.speechSynthesis.speak(utter);
@@ -2836,7 +2913,7 @@
 
           speakNext();
         } catch (e) {
-          stopTTSController();
+          stopTTSController(true);
           if (onComplete) onComplete();
         }
       }
@@ -3759,51 +3836,39 @@
         const toggleCmdk = (force = null) => {
           const modal = $('cmdk-modal');
           if (!modal) return;
-          const next = force !== null ? force : modal.classList.contains('hidden');
-          modal.classList.toggle('hidden', !next);
+          const show = force !== null ? force : modal.classList.contains('hidden');
+          modal.classList.toggle('hidden', !show);
         };
         $('btn-open-cmdk')?.addEventListener('click', () => toggleCmdk(true));
         $('btn-close-cmdk')?.addEventListener('click', () => toggleCmdk(false));
-        $('cmdk-modal')?.addEventListener('click', (e) => {
-          if (e.target === $('cmdk-modal')) toggleCmdk(false);
-          const item = e.target.closest('.cmdk-item');
-          if (!item) return;
-          const act = item.dataset.cmdk;
-          toggleCmdk(false);
-          if (act === 'new-chat') createNewChat(true);
-          else if (act === 'photo-studio') switchView('photo-studio');
-          else if (act === 'video-studio') switchView('video-editing');
-          else if (act === 'apps') switchView('apps');
-          else if (act === 'video-call') startVideoCall();
-          else if (act === 'toggle-voice') toggleVoiceControl();
-        });
-        window.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', (e) => {
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
             e.preventDefault();
             toggleCmdk();
           } else if (e.key === 'Escape') {
-            $('cmdk-modal')?.classList.add('hidden');
+            toggleCmdk(false);
           }
         });
-
-        $('btn-close-pure-code')?.addEventListener('click', () => {
-          $('pure-code-drawer')?.classList.add('hidden');
+        document.querySelectorAll('.cmdk-item').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const action = btn.dataset.cmdk;
+            toggleCmdk(false);
+            if (action === 'new-chat') createNewChat(true);
+            else if (action === 'photo-studio') switchView('photo-studio');
+            else if (action === 'video-studio') switchView('video-editing');
+            else if (action === 'apps') switchView('apps');
+            else if (action === 'video-call') startVideoCall();
+            else if (action === 'toggle-voice') toggleVoiceControl();
+          });
         });
+
         $('btn-copy-pure-code')?.addEventListener('click', () => {
           const code = $('pure-code-content')?.textContent || '';
           if (code && navigator.clipboard) {
-            navigator.clipboard.writeText(code).then(() => showToast('Code copied!'));
+            navigator.clipboard.writeText(code).then(() => showToast('Pure code copied!'));
           }
         });
-        $('btn-open-code-vault')?.addEventListener('click', () => {
-          if (!state.pureCodeHistory.length) {
-            showToast('No code blocks saved yet.');
-            return;
-          }
-          $('pure-code-content').textContent = state.pureCodeHistory[0].code;
-          $('pure-code-drawer').classList.remove('hidden');
-          switchView('chat');
-        });
+        $('btn-close-pure-code')?.addEventListener('click', () => $('pure-code-drawer')?.classList.add('hidden'));
 
         $('btn-open-sidebar').addEventListener('click', openSidebarMobile);
         $('btn-close-sidebar').addEventListener('click', closeSidebarMobile);
@@ -3811,187 +3876,28 @@
 
         $('btn-new-chat').addEventListener('click', () => createNewChat(true));
         $('nav-chat').addEventListener('click', () => switchView('chat'));
-        $('nav-photo-studio')?.addEventListener('click', () => switchView('photo-studio'));
-        $('nav-video-editing')?.addEventListener('click', () => switchView('video-editing'));
+        if ($('nav-photo-studio')) $('nav-photo-studio').addEventListener('click', () => switchView('photo-studio'));
+        if ($('nav-video-editing')) $('nav-video-editing').addEventListener('click', () => switchView('video-editing'));
         $('nav-apps').addEventListener('click', () => switchView('apps'));
         $('nav-settings').addEventListener('click', () => switchView('settings'));
         $('btn-header-settings').addEventListener('click', () => switchView('settings'));
         $('btn-settings-back').addEventListener('click', () => switchView('chat'));
-
         $('btn-settings-info').addEventListener('click', () => {
           openDetailModal(
             'AXON AI Workspace Info',
-            `<p><strong>AXON AI</strong> Intelligent Neural Workspace with 6 natural TTS voices, separate Pure Code Area, Xone Photo &amp; Video Studio, and live AI video calls.</p>`
+            `<p><strong>Workspace:</strong> AXON AI Pro</p><p><strong>Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p><p><strong>Language:</strong> ${escapeHtml(state.settings.appLanguage)}</p><p><strong>Saved Chats:</strong> ${state.chats.filter(c => c.messages.length).length}</p>`
           );
-        });
-
-        $('row-edit-profile').addEventListener('click', () => {
-          const curName = state.user?.name || state.settings.profileName || 'AXON User';
-          const curEmail = state.user?.email || state.settings.profileEmail || 'user@axon.ai';
-          openDetailModal(
-            'Edit Profile',
-            `
-              <div class="space-y-3">
-                <div>
-                  <label class="block text-xs text-slate-400 mb-1">Display Name</label>
-                  <input id="edit-profile-name-input" type="text" value="${escapeHtml(curName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
-                </div>
-                <div>
-                  <label class="block text-xs text-slate-400 mb-1">Email Address</label>
-                  <input id="edit-profile-email-input" type="email" value="${escapeHtml(curEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white focus:outline-none focus:border-cyan-400" />
-                </div>
-              </div>
-            `,
-            `
-              <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
-              <button id="btn-save-profile-detail" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
-            `
-          );
-          $('btn-save-profile-detail').addEventListener('click', () => {
-            const newName = ($('edit-profile-name-input').value || '').trim() || 'AXON User';
-            const newEmail = ($('edit-profile-email-input').value || '').trim() || curEmail;
-            const initials = newName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
-            state.settings.profileName = newName;
-            state.settings.profileEmail = newEmail;
-            state.user = { ...(state.user || {}), name: newName, email: newEmail, initials, photo: state.settings.profilePhoto };
-            $('user-display-name').textContent = newName;
-            $('user-display-email').textContent = newEmail;
-            renderUserAvatarElement($('user-avatar'), state.user);
-            saveState();
-            renderSettingsPanel();
-            closeDetailModal();
-            showToast('Profile updated!');
-          });
-        });
-
-        $('row-profile-photo').addEventListener('click', () => $('input-profile-photo').click());
-        $('input-profile-photo').addEventListener('change', (e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            state.settings.profilePhoto = ev.target.result;
-            if (state.user) state.user.photo = ev.target.result;
-            renderUserAvatarElement($('user-avatar'), state.user);
-            renderSettingsPanel();
-            saveState();
-            showToast('Profile photo updated!');
-          };
-          reader.readAsDataURL(file);
-        });
-
-        $('row-account-info').addEventListener('click', () => {
-          const name = state.user?.name || state.settings.profileName;
-          const email = state.user?.email || state.settings.profileEmail;
-          openDetailModal(
-            'Account Information',
-            `
-              <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs">
-                <p><strong class="text-slate-400">Name:</strong> <span class="text-white">${escapeHtml(name)}</span></p>
-                <p><strong class="text-slate-400">Email:</strong> <span class="text-white">${escapeHtml(email)}</span></p>
-                <p><strong class="text-slate-400">Session Type:</strong> <span class="text-cyan-300">${demoSession ? 'Quick Demo Session' : 'Authenticated Account'}</span></p>
-                <p><strong class="text-slate-400">Saved Chats:</strong> <span class="text-white">${state.chats.length}</span></p>
-              </div>
-            `
-          );
-        });
-
-        $('row-account-management').addEventListener('click', () => {
-          openDetailModal(
-            'Account Management',
-            `<p class="text-xs text-slate-300">Manage your active session or sign out of AXON AI on this device.</p>`,
-            `
-              <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
-              <button id="btn-detail-logout" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Sign Out</button>
-            `
-          );
-          $('btn-detail-logout').addEventListener('click', () => {
-            closeDetailModal();
-            $('btn-logout').click();
-          });
-        });
-
-        $('row-model-info').addEventListener('click', () => {
-          openDetailModal(
-            `Model Information — ${state.settings.aiModel}`,
-            `
-              <div class="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs">
-                <p><strong class="text-cyan-300">Active Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
-                <p><strong class="text-cyan-300">Default Model:</strong> ${escapeHtml(state.settings.defaultModel)}</p>
-                <p><strong class="text-cyan-300">Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
-                <p><strong class="text-cyan-300">Capabilities:</strong> Chat, Photo Studio, Video Studio, Live Video Call &amp; Natural Voice TTS.</p>
-              </div>
-            `
-          );
-        });
-
-        $('settings-detail-modal').addEventListener('click', (e) => {
-          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn') || e.target.id === 'btn-detail-close' || e.target.id === 'btn-close-detail-modal') {
-            closeDetailModal();
-          }
-        });
-
-        $('setting-app-language').addEventListener('change', (e) => {
-          state.settings.appLanguage = e.target.value;
-          saveState();
-          showToast(`App language set to ${e.target.value}`);
-        });
-
-        $('setting-default-model').addEventListener('change', (e) => {
-          state.settings.defaultModel = e.target.value;
-          state.settings.aiModel = e.target.value;
-          saveState();
-          renderSettingsPanel();
-          showToast(`Default AI model set to ${e.target.value}`);
-        });
-
-        $('setting-ai-model').addEventListener('change', (e) => {
-          state.settings.aiModel = e.target.value;
-          saveState();
-          renderSettingsPanel();
-          showToast(`Active model switched to ${e.target.value}`);
-        });
-
-        $('setting-chat-mode').addEventListener('change', (e) => {
-          state.settings.chatMode = e.target.value;
-          saveState();
-          showToast(`Chat mode set to ${e.target.value}`);
-        });
-
-        $('setting-startup').addEventListener('change', (e) => {
-          state.settings.startupMode = e.target.value;
-          saveState();
-          showToast('Startup preference saved.');
-        });
-
-        $('btn-reset-settings').addEventListener('click', () => {
-          const keepName = state.settings.profileName;
-          const keepEmail = state.settings.profileEmail;
-          const keepPhoto = state.settings.profilePhoto;
-          state.settings = { ...defaultSettings, profileName: keepName, profileEmail: keepEmail, profilePhoto: keepPhoto };
-          saveState();
-          renderAll();
-          populateVoicesDropdown();
-          showToast('Settings reset to defaults.');
-        });
-
-        $('search-settings-input').addEventListener('input', (e) => {
-          const q = e.target.value.trim().toLowerCase();
-          document.querySelectorAll('#view-settings .settings-section').forEach(sec => {
-            const hay = (sec.dataset.search || '') + ' ' + sec.textContent.toLowerCase();
-            sec.classList.toggle('hidden', Boolean(q) && !hay.includes(q));
-          });
         });
 
         $('btn-logout').addEventListener('click', async () => {
-          stopSpeechRecognition();
           stopTTSController();
-          endVideoCall();
+          stopGeneration();
+          toggleVoiceControl(false);
           demoSession = false;
-          state.user = null;
           if (firebaseReady && firebaseAuth) {
             try { await firebaseAuth.signOut(); } catch (e) {}
           }
+          state.user = null;
           $('app-screen').classList.add('hidden');
           $('login-screen').classList.remove('hidden');
           showToast('Signed out.');
@@ -4000,13 +3906,10 @@
         $('sidebar-chat-list').addEventListener('click', (e) => {
           const delBtn = e.target.closest('.delete-chat-btn');
           if (delBtn) {
-            e.stopPropagation();
             const id = delBtn.dataset.chatId;
             state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
-              state.activeChatId = state.chats[0]?.id || null;
-              if (!state.activeChatId) createNewChat(false);
-            }
+            if (state.activeChatId === id) state.activeChatId = state.chats[0]?.id || null;
+            if (!state.activeChatId) createNewChat(false);
             saveState();
             renderAll();
             return;
@@ -4014,8 +3917,8 @@
           const sel = e.target.closest('.select-chat-btn');
           if (sel) {
             state.activeChatId = sel.dataset.chatId;
-            switchView('chat');
             saveState();
+            switchView('chat');
             renderAll();
           }
         });
@@ -4023,48 +3926,63 @@
         $('chat-messages').addEventListener('click', (e) => {
           const starter = e.target.closest('.starter-prompt');
           if (starter) {
-            sendMessage(starter.dataset.prompt);
-            return;
-          }
-          const zoomBtn = e.target.closest('.btn-zoom-toggle');
-          if (zoomBtn) {
-            const targetEl = document.getElementById(zoomBtn.dataset.target);
-            if (targetEl) {
-              const zoomed = targetEl.classList.toggle('zoomed-out-text');
-              zoomBtn.textContent = zoomed ? 'Normal Size' : 'Zoom Out (2.5x)';
+            const promptText = starter.dataset.prompt;
+            if (promptText === 'Open WhatsApp') {
+              executeVoiceCommand('Open WhatsApp');
+            } else {
+              sendMessage(promptText);
             }
             return;
           }
+
           const copyBtn = e.target.closest('.btn-copy-msg');
           if (copyBtn) {
+            const msgId = copyBtn.dataset.msgId;
             const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === copyBtn.dataset.msgId);
-            if (msg && navigator.clipboard) {
-              navigator.clipboard.writeText(msg.text).then(() => showToast('Message copied!'));
+            const m = chat?.messages.find(item => item.id === msgId);
+            if (m && navigator.clipboard) {
+              navigator.clipboard.writeText(m.text).then(() => showToast('Message copied!'));
             }
             return;
           }
+
           const speakBtn = e.target.closest('.btn-speak-msg');
           if (speakBtn) {
+            const msgId = speakBtn.dataset.msgId;
+            if (activeSpeakingMsgId === msgId) {
+              togglePauseResumeTTS();
+              return;
+            }
             const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === speakBtn.dataset.msgId);
-            if (msg) speakText(msg.text);
+            const m = chat?.messages.find(item => item.id === msgId);
+            if (m) {
+              speakText(m.text, null, null, msgId);
+            }
             return;
           }
+
+          const stopSpeakBtn = e.target.closest('.btn-stop-speak');
+          if (stopSpeakBtn) {
+            stopTTSController(true);
+            showToast('Speech stopped.');
+            return;
+          }
+
           const codeBtn = e.target.closest('.btn-open-code-msg');
           if (codeBtn) {
+            const msgId = codeBtn.dataset.msgId;
             const chat = getActiveChat();
-            const msg = chat?.messages.find(m => m.id === codeBtn.dataset.msgId);
-            if (msg) extractAndShowPureCode(msg.text);
+            const m = chat?.messages.find(item => item.id === msgId);
+            if (m) extractAndShowPureCode(m.text);
           }
         });
 
-        const textarea = $('chat-input');
-        textarea.addEventListener('input', () => {
-          textarea.style.height = 'auto';
-          textarea.style.height = Math.min(textarea.scrollHeight, 144) + 'px';
+        const chatInput = $('chat-input');
+        chatInput.addEventListener('input', () => {
+          chatInput.style.height = 'auto';
+          chatInput.style.height = Math.min(chatInput.scrollHeight, 144) + 'px';
         });
-        textarea.addEventListener('keydown', (e) => {
+        chatInput.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
@@ -4072,37 +3990,38 @@
         });
         $('btn-send').addEventListener('click', () => sendMessage());
 
+        const plusMenu = $('plus-menu');
         $('btn-plus-menu').addEventListener('click', (e) => {
           e.stopPropagation();
-          $('plus-menu').classList.toggle('hidden');
+          plusMenu.classList.toggle('hidden');
         });
         document.addEventListener('click', (e) => {
-          if (!e.target.closest('#plus-menu') && !e.target.closest('#btn-plus-menu')) {
-            $('plus-menu').classList.add('hidden');
+          if (!plusMenu.contains(e.target) && e.target !== $('btn-plus-menu')) {
+            plusMenu.classList.add('hidden');
           }
         });
 
         $('menu-send-photo').addEventListener('click', () => {
-          $('plus-menu').classList.add('hidden');
+          plusMenu.classList.add('hidden');
           if (!requireSignInForUpload()) return;
           $('input-photo').click();
         });
         $('menu-send-video').addEventListener('click', () => {
-          $('plus-menu').classList.add('hidden');
+          plusMenu.classList.add('hidden');
           if (!requireSignInForUpload()) return;
           $('input-video').click();
         });
         $('menu-open-camera').addEventListener('click', openCameraModal);
         $('menu-send-file').addEventListener('click', () => {
-          $('plus-menu').classList.add('hidden');
+          plusMenu.classList.add('hidden');
           if (!requireSignInForUpload()) return;
           $('input-file').click();
         });
         $('menu-deep-think').addEventListener('click', () => {
           state.deepThink = !state.deepThink;
           $('deep-think-status').textContent = state.deepThink ? 'On — Deep reasoning active' : 'Off — Standard speed';
-          $('plus-menu').classList.add('hidden');
-          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode disabled');
+          plusMenu.classList.add('hidden');
+          showToast(state.deepThink ? 'Deep Think Mode enabled' : 'Deep Think Mode off');
         });
 
         $('input-photo').addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'image'));
@@ -4113,8 +4032,7 @@
         $('btn-close-camera').addEventListener('click', closeCameraModal);
         $('btn-camera-upload-alt').addEventListener('click', () => {
           closeCameraModal();
-          if (!requireSignInForUpload()) return;
-          $('input-photo').click();
+          if (requireSignInForUpload()) $('input-photo').click();
         });
         $('btn-camera-capture').addEventListener('click', captureCameraPhoto);
 
@@ -4122,50 +4040,50 @@
         $('btn-end-call').addEventListener('click', endVideoCall);
         $('btn-call-mic').addEventListener('click', () => {
           callMicMuted = !callMicMuted;
-          $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
-          if (callStream) callStream.getAudioTracks().forEach(t => t.enabled = !callMicMuted);
+          if (callStream) {
+            callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
+          }
           if (callMicMuted) {
             stopCallVoiceCapture();
             $('call-voice-status').textContent = 'Mic Muted';
           } else {
             startCallVoiceCapture();
           }
+          $('btn-call-mic').classList.toggle('bg-rose-600', callMicMuted);
           showToast(callMicMuted ? 'Microphone muted' : 'Microphone unmuted');
         });
         $('btn-call-cam').addEventListener('click', () => {
           callCamOff = !callCamOff;
-          $('btn-call-cam').classList.toggle('bg-rose-600', callCamOff);
-          if (callStream) callStream.getVideoTracks().forEach(t => t.enabled = !callCamOff);
+          if (callStream) callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
           $('call-pip-video').classList.toggle('hidden', callCamOff);
           $('call-pip-off').classList.toggle('hidden', !callCamOff);
+          $('call-pip-off').classList.toggle('flex', callCamOff);
+          $('btn-call-cam').classList.toggle('bg-rose-600', callCamOff);
           showToast(callCamOff ? 'Camera turned off' : 'Camera turned on');
         });
 
         $('btn-header-voice').addEventListener('click', () => toggleVoiceControl());
-        $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
         $('btn-hud-stop-voice').addEventListener('click', () => toggleVoiceControl(false));
-
+        $('toggle-voice-control').addEventListener('click', () => toggleVoiceControl());
         $('toggle-voice-tts').addEventListener('click', () => {
           state.settings.voiceTTS = !state.settings.voiceTTS;
           if (!state.settings.voiceTTS) stopTTSController();
           saveState();
           renderToggles();
-          showToast(state.settings.voiceTTS ? 'Natural AI voice speech enabled' : 'AI voice speech muted');
+          showToast(state.settings.voiceTTS ? 'Natural AI Voice enabled' : 'AI Voice speech muted');
         });
 
-        $('setting-voice-select').addEventListener('change', (e) => {
-          const idx = Number(e.target.value) || 0;
-          state.settings.selectedVoiceIndex = idx;
+        $('setting-voice-select')?.addEventListener('change', (e) => {
+          state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
+          const profile = SIX_VOICE_PROFILES[state.settings.selectedVoiceIndex] || SIX_VOICE_PROFILES[0];
+          lockedVoiceObj = resolveAndLockVoice(profile);
           saveState();
-          updateAIWallBanner();
-          const chosenProfile = SIX_VOICE_PROFILES[idx] || SIX_VOICE_PROFILES[0];
-          showToast(`Selected ${chosenProfile.name}`);
-          speakText(`Hello, I am ${chosenProfile.name.replace(/^\d+\.\s*/, '')}. Ready to assist you.`);
+          renderToggles();
+          showToast(`Voice set to ${profile.name}`);
+          if (state.settings.voiceTTS) {
+            speakText(`Hello, I am ${profile.name.replace(/^\d+\.\s*/, '')}. How can I help you?`);
+          }
         });
-
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
-        }
 
         $('btn-run-voice-sim').addEventListener('click', () => {
           const val = $('voice-sim-input').value.trim();
@@ -4173,29 +4091,192 @@
           if (!state.settings.voiceControl) toggleVoiceControl(true);
           executeVoiceCommand(val);
         });
-        $('voice-sim-input').addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') $('btn-run-voice-sim').click();
-        });
-        document.querySelectorAll('.voice-chip').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const cmd = btn.dataset.voiceCmd;
-            $('voice-sim-input').value = cmd;
+        document.querySelectorAll('.voice-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            $('voice-sim-input').value = chip.dataset.voiceCmd;
             if (!state.settings.voiceControl) toggleVoiceControl(true);
-            executeVoiceCommand(cmd);
+            executeVoiceCommand(chip.dataset.voiceCmd);
           });
         });
 
-        $('app-launcher-grid').addEventListener('click', (e) => {
-          const btn = e.target.closest('.launch-app-btn');
-          if (!btn) return;
-          const url = btn.dataset.url;
-          const name = btn.dataset.name;
-          showToast(`Opening ${name}...`);
-          try { window.open(url, '_blank', 'noopener,noreferrer'); } catch (err) {}
+        $('row-edit-profile')?.addEventListener('click', () => {
+          const curName = state.user?.name || state.settings.profileName || '';
+          const curEmail = state.user?.email || state.settings.profileEmail || '';
+          openDetailModal(
+            'Edit Profile',
+            `
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Display Name</label>
+                <input id="modal-profile-name" type="text" value="${escapeHtml(curName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Email Address</label>
+                <input id="modal-profile-email" type="email" value="${escapeHtml(curEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white" />
+              </div>
+            `,
+            `
+              <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200">Cancel</button>
+              <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
+            `
+          );
+          $('btn-save-profile-modal')?.addEventListener('click', () => {
+            const nextName = ($('modal-profile-name')?.value || '').trim() || 'AXON User';
+            const nextEmail = ($('modal-profile-email')?.value || '').trim() || 'user@axon.ai';
+            const initials = nextName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AX';
+            state.settings.profileName = nextName;
+            state.settings.profileEmail = nextEmail;
+            state.user = {
+              ...(state.user || {}),
+              name: nextName,
+              email: nextEmail,
+              initials,
+              photo: state.settings.profilePhoto
+            };
+            $('user-display-name').textContent = nextName;
+            $('user-display-email').textContent = nextEmail;
+            renderUserAvatarElement($('user-avatar'), state.user);
+            saveState();
+            renderSettingsPanel();
+            closeDetailModal();
+            showToast('Profile updated!');
+          });
         });
 
-        $('btn-launch-yt-ext').addEventListener('click', () => {
-          window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer');
+        $('row-profile-photo')?.addEventListener('click', () => $('input-profile-photo')?.click());
+        $('input-profile-photo')?.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            state.settings.profilePhoto = ev.target.result;
+            if (state.user) state.user.photo = ev.target.result;
+            renderUserAvatarElement($('user-avatar'), state.user);
+            saveState();
+            renderSettingsPanel();
+            showToast('Profile photo updated!');
+          };
+          reader.readAsDataURL(file);
+        });
+
+        $('row-account-info')?.addEventListener('click', () => {
+          const name = state.user?.name || state.settings.profileName;
+          const email = state.user?.email || state.settings.profileEmail;
+          openDetailModal(
+            'Account Information',
+            `
+              <div class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1.5">
+                <p><strong class="text-white">Name:</strong> ${escapeHtml(name)}</p>
+                <p><strong class="text-white">Email:</strong> ${escapeHtml(email)}</p>
+                <p><strong class="text-white">Plan:</strong> AXON AI Pro Workspace</p>
+                <p><strong class="text-white">Session Type:</strong> ${demoSession ? 'Quick Demo' : 'Authenticated Account'}</p>
+              </div>
+            `
+          );
+        });
+
+        $('row-account-management')?.addEventListener('click', () => {
+          openDetailModal(
+            'Account Management',
+            `<p class="text-slate-300">Manage your active session or send a password reset link to <strong class="text-cyan-300">${escapeHtml(state.user?.email || state.settings.profileEmail)}</strong>.</p>`,
+            `
+              <button id="btn-modal-reset-pw" type="button" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-cyan-300 border border-slate-700">Send Reset Email</button>
+              <button id="btn-modal-signout" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Sign Out</button>
+            `
+          );
+          $('btn-modal-reset-pw')?.addEventListener('click', async () => {
+            const targetEmail = state.user?.email || state.settings.profileEmail;
+            if (firebaseReady && firebaseAuth && targetEmail) {
+              try {
+                await firebaseAuth.sendPasswordResetEmail(targetEmail);
+                showToast('Password reset email sent!');
+              } catch (err) {
+                showToast(firebaseErrorMessage(err));
+              }
+            } else {
+              showToast('Reset link ready for configured account.');
+            }
+          });
+          $('btn-modal-signout')?.addEventListener('click', () => {
+            closeDetailModal();
+            $('btn-logout').click();
+          });
+        });
+
+        $('row-model-info')?.addEventListener('click', () => {
+          openDetailModal(
+            'Model Information',
+            `
+              <div class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1.5">
+                <p><strong class="text-cyan-300">Selected Model:</strong> ${escapeHtml(state.settings.aiModel)}</p>
+                <p><strong class="text-cyan-300">Default Model:</strong> ${escapeHtml(state.settings.defaultModel)}</p>
+                <p><strong class="text-cyan-300">Chat Mode:</strong> ${escapeHtml(state.settings.chatMode)}</p>
+                <p class="text-xs text-slate-400 pt-1">Supports natural conversation, pure code extraction, photo/video studio tools, and live video calls.</p>
+              </div>
+            `
+          );
+        });
+
+        $('settings-detail-modal')?.addEventListener('click', (e) => {
+          if (e.target.id === 'settings-detail-modal' || e.target.id === 'btn-close-detail-modal' || e.target.id === 'btn-detail-close' || e.target.closest('.close-detail-btn')) {
+            closeDetailModal();
+          }
+        });
+
+        $('setting-app-language')?.addEventListener('change', (e) => {
+          state.settings.appLanguage = e.target.value;
+          saveState();
+          showToast(`App language set to ${e.target.value}`);
+        });
+
+        $('setting-default-model')?.addEventListener('change', (e) => {
+          state.settings.defaultModel = e.target.value;
+          state.settings.aiModel = e.target.value;
+          saveState();
+          renderSettingsPanel();
+          showToast(`Default AI model set to ${e.target.value}`);
+        });
+
+        $('setting-ai-model')?.addEventListener('change', (e) => {
+          state.settings.aiModel = e.target.value;
+          saveState();
+          renderSettingsPanel();
+          showToast(`Active model switched to ${e.target.value}`);
+        });
+
+        $('setting-chat-mode')?.addEventListener('change', (e) => {
+          state.settings.chatMode = e.target.value;
+          saveState();
+          showToast(`Chat mode set to ${e.target.value}`);
+        });
+
+        $('setting-startup')?.addEventListener('change', (e) => {
+          state.settings.startupMode = e.target.value;
+          saveState();
+          showToast(e.target.value === 'last_chat' ? 'Will resume last chat on open' : 'Will start new chat on open');
+        });
+
+        $('btn-reset-settings')?.addEventListener('click', () => {
+          const keepName = state.user?.name || defaultSettings.profileName;
+          const keepEmail = state.user?.email || defaultSettings.profileEmail;
+          const keepPhoto = state.settings.profilePhoto;
+          state.settings = {
+            ...defaultSettings,
+            profileName: keepName,
+            profileEmail: keepEmail,
+            profilePhoto: keepPhoto
+          };
+          saveState();
+          renderAll();
+          populateVoicesDropdown();
+          showToast('Settings reset to defaults!');
+        });
+
+        $('search-settings-input')?.addEventListener('input', (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          document.querySelectorAll('.settings-section').forEach(sec => {
+            const hay = (sec.dataset.search || '') + ' ' + sec.textContent.toLowerCase();
+            sec.classList.toggle('hidden', Boolean(q && !hay.includes(q)));
+          });
         });
 
         $('toggle-history').addEventListener('click', () => {
@@ -4206,13 +4287,12 @@
         });
 
         $('history-search').addEventListener('input', renderSettingsHistory);
-
         $('settings-history-list').addEventListener('click', (e) => {
           const openBtn = e.target.closest('.open-history-chat');
           if (openBtn) {
             state.activeChatId = openBtn.dataset.chatId;
-            switchView('chat');
             saveState();
+            switchView('chat');
             renderAll();
             return;
           }
@@ -4221,20 +4301,21 @@
             const id = delBtn.dataset.chatId;
             state.chats = state.chats.filter(c => c.id !== id);
             if (state.activeChatId === id) state.activeChatId = state.chats[0]?.id || null;
+            if (!state.activeChatId) createNewChat(false);
             saveState();
             renderAll();
           }
         });
 
         $('btn-export-history').addEventListener('click', () => {
-          const blob = new Blob([JSON.stringify(state.chats, null, 2)], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
+          const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(state.chats, null, 2));
           const a = document.createElement('a');
-          a.href = url;
-          a.download = `axon-ai-history-${new Date().toISOString().slice(0, 10)}.json`;
+          a.setAttribute('href', dataStr);
+          a.setAttribute('download', `axon-ai-history-${new Date().toISOString().slice(0, 10)}.json`);
+          document.body.appendChild(a);
           a.click();
-          URL.revokeObjectURL(url);
-          showToast('Chat history exported as JSON!');
+          a.remove();
+          showToast('Chat history exported!');
         });
 
         $('btn-clear-history').addEventListener('click', () => {
@@ -4245,6 +4326,7 @@
           state.chats = [];
           state.activeChatId = null;
           createNewChat(false);
+          saveState();
           $('confirm-modal').classList.add('hidden');
           renderAll();
           showToast('All chat history cleared.');
@@ -4270,36 +4352,51 @@
           saveState();
           renderToggles();
         });
+
+        $('btn-launch-yt-ext').addEventListener('click', () => {
+          window.open('https://www.youtube.com', '_blank', 'noopener,noreferrer');
+        });
+        $('app-launcher-grid').addEventListener('click', (e) => {
+          const btn = e.target.closest('.launch-app-btn');
+          if (!btn) return;
+          const url = btn.dataset.url;
+          const name = btn.dataset.name;
+          showToast(`Opening ${name}...`);
+          window.open(url, '_blank', 'noopener,noreferrer');
+        });
+        $('yt-feed-grid').addEventListener('click', (e) => {
+          const card = e.target.closest('#yt-feed-grid > div');
+          if (!card) return;
+          const title = card.querySelector('h4')?.textContent || 'YouTube Video';
+          showToast(`Playing: ${title}`);
+        });
       }
 
       function init() {
         loadState();
         setAuthMode('signin');
         applyAppearance();
-        renderAll();
-        populateVoicesDropdown();
         bindEvents();
         initPhotoStudio();
         initVideoEditing();
-
-        const hasFirebase = initializeFirebaseAuth();
-
+        updateSendButtonState();
+        populateVoicesDropdown();
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
+        }
+        initializeFirebaseAuth();
         setTimeout(() => {
-          if (state.user) {
-            if ($('splash-screen')) $('splash-screen').classList.add('hidden');
-            enterApp();
-            return;
+          if (!state.user) {
+            dismissSplashToLogin();
           }
-          if (hasFirebase && firebaseAuth && firebaseAuth.currentUser) {
-            const u = firebaseAuth.currentUser;
-            completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '');
-            return;
-          }
-          dismissSplashToLogin();
         }, 1900);
       }
 
-      document.addEventListener('DOMContentLoaded', init);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
     })();
   </script>
 </body>
