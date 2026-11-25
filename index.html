@@ -64,10 +64,13 @@
       50% { opacity: 0.15; }
     }
 
-    /* ==================== DARK THEME (MATCHING SCREENSHOTS 1 & 3) ==================== */
+    /* ==================== DARK THEME (MATCHING ALL DARK SCREENSHOTS) ==================== */
     html:not(.light-theme) body,
     html:not(.light-theme) #app-screen,
     html:not(.light-theme) #view-chat,
+    html:not(.light-theme) #view-settings,
+    html:not(.light-theme) #view-photo-studio,
+    html:not(.light-theme) #view-apps,
     html:not(.light-theme) #chat-messages,
     html:not(.light-theme) main {
       background-color: #0b111e !important;
@@ -87,44 +90,66 @@
       border: 1px solid rgba(59, 130, 246, 0.38) !important;
       color: #60a5fa !important;
     }
+    html:not(.light-theme) #btn-new-page {
+      background: rgba(20, 33, 61, 0.75) !important;
+      border: 1px solid rgba(59, 130, 246, 0.35) !important;
+      color: #60a5fa !important;
+    }
     html:not(.light-theme) #btn-header-voice,
     html:not(.light-theme) #btn-header-settings,
     html:not(.light-theme) #btn-open-sidebar {
       background: #232b3b !important;
       border: 1px solid rgba(148, 163, 184, 0.18) !important;
-      color: #e2e8f0 !important;
+      color: #93c5fd !important;
     }
     html:not(.light-theme) .user-chat-bubble {
-      background: #163256 !important;
+      background: #142244 !important;
       border: 1px solid rgba(56, 189, 248, 0.22) !important;
       color: #f8fafc !important;
     }
     html:not(.light-theme) .chat-composer-shell {
-      background: #181f2e !important;
+      background: #141c2c !important;
       border: 1px solid rgba(148, 163, 184, 0.18) !important;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
     }
     html:not(.light-theme) .chat-input-pill {
-      background: #121826 !important;
+      background: #111827 !important;
       border: 1px solid rgba(148, 163, 184, 0.16) !important;
     }
-    html:not(.light-theme) #btn-plus-menu {
-      background: #222a3a !important;
-      border: 1px solid rgba(148, 163, 184, 0.15) !important;
-      color: #e2e8f0 !important;
+    html:not(.light-theme) #btn-plus-menu,
+    html:not(.light-theme) #btn-inline-camera {
+      background: #1e2638 !important;
+      border: 1px solid rgba(148, 163, 184, 0.18) !important;
+      color: #cbd5e1 !important;
     }
     html:not(.light-theme) #btn-send {
       background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 50%, #6366f1 100%) !important;
       color: #ffffff !important;
       border: none !important;
     }
+    html:not(.light-theme) .axon-code-card {
+      background: #1c1d21 !important;
+      border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    }
+    html:not(.light-theme) .axon-code-card-header {
+      background: #25272c !important;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15) !important;
+      color: #cbd5e1 !important;
+    }
+    html:not(.light-theme) .axon-news-card {
+      background: #151d2e !important;
+      border: 1px solid rgba(148, 163, 184, 0.16) !important;
+    }
+    html:not(.light-theme) .settings-cyan-glow {
+      border: 1.5px solid #22d3ee !important;
+      box-shadow: 0 0 22px rgba(34, 211, 238, 0.24) !important;
+    }
 
-    /* ==================== LIGHT THEME (MATCHING SCREENSHOTS 2 & 3) ==================== */
+    /* ==================== LIGHT THEME (MATCHING LIGHT SCREENSHOTS) ==================== */
     html.light-theme body,
     html.light-theme #app-screen,
     html.light-theme #view-chat,
     html.light-theme #view-photo-studio,
-    html.light-theme #view-video-editing,
     html.light-theme #view-apps,
     html.light-theme #view-settings,
     html.light-theme #chat-messages,
@@ -134,8 +159,8 @@
       color: #0f172a !important;
     }
     html.light-theme header {
-      background-color: #ffffff !important;
-      border-bottom: 1px solid #e2e8f0 !important;
+      background-color: #eef2f7 !important;
+      border-bottom: 1px solid #dce3ec !important;
       color: #0f172a !important;
     }
     html.light-theme aside {
@@ -149,6 +174,11 @@
       border: 1px solid #bfdff9 !important;
       color: #1e3a5f !important;
     }
+    html.light-theme #btn-new-page {
+      background-color: #e2e8f0 !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #1e293b !important;
+    }
     html.light-theme #btn-header-voice,
     html.light-theme #btn-header-settings,
     html.light-theme #btn-open-sidebar,
@@ -158,28 +188,50 @@
       color: #1e293b !important;
     }
     html.light-theme .user-chat-bubble {
-      background-color: #d9eef7 !important;
-      border: 1px solid #bae0f0 !important;
-      color: #0f172a !important;
+      background-color: #1e2d4a !important;
+      border: 1px solid #1e3a5f !important;
+      color: #ffffff !important;
+    }
+    html.light-theme .user-chat-bubble * {
+      color: #ffffff !important;
     }
     html.light-theme .chat-composer-shell {
-      background-color: #ffffff !important;
-      border: 1px solid #e2e8f0 !important;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+      background-color: #eef2f7 !important;
+      border: 1px solid #d5dde7 !important;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08) !important;
     }
     html.light-theme .chat-input-pill {
       background-color: #ffffff !important;
       border: 1px solid #cbd5e1 !important;
     }
-    html.light-theme #btn-plus-menu {
-      background-color: #f1f5f9 !important;
-      border: 1px solid #e2e8f0 !important;
+    html.light-theme #btn-plus-menu,
+    html.light-theme #btn-inline-camera {
+      background-color: #e2e8f0 !important;
+      border: 1px solid #cbd5e1 !important;
       color: #334155 !important;
     }
     html.light-theme #chat-input {
       background-color: transparent !important;
       color: #0f172a !important;
       border-color: transparent !important;
+    }
+    html.light-theme .axon-code-card {
+      background: #e9ecef !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+    html.light-theme .axon-code-card-header {
+      background: #dfe4ea !important;
+      border-bottom: 1px solid #cbd5e1 !important;
+      color: #334155 !important;
+    }
+    html.light-theme .axon-code-card pre,
+    html.light-theme .axon-code-card code {
+      background: #e9ecef !important;
+      color: #0f172a !important;
+    }
+    html.light-theme .axon-news-card {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
     }
     html.light-theme .glass-panel,
     html.light-theme .axon-glass-card {
@@ -193,6 +245,7 @@
       border-color: #93c5fd !important;
     }
     html.light-theme .text-white { color: #0f172a !important; }
+    html.light-theme .text-slate-100,
     html.light-theme .text-slate-200,
     html.light-theme .text-slate-300 { color: #334155 !important; }
     html.light-theme .text-slate-400 { color: #64748b !important; }
@@ -216,8 +269,6 @@
     html.light-theme .btn-copy-msg,
     html.light-theme .btn-speak-msg,
     html.light-theme .btn-open-code-msg,
-    html.light-theme .voice-chip,
-    html.light-theme .studio-preset-chip,
     html.light-theme .starter-prompt {
       background-color: #e2e8f0 !important;
       color: #1e293b !important;
@@ -228,27 +279,39 @@
       color: #ffffff !important;
       border: none !important;
     }
+    html.light-theme #videocall-modal {
+      background: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+    html.light-theme #videocall-card-shell {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+    }
+    html.light-theme #btn-call-mic,
+    html.light-theme #btn-call-cam,
+    html.light-theme #btn-call-flip {
+      background: #e2e8f0 !important;
+      border-color: #cbd5e1 !important;
+      color: #1e293b !important;
+    }
     html.light-theme #btn-auth-submit,
     html.light-theme #btn-camera-capture,
     html.light-theme #btn-end-call,
     html.light-theme #btn-confirm-ok,
-    html.light-theme #btn-launch-yt-ext,
-    html.light-theme #studio-ai-generate-btn,
-    html.light-theme #vedit-ai-analyze-btn {
+    html.light-theme #studio-ai-generate-btn {
       color: #ffffff !important;
     }
 
     .axon-glass-card {
-      background: rgba(15, 23, 48, 0.78);
+      background: rgba(15, 23, 48, 0.84);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(99, 132, 255, 0.32);
-      box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(99, 132, 255, 0.28);
+      box-shadow: 0 8px 30px rgba(14, 165, 233, 0.1);
     }
     .axon-featured-card {
-      background: linear-gradient(135deg, rgba(23, 48, 118, 0.65), rgba(76, 29, 149, 0.45));
-      border: 1px solid rgba(96, 165, 250, 0.5);
-      box-shadow: 0 10px 34px rgba(37, 99, 235, 0.22);
+      background: linear-gradient(135deg, rgba(23, 48, 118, 0.55), rgba(49, 46, 129, 0.35));
+      border: 1px solid rgba(96, 165, 250, 0.42);
     }
     .axon-neon-btn {
       border: 1.5px solid rgba(56, 189, 248, 0.55);
@@ -279,17 +342,11 @@
     .animate-float-orb { animation: floatOrb 3.5s ease-in-out infinite; }
     .animate-fade-up { animation: fadeSlideUp 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
     .splash-progress-fill { animation: splashLoadBar 1.6s ease-in-out forwards; }
-    .wave-bar {
-      width: 4px;
-      border-radius: 9999px;
-      background: linear-gradient(180deg, #22d3ee, #6366f1);
-      animation: waveBar 0.9s ease-in-out infinite;
-    }
     .glass-panel {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(148, 163, 184, 0.16);
+      border: 1px solid rgba(148, 163, 184, 0.18);
     }
     .typing-dot {
       width: 6px;
@@ -416,7 +473,7 @@
   <div id="app-screen" class="hidden h-full w-full max-w-full flex overflow-hidden">
     <div id="sidebar-backdrop" class="hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"></div>
 
-    <!-- CLEAN SIDEBAR MATCHING SCREENSHOT 3 (BOTH DARK & LIGHT) -->
+    <!-- SIDEBAR MATCHING SCREENSHOTS 3 & 4 -->
     <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-[#0c1322] border-r border-slate-800/80 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0">
       <div class="px-4 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -451,7 +508,7 @@
 
       <div id="sidebar-chat-list" class="flex-1 overflow-y-auto px-3.5 py-1 space-y-1.5"></div>
 
-      <!-- Bottom Navigation & User Profile matching Screenshot 3 -->
+      <!-- Bottom Navigation & User Profile -->
       <div class="pt-2">
         <div class="px-3.5 pb-2 space-y-1">
           <button id="nav-settings" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition">
@@ -475,9 +532,46 @@
       </div>
     </aside>
 
+    <!-- ==================== CHAT CONTEXT POPUP MENU (SCREENSHOT 4) ==================== -->
+    <div id="chat-context-menu" class="hidden fixed z-50 w-64 glass-panel rounded-2xl p-2 shadow-2xl border border-cyan-500/30 animate-fade-up">
+      <button type="button" data-chat-action="pin" class="w-full flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-800/70 text-left transition">
+        <span class="text-slate-300 mt-0.5">📌</span>
+        <div>
+          <span id="ctx-pin-title" class="block text-sm font-semibold text-white">Pin Chat</span>
+          <span class="block text-[11px] text-slate-400">Keep important chats at the top.</span>
+        </div>
+      </button>
+      <button type="button" data-chat-action="lock" class="w-full flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-800/70 text-left transition">
+        <span class="text-slate-300 mt-0.5">🔒</span>
+        <div>
+          <span id="ctx-lock-title" class="block text-sm font-semibold text-white">Lock Chat</span>
+          <span class="block text-[11px] text-slate-400">Secure chat with a password or PIN.</span>
+        </div>
+      </button>
+      <button type="button" data-chat-action="rename" class="w-full flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-800/70 text-left transition">
+        <span class="text-slate-300 mt-0.5">✏️</span>
+        <div>
+          <span class="block text-sm font-semibold text-white">Rename Chat</span>
+          <span class="block text-[11px] text-slate-400">Change the chat name.</span>
+        </div>
+      </button>
+      <button type="button" data-chat-action="archive" class="w-full flex items-start gap-3 p-2.5 rounded-xl hover:bg-slate-800/70 text-left transition">
+        <span class="text-slate-300 mt-0.5">📦</span>
+        <div>
+          <span id="ctx-archive-title" class="block text-sm font-semibold text-white">Archive Chat</span>
+          <span class="block text-[11px] text-slate-400">Remove chat from main list.</span>
+        </div>
+      </button>
+      <div class="my-1 border-t border-slate-800"></div>
+      <button type="button" data-chat-action="delete" class="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-rose-500/15 text-left transition">
+        <span class="text-rose-400">🗑️</span>
+        <span class="text-sm font-semibold text-rose-400">Delete Chat</span>
+      </button>
+    </div>
+
     <!-- ==================== MAIN CONTENT ==================== -->
     <main class="flex-1 flex flex-col w-full max-w-full min-w-0 h-full relative overflow-hidden">
-      <!-- TOP HEADER BAR MATCHING SCREENSHOTS 1 & 2 -->
+      <!-- TOP HEADER BAR MATCHING SCREENSHOTS 5, 6, 9, 10, 11 -->
       <header class="h-14 shrink-0 w-full px-3 sm:px-5 flex items-center justify-between gap-2 z-20">
         <div class="flex items-center gap-3 min-w-0">
           <button id="btn-open-sidebar" type="button" aria-label="Open Menu" class="lg:hidden w-9 h-9 rounded-full flex items-center justify-center transition">
@@ -487,13 +581,21 @@
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
-          <button id="btn-header-voice" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-            <span id="header-voice-label">Voice Off</span>
+          <!-- + New Page Pill Button -->
+          <button id="btn-new-page" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="12" y1="12" x2="12" y2="18"/></svg>
+            <span>New Page</span>
           </button>
 
-          <button id="btn-header-settings" type="button" title="Settings" class="w-9 h-9 rounded-full flex items-center justify-center transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <!-- Circular Audio Waveform Button -->
+          <button id="btn-header-voice" type="button" title="Toggle Voice Control" class="w-9 h-9 rounded-full flex items-center justify-center transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24">
+              <line x1="4" y1="10" x2="4" y2="14"/>
+              <line x1="8" y1="7" x2="8" y2="17"/>
+              <line x1="12" y1="4" x2="12" y2="20"/>
+              <line x1="16" y1="7" x2="16" y2="17"/>
+              <line x1="20" y1="10" x2="20" y2="14"/>
+            </svg>
           </button>
         </div>
       </header>
@@ -502,24 +604,24 @@
       <div id="view-chat" class="flex-1 flex flex-col w-full max-w-full min-h-0">
         <div id="chat-messages" class="flex-1 overflow-y-auto w-full max-w-full px-3 sm:px-6 py-4 space-y-5 scroll-smooth"></div>
 
-        <!-- PURE CODE AREA DRAWER -->
+        <!-- PURE CODE AREA DRAWER (EDITABLE CODE CANVAS) -->
         <div id="pure-code-drawer" class="hidden w-full max-w-full px-3 sm:px-6 mb-2 animate-fade-up">
           <div class="w-full rounded-2xl bg-[#03050a] border border-slate-700/90 shadow-2xl overflow-hidden">
             <div class="px-4 py-2 bg-black border-b border-slate-800 flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                <span class="text-xs font-mono font-semibold text-cyan-300">PURE CODE AREA</span>
+                <span id="pure-code-lang" class="text-xs font-mono font-semibold text-cyan-300">PURE CODE AREA</span>
               </div>
               <div class="flex items-center gap-2">
                 <button id="btn-copy-pure-code" type="button" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white font-medium">Copy Code</button>
                 <button id="btn-close-pure-code" type="button" class="px-2.5 py-1 rounded text-xs text-slate-400 hover:text-white">✕</button>
               </div>
             </div>
-            <pre id="pure-code-content" class="p-4 max-h-52 overflow-auto text-xs font-mono text-emerald-300 bg-black leading-relaxed whitespace-pre-wrap"></pre>
+            <textarea id="pure-code-content" rows="7" spellcheck="false" class="w-full p-4 text-xs font-mono text-emerald-300 bg-black leading-relaxed focus:outline-none resize-y"></textarea>
           </div>
         </div>
 
-        <!-- BOTTOM PILL COMPOSER MATCHING SCREENSHOTS 1 & 2 -->
+        <!-- BOTTOM PILL COMPOSER MATCHING SCREENSHOTS 5, 6, 9, 10, 11 -->
         <div class="shrink-0 w-full max-w-full px-3 sm:px-6 pb-3 pt-1">
           <div class="w-full max-w-3xl mx-auto relative">
             <!-- Attachment Preview -->
@@ -595,27 +697,39 @@
             <input id="input-video" type="file" accept="video/*" class="hidden" />
             <input id="input-file" type="file" accept=".pdf,.txt,.csv,.json,.md,.js,.py,.html,.doc,.docx" class="hidden" />
 
-            <!-- Pill Composer Shell matching Screenshot 1 & 2 -->
+            <!-- Pill Composer Shell matching Screenshots -->
             <div class="chat-composer-shell w-full rounded-full p-2 flex items-center gap-2 transition">
               <button id="btn-plus-menu" type="button" title="Attach Photo, Video, Camera, or File" class="shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
 
-              <div class="chat-input-pill flex-1 min-w-0 rounded-full px-3.5 py-1 flex items-center gap-2 transition">
+              <div class="chat-input-pill flex-1 min-w-0 rounded-full px-4 py-1 flex items-center gap-2 transition">
                 <textarea id="chat-input" rows="1" placeholder="Message AXON AI..." class="flex-1 min-w-0 bg-transparent text-sm sm:text-[15px] text-white placeholder-slate-400 resize-none py-1.5 max-h-32 focus:outline-none leading-snug"></textarea>
-                <button id="btn-inline-camera" type="button" title="Open Camera" class="shrink-0 p-1.5 rounded-full text-slate-400 hover:text-cyan-400 transition">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                  </svg>
-                </button>
               </div>
+
+              <!-- Live Video Call Circular Button with Red Dot (Matching Screenshots) -->
+              <button id="btn-inline-videocall" type="button" title="AI Live Video Call" class="relative shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-[#1e2638] border border-slate-700/70 text-slate-200 hover:text-cyan-400 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+                  <polygon points="23 7 16 12 23 17 23 7"/>
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                </svg>
+                <span class="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-[#141c2c]"></span>
+              </button>
 
               <button id="btn-send" type="button" title="Send Message" class="shrink-0 w-11 h-11 rounded-full text-white flex items-center justify-center shadow-lg transition active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               </button>
             </div>
-            <p class="text-[11px] text-slate-400 text-center mt-2">AXON AI can make mistakes. Press Ctrl+K for Quick Commands.</p>
+
+            <!-- Quick Action Bar (Share • Copy • Save) -->
+            <div class="flex items-center justify-center gap-4 mt-2 text-[11px] text-slate-400">
+              <button id="btn-quick-share" type="button" class="hover:text-cyan-400 transition font-medium">Share</button>
+              <span>•</span>
+              <button id="btn-quick-copy" type="button" class="hover:text-cyan-400 transition font-medium">Copy</button>
+              <span>•</span>
+              <button id="btn-quick-save" type="button" class="hover:text-cyan-400 transition font-medium">Save</button>
+              <span class="hidden sm:inline">• AXON AI can make mistakes. Press Ctrl+K.</span>
+            </div>
           </div>
         </div>
       </div>
@@ -685,9 +799,9 @@
         </div>
       </div>
 
-      <!-- ==================== VIEW 3: SETTINGS & MEMORY MANAGEMENT ==================== -->
+      <!-- ==================== VIEW 3: SETTINGS & MEMORY (MATCHING SCREENSHOT 2) ==================== -->
       <div id="view-settings" class="hidden flex-1 overflow-y-auto p-4 sm:p-6">
-        <div class="max-w-3xl mx-auto space-y-5 pb-12">
+        <div class="max-w-3xl mx-auto space-y-4 pb-12">
 
           <div class="flex items-center justify-between gap-3">
             <button id="btn-settings-back" type="button" title="Back to Chat" class="w-10 h-10 rounded-full axon-glass-card axon-neon-btn flex items-center justify-center text-white hover:scale-105 transition">
@@ -702,13 +816,13 @@
             </button>
           </div>
 
-          <!-- 1. Account & Profile (Firebase Auth) -->
+          <!-- 1. ACCOUNT & PROFILE (FIREBASE USER SCOPE) -->
           <div class="axon-glass-card axon-featured-card rounded-3xl overflow-hidden settings-section">
-            <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-300">
-              1. Account &amp; Profile (Firebase User Scope)
+            <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
+              1. ACCOUNT &amp; PROFILE (FIREBASE USER SCOPE)
             </div>
 
-            <button id="row-edit-profile" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-700/40 hover:bg-white/5 transition text-left">
+            <button id="row-edit-profile" type="button" class="w-full px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-white/5 transition text-left">
               <div class="flex items-center gap-3 min-w-0">
                 <div id="settings-profile-avatar" class="w-11 h-11 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 flex items-center justify-center text-sm font-bold text-white shrink-0 overflow-hidden border border-cyan-300/50">AD</div>
                 <div class="min-w-0">
@@ -720,69 +834,55 @@
                 </div>
               </div>
               <div class="flex items-center gap-2 shrink-0">
-                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-purple-500/25 text-purple-200 border border-purple-400/40">Edit</span>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/25 text-purple-200 border border-purple-400/40">Edit</span>
                 <span class="text-slate-300 text-base">›</span>
               </div>
             </button>
-
-            <div class="px-4 py-3 flex items-center justify-between gap-3 text-xs text-slate-300">
-              <span>User Memory Scope:</span>
-              <span id="settings-account-meta" class="font-mono text-cyan-300">guest_default</span>
-            </div>
           </div>
 
-          <!-- 2. Appearance & Theme Mode (Dark & Light) -->
-          <div class="axon-glass-card rounded-3xl overflow-hidden settings-section">
+          <!-- 2. APPEARANCE & THEME (DARK / LIGHT) WITH CYAN GLOW (MATCHING SCREENSHOT 2) -->
+          <div class="axon-glass-card settings-cyan-glow rounded-3xl overflow-hidden settings-section">
             <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
-              2. Appearance &amp; Theme (Dark / Light)
+              2. APPEARANCE &amp; THEME (DARK / LIGHT)
             </div>
-            <div class="px-4 py-3.5 flex items-center justify-between gap-4 border-b border-slate-800/70">
-              <div>
-                <p class="text-sm font-medium text-white">Theme Mode</p>
-                <p class="text-xs text-slate-400 mt-0.5">Switch between Dark and Light mode</p>
-              </div>
-              <div class="flex items-center gap-1 p-1 rounded-xl bg-slate-900/90 border border-slate-800">
-                <button id="btn-theme-dark" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition">Dark</button>
-                <button id="btn-theme-light" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition">Light</button>
+            <div class="px-4 py-3 flex items-center justify-between gap-4">
+              <p class="text-sm font-medium text-white">Theme Mode</p>
+              <div class="flex items-center gap-1 p-1 rounded-full bg-slate-900/90 border border-slate-700/80">
+                <button id="btn-theme-dark" type="button" class="px-3.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-white transition">Dark</button>
+                <button id="btn-theme-light" type="button" class="px-3.5 py-1 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition">Light</button>
               </div>
             </div>
 
-            <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label for="setting-font-size" class="block text-xs text-slate-400 mb-1">Chat Text Size</label>
-                <select id="setting-font-size" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
-                  <option value="sm">Compact (Small)</option>
-                  <option value="md" selected>Standard (Medium)</option>
-                  <option value="lg">Comfortable (Large)</option>
-                </select>
-              </div>
-              <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                <div>
-                  <p class="text-xs font-medium text-slate-200">Auto-Scroll Chat</p>
-                  <p class="text-[11px] text-slate-400">Jump to newest message</p>
-                </div>
-                <button id="toggle-autoscroll" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
-                  <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
-                </button>
-              </div>
+            <div class="px-4 pb-3">
+              <select id="setting-font-size" aria-label="Chat Text Size" class="w-full px-3.5 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-xs sm:text-sm text-white focus:outline-none focus:border-cyan-400">
+                <option value="md" selected>Chat Text Size</option>
+                <option value="sm">Compact (Small)</option>
+                <option value="md">Standard (Medium)</option>
+                <option value="lg">Comfortable (Large)</option>
+              </select>
+            </div>
+
+            <div class="px-4 pb-4 flex items-center justify-between">
+              <p class="text-sm font-medium text-white">Auto-Scroll Chat</p>
+              <button id="toggle-autoscroll" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-cyan-500 transition-colors duration-200 focus:outline-none">
+                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
+              </button>
             </div>
           </div>
 
-          <!-- 3. Long-Term Memory, Supabase Sync, Auto Load & Memory Management -->
+          <!-- 3. LONG-TERM MEMORY & ADVANCED SETTINGS LIST (MATCHING SCREENSHOT 2) -->
           <div class="axon-glass-card rounded-3xl overflow-hidden settings-section">
-            <div class="px-4 pt-3.5 pb-1.5 flex items-center justify-between">
-              <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-400">
-                3. Long-Term Memory &amp; Context Engine (Supabase + Auto Load)
+            <div class="px-4 pt-3.5 pb-2.5 flex items-center justify-between gap-2 border-b border-slate-800/80">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-400 leading-snug">
+                3. LONG-TERM MEMORY &amp; CONTEXT ENGINE (SUPABASE + AUTO LOAD)
               </span>
-              <span id="memory-count-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 font-semibold">0 Memories</span>
+              <button id="btn-open-memory-drawer" type="button" class="px-3 py-1 rounded-2xl bg-cyan-500/15 text-cyan-300 border border-cyan-400/35 text-[11px] font-semibold text-center leading-tight shrink-0">
+                <span id="memory-count-badge">0<br/>Memories</span>
+              </button>
             </div>
 
-            <div class="p-4 space-y-3 border-b border-slate-800/70">
-              <p class="text-xs text-slate-400">
-                Purani zaroori baatein apne aap ya manually yahan save hoti hain. User pooche to AI purani baatein recall karke jawab deta hai.
-              </p>
-
-              <!-- Optional Supabase Cloud Credentials -->
+            <!-- Collapsible Memory Manager Drawer -->
+            <div id="memory-manager-drawer" class="hidden p-4 bg-slate-950/50 border-b border-slate-800/80 space-y-3">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <input id="supabase-url-input" type="text" placeholder="Supabase URL (https://xxx.supabase.co)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
                 <div class="flex gap-1.5">
@@ -790,114 +890,105 @@
                   <button id="btn-save-supabase" type="button" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-cyan-300 border border-slate-700 shrink-0">Connect</button>
                 </div>
               </div>
-
-              <!-- Add New Memory -->
               <div class="flex gap-2">
-                <input id="memory-manual-input" type="text" placeholder="e.g. Mera naam Ms Developer hai aur main AXON AI bana raha hoon" class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
-                <button id="btn-add-memory" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shrink-0">Save Memory</button>
+                <input id="memory-manual-input" type="text" placeholder="Add memory (e.g. Mera naam Ms Developer hai)" class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+                <button id="btn-add-memory" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shrink-0">Save</button>
               </div>
-
-              <!-- Search, Auto-Load Sync & Delete All -->
-              <div class="flex items-center justify-between gap-2 pt-1">
-                <input id="memory-search-input" type="text" placeholder="Search saved memories..." class="flex-1 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
-                <button id="btn-reload-memory" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-cyan-300 border border-slate-700 shrink-0">Auto Load</button>
-                <button id="btn-clear-memories" type="button" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-xs text-rose-300 border border-rose-500/20 shrink-0">Delete All</button>
-              </div>
-
-              <!-- Memory List (View & Delete individual memories) -->
-              <div id="settings-memory-list" class="max-h-60 overflow-y-auto space-y-2 pr-1"></div>
-            </div>
-          </div>
-
-          <!-- 4. Auto Save & Chat History Management -->
-          <div class="axon-glass-card rounded-3xl overflow-hidden settings-section">
-            <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
-              4. Auto Save &amp; Chat History
-            </div>
-
-            <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
-              <div class="flex items-center gap-3 min-w-0">
-                <span class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">💾</span>
-                <div class="min-w-0">
-                  <p class="text-sm font-medium text-white">Auto Save Chats &amp; Memory</p>
-                  <p class="text-xs text-slate-400 truncate">Baatcheet aur memory apne aap save hoti rahe</p>
-                </div>
-              </div>
-              <button id="toggle-history" type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-indigo-500 transition-colors duration-200 focus:outline-none">
-                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-5"></span>
-              </button>
-            </div>
-
-            <div class="px-4 py-3.5 space-y-3">
               <div class="flex items-center justify-between gap-2">
-                <div class="min-w-0">
-                  <p class="text-sm font-medium text-white">Saved Conversations (<span id="history-count">0</span>)</p>
-                  <p class="text-xs text-slate-400 truncate">Export or clear saved chat history</p>
-                </div>
-                <div class="flex items-center gap-1.5 shrink-0">
-                  <button id="btn-export-history" type="button" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">Export</button>
-                  <button id="btn-clear-history" type="button" class="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-xs font-medium text-rose-300 border border-rose-500/20 transition">Clear All</button>
-                </div>
+                <input id="memory-search-input" type="text" placeholder="Search memories..." class="flex-1 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+                <button id="btn-reload-memory" type="button" class="px-2.5 py-1.5 rounded-xl bg-slate-800 text-xs text-cyan-300 border border-slate-700 shrink-0">Auto Load</button>
+                <button id="btn-clear-memories" type="button" class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 text-xs text-rose-300 border border-rose-500/20 shrink-0">Delete All</button>
               </div>
-              <input id="history-search" type="text" placeholder="Search saved messages..." class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700/80 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400" />
-              <div id="settings-history-list" class="max-h-52 overflow-y-auto space-y-2 pr-1"></div>
+              <div id="settings-memory-list" class="max-h-48 overflow-y-auto space-y-2 pr-1"></div>
+            </div>
+
+            <!-- Advanced Settings List Rows (Exact Screenshot 2 Items) -->
+            <div class="divide-y divide-slate-800/80">
+              <div class="px-4 pt-3 pb-1.5">
+                <h4 class="text-sm font-bold text-white">Advanced Settings</h4>
+              </div>
+
+              <button type="button" data-adv-panel="voice" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">Voice Settings</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="language" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">Language</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="notification" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">Notification</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="privacy" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">Privacy &amp; Security</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="data" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">Data Management</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="media" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">File &amp; Media</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="model" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">AI Model</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="usage" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">Usage &amp; Limits</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="help" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">Help &amp; Support</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="about" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <span class="text-sm font-medium text-white">About AXON AI</span>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
             </div>
           </div>
 
-          <!-- 5. Voice & AI Model Settings -->
-          <div class="axon-glass-card rounded-3xl overflow-hidden settings-section">
-            <div class="px-4 pt-3.5 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
-              5. AI Model &amp; Voice Controller
-            </div>
-
-            <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
-              <div>
-                <p class="text-sm font-medium text-white">AI Model</p>
-                <p class="text-xs text-slate-400">Select intelligence engine</p>
-              </div>
-              <select id="setting-ai-model" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-white focus:outline-none focus:border-cyan-400">
-                <option value="AXON Pro 2.5">AXON Pro 2.5</option>
-                <option value="AXON Ultra Reasoning">AXON Ultra Reasoning</option>
-                <option value="AXON Flash Speed">AXON Flash Speed</option>
-              </select>
-            </div>
-
-            <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
-              <div>
-                <p class="text-sm font-medium text-white">App Language</p>
-                <p class="text-xs text-slate-400">Preferred reply &amp; voice language</p>
-              </div>
-              <select id="setting-app-language" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-white focus:outline-none focus:border-cyan-400">
-                <option value="Hinglish">Hinglish</option>
-                <option value="Hindi">Hindi</option>
-                <option value="English">English</option>
-              </select>
-            </div>
-
-            <div class="px-4 py-3.5 flex items-center justify-between gap-3 border-b border-slate-800/70">
-              <div>
-                <p class="text-sm font-medium text-white">Voice Control</p>
-                <p class="text-xs text-slate-400">Hands-free mic commands</p>
-              </div>
-              <button id="toggle-voice-control" type="button" role="switch" aria-checked="false" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-slate-700 transition-colors duration-200 focus:outline-none">
-                <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 translate-x-0"></span>
-              </button>
-            </div>
-
-            <div class="px-4 py-3.5 flex items-center justify-between gap-3">
-              <div>
-                <p class="text-sm font-medium text-white">AI Voice Selection</p>
-                <p id="tts-controller-state" class="text-xs text-slate-400">Natural Speech Ready</p>
-              </div>
-              <select id="setting-voice-select" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-white focus:outline-none focus:border-cyan-400 max-w-[175px]">
-                <option value="0">1. Nova (Clear Female)</option>
-                <option value="1">2. Orion (Deep Male)</option>
-                <option value="2">3. Aria (Warm Female)</option>
-                <option value="3">4. Atlas (Crisp Male)</option>
-                <option value="4">5. Luna (Soft Assistant)</option>
-                <option value="5">6. Rex (Energetic Voice)</option>
-              </select>
-            </div>
+          <!-- Hidden backing controls preserved so all JS bindings stay 100% intact -->
+          <div class="hidden">
+            <button id="toggle-history" type="button" role="switch" aria-checked="true"><span></span></button>
+            <span id="history-count">0</span>
+            <button id="btn-export-history" type="button"></button>
+            <button id="btn-clear-history" type="button"></button>
+            <input id="history-search" type="text" />
+            <div id="settings-history-list"></div>
+            <select id="setting-ai-model">
+              <option value="AXON Pro 2.5">AXON Pro 2.5</option>
+              <option value="AXON Ultra Reasoning">AXON Ultra Reasoning</option>
+              <option value="AXON Flash Speed">AXON Flash Speed</option>
+            </select>
+            <select id="setting-app-language">
+              <option value="Hinglish">Hinglish</option>
+              <option value="Hindi">Hindi</option>
+              <option value="English">English</option>
+            </select>
+            <button id="toggle-voice-control" type="button" role="switch" aria-checked="false"><span></span></button>
+            <span id="tts-controller-state">Natural Speech Ready</span>
+            <select id="setting-voice-select">
+              <option value="0">1. Nova (Clear Female)</option>
+              <option value="1">2. Orion (Deep Male)</option>
+              <option value="2">3. Aria (Warm Female)</option>
+              <option value="3">4. Atlas (Crisp Male)</option>
+              <option value="4">5. Luna (Soft Assistant)</option>
+              <option value="5">6. Rex (Energetic Voice)</option>
+            </select>
+            <span id="settings-account-meta">guest_default</span>
           </div>
 
         </div>
@@ -971,35 +1062,42 @@
     </div>
   </div>
 
-  <!-- ==================== VIDEO CALL MODAL ==================== -->
-  <div id="videocall-modal" class="hidden fixed inset-0 z-50 bg-[#050811]/95 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-7 animate-fade-up">
+  <!-- ==================== VIDEO CALL MODAL (MATCHING SCREENSHOTS 7 & 8) ==================== -->
+  <div id="videocall-modal" class="hidden fixed inset-0 z-50 bg-[#0b111e] flex flex-col items-center justify-between p-4 sm:p-7 animate-fade-up">
     <div class="w-full max-w-5xl flex items-center justify-between gap-2">
       <div class="flex items-center gap-3">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
         <div>
           <h3 class="text-base font-bold text-white">AXON AI Live Video Call</h3>
-          <p id="call-timer" class="text-xs text-cyan-300 font-mono">00:00</p>
+          <p id="call-timer" class="text-xs text-cyan-400 font-mono">00:00</p>
         </div>
       </div>
-      <span id="call-voice-status" class="px-3 py-1 rounded-full text-xs bg-cyan-500/15 text-cyan-300 border border-cyan-400/30">Mic Listening</span>
+      <span id="call-voice-status" class="px-3.5 py-1 rounded-full text-xs font-medium bg-cyan-500/15 text-cyan-400 border border-cyan-400/30">Mic Listening</span>
     </div>
 
-    <div class="relative w-full max-w-5xl flex-1 my-4 rounded-3xl glass-panel border border-slate-800 flex flex-col items-center justify-between overflow-hidden p-4 sm:p-6">
-      <div class="relative w-full flex-1 min-h-[210px] rounded-2xl bg-slate-950 border border-slate-700/80 overflow-hidden flex items-center justify-center">
-        <video id="call-pip-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
-        <div id="call-pip-off" class="hidden text-center p-4">
-          <span class="text-xs sm:text-sm text-slate-400">Your Camera is Off</span>
-        </div>
+    <div id="videocall-card-shell" class="relative w-full max-w-5xl flex-1 my-4 rounded-3xl bg-[#11192b] border border-slate-800 flex flex-col items-center justify-between overflow-hidden p-4 sm:p-6 shadow-2xl">
+      <div class="relative w-full flex-1 min-h-[240px] rounded-2xl bg-slate-950 border border-slate-700/60 overflow-hidden flex items-center justify-center">
+        <!-- Realistic AI Assistant Avatar Feed (Visible when user camera is off or as main AI view) -->
+        <img id="call-ai-avatar" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80" alt="AXON AI Live" class="w-full h-full object-cover" />
+        <!-- User PiP Camera Stream -->
+        <video id="call-pip-video" autoplay playsinline muted class="hidden absolute bottom-3 right-3 w-28 sm:w-36 aspect-[3/4] rounded-2xl object-cover border-2 border-cyan-400/70 shadow-xl"></video>
       </div>
-      <p id="call-caption" class="mt-3 text-sm text-slate-200 text-center max-w-2xl font-medium">
+      <p id="call-caption" class="mt-4 text-sm sm:text-base text-slate-100 text-center max-w-xl font-medium">
         "Hi! I'm AXON AI. Speak clearly—your voice is active."
       </p>
     </div>
 
     <div class="flex items-center gap-4">
-      <button id="btn-call-mic" type="button" class="w-12 h-12 rounded-full bg-slate-800 text-white flex items-center justify-center border border-slate-700">🎙️</button>
-      <button id="btn-call-cam" type="button" class="w-12 h-12 rounded-full bg-slate-800 text-white flex items-center justify-center border border-slate-700">📹</button>
-      <button id="btn-end-call" type="button" class="px-6 h-12 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm">End Call</button>
+      <button id="btn-call-mic" type="button" title="Mute/Unmute Mic" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+      </button>
+      <button id="btn-call-cam" type="button" title="Toggle Camera" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </button>
+      <button id="btn-call-flip" type="button" title="Flip Camera" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7h-3l-2-2H9L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M9 13a3 3 0 0 1 5.12-2.12L15 12"/><polyline points="15 9 15 12 12 12"/></svg>
+      </button>
+      <button id="btn-end-call" type="button" class="px-7 h-12 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm shadow-lg shadow-rose-600/30 transition">End Call</button>
     </div>
   </div>
 
@@ -1057,7 +1155,6 @@
         measurementId: "G-NBP2KRZWSG"
       };
 
-      // Supabase Config (Table: axon_memories -> columns: id, user_key, content, tags, created_at)
       const SUPABASE_CONFIG = {
         url: "",
         anonKey: "",
@@ -1096,6 +1193,7 @@
         theme: 'dark',
         fontSize: 'md',
         autoScroll: true,
+        notifications: true,
         appLanguage: 'Hinglish',
         defaultModel: 'AXON Pro 2.5',
         aiModel: 'AXON Pro 2.5',
@@ -1118,7 +1216,8 @@
         pendingAttachment: null,
         isGenerating: false,
         photoVault: [],
-        pureCodeHistory: []
+        pureCodeHistory: [],
+        contextMenuChatId: null
       };
 
       let firebaseAuth = null;
@@ -1126,7 +1225,6 @@
       let demoSession = false;
       let splashDismissed = false;
       let recognition = null;
-      let callRecognition = null;
       let generationAbort = null;
       let cameraStream = null;
       let callStream = null;
@@ -1134,6 +1232,7 @@
       let callSeconds = 0;
       let callMicMuted = false;
       let callCamOff = false;
+      let callFacingMode = 'user';
       let availableVoices = [];
       let ttsKeepAliveTimer = null;
       let lockedVoiceObj = null;
@@ -1450,13 +1549,60 @@
           .replace(/"/g, '&quot;');
       }
 
-      function formatMessageHtml(text) {
-        let safe = escapeHtml(text);
-        safe = safe.replace(/```([\s\S]*?)```/g, (_, code) => {
-          return `<pre class="mt-2 mb-2 p-3 rounded-xl bg-black border border-slate-800 text-xs text-emerald-300 overflow-x-auto font-mono"><code>${code.trim()}</code></pre>`;
+      // ==================== CODE BLOCK & NEWS CARD FORMATTER (SCREENSHOTS 6, 9, 10, 11) ====================
+      function formatMessageHtml(text, msgId = '') {
+        let raw = String(text || '');
+        const codeBlocks = [];
+
+        raw = raw.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => {
+          const idx = codeBlocks.length;
+          const cleanLang = (lang || 'Code').trim();
+          const label = cleanLang.charAt(0).toUpperCase() + cleanLang.slice(1);
+          codeBlocks.push(`
+            <div class="axon-code-card my-3 rounded-2xl overflow-hidden shadow-md">
+              <div class="axon-code-card-header px-3.5 py-2 flex items-center justify-between text-xs">
+                <div class="flex items-center gap-3">
+                  <span class="font-semibold">${escapeHtml(label)}</span>
+                  <span class="opacity-75">AI Assistant</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" class="btn-edit-code-block p-1 rounded hover:bg-black/10 transition" data-msg-id="${escapeHtml(msgId)}" data-block-idx="${idx}" title="Edit in Pure Code Area">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button type="button" class="btn-copy-code-block p-1 rounded hover:bg-black/10 transition" data-msg-id="${escapeHtml(msgId)}" data-block-idx="${idx}" title="Copy Code">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              </div>
+              <pre class="p-3.5 text-xs sm:text-[13px] text-emerald-300 bg-[#1c1d21] overflow-x-auto font-mono leading-relaxed"><code>${escapeHtml(code.trim())}</code></pre>
+            </div>
+          `);
+          return `__AXON_CODE_BLOCK_${idx}__`;
         });
+
+        let safe = escapeHtml(raw);
+
+        // Rich News Card Formatting: [NEWS_CARD: Title | ImageURL | Summary | Source]
+        safe = safe.replace(/\[NEWS_CARD:\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\]/g, (_, title, imgUrl, summary, source) => {
+          return `
+            <div class="axon-news-card my-3 rounded-2xl p-3.5 space-y-2.5 shadow-md">
+              <h4 class="text-base font-bold text-white leading-snug">${title}</h4>
+              ${imgUrl && imgUrl.startsWith('http') ? `<img src="${imgUrl}" alt="${title}" class="w-full max-h-52 object-cover rounded-xl border border-slate-700/50" />` : ''}
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${summary}</p>
+              <div class="flex items-center gap-2 pt-1">
+                <span class="w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center">${source.slice(0, 1)}</span>
+                <span class="text-xs font-medium text-slate-400">${source}</span>
+              </div>
+            </div>
+          `;
+        });
+
         safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-cyan-400">$1</strong>');
         safe = safe.replace(/\n/g, '<br/>');
+
+        codeBlocks.forEach((htmlBlock, idx) => {
+          safe = safe.replace(`__AXON_CODE_BLOCK_${idx}__`, htmlBlock);
+        });
         return safe;
       }
 
@@ -1475,6 +1621,10 @@
         const chat = {
           id,
           title: 'New Conversation',
+          pinned: false,
+          locked: false,
+          pinCode: '',
+          archived: false,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           messages: []
@@ -1590,6 +1740,7 @@
       function closeSidebarMobile() {
         $('sidebar')?.classList.add('-translate-x-full');
         $('sidebar-backdrop')?.classList.add('hidden');
+        $('chat-context-menu')?.classList.add('hidden');
       }
 
       function renderAll() {
@@ -1601,19 +1752,23 @@
         renderSettingsMemory();
       }
 
-      // ==================== SIDEBAR RENDERING (EXACT SCREENSHOT 3 STYLE) ====================
+      // ==================== SIDEBAR WITH PIN, LOCK, ARCHIVE, RENAME, DELETE (SCREENSHOTS 3 & 4) ====================
       function renderSidebarChats() {
         const list = $('sidebar-chat-list');
         if (!list) return;
         const memPill = $('sidebar-memory-pill');
         if (memPill) memPill.textContent = `${state.memories.length} Memories`;
 
-        if (!state.chats.length) {
+        const visibleChats = state.chats
+          .filter(c => !c.archived)
+          .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+        if (!visibleChats.length) {
           list.innerHTML = `<p class="text-xs text-slate-400 px-3 py-4 text-center">No chats yet</p>`;
           return;
         }
         const isLight = state.settings.theme === 'light';
-        list.innerHTML = state.chats.map(c => {
+        list.innerHTML = visibleChats.map(c => {
           const active = c.id === state.activeChatId;
           const label = c.title === 'New Conversation' ? 'AI Chat' : c.title;
           const rowBg = active
@@ -1621,17 +1776,39 @@
             : (isLight ? 'text-slate-600 hover:bg-slate-200/60' : 'text-slate-300 hover:bg-slate-800/40');
           return `
             <div class="group flex items-center justify-between gap-1.5 px-3.5 py-2.5 rounded-xl cursor-pointer transition ${rowBg}" data-chat-id="${c.id}">
-              <div class="flex items-center gap-3 min-w-0 flex-1 select-chat-btn" data-chat-id="${c.id}">
+              <div class="flex items-center gap-2.5 min-w-0 flex-1 select-chat-btn" data-chat-id="${c.id}">
                 <svg class="w-4 h-4 shrink-0 ${active ? 'text-sky-400' : 'text-slate-400'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 <span class="text-sm font-medium truncate">${escapeHtml(label)}</span>
+                ${c.pinned ? `<span class="text-[11px] text-cyan-400 shrink-0" title="Pinned">📌</span>` : ''}
+                ${c.locked ? `<span class="text-[11px] text-amber-400 shrink-0" title="Locked">🔒</span>` : ''}
               </div>
-              <button type="button" class="delete-chat-btn opacity-0 group-hover:opacity-100 p-1 rounded text-slate-400 hover:text-rose-400 transition" data-chat-id="${c.id}" title="Delete chat">✕</button>
+              <div class="flex items-center gap-1 shrink-0">
+                <button type="button" class="open-chat-ctx-btn p-1 rounded text-slate-400 hover:text-cyan-400 transition" data-chat-id="${c.id}" title="Chat Options">⋮</button>
+                <button type="button" class="delete-chat-btn p-1 rounded text-slate-400 hover:text-rose-400 transition" data-chat-id="${c.id}" title="Delete chat">✕</button>
+              </div>
             </div>
           `;
         }).join('');
       }
 
-      function animateTextReveal(elementId, fullText) {
+      function openChatContextMenu(chatId, anchorEl) {
+        const chat = state.chats.find(c => c.id === chatId);
+        if (!chat) return;
+        state.contextMenuChatId = chatId;
+        $('ctx-pin-title').textContent = chat.pinned ? 'Unpin Chat' : 'Pin Chat';
+        $('ctx-lock-title').textContent = chat.locked ? 'Unlock Chat' : 'Lock Chat';
+        $('ctx-archive-title').textContent = chat.archived ? 'Unarchive Chat' : 'Archive Chat';
+
+        const menu = $('chat-context-menu');
+        menu.classList.remove('hidden');
+        const rect = anchorEl ? anchorEl.getBoundingClientRect() : { top: 180, left: 160 };
+        const top = Math.min(window.innerHeight - 310, Math.max(60, rect.top));
+        const left = Math.min(window.innerWidth - 270, Math.max(16, rect.left - 120));
+        menu.style.top = `${top}px`;
+        menu.style.left = `${left}px`;
+      }
+
+      function animateTextReveal(elementId, fullText, msgId = '') {
         const el = document.getElementById(elementId);
         if (!el) return;
         const words = String(fullText || '').split(/(\s+)/);
@@ -1639,22 +1816,22 @@
         el.classList.add('streaming-caret');
 
         const timer = setInterval(() => {
-          idx += 3;
+          idx += 4;
           if (idx >= words.length) {
-            el.innerHTML = formatMessageHtml(fullText);
+            el.innerHTML = formatMessageHtml(fullText, msgId);
             el.classList.remove('streaming-caret');
             clearInterval(timer);
           } else {
-            el.innerHTML = formatMessageHtml(words.slice(0, idx).join(''));
+            el.innerHTML = formatMessageHtml(words.slice(0, idx).join(''), msgId);
           }
           if (state.settings.autoScroll) {
             const box = $('chat-messages');
             if (box) box.scrollTop = box.scrollHeight;
           }
-        }, 20);
+        }, 18);
       }
 
-      // ==================== CHAT MESSAGES RENDERING (EXACT SCREENSHOTS 1 & 2) ====================
+      // ==================== CHAT MESSAGES RENDERING ====================
       function renderMessages(animateLastAssistant = false) {
         const container = $('chat-messages');
         if (!container) return;
@@ -1704,7 +1881,7 @@
             return `
               <div class="w-full max-w-3xl mx-auto flex justify-end animate-fade-up">
                 <div class="user-chat-bubble max-w-[88%] sm:max-w-[78%] rounded-2xl rounded-tr-sm px-4 py-3 text-[15px] leading-relaxed axon-msg-body shadow-sm">
-                  <div>${formatMessageHtml(m.text)}</div>
+                  <div>${formatMessageHtml(m.text, m.id)}</div>
                   ${attachHtml}
                 </div>
               </div>
@@ -1717,7 +1894,7 @@
             return `
               <div class="w-full max-w-3xl mx-auto flex flex-col items-start animate-fade-up">
                 <div class="w-full px-1 py-1 text-[15px] text-slate-100 axon-msg-body">
-                  <div id="${msgDomId}" class="leading-relaxed">${formatMessageHtml(m.text)}</div>
+                  <div id="${msgDomId}" class="leading-relaxed">${formatMessageHtml(m.text, m.id)}</div>
                   <div class="flex flex-wrap items-center gap-2 mt-3">
                     <button type="button" class="btn-copy-msg inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700/80 transition" data-msg-id="${m.id}">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -1728,7 +1905,7 @@
                       <span>${speakLabel}</span>
                     </button>
                     ${isSpeakingThis ? `<button type="button" class="btn-stop-speak px-2.5 py-1.5 rounded-lg bg-rose-600/25 text-xs font-medium text-rose-300 border border-rose-500/40" data-msg-id="${m.id}">Stop</button>` : ''}
-                    ${/```/.test(m.text) ? `<button type="button" class="btn-open-code-msg px-2.5 py-1.5 rounded-lg bg-slate-800/90 text-xs text-emerald-400 border border-slate-700/80 font-mono" data-msg-id="${m.id}">Code Box</button>` : ''}
+                    ${/```/.test(m.text) ? `<button type="button" class="btn-open-code-msg px-2.5 py-1.5 rounded-lg bg-slate-800/90 text-xs text-emerald-400 border border-slate-700/80 font-mono" data-msg-id="${m.id}">Pure Code</button>` : ''}
                   </div>
                 </div>
               </div>
@@ -1738,7 +1915,7 @@
 
         if (animateLastAssistant && chat.messages[lastIndex]?.role === 'assistant') {
           const lastMsg = chat.messages[lastIndex];
-          animateTextReveal(`msg-body-${lastMsg.id}`, lastMsg.text);
+          animateTextReveal(`msg-body-${lastMsg.id}`, lastMsg.text, lastMsg.id);
         }
 
         if (state.isGenerating) {
@@ -1760,7 +1937,6 @@
         setSwitchUI($('toggle-history'), state.settings.saveHistory, 'bg-indigo-500');
         setSwitchUI($('toggle-autoscroll'), state.settings.autoScroll, 'bg-cyan-500');
 
-        $('header-voice-label').textContent = state.settings.voiceControl ? 'Voice On' : 'Voice Off';
         $('voice-hud')?.classList.toggle('hidden', !state.settings.voiceControl);
         $('setting-font-size').value = state.settings.fontSize;
         if ($('setting-voice-select')) $('setting-voice-select').value = String(state.settings.selectedVoiceIndex ?? 0);
@@ -1779,11 +1955,11 @@
         const isLight = state.settings.theme === 'light';
         document.documentElement.classList.toggle('light-theme', isLight);
         $('btn-theme-dark').className = !isLight
-          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-white transition'
-          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-900 transition';
+          ? 'px-3.5 py-1 rounded-full text-xs font-semibold bg-slate-800 text-white transition'
+          : 'px-3.5 py-1 rounded-full text-xs font-semibold text-slate-400 hover:text-slate-900 transition';
         $('btn-theme-light').className = isLight
-          ? 'px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-white transition'
-          : 'px-3 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition';
+          ? 'px-3.5 py-1 rounded-full text-xs font-semibold bg-cyan-500 text-white transition'
+          : 'px-3.5 py-1 rounded-full text-xs font-semibold text-slate-400 hover:text-white transition';
         const msgBox = $('chat-messages');
         if (msgBox) {
           msgBox.classList.remove('text-xs', 'text-sm', 'text-base');
@@ -1815,7 +1991,7 @@
         const q = ($('memory-search-input')?.value || '').trim().toLowerCase();
         const filtered = q ? state.memories.filter(m => m.content.toLowerCase().includes(q)) : state.memories;
 
-        if (badge) badge.textContent = `${state.memories.length} Memories`;
+        if (badge) badge.innerHTML = `${state.memories.length}<br/>Memories`;
 
         if (!filtered.length) {
           list.innerHTML = `<div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">${state.memories.length ? 'No matching memory found.' : 'No saved memories yet.'}</div>`;
@@ -1836,34 +2012,8 @@
       function renderSettingsHistory() {
         const list = $('settings-history-list');
         if (!list) return;
-        const q = ($('history-search')?.value || '').trim().toLowerCase();
         const nonEmpty = state.chats.filter(c => c.messages.length > 0);
-        const filtered = q
-          ? nonEmpty.filter(c => c.title.toLowerCase().includes(q) || c.messages.some(m => m.text.toLowerCase().includes(q)))
-          : nonEmpty;
-
         if ($('history-count')) $('history-count').textContent = String(nonEmpty.length);
-
-        if (!filtered.length) {
-          list.innerHTML = `<div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">No saved chats yet.</div>`;
-          return;
-        }
-
-        list.innerHTML = filtered.map(c => {
-          const lastMsg = c.messages[c.messages.length - 1];
-          return `
-            <div class="p-3 rounded-xl bg-slate-900/75 border border-slate-800 flex items-center justify-between gap-3">
-              <div class="min-w-0 flex-1">
-                <p class="text-xs font-semibold text-white truncate">${escapeHtml(c.title)} <span class="text-[10px] text-slate-400">(${c.messages.length} msgs)</span></p>
-                <p class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtml(lastMsg.text)}</p>
-              </div>
-              <div class="flex items-center gap-1.5 shrink-0">
-                <button type="button" class="open-history-chat px-2.5 py-1 rounded-lg bg-indigo-500/15 text-indigo-300 text-[11px] font-medium" data-chat-id="${c.id}">Open</button>
-                <button type="button" class="delete-chat-btn px-2 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-rose-300 text-[11px]" data-chat-id="${c.id}">Delete</button>
-              </div>
-            </div>
-          `;
-        }).join('');
       }
 
       function renderAppHub() {
@@ -1875,6 +2025,199 @@
             <span class="text-xs font-semibold text-white text-center">${app.name}</span>
           </button>
         `).join('');
+      }
+
+      // ==================== ADVANCED SETTINGS DETAIL MODALS (SCREENSHOT 2) ====================
+      function openAdvancedSettingDialog(panelKey) {
+        const titleEl = $('detail-modal-title');
+        const bodyEl = $('detail-modal-body');
+        const footerEl = $('detail-modal-footer');
+        footerEl.innerHTML = `<button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Done</button>`;
+
+        if (panelKey === 'voice') {
+          titleEl.textContent = 'Voice Settings';
+          bodyEl.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">AI Voice Profile</label>
+                <select id="modal-voice-select" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                  ${SIX_VOICE_PROFILES.map(v => `<option value="${v.index}" ${Number(state.settings.selectedVoiceIndex) === v.index ? 'selected' : ''}>${escapeHtml(v.name)}</option>`).join('')}
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Hands-Free Voice Control</span>
+                <button id="modal-toggle-voice" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800 text-xs font-semibold text-cyan-300 border border-slate-700">${state.settings.voiceControl ? 'On' : 'Off'}</button>
+              </div>
+            </div>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('modal-voice-select')?.addEventListener('change', (e) => {
+            state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
+            saveState();
+            populateVoicesDropdown();
+            showToast('Voice updated');
+          });
+          $('modal-toggle-voice')?.addEventListener('click', (e) => {
+            toggleVoiceControl();
+            e.target.textContent = state.settings.voiceControl ? 'On' : 'Off';
+          });
+          return;
+        }
+
+        if (panelKey === 'language') {
+          titleEl.textContent = 'Language';
+          bodyEl.innerHTML = `
+            <label class="block text-xs text-slate-400 mb-1">Preferred AI Reply &amp; Voice Language</label>
+            <select id="modal-lang-select" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+              <option value="Hinglish" ${state.settings.appLanguage === 'Hinglish' ? 'selected' : ''}>Hinglish (Hindi + English)</option>
+              <option value="Hindi" ${state.settings.appLanguage === 'Hindi' ? 'selected' : ''}>Hindi (हिन्दी)</option>
+              <option value="English" ${state.settings.appLanguage === 'English' ? 'selected' : ''}>English</option>
+            </select>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('modal-lang-select')?.addEventListener('change', (e) => {
+            state.settings.appLanguage = e.target.value;
+            saveState();
+            showToast(`Language: ${e.target.value}`);
+          });
+          return;
+        }
+
+        if (panelKey === 'notification') {
+          titleEl.textContent = 'Notification';
+          bodyEl.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span>Smart Alerts &amp; Toast Feedback</span>
+              <button id="modal-toggle-notif" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800 text-xs font-semibold text-cyan-300 border border-slate-700">${state.settings.notifications ? 'Enabled' : 'Muted'}</button>
+            </div>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('modal-toggle-notif')?.addEventListener('click', (e) => {
+            state.settings.notifications = !state.settings.notifications;
+            saveState();
+            e.target.textContent = state.settings.notifications ? 'Enabled' : 'Muted';
+          });
+          return;
+        }
+
+        if (panelKey === 'privacy') {
+          titleEl.textContent = 'Privacy & Security';
+          const archivedChats = state.chats.filter(c => c.archived);
+          bodyEl.innerHTML = `
+            <p><strong>Firebase Scope:</strong> ${escapeHtml(getUserScopeKey())}</p>
+            <p><strong>Locked Chats:</strong> ${state.chats.filter(c => c.locked).length} protected with PIN</p>
+            <p><strong>Archived Chats:</strong> ${archivedChats.length}</p>
+            ${archivedChats.length ? `<button id="modal-unarchive-all" type="button" class="w-full py-2 rounded-xl bg-slate-800 text-xs font-semibold text-cyan-300 border border-slate-700">Restore All Archived Chats (${archivedChats.length})</button>` : ''}
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('modal-unarchive-all')?.addEventListener('click', () => {
+            state.chats.forEach(c => { c.archived = false; });
+            saveState();
+            renderSidebarChats();
+            showToast('Archived chats restored!');
+            $('settings-detail-modal').classList.add('hidden');
+          });
+          return;
+        }
+
+        if (panelKey === 'data') {
+          titleEl.textContent = 'Data Management';
+          bodyEl.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span>Auto Save Chats &amp; Memory</span>
+              <button id="modal-toggle-autosave" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800 text-xs font-semibold text-cyan-300 border border-slate-700">${state.settings.saveHistory ? 'On' : 'Off'}</button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <button id="modal-export-btn" type="button" class="py-2 rounded-xl bg-slate-800 text-xs font-semibold text-white border border-slate-700">Export JSON</button>
+              <button id="modal-clear-btn" type="button" class="py-2 rounded-xl bg-rose-600/20 text-xs font-semibold text-rose-300 border border-rose-500/30">Clear All Chats</button>
+            </div>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('modal-toggle-autosave')?.addEventListener('click', (e) => {
+            state.settings.saveHistory = !state.settings.saveHistory;
+            saveState();
+            e.target.textContent = state.settings.saveHistory ? 'On' : 'Off';
+          });
+          $('modal-export-btn')?.addEventListener('click', () => $('btn-export-history')?.click());
+          $('modal-clear-btn')?.addEventListener('click', () => {
+            $('btn-clear-history')?.click();
+            $('settings-detail-modal').classList.add('hidden');
+          });
+          return;
+        }
+
+        if (panelKey === 'media') {
+          titleEl.textContent = 'File & Media';
+          bodyEl.innerHTML = `
+            <p class="text-xs text-slate-400">Open Xone Photo Studio or App Hub directly:</p>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button id="modal-open-studio" type="button" class="py-2.5 rounded-xl bg-cyan-500/15 text-xs font-semibold text-cyan-300 border border-cyan-400/30">Xone Photo Studio</button>
+              <button id="modal-open-apps" type="button" class="py-2.5 rounded-xl bg-indigo-500/15 text-xs font-semibold text-indigo-300 border border-indigo-400/30">A-to-Z App Hub</button>
+            </div>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('modal-open-studio')?.addEventListener('click', () => {
+            $('settings-detail-modal').classList.add('hidden');
+            switchView('photo-studio');
+          });
+          $('modal-open-apps')?.addEventListener('click', () => {
+            $('settings-detail-modal').classList.add('hidden');
+            switchView('apps');
+          });
+          return;
+        }
+
+        if (panelKey === 'model') {
+          titleEl.textContent = 'AI Model';
+          bodyEl.innerHTML = `
+            <label class="block text-xs text-slate-400 mb-1">Active Neural Model</label>
+            <select id="modal-model-select" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+              <option value="AXON Pro 2.5" ${state.settings.aiModel === 'AXON Pro 2.5' ? 'selected' : ''}>AXON Pro 2.5</option>
+              <option value="AXON Ultra Reasoning" ${state.settings.aiModel === 'AXON Ultra Reasoning' ? 'selected' : ''}>AXON Ultra Reasoning</option>
+              <option value="AXON Flash Speed" ${state.settings.aiModel === 'AXON Flash Speed' ? 'selected' : ''}>AXON Flash Speed</option>
+            </select>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('modal-model-select')?.addEventListener('change', (e) => {
+            state.settings.aiModel = e.target.value;
+            saveState();
+            showToast(`Model: ${e.target.value}`);
+          });
+          return;
+        }
+
+        if (panelKey === 'usage') {
+          const totalMsgs = state.chats.reduce((acc, c) => acc + c.messages.length, 0);
+          titleEl.textContent = 'Usage & Limits';
+          bodyEl.innerHTML = `
+            <p><strong>Active Conversations:</strong> ${state.chats.length}</p>
+            <p><strong>Total Messages:</strong> ${totalMsgs}</p>
+            <p><strong>Saved Memories:</strong> ${state.memories.length} / 120</p>
+            <p><strong>Plan Status:</strong> AXON Pro Workspace Unlimited</p>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          return;
+        }
+
+        if (panelKey === 'help') {
+          titleEl.textContent = 'Help & Support';
+          bodyEl.innerHTML = `
+            <p>• Use <strong>+ New Page</strong> in header for an instant fresh workspace.</p>
+            <p>• Click <strong>⋮</strong> next to any chat in sidebar to <strong>Pin, Lock, Rename, Archive, or Delete</strong>.</p>
+            <p>• Press <strong>Ctrl+K</strong> anytime to open Quick Command Palette.</p>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          return;
+        }
+
+        if (panelKey === 'about') {
+          titleEl.textContent = 'About AXON AI';
+          bodyEl.innerHTML = `
+            <p><strong>AXON AI — Pro Workspace v2.5</strong></p>
+            <p>Equipped with Firebase User Scope, Supabase Long-Term Memory Sync, Live Video Call, and Dual Dark/Light Neural UI.</p>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+        }
       }
 
       // ==================== AI API & MEMORY RECALL ====================
@@ -1993,7 +2336,6 @@
             combinedPrompt = `${promptText ? promptText + "\n\n" : ""}[File: ${attachment.name}]\n\`\`\`\n${attachment.textContent.slice(0, 7000)}\n\`\`\``;
           }
 
-          // Inject recalled memories into system context + payload so AI always remembers past facts
           const memorySystemPrompt = recalledMemories.length
             ? `User Long-Term Memory (${userName}):\n- ${recalledMemories.join('\n- ')}`
             : '';
@@ -2030,11 +2372,16 @@
         }
       }
 
-      function extractAndShowPureCode(replyText) {
-        const matches = [...String(replyText || '').matchAll(/```(?:\w+)?\n?([\s\S]*?)```/g)];
+      function extractAndShowPureCode(replyText, blockIndex = null) {
+        const matches = [...String(replyText || '').matchAll(/```(\w+)?\n?([\s\S]*?)```/g)];
         if (!matches.length) return;
-        const codeBlock = matches.map(m => m[1].trim()).join('\n\n// ---\n\n');
-        $('pure-code-content').textContent = codeBlock;
+        if (blockIndex !== null && matches[blockIndex]) {
+          $('pure-code-lang').textContent = `${(matches[blockIndex][1] || 'CODE').toUpperCase()} • PURE CODE AREA`;
+          $('pure-code-content').value = matches[blockIndex][2].trim();
+        } else {
+          $('pure-code-lang').textContent = 'PURE CODE AREA';
+          $('pure-code-content').value = matches.map(m => m[2].trim()).join('\n\n// ---\n\n');
+        }
         $('pure-code-drawer').classList.remove('hidden');
       }
 
@@ -2090,7 +2437,6 @@
           });
           chat.updatedAt = new Date().toISOString();
 
-          extractAndShowPureCode(replyText);
           extractImportantMemoriesFromTurn(userMsg.text);
           saveState();
           renderSidebarChats();
@@ -2242,7 +2588,7 @@
         try {
           if (!('speechSynthesis' in window)) { if (onComplete) onComplete(); return; }
           stopTTSController(false);
-          const clean = String(text || '').replace(/```[\s\S]*?```/g, ' Code screen par hai. ').replace(/[*#_~>`]+/g, ' ').replace(/\s+/g, ' ').trim();
+          const clean = String(text || '').replace(/```[\s\S]*?```/g, ' Code screen par hai. ').replace(/\[NEWS_CARD:[\s\S]*?\]/g, ' News card screen par hai. ').replace(/[*#_~>`]+/g, ' ').replace(/\s+/g, ' ').trim();
           if (!clean) { if (onComplete) onComplete(); return; }
 
           const profile = SIX_VOICE_PROFILES[Number(state.settings.selectedVoiceIndex) || 0] || SIX_VOICE_PROFILES[0];
@@ -2304,7 +2650,21 @@
         }
       }
 
-      // ==================== VIDEO CALL ====================
+      // ==================== VIDEO CALL WITH CAMERA FLIP ====================
+      async function attachCallCameraStream() {
+        try {
+          if (callStream) { callStream.getTracks().forEach(t => t.stop()); callStream = null; }
+          if (navigator.mediaDevices?.getUserMedia) {
+            callStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: callFacingMode }, audio: true });
+            $('call-pip-video').srcObject = callStream;
+            $('call-pip-video').classList.remove('hidden');
+            callCamOff = false;
+          }
+        } catch (e) {
+          $('call-pip-video')?.classList.add('hidden');
+        }
+      }
+
       async function startVideoCall() {
         $('plus-menu')?.classList.add('hidden');
         $('videocall-modal')?.classList.remove('hidden');
@@ -2316,17 +2676,7 @@
           const s = String(callSeconds % 60).padStart(2, '0');
           $('call-timer').textContent = `${m}:${s}`;
         }, 1000);
-        try {
-          if (navigator.mediaDevices?.getUserMedia) {
-            callStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            $('call-pip-video').srcObject = callStream;
-            $('call-pip-video').classList.remove('hidden');
-            $('call-pip-off').classList.add('hidden');
-          }
-        } catch (e) {
-          $('call-pip-video')?.classList.add('hidden');
-          $('call-pip-off')?.classList.remove('hidden');
-        }
+        await attachCallCameraStream();
       }
 
       function endVideoCall() {
@@ -2423,11 +2773,64 @@
         $('sidebar-backdrop')?.addEventListener('click', closeSidebarMobile);
 
         $('btn-new-chat')?.addEventListener('click', () => createNewChat(true));
+        $('btn-new-page')?.addEventListener('click', () => {
+          createNewChat(true);
+          showToast('New Page ready');
+        });
         $('nav-settings')?.addEventListener('click', () => switchView('settings'));
-        $('btn-header-settings')?.addEventListener('click', () => switchView('settings'));
         $('btn-settings-back')?.addEventListener('click', () => switchView('chat'));
         $('btn-studio-back')?.addEventListener('click', () => switchView('chat'));
         $('btn-apps-back')?.addEventListener('click', () => switchView('chat'));
+
+        // Profile Edit Row
+        $('row-edit-profile')?.addEventListener('click', () => {
+          $('detail-modal-title').textContent = 'Edit Profile';
+          $('detail-modal-body').innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Display Name</label>
+                <input id="edit-profile-name-input" type="text" value="${escapeHtml(state.settings.profileName || '')}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Email</label>
+                <input id="edit-profile-email-input" type="email" value="${escapeHtml(state.settings.profileEmail || '')}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+              </div>
+            </div>
+          `;
+          $('detail-modal-footer').innerHTML = `
+            <button type="button" class="close-detail-btn px-3 py-2 rounded-xl bg-slate-800 text-xs text-slate-300">Cancel</button>
+            <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
+          `;
+          $('settings-detail-modal')?.classList.remove('hidden');
+          $('btn-save-profile-modal')?.addEventListener('click', () => {
+            const newName = ($('edit-profile-name-input')?.value || '').trim();
+            const newEmail = ($('edit-profile-email-input')?.value || '').trim();
+            if (newName) {
+              state.settings.profileName = newName;
+              if (state.user) state.user.name = newName;
+              $('user-display-name').textContent = newName;
+            }
+            if (newEmail) {
+              state.settings.profileEmail = newEmail;
+              if (state.user) state.user.email = newEmail;
+              $('user-display-email').textContent = newEmail;
+            }
+            saveState();
+            renderSettingsPanel();
+            $('settings-detail-modal')?.classList.add('hidden');
+            showToast('Profile updated!');
+          });
+        });
+
+        // Toggle Memory Drawer in Settings
+        $('btn-open-memory-drawer')?.addEventListener('click', () => {
+          $('memory-manager-drawer')?.classList.toggle('hidden');
+        });
+
+        // Advanced Settings Rows
+        document.querySelectorAll('.adv-row-btn').forEach(btn => {
+          btn.addEventListener('click', () => openAdvancedSettingDialog(btn.dataset.advPanel));
+        });
 
         $('btn-settings-info')?.addEventListener('click', () => {
           $('detail-modal-title').textContent = 'Memory & Context Engine';
@@ -2447,13 +2850,41 @@
           }
         });
 
+        // Quick Action Bar (Share • Copy • Save)
+        $('btn-quick-copy')?.addEventListener('click', () => {
+          const chat = getActiveChat();
+          const last = chat?.messages[chat.messages.length - 1];
+          if (!last) { showToast('Nothing to copy yet'); return; }
+          navigator.clipboard?.writeText(last.text).then(() => showToast('Last response copied!'));
+        });
+        $('btn-quick-share')?.addEventListener('click', async () => {
+          const chat = getActiveChat();
+          const last = chat?.messages[chat.messages.length - 1];
+          const shareText = last ? last.text : 'AXON AI — Intelligent Neural Workspace';
+          if (navigator.share) {
+            try { await navigator.share({ title: 'AXON AI', text: shareText }); } catch (e) {}
+          } else {
+            navigator.clipboard?.writeText(shareText).then(() => showToast('Copied to share!'));
+          }
+        });
+        $('btn-quick-save')?.addEventListener('click', async () => {
+          const chat = getActiveChat();
+          const last = chat?.messages[chat.messages.length - 1];
+          if (!last) { showToast('Nothing to save yet'); return; }
+          await saveLongTermMemory(last.text.slice(0, 220), ['saved-chat']);
+          showToast('Saved to Long-Term Memory!');
+        });
+
         // Quick Commands (Ctrl+K)
         document.addEventListener('keydown', (e) => {
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
             e.preventDefault();
             $('cmdk-modal')?.classList.toggle('hidden');
           }
-          if (e.key === 'Escape') $('cmdk-modal')?.classList.add('hidden');
+          if (e.key === 'Escape') {
+            $('cmdk-modal')?.classList.add('hidden');
+            $('chat-context-menu')?.classList.add('hidden');
+          }
         });
         $('btn-close-cmdk')?.addEventListener('click', () => $('cmdk-modal')?.classList.add('hidden'));
         document.querySelectorAll('.cmdk-item').forEach(btn => {
@@ -2469,11 +2900,18 @@
         });
 
         $('btn-copy-pure-code')?.addEventListener('click', () => {
-          navigator.clipboard?.writeText($('pure-code-content').textContent || '').then(() => showToast('Code copied!'));
+          navigator.clipboard?.writeText($('pure-code-content').value || '').then(() => showToast('Code copied!'));
         });
         $('btn-close-pure-code')?.addEventListener('click', () => $('pure-code-drawer')?.classList.add('hidden'));
 
+        // Sidebar Chat List & Context Menu Actions (Pin, Lock, Rename, Archive, Delete)
         $('sidebar-chat-list')?.addEventListener('click', (e) => {
+          const ctxBtn = e.target.closest('.open-chat-ctx-btn');
+          if (ctxBtn) {
+            e.stopPropagation();
+            openChatContextMenu(ctxBtn.dataset.chatId, ctxBtn);
+            return;
+          }
           const delBtn = e.target.closest('.delete-chat-btn');
           if (delBtn) {
             const id = delBtn.dataset.chatId;
@@ -2488,6 +2926,14 @@
           }
           const sel = e.target.closest('.select-chat-btn');
           if (sel) {
+            const targetChat = state.chats.find(c => c.id === sel.dataset.chatId);
+            if (targetChat && targetChat.locked) {
+              const entered = prompt('This chat is locked. Enter PIN to open:');
+              if (entered !== targetChat.pinCode) {
+                showToast('Incorrect PIN');
+                return;
+              }
+            }
             state.activeChatId = sel.dataset.chatId;
             saveState();
             switchView('chat');
@@ -2495,9 +2941,88 @@
           }
         });
 
+        $('chat-context-menu')?.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-chat-action]');
+          if (!btn || !state.contextMenuChatId) return;
+          const action = btn.dataset.chatAction;
+          const chat = state.chats.find(c => c.id === state.contextMenuChatId);
+          $('chat-context-menu')?.classList.add('hidden');
+          if (!chat) return;
+
+          if (action === 'pin') {
+            chat.pinned = !chat.pinned;
+            saveState();
+            renderSidebarChats();
+            showToast(chat.pinned ? 'Chat pinned to top!' : 'Chat unpinned');
+          } else if (action === 'lock') {
+            if (!chat.locked) {
+              const pin = prompt('Set a 4-digit PIN to lock this chat:');
+              if (!pin || !pin.trim()) return;
+              chat.locked = true;
+              chat.pinCode = pin.trim();
+              showToast('Chat locked with PIN 🔒');
+            } else {
+              const check = prompt('Enter current PIN to unlock:');
+              if (check !== chat.pinCode) { showToast('Wrong PIN'); return; }
+              chat.locked = false;
+              chat.pinCode = '';
+              showToast('Chat unlocked');
+            }
+            saveState();
+            renderSidebarChats();
+          } else if (action === 'rename') {
+            const nextName = prompt('Enter new chat name:', chat.title);
+            if (nextName && nextName.trim()) {
+              chat.title = nextName.trim();
+              saveState();
+              renderAll();
+              showToast('Chat renamed');
+            }
+          } else if (action === 'archive') {
+            chat.archived = !chat.archived;
+            if (chat.archived && state.activeChatId === chat.id) {
+              const nextOpen = state.chats.find(c => !c.archived && c.id !== chat.id);
+              if (nextOpen) state.activeChatId = nextOpen.id;
+              else createNewChat(false);
+            }
+            saveState();
+            renderAll();
+            showToast(chat.archived ? 'Chat archived' : 'Chat unarchived');
+          } else if (action === 'delete') {
+            state.chats = state.chats.filter(c => c.id !== chat.id);
+            if (state.activeChatId === chat.id) {
+              state.activeChatId = state.chats[0]?.id || null;
+              if (!state.activeChatId) createNewChat(false);
+            }
+            saveState();
+            renderAll();
+            showToast('Chat deleted');
+          }
+        });
+
+        // Message Actions & Code Block Header Buttons
         $('chat-messages')?.addEventListener('click', (e) => {
           const starter = e.target.closest('.starter-prompt');
           if (starter) { sendMessage(starter.dataset.prompt); return; }
+
+          const editBlockBtn = e.target.closest('.btn-edit-code-block');
+          if (editBlockBtn) {
+            const msg = getActiveChat()?.messages.find(m => m.id === editBlockBtn.dataset.msgId);
+            if (msg) extractAndShowPureCode(msg.text, Number(editBlockBtn.dataset.blockIdx));
+            return;
+          }
+
+          const copyBlockBtn = e.target.closest('.btn-copy-code-block');
+          if (copyBlockBtn) {
+            const msg = getActiveChat()?.messages.find(m => m.id === copyBlockBtn.dataset.msgId);
+            if (msg) {
+              const matches = [...String(msg.text || '').matchAll(/```(?:\w+)?\n?([\s\S]*?)```/g)];
+              const idx = Number(copyBlockBtn.dataset.blockIdx) || 0;
+              const codeStr = matches[idx] ? matches[idx][1].trim() : msg.text;
+              navigator.clipboard?.writeText(codeStr).then(() => showToast('Code copied!'));
+            }
+            return;
+          }
 
           const copyBtn = e.target.closest('.btn-copy-msg');
           if (copyBtn) {
@@ -2547,9 +3072,12 @@
           if ($('plus-menu') && !$('plus-menu').contains(e.target) && e.target !== $('btn-plus-menu')) {
             $('plus-menu').classList.add('hidden');
           }
+          if ($('chat-context-menu') && !$('chat-context-menu').contains(e.target) && !e.target.closest('.open-chat-ctx-btn')) {
+            $('chat-context-menu').classList.add('hidden');
+          }
         });
 
-        $('btn-inline-camera')?.addEventListener('click', openCameraModal);
+        $('btn-inline-videocall')?.addEventListener('click', startVideoCall);
         $('menu-open-camera')?.addEventListener('click', openCameraModal);
         $('menu-send-photo')?.addEventListener('click', () => { $('plus-menu')?.classList.add('hidden'); $('input-photo')?.click(); });
         $('menu-send-video')?.addEventListener('click', () => { $('plus-menu')?.classList.add('hidden'); $('input-video')?.click(); });
@@ -2581,7 +3109,12 @@
           callCamOff = !callCamOff;
           if (callStream) callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
           $('call-pip-video')?.classList.toggle('hidden', callCamOff);
-          $('call-pip-off')?.classList.toggle('hidden', !callCamOff);
+          showToast(callCamOff ? 'Camera Off' : 'Camera On');
+        });
+        $('btn-call-flip')?.addEventListener('click', async () => {
+          callFacingMode = callFacingMode === 'user' ? 'environment' : 'user';
+          await attachCallCameraStream();
+          showToast('Camera flipped');
         });
 
         $('btn-header-voice')?.addEventListener('click', () => toggleVoiceControl());
@@ -2594,7 +3127,6 @@
           showToast('Voice updated');
         });
 
-        // Supabase Credentials Connect
         $('btn-save-supabase')?.addEventListener('click', async () => {
           const url = ($('supabase-url-input')?.value || '').trim();
           const key = ($('supabase-key-input')?.value || '').trim();
@@ -2605,7 +3137,6 @@
           showToast(url && key ? 'Supabase connected & synced!' : 'Using local user memory storage.');
         });
 
-        // Memory Management Handlers
         $('btn-add-memory')?.addEventListener('click', async () => {
           const input = $('memory-manual-input');
           const txt = (input?.value || '').trim();
@@ -2643,34 +3174,10 @@
           showToast('Memory deleted.');
         });
 
-        // History & Settings Handlers
         $('toggle-history')?.addEventListener('click', () => {
           state.settings.saveHistory = !state.settings.saveHistory;
           saveState();
           renderAll();
-        });
-        $('history-search')?.addEventListener('input', renderSettingsHistory);
-
-        $('settings-history-list')?.addEventListener('click', (e) => {
-          const openBtn = e.target.closest('.open-history-chat');
-          if (openBtn) {
-            state.activeChatId = openBtn.dataset.chatId;
-            saveState();
-            switchView('chat');
-            renderAll();
-            return;
-          }
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            const id = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
-              state.activeChatId = state.chats[0]?.id || null;
-              if (!state.activeChatId) createNewChat(false);
-            }
-            saveState();
-            renderAll();
-          }
         });
 
         $('btn-export-history')?.addEventListener('click', () => {
