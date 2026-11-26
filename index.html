@@ -2488,6 +2488,9 @@
       }
 
       // ==================== LOCAL SMART TOOL ROUTING + AI API ====================
+      function isImageGenerationRequest(text) {
+  return /(?:\b(?:create|generate|make|draw)\s+(?:an?\s+)?image\b|\bimage\s+(?:banao|bana|bana\s*do|generate|create)\b|\b(?:image|picture)\s+(?:of|showing)\b|इमेज\s*(?:बनाओ|बना|बना\s*दो|बनाइए)|तस्वीर\s*(?:बनाओ|बना))/i.test(String(text || '').trim());
+}
       function tryLocalToolRouting(promptText) {
         const q = String(promptText || '').trim();
         const lower = q.toLowerCase();
@@ -2497,10 +2500,64 @@
           return 'Ye raha mera Mini Calculator!\n[MINI_CALCULATOR]';
         }
 
-        // 2. Sketch / Image generation visual state
-        if (/\b(image\s*bnao|image\s*bana|draw\s*a|sketch|generate\s*image|create\s*image|tasveer\s*bnao)\b/i.test(lower)) {
-          return `Sketching it out\n[SKETCH_CARD: ${q.slice(0, 48)} | 3 | Generating neural canvas preview...]`;
-        }
+        
+// ==================== AXON AI HORDE IMAGE ENGINE ====================
+
+function isImageGenerationRequest(text) {
+  return /(?:\b(?:create|generate|make|draw)\s+(?:an?\s+)?image\b|\bimage\s+(?:banao|bana|bana\s*do|generate|create)\b|\b(?:image|picture)\s+(?:of|showing)\b|इमेज\s*(?:बनाओ|बना|बना\s*दो|बनाइए)|तस्वीर\s*(?:बनाओ|बना))/i.test(String(text || '').trim());
+}
+
+async function generateAxonImage(prompt, signal) {
+  const startResponse = await fetch("/api/image-generate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ prompt: prompt.trim() }),
+    signal
+  });
+
+  const startData = await startResponse.json().catch(() => ({}));
+
+  if (!startResponse.ok || !startData.requestId) {
+    throw new Error(startData.error || "Image generation could not start.");
+  }
+
+  const requestId = startData.requestId;
+
+  // Wait for AI Horde generation
+  for (let attempt = 0; attempt < 60; attempt++) {
+    if (signal?.aborted) {
+      throw new DOMException("Generation cancelled", "AbortError");
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    const statusResponse = await fetch(
+      `/api/image-generate/${encodeURIComponent(requestId)}`,
+      { signal }
+    );
+
+    const statusData = await statusResponse.json().catch(() => ({}));
+
+    if (!statusResponse.ok) {
+      throw new Error(statusData.error || "Image status check failed.");
+    }
+
+    if (statusData.done && statusData.imageUrl) {
+      const imageUrl = new URL(statusData.imageUrl);
+
+      if (imageUrl.protocol !== "https:") {
+        throw new Error("Invalid generated image URL.");
+      }
+
+      return `[AXON_GENERATED_IMAGE: ${imageUrl.href}]`;
+    }
+  }
+
+  throw new Error("Image generation timed out. Please try again.");
+}
+
 
         // 3. Web search visual state
         if (/\b(search\s*karo|web\s*search|search\s*the\s*web|khojo|google\s*karo)\b/i.test(lower)) {
