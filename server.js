@@ -51,6 +51,173 @@ app.use((req, res, next) => {
     req.path === "/api/vision" ||
     req.path === "/api/video" ||
     req.path === "/api/photo-edit" ||
+
+// ==================== AI HORDE IMAGE GENERATION ====================
+
+app.post(
+  "/api/image-generate",
+  visionLimiter,
+  async (req, res) => {
+    try {
+      const apiKey = process.env.AI_HORDE_API_KEY;
+      const prompt = req.body?.prompt;
+
+      if (!apiKey || !apiKey.trim()) {
+        return res.status(503).json({
+          error: "AI_HORDE_API_KEY is missing."
+        });
+      }
+
+      if (
+        typeof prompt !== "string" ||
+        !prompt.trim() ||
+        prompt.length > 1500
+      ) {
+        return res.status(400).json({
+          error: "Valid image prompt is required."
+        });
+      }
+
+      const response = await fetch(
+        "https://aihorde.net/api/v2/generate/async",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: apiKey.trim(),
+            "Client-Agent":
+              "AXON-AI:1.0:github.com/yadavyogesh73888-blip/AXON-AI"
+          },
+          body: JSON.stringify({
+            prompt: prompt.trim(),
+            params: {
+              width: 512,
+              height: 512,
+              steps: 20,
+              n: 1,
+              cfg_scale: 7
+            },
+            nsfw: false,
+            censor_nsfw: true,
+            trusted_workers: true,
+            r2: true
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.id) {
+        return res.status(502).json({
+          error: data.message || "AI Horde request failed."
+        });
+      }
+
+      return res.json({
+        ok: true,
+        requestId: data.id,
+        message: "Image generation started."
+      });
+
+    } catch (error) {
+      console.error("[AXON-AI] HORDE ERROR:", error);
+
+      return res.status(500).json({
+        error: "Image generation request failed."
+      });
+    }
+  }
+);
+
+// CHECK IMAGE GENERATION STATUS
+
+app.get(
+  "/api/image-generate/:id",
+  visionLimiter,
+  async (req, res) => {
+    try {
+      const apiKey = process.env.AI_HORDE_API_KEY;
+      const id = req.params.id;
+
+      if (!apiKey) {
+        return res.status(503).json({
+          error: "AI_HORDE_API_KEY is missing."
+        });
+      }
+
+      if (!/^[a-zA-Z0-9-]{10,60}$/.test(id)) {
+        return res.status(400).json({
+          error: "Invalid request ID."
+        });
+      }
+
+      const headers = {
+        apikey: apiKey.trim(),
+        "Client-Agent":
+          "AXON-AI:1.0:github.com/yadavyogesh73888-blip/AXON-AI"
+      };
+
+      const checkResponse = await fetch(
+        `https://aihorde.net/api/v2/generate/check/${id}`,
+        { headers }
+      );
+
+      const check = await checkResponse.json();
+
+      if (!checkResponse.ok) {
+        return res.status(502).json({
+          error: "Could not check image status."
+        });
+      }
+
+      if (!check.done) {
+        return res.json({
+          ok: true,
+          done: false,
+          waiting: check.waiting || 0,
+          processing: check.processing || 0
+        });
+      }
+
+      const statusResponse = await fetch(
+        `https://aihorde.net/api/v2/generate/status/${id}`,
+        { headers }
+      );
+
+      const result = await statusResponse.json();
+
+      if (!statusResponse.ok) {
+        return res.status(502).json({
+          error: "Could not retrieve generated image."
+        });
+      }
+
+      const imageUrl = result?.generations?.[0]?.img;
+
+      if (!imageUrl) {
+        return res.status(502).json({
+          error: "Image generation completed, but no image was returned."
+        });
+      }
+
+      return res.json({
+        ok: true,
+        done: true,
+        imageUrl
+      });
+
+    } catch (error) {
+      console.error("[AXON-AI] HORDE STATUS ERROR:", error);
+
+      return res.status(500).json({
+        error: "Image status check failed."
+      });
+    }
+  }
+);
+
+
+    
     req.path === "/api/photo-studio-edit"
   ) {
     return next();
