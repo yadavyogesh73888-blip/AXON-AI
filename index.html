@@ -64,6 +64,16 @@
       50% { opacity: 0.15; }
     }
 
+    @keyframes axonCyanBarSlide {
+      0% { transform: translateX(-110%); }
+      50% { transform: translateX(130%); }
+      100% { transform: translateX(320%); }
+    }
+    .axon-search-progress-bar {
+      width: 42%;
+      animation: axonCyanBarSlide 1.35s ease-in-out infinite;
+    }
+
     /* ==================== DARK THEME ==================== */
     html:not(.light-theme) body,
     html:not(.light-theme) #app-screen,
@@ -390,7 +400,7 @@
     .animate-float-orb { animation: floatOrb 3.5s ease-in-out infinite; }
     .animate-fade-up { animation: fadeSlideUp 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
     .splash-progress-fill { animation: splashLoadBar 1.6s ease-in-out forwards; }
-    .animate-spin-slow { animation: spinSlow 4.5s linear infinite; }
+    .animate-spin-slow { animation: spinSlow 2.4s linear infinite; }
     .glass-panel {
       background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(18px);
@@ -561,7 +571,7 @@
       <div class="pt-2">
         <div class="px-3.5 pb-2 space-y-1">
           <button id="nav-settings" type="button" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/40 transition">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             <span>Settings</span>
           </button>
         </div>
@@ -885,7 +895,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
             </button>
             <div class="flex items-center gap-2">
-              <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
               <h3 class="text-xl font-bold text-white tracking-tight">Settings &amp; Memory</h3>
             </div>
             <button id="btn-settings-info" type="button" title="Workspace Info" class="w-10 h-10 rounded-full axon-glass-card axon-neon-btn flex items-center justify-center text-white hover:scale-105 transition">
@@ -1168,24 +1178,17 @@
         <div id="call-cute-robot-wrap" class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0d182e] via-[#0a1222] to-[#070c17] px-4 select-none">
           <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-br from-cyan-500/15 via-indigo-500/15 to-sky-400/10 border border-cyan-400/30 shadow-2xl shadow-cyan-500/15 flex items-center justify-center animate-float-orb">
             <svg class="w-28 h-28 sm:w-32 sm:h-32" viewBox="0 0 120 120" fill="none">
-              <!-- Antenna -->
               <line x1="60" y1="12" x2="60" y2="28" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
               <circle cx="60" cy="11" r="6" fill="#22d3ee"/>
-              <!-- Robot Ears -->
               <rect x="14" y="44" width="10" height="24" rx="5" fill="#3b82f6"/>
               <rect x="96" y="44" width="10" height="24" rx="5" fill="#3b82f6"/>
-              <!-- Robot Head -->
               <rect x="24" y="28" width="72" height="56" rx="22" fill="#172540" stroke="#38bdf8" stroke-width="3"/>
-              <!-- Visor Screen -->
               <rect x="32" y="38" width="56" height="34" rx="14" fill="#08101e"/>
-              <!-- Cute Eyes -->
               <circle cx="48" cy="54" r="6.5" fill="#22d3ee"/>
               <circle cx="50" cy="52" r="2.2" fill="#ffffff"/>
               <circle cx="72" cy="54" r="6.5" fill="#22d3ee"/>
               <circle cx="74" cy="52" r="2.2" fill="#ffffff"/>
-              <!-- Cute Smile -->
               <path d="M53 64 Q60 69 67 64" stroke="#67e8f9" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-              <!-- Mini Neck & Chest Badge -->
               <rect x="52" y="84" width="16" height="8" rx="3" fill="#334155"/>
               <rect x="36" y="92" width="48" height="16" rx="8" fill="#1e293b" stroke="#60a5fa" stroke-width="2"/>
               <circle cx="60" cy="100" r="4" fill="#34d399"/>
@@ -1194,7 +1197,6 @@
           <span class="mt-3 text-xs font-semibold tracking-wider uppercase text-cyan-400">AXON Mini Bot</span>
         </div>
 
-        <!-- Live Camera Stream (Covers main frame when camera is active so user sees full front/back camera) -->
         <video id="call-pip-video" autoplay playsinline muted class="hidden absolute inset-0 w-full h-full object-cover z-10"></video>
       </div>
       <p id="call-caption" class="mt-4 text-sm sm:text-base text-slate-100 text-center max-w-xl font-medium">
@@ -1330,6 +1332,7 @@
         memories: [],
         pendingAttachment: null,
         isGenerating: false,
+        liveActivity: null,
         photoVault: [],
         pureCodeHistory: [],
         contextMenuChatId: null,
@@ -1668,6 +1671,16 @@
           .replace(/"/g, '&quot;');
       }
 
+      function sanitizeHttpsUrl(rawUrl) {
+        try {
+          const parsed = new URL(String(rawUrl || '').trim());
+          if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return parsed.href;
+          return '';
+        } catch (e) {
+          return '';
+        }
+      }
+
       // ==================== SAFE COLOR SANITIZER & RICH WIDGET FORMATTER ====================
       function sanitizeColorToken(rawColor) {
         const val = String(rawColor || '').trim();
@@ -1715,25 +1728,123 @@
         `;
       }
 
+      function renderGeneratedImageCardHtml(rawUrl, promptText = '') {
+        const safeUrl = sanitizeHttpsUrl(rawUrl);
+        if (!safeUrl) return '';
+        const encodedPrompt = encodeURIComponent(String(promptText || 'Generated image'));
+        return `
+          <div class="my-3 w-full max-w-md rounded-2xl overflow-hidden bg-[#121a2d] border border-cyan-500/30 shadow-xl">
+            <img src="${escapeHtml(safeUrl)}" alt="${escapeHtml(promptText || 'AXON AI Generated Image')}" class="w-full max-h-96 object-cover bg-slate-950" loading="lazy" />
+            <div class="p-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800/80">
+              <span class="text-xs text-slate-300 truncate max-w-[200px]">${escapeHtml(promptText || 'AXON AI Image')}</span>
+              <div class="flex items-center gap-2">
+                <a href="${escapeHtml(safeUrl)}" download="axon-image-${Date.now()}.png" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-400/40 text-xs font-semibold transition">Download</a>
+                <button type="button" class="btn-regenerate-image px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/45 text-indigo-200 border border-indigo-400/40 text-xs font-semibold transition" data-img-prompt="${encodedPrompt}">Regenerate</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderSearchResultsListHtml(results) {
+        if (!Array.isArray(results) || !results.length) return '';
+        return `
+          <div class="my-3 space-y-2.5 max-w-2xl">
+            ${results.map((item) => {
+              const title = escapeHtml(item.title || 'Search Result');
+              const summary = escapeHtml(item.snippet || item.summary || '');
+              const url = sanitizeHttpsUrl(item.url || item.link || '');
+              const sourceLabel = escapeHtml(item.source || (url ? new URL(url).hostname : 'Web Source'));
+              return `
+                <div class="axon-news-card rounded-2xl p-3.5 space-y-1.5 shadow-md">
+                  <h4 class="text-sm sm:text-base font-bold text-white leading-snug">${title}</h4>
+                  ${summary ? `<p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${summary}</p>` : ''}
+                  <div class="flex items-center justify-between gap-2 pt-1">
+                    <span class="text-[11px] font-medium text-cyan-300 truncate">${sourceLabel}</span>
+                    ${url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-cyan-400 hover:underline shrink-0">Source Link →</a>` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      function renderLiveActivityPanelHtml(act) {
+        if (!act) return '';
+        if (act.type === 'search') {
+          return `
+            <div class="w-full max-w-3xl mx-auto animate-fade-up">
+              <div class="rounded-2xl p-4 bg-[#11192d] border border-cyan-400/35 shadow-xl space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-cyan-500/15 border border-cyan-400/35 flex items-center justify-center animate-spin-slow">
+                      <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300">AXON AI — Searching the Web</div>
+                      <div class="text-xs text-slate-200 mt-0.5">${escapeHtml(act.statusText || 'वेब पर जानकारी खोजी जा रही है...')}</div>
+                    </div>
+                  </div>
+                  <span class="text-[11px] font-mono text-cyan-400 truncate max-w-[160px]">${escapeHtml(act.query || '')}</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                  <div class="h-full rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-500 axon-search-progress-bar"></div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        if (act.type === 'image') {
+          return `
+            <div class="w-full max-w-3xl mx-auto animate-fade-up">
+              <div class="rounded-2xl p-4 bg-[#11192d] border border-indigo-400/35 shadow-xl space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center animate-spin-slow">
+                      <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div>
+                      <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300">AXON AI — Generating Real Image</div>
+                      <div class="text-xs text-slate-200 mt-0.5">${escapeHtml(act.statusText || 'AI Horde par image generate ho rahi hai...')}</div>
+                    </div>
+                  </div>
+                  <span class="text-[11px] font-mono text-indigo-300">${escapeHtml(act.progressLabel || 'Queued')}</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                  <div class="h-full rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 axon-search-progress-bar"></div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        return '';
+      }
+
       function formatMessageHtml(text, msgId = '') {
         let raw = String(text || '');
         const codeBlocks = [];
         const widgetPlaceholders = [];
-raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, url) => {
-  const wIdx = widgetPlaceholders.length;
-  const safeUrl = escapeHtml(url);
 
-  widgetPlaceholders.push(`
-    <div class="my-4">
-      <img src="${safeUrl}"
-           alt="Generated by AXON AI"
-           class="w-full max-w-lg rounded-2xl border border-cyan-400/30 shadow-lg"
-           loading="lazy">
-    </div>
-  `);
+        // Extract [AXON_GENERATED_IMAGE: URL | Prompt]
+        raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https?:\/\/[^\s|\]]+)(?:\s*\|\s*([^\]]*))?\]/gi, (_, url, promptVal) => {
+          const wIdx = widgetPlaceholders.length;
+          widgetPlaceholders.push(renderGeneratedImageCardHtml(url, decodeURIComponent(promptVal || 'AXON AI Image')));
+          return `__AXON_WIDGET_${wIdx}__`;
+        });
 
-  return `__AXON_WIDGET_${wIdx}__`;
-});
+        // Extract [AXON_SEARCH_RESULTS: JSON_ARRAY]
+        raw = raw.replace(/\[AXON_SEARCH_RESULTS:\s*([\s\S]*?)\s*\]/g, (_, jsonPart) => {
+          const wIdx = widgetPlaceholders.length;
+          try {
+            const parsed = JSON.parse(jsonPart);
+            widgetPlaceholders.push(renderSearchResultsListHtml(parsed));
+          } catch (e) {
+            widgetPlaceholders.push('');
+          }
+          return `__AXON_WIDGET_${wIdx}__`;
+        });
+
         raw = raw.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => {
           const idx = codeBlocks.length;
           const cleanLang = (lang || 'Code').trim();
@@ -1760,7 +1871,6 @@ raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, ur
           return `__AXON_CODE_BLOCK_${idx}__`;
         });
 
-        // Extract [MINI_CALCULATOR]
         raw = raw.replace(/\[MINI_CALCULATOR\]/g, () => {
           const wIdx = widgetPlaceholders.length;
           const calcId = `calc_${msgId || 'live'}_${wIdx}`;
@@ -1768,7 +1878,6 @@ raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, ur
           return `__AXON_WIDGET_${wIdx}__`;
         });
 
-        // Extract [SKETCH_CARD: Title | ProgressPercent | StatusText]
         raw = raw.replace(/\[SKETCH_CARD:\s*(.*?)\s*\|\s*(\d+)\s*\|\s*(.*?)\]/g, (_, title, pct, status) => {
           const wIdx = widgetPlaceholders.length;
           const safePct = Math.max(0, Math.min(100, Number(pct) || 3));
@@ -1786,7 +1895,6 @@ raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, ur
           return `__AXON_WIDGET_${wIdx}__`;
         });
 
-        // Extract [SEARCH_STATE: QueryLabel | StatusText]
         raw = raw.replace(/\[SEARCH_STATE:\s*(.*?)\s*\|\s*(.*?)\]/g, (_, label, status) => {
           const wIdx = widgetPlaceholders.length;
           widgetPlaceholders.push(`
@@ -1808,29 +1916,27 @@ raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, ur
 
         let safe = escapeHtml(raw);
 
-        // AI Dynamic Color Tag: [COLOR: green | text here] or [COLOR: #38bdf8 | text here]
         safe = safe.replace(/\[COLOR:\s*([^|\]]+?)\s*\|\s*([\s\S]*?)\]/gi, (_, colorRaw, innerText) => {
           const validColor = sanitizeColorToken(colorRaw);
           if (!validColor) return innerText;
           return `<span style="color: ${validColor}; font-weight: 500;">${innerText}</span>`;
         });
 
-        // Rich News Card Formatting: [NEWS_CARD: Title | ImageURL | Summary | Source | SourceURL]
         safe = safe.replace(/\[NEWS_CARD:\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)(?:\s*\|\s*(.*?))?\]/g, (_, title, imgUrl, summary, source, linkUrl) => {
-          const cleanLink = (linkUrl || '').trim();
-          const hasValidLink = /^https?:\/\//i.test(cleanLink);
+          const cleanLink = sanitizeHttpsUrl((linkUrl || '').trim());
           const srcLabel = (source || 'AXON News').trim();
+          const safeImg = sanitizeHttpsUrl((imgUrl || '').trim());
           return `
             <div class="axon-news-card my-3 rounded-2xl p-3.5 space-y-2.5 shadow-md">
               <h4 class="text-base font-bold text-white leading-snug">${title}</h4>
-              ${imgUrl && /^https?:\/\//i.test(imgUrl.trim()) ? `<img src="${imgUrl.trim()}" alt="${title}" class="w-full max-h-52 object-cover rounded-xl border border-slate-700/50" />` : ''}
+              ${safeImg ? `<img src="${escapeHtml(safeImg)}" alt="${title}" class="w-full max-h-52 object-cover rounded-xl border border-slate-700/50" />` : ''}
               <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${summary}</p>
               <div class="flex items-center justify-between gap-2 pt-1">
                 <div class="flex items-center gap-2 min-w-0">
                   <span class="w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shrink-0">${srcLabel.slice(0, 1).toUpperCase()}</span>
                   <span class="text-xs font-medium text-slate-400 truncate">${srcLabel}</span>
                 </div>
-                ${hasValidLink ? `<a href="${cleanLink}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-cyan-400 hover:underline shrink-0">Source Link →</a>` : ''}
+                ${cleanLink ? `<a href="${escapeHtml(cleanLink)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-cyan-400 hover:underline shrink-0">Source Link →</a>` : ''}
               </div>
             </div>
           `;
@@ -2161,7 +2267,9 @@ raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, ur
           animateTextReveal(`msg-body-${lastMsg.id}`, lastMsg.text, lastMsg.id);
         }
 
-        if (state.isGenerating) {
+        if (state.liveActivity) {
+          container.innerHTML += renderLiveActivityPanelHtml(state.liveActivity);
+        } else if (state.isGenerating) {
           container.innerHTML += `
             <div class="w-full max-w-3xl mx-auto flex items-center gap-2 px-1 py-2">
               <span class="typing-dot" style="animation-delay:0s"></span>
@@ -2501,10 +2609,157 @@ raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, ur
         }
       }
 
-      // ==================== LOCAL SMART TOOL ROUTING + AI API ====================
+      // ==================== REAL IMAGE GENERATION & LIVE WEB SEARCH ====================
       function isImageGenerationRequest(text) {
-  return /(?:\b(?:create|generate|make|draw)\s+(?:an?\s+)?image\b|\bimage\s+(?:banao|bana|bana\s*do|generate|create)\b|\b(?:image|picture)\s+(?:of|showing)\b|इमेज\s*(?:बनाओ|बना|बना\s*दो|बनाइए)|तस्वीर\s*(?:बनाओ|बना))/i.test(String(text || '').trim());
-}
+        return /(?:^|\b)(?:image\s*banao|tasveer\s*banao|generate\s+(?:an?\s+)?image|draw\s+(?:something|an?\s+image|a\s+picture)|create\s+(?:an?\s+)?(?:image|picture)|make\s+(?:an?\s+)?(?:image|picture)|इमेज\s*बनाओ|तस्वीर\s*बनाओ)(?:\b|$)/i.test(String(text || '').trim());
+      }
+
+      function extractCleanImagePrompt(text) {
+        return String(text || '')
+          .replace(/(?:image\s*banao|tasveer\s*banao|generate\s+(?:an?\s+)?image|draw\s+(?:something|an?\s+image|a\s+picture)|create\s+(?:an?\s+)?(?:image|picture)|make\s+(?:an?\s+)?(?:image|picture)|इमेज\s*बनाओ|तस्वीर\s*बनाओ)/gi, '')
+          .replace(/^\s*(?:of|for|about|ki|ka|ke)\s+/i, '')
+          .trim() || String(text || '').trim();
+      }
+
+      function enhanceImagePrompt(rawPrompt) {
+        const clean = extractCleanImagePrompt(rawPrompt);
+        if (!clean) return 'Detailed digital artwork, high resolution, balanced lighting, crisp focus';
+        if (clean.length < 32 && !/\b(photorealistic|cinematic|detailed|4k|8k|illustration|digital art|lighting)\b/i.test(clean)) {
+          return `${clean}, detailed high-resolution digital art, balanced lighting, sharp focus`;
+        }
+        return clean;
+      }
+
+      function isWebSearchRequest(text) {
+        return /\b(web\s*search|search\s*(?:karo|for|on\s*web|the\s*web|online)?|google\s*(?:karo|search)?|khojo|taaja\s*khabar|latest\s*news|news\s*batao|aaj\s*ki\s*news)\b/i.test(String(text || '').trim());
+      }
+
+      function extractCleanSearchQuery(text) {
+        return String(text || '')
+          .replace(/\b(?:web\s*search|search\s*the\s*web|search\s*karo|google\s*karo|khojo|batao)\b/gi, '')
+          .replace(/^\s*(?:for|about|on|ka|ki|ke)\s+/i, '')
+          .trim() || String(text || '').trim();
+      }
+
+      function setLiveActivity(activityObj) {
+        state.liveActivity = activityObj;
+        renderMessages(false);
+      }
+
+      function clearLiveActivity() {
+        state.liveActivity = null;
+        renderMessages(false);
+      }
+
+      async function generateAxonImage(rawPrompt, signal) {
+        const enhancedPrompt = enhanceImagePrompt(rawPrompt);
+        setLiveActivity({
+          type: 'image',
+          statusText: 'Prompt process ho raha hai aur /api/image-generate call kiya ja raha hai...',
+          progressLabel: 'Submitting'
+        });
+
+        const startRes = await fetch('/api/image-generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: enhancedPrompt }),
+          signal
+        });
+
+        const startData = await startRes.json().catch(() => ({}));
+        if (!startRes.ok || !startData.requestId) {
+          throw new Error(startData.error || `Image generation failed (${startRes.status})`);
+        }
+
+        const requestId = String(startData.requestId);
+        const maxAttempts = 60;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          if (signal?.aborted) {
+            throw new DOMException('Generation cancelled', 'AbortError');
+          }
+
+          setLiveActivity({
+            type: 'image',
+            statusText: `AI Horde par image generate ho rahi hai (Request ID: ${requestId.slice(0, 8)}...)`,
+            progressLabel: `${Math.min(99, Math.max(5, (attempt + 1) * 3))}%`
+          });
+
+          await new Promise((resolve, reject) => {
+            const timer = setTimeout(resolve, 4000);
+            if (signal) {
+              signal.addEventListener('abort', () => {
+                clearTimeout(timer);
+                reject(new DOMException('Generation cancelled', 'AbortError'));
+              }, { once: true });
+            }
+          });
+
+          const statusRes = await fetch(`/api/image-generate/${encodeURIComponent(requestId)}`, { signal });
+          const statusData = await statusRes.json().catch(() => ({}));
+          if (!statusRes.ok) {
+            throw new Error(statusData.error || `Image status check failed (${statusRes.status})`);
+          }
+
+          if (statusData.done) {
+            const imgUrl = sanitizeHttpsUrl(statusData.imageUrl || statusData.url || '');
+            if (!imgUrl) {
+              throw new Error(statusData.error || 'Image generation completed without a valid image URL.');
+            }
+            return `[AXON_GENERATED_IMAGE: ${imgUrl} | ${encodeURIComponent(enhancedPrompt)}]`;
+          }
+        }
+
+        throw new Error('Image generation timed out. Please try again.');
+      }
+
+      async function performLiveWebSearch(rawQuery, signal) {
+        const query = extractCleanSearchQuery(rawQuery);
+        setLiveActivity({
+          type: 'search',
+          query,
+          statusText: 'वेब पर जानकारी खोजी जा रही है...'
+        });
+
+        try {
+          const endpoint = `/api/search?q=${encodeURIComponent(query)}`;
+          const res = await fetch(endpoint, { signal });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            throw new Error(data.error || `Search API error (${res.status})`);
+          }
+
+          const rawResults = Array.isArray(data.results) ? data.results : (Array.isArray(data.items) ? data.items : []);
+          const normalized = rawResults
+            .map((r) => ({
+              title: String(r.title || '').trim(),
+              snippet: String(r.snippet || r.description || r.summary || '').trim(),
+              url: sanitizeHttpsUrl(r.url || r.link || ''),
+              source: String(r.source || r.domain || '').trim()
+            }))
+            .filter((r) => r.title && r.url);
+
+          if (!normalized.length) {
+            throw new Error('कोई सत्यापित वेब परिणाम नहीं मिला।');
+          }
+
+          const synthesisParts = [];
+          if (data.answer && String(data.answer).trim()) {
+            synthesisParts.push(String(data.answer).trim());
+          } else {
+            const topSummaries = normalized.slice(0, 4).map((item, idx) =>
+              `${idx + 1}. **${item.title}**${item.snippet ? ` — ${item.snippet}` : ''}`
+            );
+            synthesisParts.push(`**"${query}"** ke liye verified sources se mili jaankari:\n${topSummaries.join('\n')}`);
+          }
+
+          synthesisParts.push(`[AXON_SEARCH_RESULTS: ${JSON.stringify(normalized.slice(0, 8))}]`);
+          return synthesisParts.join('\n\n');
+        } finally {
+          clearLiveActivity();
+        }
+      }
+
       function tryLocalToolRouting(promptText) {
         const q = String(promptText || '').trim();
         const lower = q.toLowerCase();
@@ -2514,71 +2769,7 @@ raw = raw.replace(/\[AXON_GENERATED_IMAGE:\s*(https:\/\/[^\s\]]+)\s*\]/g, (_, ur
           return 'Ye raha mera Mini Calculator!\n[MINI_CALCULATOR]';
         }
 
-        
-// ==================== AXON AI HORDE IMAGE ENGINE ====================
-
-function isImageGenerationRequest(text) {
-  return /(?:\b(?:create|generate|make|draw)\s+(?:an?\s+)?image\b|\bimage\s+(?:banao|bana|bana\s*do|generate|create)\b|\b(?:image|picture)\s+(?:of|showing)\b|इमेज\s*(?:बनाओ|बना|बना\s*दो|बनाइए)|तस्वीर\s*(?:बनाओ|बना))/i.test(String(text || '').trim());
-}
-
-async function generateAxonImage(prompt, signal) {
-  const startResponse = await fetch("/api/image-generate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ prompt: prompt.trim() }),
-    signal
-  });
-
-  const startData = await startResponse.json().catch(() => ({}));
-
-  if (!startResponse.ok || !startData.requestId) {
-    throw new Error(startData.error || "Image generation could not start.");
-  }
-
-  const requestId = startData.requestId;
-
-  // Wait for AI Horde generation
-  for (let attempt = 0; attempt < 60; attempt++) {
-    if (signal?.aborted) {
-      throw new DOMException("Generation cancelled", "AbortError");
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 5000));
-
-    const statusResponse = await fetch(
-      `/api/image-generate/${encodeURIComponent(requestId)}`,
-      { signal }
-    );
-
-    const statusData = await statusResponse.json().catch(() => ({}));
-
-    if (!statusResponse.ok) {
-      throw new Error(statusData.error || "Image status check failed.");
-    }
-
-    if (statusData.done && statusData.imageUrl) {
-      const imageUrl = new URL(statusData.imageUrl);
-
-      if (imageUrl.protocol !== "https:") {
-        throw new Error("Invalid generated image URL.");
-      }
-
-      return `[AXON_GENERATED_IMAGE: ${imageUrl.href}]`;
-    }
-  }
-
-  throw new Error("Image generation timed out. Please try again.");
-}
-
-
-        // 3. Web search visual state
-        if (/\b(search\s*karo|web\s*search|search\s*the\s*web|khojo|google\s*karo)\b/i.test(lower)) {
-          return `[SEARCH_STATE: Query: "${q.slice(0, 50)}" | Searching the web...]`;
-        }
-
-        // 4. App open shortcut
+        // 2. App open shortcut
         for (const app of APP_DIRECTORY) {
           if (new RegExp(`\\b(open|kholo|launch)\\s+${app.aliases.join('|')}\\b`, 'i').test(lower)) {
             setTimeout(() => {
@@ -2611,6 +2802,7 @@ async function generateAxonImage(prompt, signal) {
           try { generationAbort.abort(); } catch (e) {}
           generationAbort = null;
         }
+        state.liveActivity = null;
         state.isGenerating = false;
         updateSendButtonState();
         renderAll();
@@ -2652,15 +2844,29 @@ async function generateAxonImage(prompt, signal) {
         }
       }
 
-      async function fetchAIReply(promptText, signal = null, attachment = null) { 
+      async function fetchAIReply(promptText, signal = null, attachment = null) {
         if (!attachment && isImageGenerationRequest(promptText)) {
-  try {
-    return await generateAxonImage(promptText, signal);
-  } catch (error) {
-    if (error.name === "AbortError") throw error;
-    return `Image Generation Error: ${error.message}`;
-  }
-}
+          try {
+            return await generateAxonImage(promptText, signal);
+          } catch (err) {
+            clearLiveActivity();
+            if (err && err.name === 'AbortError') throw err;
+            return `Image Generation Error: ${err.message}`;
+          } finally {
+            clearLiveActivity();
+          }
+        }
+
+        if (!attachment && isWebSearchRequest(promptText)) {
+          try {
+            return await performLiveWebSearch(promptText, signal);
+          } catch (err) {
+            clearLiveActivity();
+            if (err && err.name === 'AbortError') throw err;
+            return `Web Search Error: ${err.message}`;
+          }
+        }
+
         const localToolReply = !attachment ? tryLocalToolRouting(promptText) : null;
         if (localToolReply) {
           await new Promise(r => setTimeout(r, 250));
@@ -2802,6 +3008,7 @@ async function generateAxonImage(prompt, signal) {
         }
         clearAttachment();
         state.isGenerating = true;
+        state.liveActivity = null;
         generationAbort = new AbortController();
         updateSendButtonState();
         saveState();
@@ -2809,6 +3016,7 @@ async function generateAxonImage(prompt, signal) {
 
         try {
           const replyText = await fetchAIReply(userMsg.text, generationAbort.signal, userMsg.attachment);
+          state.liveActivity = null;
           state.isGenerating = false;
           generationAbort = null;
           updateSendButtonState();
@@ -2832,6 +3040,7 @@ async function generateAxonImage(prompt, signal) {
           }
           return replyText;
         } catch (err) {
+          state.liveActivity = null;
           state.isGenerating = false;
           generationAbort = null;
           updateSendButtonState();
@@ -3024,6 +3233,8 @@ async function generateAxonImage(prompt, signal) {
           stopTTSController(false);
           const clean = String(text || '')
             .replace(/```[\s\S]*?```/g, ' Code screen par hai. ')
+            .replace(/\[AXON_GENERATED_IMAGE:[\s\S]*?\]/g, ' Image screen par taiyaar hai. ')
+            .replace(/\[AXON_SEARCH_RESULTS:[\s\S]*?\]/g, ' Search results screen par hain. ')
             .replace(/\[NEWS_CARD:[\s\S]*?\]/g, ' News card screen par hai. ')
             .replace(/\[MINI_CALCULATOR\]/g, ' Calculator open hai. ')
             .replace(/\[SKETCH_CARD:[\s\S]*?\]/g, ' Sketching progress chal rahi hai. ')
@@ -3240,7 +3451,7 @@ async function generateAxonImage(prompt, signal) {
         $('btn-header-websearch')?.addEventListener('click', () => {
           switchView('chat');
           const cur = ($('chat-input')?.value || '').trim();
-          sendMessage(cur ? `Web search karo: ${cur}` : 'Aaj ki taaja news aur web search updates batao');
+          sendMessage(cur ? `Web search karo: ${cur}` : 'Web search karo: latest technology news India');
         });
         $('nav-settings')?.addEventListener('click', () => switchView('settings'));
         $('btn-settings-back')?.addEventListener('click', () => switchView('chat'));
@@ -3407,7 +3618,7 @@ async function generateAxonImage(prompt, signal) {
             const act = btn.dataset.cmdk;
             $('cmdk-modal')?.classList.add('hidden');
             if (act === 'new-chat') createNewChat(true);
-            if (act === 'web-search') { switchView('chat'); sendMessage('Web search karo: aaj ki taaja news'); }
+            if (act === 'web-search') { switchView('chat'); sendMessage('Web search karo: latest technology news'); }
             if (act === 'calculator') { switchView('chat'); sendMessage('mini calculator kholo'); }
             if (act === 'settings') switchView('settings');
             if (act === 'photo-studio') switchView('photo-studio');
@@ -3517,8 +3728,15 @@ async function generateAxonImage(prompt, signal) {
           }
         });
 
-        // Message Actions, Mini Calculator & Code Block Header Buttons
+        // Message Actions, Mini Calculator, Image Regenerate & Code Block Header Buttons
         $('chat-messages')?.addEventListener('click', (e) => {
+          const regenBtn = e.target.closest('.btn-regenerate-image');
+          if (regenBtn && !state.isGenerating) {
+            const prevPrompt = decodeURIComponent(regenBtn.dataset.imgPrompt || '');
+            sendMessage(`Generate an image: ${prevPrompt}`);
+            return;
+          }
+
           const calcBtn = e.target.closest('.axon-calc-btn');
           if (calcBtn) {
             const shell = calcBtn.closest('[data-calc-id]');
@@ -3709,77 +3927,52 @@ async function generateAxonImage(prompt, signal) {
           const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({ chats: state.chats, memories: state.memories }, null, 2));
           const a = document.createElement('a');
           a.href = dataStr;
-          a.download = `axon-ai-memory-history-${new Date().toISOString().slice(0, 10)}.json`;
+          a.download = `axon-ai-backup-${Date.now()}.json`;
           a.click();
+          showToast('Exported JSON!');
         });
 
         $('btn-clear-history')?.addEventListener('click', () => {
           state.chats = [];
           state.activeChatId = null;
           createNewChat(false);
-          showToast('All chat history cleared.');
+          saveState();
+          renderAll();
+          showToast('Chat history cleared.');
         });
 
-        $('btn-theme-dark')?.addEventListener('click', () => {
-          state.settings.theme = 'dark';
-          saveState();
-          applyAppearance();
-        });
-        $('btn-theme-light')?.addEventListener('click', () => {
-          state.settings.theme = 'light';
-          saveState();
-          applyAppearance();
-        });
-        $('setting-font-size')?.addEventListener('change', (e) => {
-          state.settings.fontSize = e.target.value;
-          saveState();
-          applyAppearance();
-        });
+        $('btn-theme-dark')?.addEventListener('click', () => { state.settings.theme = 'dark'; saveState(); applyAppearance(); });
+        $('btn-theme-light')?.addEventListener('click', () => { state.settings.theme = 'light'; saveState(); applyAppearance(); });
+        $('setting-font-size')?.addEventListener('change', (e) => { state.settings.fontSize = e.target.value; saveState(); applyAppearance(); });
         $('toggle-autoscroll')?.addEventListener('click', () => {
           state.settings.autoScroll = !state.settings.autoScroll;
           saveState();
           renderToggles();
         });
-        $('setting-ai-model')?.addEventListener('change', (e) => {
-          state.settings.aiModel = e.target.value;
-          saveState();
-        });
-        $('setting-app-language')?.addEventListener('change', (e) => {
-          state.settings.appLanguage = e.target.value;
-          saveState();
-        });
 
-        $('view-apps')?.addEventListener('click', (e) => {
-          const appBtn = e.target.closest('.launch-app-btn');
-          if (appBtn) window.open(appBtn.dataset.url, '_blank', 'noopener,noreferrer');
+        $('app-launcher-grid')?.addEventListener('click', (e) => {
+          const btn = e.target.closest('.launch-app-btn');
+          if (!btn) return;
+          try { window.open(btn.dataset.url, '_blank', 'noopener,noreferrer'); } catch (err) {}
+          showToast(`Opening ${btn.dataset.name}...`);
         });
       }
 
+      // ==================== INIT ====================
       function init() {
         loadStateForCurrentUser();
-        setAuthMode('signin');
-        bindEvents();
         applyAppearance();
+        bindEvents();
+        initializeFirebaseAuth();
 
         if ('speechSynthesis' in window) {
           populateVoicesDropdown();
           window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
         }
 
-        const hasFirebase = initializeFirebaseAuth();
-
         setTimeout(() => {
-          if (state.user) {
-            $('splash-screen')?.classList.add('hidden');
-            enterApp();
-          } else if (hasFirebase && firebaseAuth && firebaseAuth.currentUser) {
-            const u = firebaseAuth.currentUser;
-            demoSession = false;
-            completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '', u.uid || '');
-          } else {
-            dismissSplashToLogin();
-          }
-        }, 1600);
+          if (!state.user) dismissSplashToLogin();
+        }, 1200);
       }
 
       if (document.readyState === 'loading') {
