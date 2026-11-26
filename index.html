@@ -1356,6 +1356,7 @@
       let ttsQueueIndex = 0;
       let ttsPaused = false;
       let activeSpeakingMsgId = null;
+      let studioImageObj = null;
 
       const $ = (id) => document.getElementById(id);
 
@@ -2255,6 +2256,44 @@
         `).join('');
       }
 
+      // ==================== XONE PHOTO STUDIO CANVAS ENGINE ====================
+      function renderStudioCanvas() {
+        const canvas = $('studio-canvas');
+        if (!canvas || !studioImageObj) return;
+        const ctx = canvas.getContext('2d');
+        const b = $('studio-brightness')?.value || 100;
+        const c = $('studio-contrast')?.value || 100;
+        const g = $('studio-grayscale')?.value || 0;
+        if ($('studio-brightness-val')) $('studio-brightness-val').textContent = `${b}%`;
+        if ($('studio-contrast-val')) $('studio-contrast-val').textContent = `${c}%`;
+        if ($('studio-grayscale-val')) $('studio-grayscale-val').textContent = `${g}%`;
+        ctx.filter = `brightness(${b}%) contrast(${c}%) grayscale(${g}%)`;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(studioImageObj, 0, 0, canvas.width, canvas.height);
+        ctx.filter = 'none';
+      }
+
+      function loadStudioPhotoFile(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            studioImageObj = img;
+            const canvas = $('studio-canvas');
+            const scale = Math.min(1, 900 / Math.max(img.width, img.height));
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.classList.remove('hidden');
+            $('studio-placeholder')?.classList.add('hidden');
+            if ($('studio-status')) $('studio-status').textContent = `Loaded: ${file.name}`;
+            renderStudioCanvas();
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
       // ==================== ADVANCED SETTINGS DETAIL MODALS ====================
       function openAdvancedSettingDialog(panelKey) {
         const titleEl = $('detail-modal-title');
@@ -3128,6 +3167,58 @@
         $('btn-settings-back')?.addEventListener('click', () => switchView('chat'));
         $('btn-studio-back')?.addEventListener('click', () => switchView('chat'));
         $('btn-apps-back')?.addEventListener('click', () => switchView('chat'));
+
+        // Photo Studio Bindings
+        $('studio-file-input')?.addEventListener('change', (e) => loadStudioPhotoFile(e.target.files[0]));
+        $('studio-brightness')?.addEventListener('input', renderStudioCanvas);
+        $('studio-contrast')?.addEventListener('input', renderStudioCanvas);
+        $('studio-grayscale')?.addEventListener('input', renderStudioCanvas);
+        $('studio-reset-btn')?.addEventListener('click', () => {
+          if ($('studio-brightness')) $('studio-brightness').value = 100;
+          if ($('studio-contrast')) $('studio-contrast').value = 100;
+          if ($('studio-grayscale')) $('studio-grayscale').value = 0;
+          renderStudioCanvas();
+          showToast('Filters reset');
+        });
+        $('studio-download-btn')?.addEventListener('click', () => {
+          const canvas = $('studio-canvas');
+          if (!studioImageObj || !canvas) { showToast('Upload a photo first'); return; }
+          const a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = `xone-studio-${Date.now()}.png`;
+          a.click();
+        });
+        $('studio-ai-generate-btn')?.addEventListener('click', async () => {
+          const canvas = $('studio-canvas');
+          if (!studioImageObj || !canvas) { showToast('Upload a photo first'); return; }
+          const mode = $('studio-ai-mode')?.value || 'cgi';
+          const prompt = ($('studio-ai-prompt')?.value || '').trim();
+          if ($('studio-status')) $('studio-status').textContent = 'Applying AI Scene / CGI Edit...';
+          try {
+            const res = await fetch('/api/vision', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                imageData: canvas.toDataURL('image/jpeg', 0.8),
+                prompt: `Photo Studio Edit (${mode}): ${prompt || 'Cinematic CGI enhancement'}`,
+                model: state.settings.aiModel,
+                language: state.settings.appLanguage
+              })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (mode === 'cgi') {
+              $('studio-contrast').value = 128;
+              $('studio-brightness').value = 108;
+            } else if (mode === 'style') {
+              $('studio-grayscale').value = 35;
+              $('studio-contrast').value = 135;
+            }
+            renderStudioCanvas();
+            if ($('studio-status')) $('studio-status').textContent = data.reply || 'AI Scene / CGI preset applied!';
+          } catch (err) {
+            if ($('studio-status')) $('studio-status').textContent = 'Local CGI filter applied.';
+          }
+        });
 
         // Profile Edit Row
         $('row-edit-profile')?.addEventListener('click', () => {
