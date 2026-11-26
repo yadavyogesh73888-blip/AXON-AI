@@ -36,6 +36,64 @@ if (!admin.apps.length) {
   }
 }
 
+// ==================== MODEL SETTINGS ====================
+
+function sanitizeModel(val, fallback) {
+  if (typeof val !== "string") return fallback;
+
+  const cleaned = val.trim().replace(/^["']+|["']+$/g, "");
+
+  return cleaned || fallback;
+}
+
+const CHAT_MODEL = sanitizeModel(
+  process.env.GROQ_MODEL,
+  "openai/gpt-oss-120b"
+);
+
+const VISION_MODEL = sanitizeModel(
+  process.env.GROQ_VISION_MODEL,
+  "qwen/qwen3.8-27b"
+);
+
+const IMAGE_EDIT_MODEL = sanitizeModel(
+  process.env.GEMINI_IMAGE_MODEL,
+  "gemini-2.5-flash-image"
+);
+
+// ==================== RATE LIMITERS ====================
+
+const chatLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 25,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    reply: "Too many requests. Please wait a minute and try again."
+  }
+});
+
+const healthLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    status: "failed",
+    message: "Too many health checks. Please try again later."
+  }
+});
+
+const visionLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 15,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    error: "Too many image requests. Please wait a minute."
+  }
+});
+
 // ==================== MIDDLEWARE ====================
 
 app.use(
@@ -51,6 +109,13 @@ app.use((req, res, next) => {
     req.path === "/api/vision" ||
     req.path === "/api/video" ||
     req.path === "/api/photo-edit" ||
+    req.path === "/api/photo-studio-edit"
+  ) {
+    return next();
+  }
+
+  express.json({ limit: "2mb" })(req, res, next);
+});
 
 // ==================== AI HORDE IMAGE GENERATION ====================
 
@@ -93,9 +158,9 @@ app.post(
             params: {
               width: 512,
               height: 512,
-              steps: 20,
+              steps: 24,
               n: 1,
-              cfg_scale: 7
+              cfg_scale: 7.5
             },
             nsfw: false,
             censor_nsfw: true,
@@ -118,7 +183,6 @@ app.post(
         requestId: data.id,
         message: "Image generation started."
       });
-
     } catch (error) {
       console.error("[AXON-AI] HORDE ERROR:", error);
 
@@ -128,8 +192,6 @@ app.post(
     }
   }
 );
-
-// CHECK IMAGE GENERATION STATUS
 
 app.get(
   "/api/image-generate/:id",
@@ -205,7 +267,6 @@ app.get(
         done: true,
         imageUrl
       });
-
     } catch (error) {
       console.error("[AXON-AI] HORDE STATUS ERROR:", error);
 
@@ -215,74 +276,6 @@ app.get(
     }
   }
 );
-
-
-    
-    req.path === "/api/photo-studio-edit"
-  ) {
-    return next();
-  }
-
-  express.json({ limit: "2mb" })(req, res, next);
-});
-
-// ==================== MODEL SETTINGS ====================
-
-function sanitizeModel(val, fallback) {
-  if (typeof val !== "string") return fallback;
-
-  const cleaned = val.trim().replace(/^[\"']+|[\"']+$/g, "");
-
-  return cleaned || fallback;
-}
-
-const CHAT_MODEL = sanitizeModel(
-  process.env.GROQ_MODEL,
-  "openai/gpt-oss-120b"
-);
-
-const VISION_MODEL = sanitizeModel(
-  process.env.GROQ_VISION_MODEL,
-  "qwen/qwen3.8-27b"
-);
-
-const IMAGE_EDIT_MODEL = sanitizeModel(
-  process.env.GEMINI_IMAGE_MODEL,
-  "gemini-2.5-flash-image"
-);
-
-// ==================== RATE LIMITERS ====================
-
-const chatLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  limit: 25,
-  standardHeaders: "draft-8",
-  legacyHeaders: false,
-  message: {
-    reply: "Too many requests. Please wait a minute and try again."
-  }
-});
-
-const healthLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  limit: 5,
-  standardHeaders: "draft-8",
-  legacyHeaders: false,
-  message: {
-    status: "failed",
-    message: "Too many health checks. Please try again later."
-  }
-});
-
-const visionLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  limit: 15,
-  standardHeaders: "draft-8",
-  legacyHeaders: false,
-  message: {
-    error: "Too many image requests. Please wait a minute."
-  }
-});
 
 // ==================== IMAGE VALIDATION ====================
 
@@ -580,7 +573,7 @@ app.get("/api/health", healthLimiter, async (req, res) => {
   });
 });
 
-// ==================== PHOTO STUDIO ====================
+// ==================== ADVANCE PHOTO STUDIO (CGI + IMAGINATION) ====================
 
 app.post(
   "/api/photo-studio-edit",
@@ -620,7 +613,8 @@ app.post(
     } else if (
       mode &&
       mode !== "generate" &&
-      mode !== "text-to-image"
+      mode !== "text-to-image" &&
+      mode !== "imaginative"
     ) {
       return res.status(400).json({
         error: "Image is required for this editing mode."
@@ -632,16 +626,23 @@ app.post(
     let finalPrompt = cleanPrompt;
 
     if (imgCheck) {
-      const prefix =
-        mode === "cgi"
-          ? "Transform into a high-detail 3D CGI / Unreal Engine cinematic render with dramatic lighting and depth while keeping the main subject recognizable. "
-          : mode === "background"
-          ? "Replace and transform the background environment naturally while keeping the foreground subject sharp and consistent. "
-          : "Apply AI style and scene transformation while keeping the core subject consistent. ";
+      const modePrompts = {
+        cgi: "Transform this photo into an ultra-detailed Hollywood-grade 3D CGI / Unreal Engine 5 cinematic render with ray-traced lighting, volumetric atmosphere, crisp micro-textures, and depth while preserving the subject's identity and pose. ",
+        imaginative:
+          "Reimagine this photo creatively and artistically with rich imagination, surreal cinematic lighting, atmospheric depth, and dramatic visual storytelling while keeping the core subject recognizable. ",
+        background:
+          "Seamlessly replace and transform the background environment with realistic lighting, shadows, and perspective blending while keeping the foreground subject sharp and natural. ",
+        cinematic:
+          "Apply high-end film color grading, anamorphic lens depth, dramatic rim lighting, and rich dynamic range while keeping the subject natural. "
+      };
 
-      finalPrompt = `${prefix}${cleanPrompt}`;
+      const prefix =
+        modePrompts[mode] ||
+        "Apply advanced AI photo editing, realistic lighting, depth, and creative enhancement while keeping the core subject consistent. ";
+
+      finalPrompt = `${prefix}User instruction: ${cleanPrompt}`;
     } else {
-      finalPrompt = `Generate a high-quality, detailed visual image for: ${cleanPrompt}`;
+      finalPrompt = `Create a hyper-detailed, imaginative, high-resolution visual with advanced CGI/cinematic lighting and rich composition for: ${cleanPrompt}`;
     }
 
     const parts = [];
@@ -727,7 +728,8 @@ app.post(
         return res.json({
           editedImage:
             `data:${outMime};base64,${imagePart.inlineData.data}`,
-          model: IMAGE_EDIT_MODEL
+          model: IMAGE_EDIT_MODEL,
+          mode: mode || "default"
         });
       }
 
@@ -1308,7 +1310,6 @@ app.post("/api/chat", chatLimiter, async (req, res) => {
   }
 
   // Optional Firebase authentication for memory context.
-  // Guests can still use the normal chat.
   let memoryContext = "";
 
   try {
@@ -1415,7 +1416,7 @@ If asked what Ms means, reply:
     );
 
     return res.status(502).json({
-      reply: `Yaar, abhi AI API mein dikkat aayi. Thodi der baad try karna!`
+      reply: "Yaar, abhi AI API mein dikkat aayi. Thodi der baad try karna!"
     });
   }
 
