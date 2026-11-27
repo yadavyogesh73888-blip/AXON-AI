@@ -4584,4 +4584,20 @@
             showToast('Copied to clipboard');
           }
           if (e.target.closest('.btn-speak-msg') && msg) {
-            togglePauseResume
+                        togglePauseResume(msg.id);
+            return;
+          }
+        });
+
+        $('btn-quick-share')?.addEventListener('click', shareLatestMessage);
+        $('btn-quick-copy')?.addEventListener('click', copyLatestMessage);
+        $('btn-quick-save')?.addEventListener('click', saveLatestMessage);
+      }
+
+      // Initialize AXON AI
+      document.addEventListener('DOMContentLoaded', () => {
+        bindEvents();
+      });
+    </script>
+  </body>
+</html>
