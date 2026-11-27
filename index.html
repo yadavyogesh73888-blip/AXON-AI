@@ -1977,7 +1977,10 @@
       // ==================== FIREBASE AUTH ====================
       function initializeFirebaseAuth() {
         const hasConfig = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_');
-        if (!hasConfig || typeof firebase === 'undefined' || !firebase.initializeApp) return false;
+        if (!hasConfig || typeof firebase === 'undefined' || !firebase.initializeApp) {
+          dismissSplashToLogin();
+          return false;
+        }
         try {
           if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
           firebaseAuth = firebase.auth();
@@ -2009,6 +2012,7 @@
           });
           return true;
         } catch (error) {
+          dismissSplashToLogin();
           return false;
         }
       }
@@ -3018,18 +3022,15 @@
           `;
           $('settings-detail-modal').classList.remove('hidden');
 
-          const updateStarUI = () => {
-            document.querySelectorAll('.feedback-star-btn').forEach(b => {
-              const val = Number(b.dataset.star);
-              b.className = val <= selectedRating
-                ? 'feedback-star-btn w-9 h-9 rounded-xl bg-amber-400/25 border border-amber-400 text-amber-300 font-bold text-sm transition'
-                : 'feedback-star-btn w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 font-bold text-sm transition';
-            });
-          };
           document.querySelectorAll('.feedback-star-btn').forEach(btn => {
             btn.addEventListener('click', () => {
               selectedRating = Number(btn.dataset.star) || 5;
-              updateStarUI();
+              document.querySelectorAll('.feedback-star-btn').forEach(b => {
+                const val = Number(b.dataset.star);
+                b.className = val <= selectedRating
+                  ? 'feedback-star-btn w-9 h-9 rounded-xl bg-amber-400/25 border border-amber-400 text-amber-300 font-bold text-sm transition'
+                  : 'feedback-star-btn w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 font-bold text-sm transition';
+              });
             });
           });
           $('btn-submit-feedback')?.addEventListener('click', () => {
@@ -3520,12 +3521,11 @@
             language: state.settings.appLanguage,
             model: state.settings.aiModel,
             attachment: attachment ? {
-              name: attachment.name,
               type: attachment.type,
-              mime: attachment.mime,
+              name: attachment.name,
               dataUrl: attachment.type === 'image' ? attachment.dataUrl : undefined,
-              textContent: attachment.textContent || undefined,
-              videoFrames: videoFrames.length ? videoFrames : undefined
+              frames: videoFrames.length ? videoFrames : undefined,
+              textPreview: attachment.textPreview || undefined
             } : null
           };
 
@@ -3535,786 +3535,562 @@
             body: JSON.stringify(payload),
             signal
           });
+
           const data = await res.json().catch(() => ({}));
           if (!res.ok) {
-            const errMsg = data.error || data.message || `Server error (${res.status})`;
-            throw new Error(errMsg);
+            throw new Error(data.error || `Server error (${res.status})`);
           }
-          return data.reply || data.response || data.message || 'No response received from AI.';
+          if (!data.reply || !String(data.reply).trim()) {
+            throw new Error('Empty response received from AI backend.');
+          }
+          return String(data.reply).trim();
         } finally {
           stopAnimatedStatusSequence(false);
         }
       }
 
-      async function sendMessage(overrideText = null) {
+      async function sendMessage(overrideText = null, isRegenerate = false) {
         if (state.isGenerating) {
           stopGeneration();
           return;
         }
-        const input = $('chat-input');
-        const text = (overrideText !== null ? overrideText : input.value).trim();
-        const att = state.pendingAttachment;
-        if (!text && !att) return;
+        const inputEl = $('chat-input');
+        const rawText = overrideText !== null ? String(overrideText) : (inputEl ? inputEl.value.trim() : '');
+        const attachment = state.pendingAttachment ? { ...state.pendingAttachment } : null;
+
+        if (!rawText && !attachment) return;
+        const promptText = rawText || `Analyze the attached ${attachment.type}: ${attachment.name}`;
+
+        if (state.activeView !== 'chat') switchView('chat');
 
         let chat = getActiveChat();
-        if (!chat) chat = createNewChat(false);
-        if (chat.locked) {
-          showToast('This chat is locked. Unlock it first.');
-          return;
+        if (!chat) chat = createNewChat(true);
+
+        if (!isRegenerate) {
+          if (chat.messages.length === 0) {
+            const cleanTitle = rawText ? rawText.slice(0, 34) : (attachment?.name || 'New Chat');
+            chat.title = cleanTitle + (rawText && rawText.length > 34 ? '…' : '');
+          }
+          chat.messages.push({
+            id: 'msg_' + Date.now() + '_u',
+            role: 'user',
+            text: rawText || `[Sent ${attachment.type}: ${attachment.name}]`,
+            attachment,
+            timestamp: new Date().toISOString()
+          });
+          chat.updatedAt = new Date().toISOString();
+          if (rawText) extractImportantMemoriesFromTurn(rawText);
         }
 
-        const displayText = text || (att.type === 'image' ? `Analyze this photo: ${att.name}` : att.type === 'video' ? `Analyze this video: ${att.name}` : `Analyze this file: ${att.name}`);
-        const userMsg = {
-          id: 'msg_' + Date.now() + '_u',
-          role: 'user',
-          text: displayText,
-          attachment: att ? { ...att } : null,
-          createdAt: new Date().toISOString()
-        };
-        chat.messages.push(userMsg);
-        if (chat.title === 'New Conversation') {
-          chat.title = displayText.slice(0, 34) + (displayText.length > 34 ? '…' : '');
-        }
-        chat.updatedAt = new Date().toISOString();
-
-        extractImportantMemoriesFromTurn(displayText);
-
-        if (overrideText === null) {
-          input.value = '';
-          input.style.height = 'auto';
+        if (overrideText === null && inputEl) {
+          inputEl.value = '';
+          inputEl.style.height = 'auto';
         }
         clearAttachment();
-        state.isGenerating = true;
-        updateSendButtonState();
         saveState();
+
+        state.isGenerating = true;
+        generationAbort = new AbortController();
+        updateSendButtonState();
         renderAll();
 
-        generationAbort = new AbortController();
-
         try {
-          const reply = await fetchAIReply(displayText, generationAbort.signal, userMsg.attachment);
-          stopAnimatedStatusSequence(false);
-          const aiMsg = {
+          const replyText = await fetchAIReply(promptText, generationAbort.signal, attachment);
+          chat.messages.push({
             id: 'msg_' + Date.now() + '_a',
             role: 'assistant',
-            text: reply,
-            createdAt: new Date().toISOString()
-          };
-          chat.messages.push(aiMsg);
+            text: replyText,
+            timestamp: new Date().toISOString()
+          });
           chat.updatedAt = new Date().toISOString();
-          state.isGenerating = false;
-          generationAbort = null;
-          updateSendButtonState();
           saveState();
-          renderSidebarChats();
-          renderMessages(true);
-          if (state.settings.voiceTTS) speakText(reply);
         } catch (err) {
-          stopAnimatedStatusSequence(false);
-          state.isGenerating = false;
-          generationAbort = null;
-          updateSendButtonState();
           if (err && err.name === 'AbortError') return;
-          const errText = `Connection error: ${err?.message || 'Unable to reach AI server.'}`;
+          const errMsg = err?.message || 'Unable to connect to AI server.';
           chat.messages.push({
             id: 'msg_' + Date.now() + '_e',
             role: 'assistant',
-            text: errText,
-            createdAt: new Date().toISOString()
+            text: `[COLOR: #fb7185 | Request failed: ${errMsg}]`,
+            timestamp: new Date().toISOString()
           });
           saveState();
-          renderMessages(true);
+        } finally {
+          stopAnimatedStatusSequence(false);
+          state.isGenerating = false;
+          generationAbort = null;
+          updateSendButtonState();
+          renderAll();
+          const lastMsg = chat.messages[chat.messages.length - 1];
+          if (lastMsg && lastMsg.role === 'assistant') {
+            animateTextReveal(`msg-body-${lastMsg.id}`, lastMsg.text, lastMsg.id);
+          }
         }
       }
 
-      // ==================== PURE CODE AREA DRAWER ====================
-      function extractCodeBlocksFromText(text) {
-        const blocks = [];
-        const rx = /```(\w+)?\n?([\s\S]*?)```/g;
-        let m;
-        while ((m = rx.exec(String(text || ''))) !== null) {
-          blocks.push({ lang: (m[1] || 'code').trim(), code: (m[2] || '').trim() });
-        }
-        return blocks;
-      }
-
-      function openPureCodeDrawer(codeText, langLabel = 'PURE CODE AREA') {
-        const drawer = $('pure-code-drawer');
-        const area = $('pure-code-content');
-        const langEl = $('pure-code-lang');
-        if (!drawer || !area) return;
-        if (langEl) langEl.textContent = `PURE CODE AREA — ${String(langLabel).toUpperCase()}`;
-        area.value = String(codeText || '');
-        drawer.classList.remove('hidden');
-        area.focus();
-      }
-
-      // ==================== ATTACHMENTS & CAMERA ====================
+      // ==================== ATTACHMENT HANDLING ====================
       function clearAttachment() {
         state.pendingAttachment = null;
         $('attachment-preview')?.classList.add('hidden');
         $('attachment-thumb')?.classList.add('hidden');
         $('attachment-video-thumb')?.classList.add('hidden');
         $('attachment-file-icon')?.classList.add('hidden');
-        $('input-photo').value = '';
-        $('input-video').value = '';
-        $('input-file').value = '';
+        if ($('input-photo')) $('input-photo').value = '';
+        if ($('input-video')) $('input-video').value = '';
+        if ($('input-file')) $('input-file').value = '';
       }
 
-      function setAttachment(att) {
-        state.pendingAttachment = att;
-        $('attachment-preview')?.classList.remove('hidden');
-        $('attachment-name').textContent = att.name;
-        $('attachment-size').textContent = att.sizeLabel || 'Attached';
-
-        $('attachment-thumb')?.classList.add('hidden');
-        $('attachment-video-thumb')?.classList.add('hidden');
-        $('attachment-file-icon')?.classList.add('hidden');
-
-        if (att.type === 'image') {
-          const thumb = $('attachment-thumb');
-          thumb.src = att.dataUrl;
-          thumb.classList.remove('hidden');
-        } else if (att.type === 'video') {
-          const vThumb = $('attachment-video-thumb');
-          vThumb.src = att.dataUrl;
-          vThumb.classList.remove('hidden');
-        } else {
-          $('attachment-file-icon')?.classList.remove('hidden');
-        }
-      }
-
-      function handlePhotoFile(file) {
+      function handleAttachmentFile(file, kind) {
         if (!file) return;
+        const sizeKb = (file.size / 1024).toFixed(1);
         const reader = new FileReader();
         reader.onload = (ev) => {
           const dataUrl = ev.target.result;
-          setAttachment({
-            type: 'image',
+          const att = {
+            type: kind,
             name: file.name,
-            mime: file.type,
-            sizeLabel: `${(file.size / 1024).toFixed(1)} KB`,
-            dataUrl
-          });
-          state.photoVault.unshift({ name: file.name, dataUrl, createdAt: new Date().toISOString() });
-          if (state.photoVault.length > 15) state.photoVault.pop();
-          saveState();
+            sizeLabel: `${sizeKb} KB`,
+            dataUrl,
+            textPreview: ''
+          };
+          if (kind === 'file') {
+            att.textPreview = file.name;
+          }
+          state.pendingAttachment = att;
+
+          $('attachment-preview')?.classList.remove('hidden');
+          $('attachment-name').textContent = file.name;
+          $('attachment-size').textContent = `${sizeKb} KB • Ready to send`;
+
+          $('attachment-thumb')?.classList.add('hidden');
+          $('attachment-video-thumb')?.classList.add('hidden');
+          $('attachment-file-icon')?.classList.add('hidden');
+
+          if (kind === 'image') {
+            const img = $('attachment-thumb');
+            img.src = dataUrl;
+            img.classList.remove('hidden');
+          } else if (kind === 'video') {
+            const vid = $('attachment-video-thumb');
+            vid.src = dataUrl;
+            vid.classList.remove('hidden');
+          } else {
+            $('attachment-file-icon')?.classList.remove('hidden');
+          }
         };
         reader.readAsDataURL(file);
       }
 
-      function handleVideoFile(file) {
-        if (!file) return;
-        if (file.size > 25 * 1024 * 1024) {
-          showToast('Video exceeds 25MB preview limit.');
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          setAttachment({
-            type: 'video',
-            name: file.name,
-            mime: file.type || 'video/mp4',
-            sizeLabel: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
-            dataUrl: ev.target.result
-          });
-          showToast('Video attached. Add a question or tap Send.');
-        };
-        reader.readAsDataURL(file);
-      }
-
-      function handleGenericFile(file) {
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const rawText = typeof ev.target.result === 'string' ? ev.target.result.slice(0, 4000) : '';
-          setAttachment({
-            type: 'file',
-            name: file.name,
-            mime: file.type || 'text/plain',
-            sizeLabel: `${(file.size / 1024).toFixed(1)} KB`,
-            textContent: rawText
-          });
-        };
-        reader.readAsText(file);
-      }
-
+      // ==================== CAMERA MODAL ====================
       async function openCameraModal() {
         $('camera-modal')?.classList.remove('hidden');
         $('camera-fallback')?.classList.add('hidden');
         try {
-          if (!navigator.mediaDevices?.getUserMedia) throw new Error('No camera API');
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('No camera');
           cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
           $('camera-video').srcObject = cameraStream;
-        } catch (err) {
+        } catch (e) {
           $('camera-fallback')?.classList.remove('hidden');
         }
       }
 
       function closeCameraModal() {
+        $('camera-modal')?.classList.add('hidden');
         if (cameraStream) {
           cameraStream.getTracks().forEach(t => t.stop());
           cameraStream = null;
         }
-        $('camera-video').srcObject = null;
-        $('camera-modal')?.classList.add('hidden');
+        if ($('camera-video')) $('camera-video').srcObject = null;
       }
 
       function captureCameraPhoto() {
         const video = $('camera-video');
         const canvas = $('camera-canvas');
-        if (!cameraStream || !video.videoWidth) {
-          closeCameraModal();
-          $('input-photo').click();
+        if (!video || !video.videoWidth) {
+          showToast('Camera preview not active. Use Upload Photo Instead.');
           return;
         }
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
         const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-        setAttachment({
+        state.pendingAttachment = {
           type: 'image',
           name: `camera_${Date.now()}.jpg`,
-          mime: 'image/jpeg',
-          sizeLabel: 'Live Capture',
+          sizeLabel: 'Captured',
           dataUrl
-        });
+        };
+        $('attachment-preview')?.classList.remove('hidden');
+        $('attachment-name').textContent = state.pendingAttachment.name;
+        $('attachment-size').textContent = 'Captured from camera';
+        const img = $('attachment-thumb');
+        img.src = dataUrl;
+        img.classList.remove('hidden');
         closeCameraModal();
       }
 
-      // ==================== VOICE ENGINE (52 VOICE CHANGER + SPEECH) ====================
-      function loadAvailableVoices() {
-        if (!('speechSynthesis' in window)) return [];
-        const list = window.speechSynthesis.getVoices();
-        if (Array.isArray(list) && list.length) availableVoices = list;
-        return availableVoices;
-      }
-
+      // ==================== VOICE & TTS (52 VOICE PRESETS SUPPORTED) ====================
       function populateVoicesDropdown() {
-        const sel = $('setting-voice-select');
-        if (!sel) return;
-        sel.innerHTML = VOICE_CHANGER_PRESETS.map((p, idx) => `<option value="${idx}">${escapeHtml(p.id)} • ${escapeHtml(p.name)}</option>`).join('');
-        const activeIdx = Math.max(0, VOICE_CHANGER_PRESETS.findIndex(p => p.id === state.settings.voiceChangerId));
-        sel.value = String(activeIdx);
+        const select = $('setting-voice-select');
+        if (!select || typeof speechSynthesis === 'undefined') return;
+        availableVoices = speechSynthesis.getVoices() || [];
+        if (!availableVoices.length) return;
+        select.innerHTML = availableVoices.map((v, idx) => `<option value="${idx}">${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`).join('');
+        select.value = String(state.settings.selectedVoiceIndex || 0);
+        lockedVoiceObj = availableVoices[Number(select.value)] || availableVoices[0];
       }
 
-      function resolveVoiceObjectForLang(targetLang) {
-        const voices = loadAvailableVoices();
-        if (!voices.length) return lockedVoiceObj || null;
-        const prefix = String(targetLang || 'en').slice(0, 2).toLowerCase();
-        const match = voices.find(v => String(v.lang || '').toLowerCase().startsWith(prefix)) || voices[0];
-        lockedVoiceObj = match || null;
-        return lockedVoiceObj;
-      }
-
-      function cleanTextForSpeech(text) {
-        return String(text || '')
-          .replace(/```[\s\S]*?```/g, ' Code block provided on screen. ')
-          .replace(/\[AXON_GENERATED_IMAGE:[^\]]*\]/gi, ' Image generated on screen. ')
-          .replace(/\[AXON_SEARCH_RESULTS:[^\]]*\]/g, ' Search results displayed on screen. ')
-          .replace(/\[[^\]]+\]/g, ' ')
-          .replace(/[#*`]/g, '')
-          .replace(/\s+/g, ' ')
-          .trim();
-      }
-
-      function splitSpeechChunks(text, maxLen = 190) {
-        const clean = cleanTextForSpeech(text);
-        if (!clean) return [];
-        const sentences = clean.match(/[^.!?।]+[.!?।]*\s*/g) || [clean];
-        const chunks = [];
-        let current = '';
-        for (const s of sentences) {
-          if ((current + s).length <= maxLen) {
-            current += s;
-          } else {
-            if (current.trim()) chunks.push(current.trim());
-            current = s;
-          }
-        }
-        if (current.trim()) chunks.push(current.trim());
-        return chunks;
-      }
-
-      function stopSpeaking(updateUi = true) {
+      function stopSpeaking() {
+        try {
+          if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+        } catch (e) {}
         ttsQueue = [];
         ttsQueueIndex = 0;
         ttsPaused = false;
         activeSpeakingMsgId = null;
-        if ('speechSynthesis' in window) {
-          try { window.speechSynthesis.cancel(); } catch (e) {}
-        }
-        if (updateUi) renderMessages(false);
+        renderMessages(false);
       }
 
-      function speakNextQueueChunk() {
-        if (!('speechSynthesis' in window)) return;
-        if (ttsQueueIndex >= ttsQueue.length) {
-          stopSpeaking(true);
+      function togglePauseResume() {
+        if (typeof speechSynthesis === 'undefined') return;
+        if (speechSynthesis.speaking && !speechSynthesis.paused) {
+          speechSynthesis.pause();
+          ttsPaused = true;
+          renderMessages(false);
+        } else if (speechSynthesis.paused) {
+          speechSynthesis.resume();
+          ttsPaused = false;
+          renderMessages(false);
+        }
+      }
+
+      function speakText(rawText, overrideLang = null, msgId = null) {
+        const clean = String(rawText || '')
+          .replace(/```[\s\S]*?```/g, ' Code block omitted. ')
+          .replace(/\[[^\]]+\]/g, ' ')
+          .replace(/[*#`_]+/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        if (!clean || typeof speechSynthesis === 'undefined') return;
+
+        if (msgId && activeSpeakingMsgId === msgId) {
+          togglePauseResume();
           return;
         }
+
+        stopSpeaking();
         const preset = getActiveVoicePreset();
-        const chunkText = ttsQueue[ttsQueueIndex++];
-        const utter = new SpeechSynthesisUtterance(chunkText);
-        const voiceObj = resolveVoiceObjectForLang(preset.lang);
-        if (voiceObj) utter.voice = voiceObj;
-        utter.lang = preset.lang || 'en-US';
-        utter.pitch = preset.pitch || 1.0;
-        utter.rate = preset.rate || 0.98;
-        utter.volume = 1;
-
-        utter.onend = () => {
-          if (!ttsPaused && ttsQueue.length) speakNextQueueChunk();
-        };
-        utter.onerror = () => {
-          if (!ttsPaused && ttsQueue.length) speakNextQueueChunk();
-          else stopSpeaking(true);
-        };
-
-        try {
-          window.speechSynthesis.speak(utter);
-        } catch (e) {
-          stopSpeaking(true);
-        }
-      }
-
-      function speakText(text, overrideLang = null, msgId = null) {
-        if (!('speechSynthesis' in window)) {
-          showToast('Speech synthesis not supported on this browser.');
-          return;
-        }
-        const chunks = splitSpeechChunks(text);
-        if (!chunks.length) return;
-        stopSpeaking(false);
-        activeSpeakingMsgId = msgId;
-        ttsQueue = chunks;
+        const chunks = clean.match(/[^.!?]+[.!?]*|.+$/g) || [clean];
+        ttsQueue = chunks.map(c => c.trim()).filter(Boolean);
         ttsQueueIndex = 0;
         ttsPaused = false;
-        if (overrideLang) resolveVoiceObjectForLang(overrideLang);
+        activeSpeakingMsgId = msgId;
         renderMessages(false);
-        speakNextQueueChunk();
-      }
 
-      function togglePauseResumeSpeech(text, msgId = null) {
-        if (!('speechSynthesis' in window)) return;
-        if (activeSpeakingMsgId === msgId) {
-          if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-            window.speechSynthesis.pause();
-            ttsPaused = true;
-            renderMessages(false);
+        const voices = speechSynthesis.getVoices() || [];
+        const targetLang = overrideLang || preset.lang || 'en-US';
+        const chosenVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(targetLang.slice(0, 2).toLowerCase()))
+          || lockedVoiceObj
+          || voices[0]
+          || null;
+
+        const playNextChunk = () => {
+          if (ttsQueueIndex >= ttsQueue.length) {
+            stopSpeaking();
             return;
           }
-          if (ttsPaused) {
-            window.speechSynthesis.resume();
-            ttsPaused = false;
-            renderMessages(false);
-            return;
-          }
-        }
-        speakText(text, null, msgId);
-      }
-
-      function initSpeechRecognition() {
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) return null;
-        const rec = new SR();
-        rec.continuous = true;
-        rec.interimResults = true;
-        rec.lang = 'en-US';
-
-        rec.onresult = (event) => {
-          let interim = '';
-          let finalStr = '';
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) finalStr += transcript;
-            else interim += transcript;
-          }
-          const liveText = (finalStr || interim).trim();
-          if ($('voice-hud-transcript')) $('voice-hud-transcript').textContent = `"${liveText || 'Listening...'}"`;
-          if (finalStr.trim()) handleVoiceCommand(finalStr.trim());
+          const part = ttsQueue[ttsQueueIndex++];
+          const utter = new SpeechSynthesisUtterance(part);
+          if (chosenVoice) utter.voice = chosenVoice;
+          utter.lang = targetLang;
+          utter.pitch = preset.pitch || 1.0;
+          utter.rate = preset.rate || 0.98;
+          utter.onend = playNextChunk;
+          utter.onerror = playNextChunk;
+          speechSynthesis.speak(utter);
         };
 
-        rec.onend = () => {
-          if (state.settings.voiceControl) {
-            try { rec.start(); } catch (e) {}
-          }
-        };
-        return rec;
-      }
-
-      function handleVoiceCommand(rawPhrase) {
-        const phrase = rawPhrase.trim();
-        const lower = phrase.toLowerCase();
-        if ($('voice-hud-action')) $('voice-hud-action').textContent = `Heard: "${phrase}"`;
-
-        if (lower.includes('stop speaking') || lower.includes('chup raho')) {
-          stopSpeaking(true);
-          return;
-        }
-        if (lower.includes('new chat')) {
-          createNewChat(true);
-          return;
-        }
-        if (lower.includes('open settings')) {
-          switchView('settings');
-          return;
-        }
-        $('chat-input').value = phrase;
-        sendMessage(phrase);
+        playNextChunk();
       }
 
       function toggleVoiceControl() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
         state.settings.voiceControl = !state.settings.voiceControl;
         saveState();
         renderToggles();
-        if (state.settings.voiceControl) {
-          if (!recognition) recognition = initSpeechRecognition();
-          if (recognition) {
-            try { recognition.start(); showToast('Hands-Free Voice Control ON'); } catch (e) {}
-          } else {
-            showToast('Voice recognition unavailable in this browser.');
-          }
-        } else {
+
+        if (!state.settings.voiceControl) {
           if (recognition) {
             try { recognition.stop(); } catch (e) {}
+            recognition = null;
           }
-          showToast('Voice Control OFF');
-        }
-      }
-
-      // ==================== RESILIENT LIVE VIDEO CALL ====================
-      function updateCallCameraBadge() {
-        const badge = $('call-camera-mode-badge');
-        if (!badge) return;
-        if (callCamOff) badge.textContent = 'Camera Off';
-        else badge.textContent = callFacingMode === 'environment' ? 'Back Cam' : 'Front Cam';
-      }
-
-      async function acquireCallMediaStream(facing = callFacingMode, includeVideo = !callCamOff, includeAudio = !callMicMuted) {
-        if (!navigator.mediaDevices?.getUserMedia) return null;
-
-        if (includeVideo && includeAudio) {
-          try {
-            return await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: { ideal: facing } },
-              audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-            });
-          } catch (e1) {
-            try {
-              return await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            } catch (e2) {}
-          }
+          return;
         }
 
-        if (includeAudio) {
-          try {
-            return await navigator.mediaDevices.getUserMedia({
-              audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
-              video: false
-            });
-          } catch (eAudio) {}
+        if (!SpeechRec) {
+          showToast('Voice recognition not supported in this browser.');
+          state.settings.voiceControl = false;
+          saveState();
+          renderToggles();
+          return;
         }
 
-        if (includeVideo) {
-          try {
-            return await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: { ideal: facing } },
-              audio: false
-            });
-          } catch (eVid) {}
-        }
-
-        return null;
-      }
-
-      function applyCallStreamToUi(stream) {
-        const pipVideo = $('call-pip-video');
-        if (!pipVideo) return;
-        const hasVideo = Boolean(stream && stream.getVideoTracks().length > 0 && !callCamOff);
-        if (hasVideo) {
-          pipVideo.srcObject = stream;
-          pipVideo.classList.remove('hidden');
-          pipVideo.style.transform = callFacingMode === 'user' ? 'scaleX(-1)' : 'none';
-        } else {
-          pipVideo.srcObject = null;
-          pipVideo.classList.add('hidden');
-        }
-        updateCallCameraBadge();
-      }
-
-      function startCallSpeechListener() {
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR || callMicMuted) return;
         try {
-          if (callRecognition) {
-            try { callRecognition.stop(); } catch (e) {}
-            callRecognition = null;
-          }
-          const rec = new SR();
-          rec.continuous = false;
-          rec.interimResults = false;
-          rec.lang = 'en-US';
-          rec.onresult = async (ev) => {
-            const spoken = ev.results[ev.results.length - 1]?.[0]?.transcript?.trim();
-            if (!spoken || callMicMuted) return;
-            if ($('call-caption')) $('call-caption').textContent = `You: "${spoken}"`;
-            if ($('call-voice-status')) $('call-voice-status').textContent = 'Thinking...';
-            try {
-              const reply = await fetchAIReply(spoken);
-              const clean = cleanTextForSpeech(reply) || 'I am right here with you.';
-              if ($('call-caption')) $('call-caption').textContent = `"${clean}"`;
-              if ($('call-voice-status')) $('call-voice-status').textContent = 'Speaking';
-              speakText(clean);
-              setTimeout(() => {
-                if (!$('videocall-modal')?.classList.contains('hidden') && $('call-voice-status')) {
-                  $('call-voice-status').textContent = callMicMuted ? 'Mic Muted' : 'Listening';
-                }
-              }, 2500);
-            } catch (e) {
-              if ($('call-voice-status')) $('call-voice-status').textContent = 'Listening';
+          recognition = new SpeechRec();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = state.settings.appLanguage === 'Hindi' ? 'hi-IN' : 'en-US';
+
+          recognition.onresult = (event) => {
+            let finalStr = '';
+            let interimStr = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+              const t = event.results[i][0].transcript;
+              if (event.results[i].isFinal) finalStr += t;
+              else interimStr += t;
+            }
+            if ($('voice-hud-transcript')) {
+              $('voice-hud-transcript').textContent = `"${(finalStr || interimStr || 'Listening...').trim()}"`;
+            }
+            if (finalStr.trim()) {
+              if ($('voice-hud-action')) $('voice-hud-action').textContent = 'Sending to AXON AI...';
+              sendMessage(finalStr.trim());
             }
           };
-          rec.onend = () => {
-            if (!$('videocall-modal')?.classList.contains('hidden') && !callMicMuted) {
-              setTimeout(() => {
-                try { rec.start(); } catch (e) {}
-              }, 350);
-            }
+
+          recognition.onerror = () => {
+            if ($('voice-hud-action')) $('voice-hud-action').textContent = 'Mic standby';
           };
-          rec.onerror = () => {};
-          rec.start();
-          callRecognition = rec;
-          if ($('call-voice-status')) $('call-voice-status').textContent = 'Listening';
-        } catch (e) {}
+
+          recognition.start();
+          showToast('Voice control active');
+        } catch (e) {
+          showToast('Could not start microphone.');
+        }
       }
 
-      async function startVideoCall() {
+      // ==================== AI LIVE VIDEO CALL ====================
+      async function startCallCameraStream(facingMode) {
+        if (callStream) {
+          callStream.getTracks().forEach(t => t.stop());
+          callStream = null;
+        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          return false;
+        }
+        try {
+          callStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode },
+            audio: false
+          });
+          const pip = $('call-pip-video');
+          if (pip) {
+            pip.srcObject = callStream;
+            pip.classList.remove('hidden');
+            pip.style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'none';
+          }
+          callCamOff = false;
+          if ($('call-camera-mode-badge')) {
+            $('call-camera-mode-badge').textContent = facingMode === 'user' ? 'Front Cam' : 'Back Cam';
+          }
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      async function openVideoCallModal() {
         $('videocall-modal')?.classList.remove('hidden');
         callSeconds = 0;
         callMicMuted = false;
         callCamOff = false;
         callFacingMode = 'user';
-        $('call-timer').textContent = '00:00';
-        if ($('call-caption')) {
-          $('call-caption').textContent = '"Hello! I am AXON AI. Speak anytime or use the controls below to toggle your camera, microphone, or switch Front/Back view."';
-        }
+        if ($('call-timer')) $('call-timer').textContent = '00:00';
+        if ($('call-cute-robot-wrap')) $('call-cute-robot-wrap').classList.remove('hidden');
 
         clearInterval(callInterval);
         callInterval = setInterval(() => {
           callSeconds++;
-          const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
-          const s = String(callSeconds % 60).padStart(2, '0');
-          $('call-timer').textContent = `${m}:${s}`;
+          const mm = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+          const ss = String(callSeconds % 60).padStart(2, '0');
+          if ($('call-timer')) $('call-timer').textContent = `${mm}:${ss}`;
         }, 1000);
 
-        if (callStream) {
-          callStream.getTracks().forEach(t => t.stop());
-          callStream = null;
-        }
-
-        const stream = await acquireCallMediaStream('user', true, true);
-        if (stream) {
-          callStream = stream;
-          applyCallStreamToUi(stream);
-        } else {
+        const camStarted = await startCallCameraStream(callFacingMode);
+        if (!camStarted) {
           callCamOff = true;
-          applyCallStreamToUi(null);
-          if ($('call-voice-status')) $('call-voice-status').textContent = 'Bot Ready';
+          $('call-pip-video')?.classList.add('hidden');
+          if ($('call-camera-mode-badge')) $('call-camera-mode-badge').textContent = 'Bot Mode';
         }
 
-        startCallSpeechListener();
-        speakText('Hello! I am AXON AI. How can I help you on this live call?');
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRec) {
+          try {
+            callRecognition = new SpeechRec();
+            callRecognition.continuous = true;
+            callRecognition.interimResults = false;
+            callRecognition.lang = state.settings.appLanguage === 'Hindi' ? 'hi-IN' : 'en-US';
+            callRecognition.onresult = async (ev) => {
+              if (callMicMuted) return;
+              const lastRes = ev.results[ev.results.length - 1];
+              const spoken = lastRes?.[0]?.transcript?.trim();
+              if (!spoken) return;
+              if ($('call-caption')) $('call-caption').textContent = `"You: ${spoken}"`;
+              if ($('call-voice-status')) $('call-voice-status').textContent = 'Thinking...';
+              try {
+                const aiAns = await fetchAIReply(spoken);
+                const cleanAns = aiAns.replace(/```[\s\S]*?```/g, 'code').replace(/\[[^\]]+\]/g, '').trim().slice(0, 220);
+                if ($('call-caption')) $('call-caption').textContent = `"AXON AI: ${cleanAns}"`;
+                speakText(cleanAns);
+              } catch (e) {}
+              if ($('call-voice-status')) $('call-voice-status').textContent = 'Mic Ready';
+            };
+            callRecognition.start();
+          } catch (e) {}
+        }
       }
 
-      async function flipCallCamera() {
-        if (callCamOff) {
-          callCamOff = false;
-        }
-        callFacingMode = callFacingMode === 'user' ? 'environment' : 'user';
+      function closeVideoCallModal() {
+        $('videocall-modal')?.classList.add('hidden');
+        clearInterval(callInterval);
+        callInterval = null;
         if (callStream) {
           callStream.getTracks().forEach(t => t.stop());
           callStream = null;
         }
-        const nextStream = await acquireCallMediaStream(callFacingMode, true, !callMicMuted);
-        if (nextStream) {
-          callStream = nextStream;
-          applyCallStreamToUi(nextStream);
-          showToast(callFacingMode === 'environment' ? 'Switched to Back Camera' : 'Switched to Front Camera');
-        } else {
-          applyCallStreamToUi(null);
-          showToast('Unable to switch camera on this device.');
-        }
-      }
-
-      function endVideoCall() {
-        clearInterval(callInterval);
-        stopSpeaking(false);
+        if ($('call-pip-video')) $('call-pip-video').srcObject = null;
         if (callRecognition) {
           try { callRecognition.stop(); } catch (e) {}
           callRecognition = null;
         }
-        if (callStream) {
-          callStream.getTracks().forEach(t => t.stop());
-          callStream = null;
-        }
-        const pipVideo = $('call-pip-video');
-        if (pipVideo) {
-          pipVideo.srcObject = null;
-          pipVideo.classList.add('hidden');
-        }
-        $('videocall-modal')?.classList.add('hidden');
       }
 
-      // ==================== MINI CALCULATOR HANDLER ====================
-      function handleCalculatorClick(calcId, act, val) {
-        const st = state.calcStates[calcId] || { display: '0', expr: '' };
-        if (act === 'ac') {
-          st.display = '0';
-          st.expr = '';
-        } else if (act === 'back') {
-          if (st.expr.length > 0) {
-            st.expr = st.expr.slice(0, -1);
-            st.display = st.expr || '0';
-          } else {
-            st.display = '0';
-          }
-        } else if (act === 'num') {
-          if (val === '.' && st.expr.split(/[\+\-\*\/]/).pop().includes('.')) return;
-          if (st.expr === '0' && val !== '.') st.expr = val;
-          else st.expr += val;
-          st.display = st.expr;
-        } else if (act === 'op') {
-          if (!st.expr) st.expr = st.display === 'Error' ? '0' : st.display;
-          if (/[\+\-\*\/]$/.test(st.expr)) st.expr = st.expr.slice(0, -1) + val;
-          else st.expr += val;
-          st.display = st.expr;
-        } else if (act === 'eq') {
-          try {
-            const sanitized = st.expr.replace(/[^0-9+\-*/().]/g, '');
-            if (!sanitized) return;
-            const result = Function(`"use strict"; return (${sanitized})`)();
-            const outStr = Number.isFinite(result) ? String(Number(result.toFixed(8))) : 'Error';
-            st.display = outStr;
-            st.expr = outStr === 'Error' ? '' : outStr;
-          } catch (e) {
-            st.display = 'Error';
-            st.expr = '';
-          }
-        }
-        state.calcStates[calcId] = st;
-        saveState();
-        const dispEl = document.getElementById(`calc-disp-${calcId}`);
-        if (dispEl) dispEl.textContent = st.display;
+      // ==================== QUICK SHARE / COPY / SAVE ====================
+      function getLatestAssistantText() {
+        const chat = getActiveChat();
+        if (!chat || !chat.messages.length) return '';
+        const lastAi = [...chat.messages].reverse().find(m => m.role === 'assistant');
+        return lastAi ? lastAi.text : chat.messages[chat.messages.length - 1].text;
       }
 
-      // ==================== EVENT WIRING ====================
+      function shareLatestMessage() {
+        const txt = getLatestAssistantText();
+        if (!txt) { showToast('No message to share yet.'); return; }
+        if (navigator.share) {
+          navigator.share({ title: 'AXON AI Response', text: txt }).catch(() => {});
+        } else {
+          navigator.clipboard?.writeText(txt).then(() => showToast('Copied for sharing!')).catch(() => {});
+        }
+      }
+
+      function copyLatestMessage() {
+        const txt = getLatestAssistantText();
+        if (!txt) { showToast('No message to copy yet.'); return; }
+        navigator.clipboard?.writeText(txt).then(() => showToast('Copied latest message!')).catch(() => {});
+      }
+
+      function saveLatestMessage() {
+        const txt = getLatestAssistantText();
+        if (!txt) { showToast('No message to save yet.'); return; }
+        saveLongTermMemory(txt.slice(0, 220), ['saved-reply']);
+        showToast('Saved to Long-Term Memory!');
+      }
+
+      // ==================== EVENT BINDINGS ====================
       function bindEvents() {
+        setAuthMode('signin');
+
         $('tab-signin')?.addEventListener('click', () => setAuthMode('signin'));
         $('tab-signup')?.addEventListener('click', () => setAuthMode('signup'));
 
         $('btn-toggle-pw')?.addEventListener('click', () => {
           const pw = $('auth-password');
-          pw.type = pw.type === 'password' ? 'text' : 'password';
+          if (pw) pw.type = pw.type === 'password' ? 'text' : 'password';
         });
 
         $('btn-forgot-pw')?.addEventListener('click', async () => {
           const email = ($('auth-email')?.value || '').trim();
-          if (!email) {
-            showAuthError('Enter your email address first to reset password.');
-            return;
-          }
+          if (!email) { showAuthError('Enter your email address first.'); return; }
           if (firebaseReady && firebaseAuth) {
             try {
               await firebaseAuth.sendPasswordResetEmail(email);
-              showToast('Password reset link sent to your email.');
+              showToast('Password reset email sent!');
             } catch (err) {
               showAuthError(firebaseErrorMessage(err));
             }
           } else {
-            showToast('Password reset link sent (Demo).');
+            showToast('Password reset link sent.');
           }
         });
 
         $('auth-form')?.addEventListener('submit', async (e) => {
           e.preventDefault();
+          $('auth-error')?.classList.add('hidden');
           const name = ($('auth-name')?.value || '').trim();
           const email = ($('auth-email')?.value || '').trim();
-          const password = $('auth-password')?.value || '';
-          $('auth-error')?.classList.add('hidden');
+          const password = ($('auth-password')?.value || '').trim();
 
-          if (!email || !email.includes('@')) {
-            showAuthError('Please enter a valid email address.');
-            return;
-          }
-          if (!password || password.length < 6) {
-            showAuthError('Password must be at least 6 characters.');
-            return;
-          }
+          if (!email || !email.includes('@')) { showAuthError('Please enter a valid email address.'); return; }
+          if (!password || password.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
 
           if (firebaseReady && firebaseAuth) {
             try {
-              demoSession = false;
               if (state.authMode === 'signup') {
                 const cred = await firebaseAuth.createUserWithEmailAndPassword(email, password);
-                if (name && cred.user) await cred.user.updateProfile({ displayName: name });
-                completeLogin(name || email.split('@')[0], email, '', cred.user?.uid || '');
+                if (name && cred.user) {
+                  try { await cred.user.updateProfile({ displayName: name }); } catch (err) {}
+                }
+                demoSession = false;
+                completeLogin(name || email.split('@')[0], email, cred.user?.photoURL || '', cred.user?.uid || '');
               } else {
                 const cred = await firebaseAuth.signInWithEmailAndPassword(email, password);
+                demoSession = false;
                 completeLogin(cred.user?.displayName || email.split('@')[0], email, cred.user?.photoURL || '', cred.user?.uid || '');
               }
-              return;
             } catch (err) {
               showAuthError(firebaseErrorMessage(err));
-              return;
             }
+          } else {
+            demoSession = true;
+            completeLogin(name || email.split('@')[0], email);
           }
-
-          demoSession = true;
-          completeLogin(name || email.split('@')[0], email);
         });
 
         $('btn-google-login')?.addEventListener('click', () => {
-          $('auth-error')?.classList.add('hidden');
           $('google-picker-modal')?.classList.remove('hidden');
         });
-
         $('btn-close-google-picker')?.addEventListener('click', () => {
           $('google-picker-modal')?.classList.add('hidden');
         });
 
         $('btn-firebase-google-auth')?.addEventListener('click', async () => {
-          if (firebaseReady && firebaseAuth && typeof firebase !== 'undefined' && firebase.auth?.GoogleAuthProvider) {
+          if (firebaseReady && firebaseAuth) {
             try {
-              demoSession = false;
               const provider = new firebase.auth.GoogleAuthProvider();
               provider.setCustomParameters({ prompt: 'select_account' });
               const result = await firebaseAuth.signInWithPopup(provider);
               if (result && result.user) {
+                demoSession = false;
                 const u = result.user;
                 completeLogin(u.displayName || u.email?.split('@')[0] || 'Google User', u.email || '', u.photoURL || '', u.uid || '');
               }
-              return;
             } catch (err) {
-              const code = err && err.code ? err.code : '';
-              if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
+              if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
                 try {
                   const provider = new firebase.auth.GoogleAuthProvider();
                   await firebaseAuth.signInWithRedirect(provider);
-                  return;
                 } catch (redirErr) {
                   $('google-picker-modal')?.classList.add('hidden');
                   showAuthError(firebaseErrorMessage(redirErr));
-                  return;
                 }
+              } else {
+                $('google-picker-modal')?.classList.add('hidden');
+                showAuthError(firebaseErrorMessage(err));
               }
-              $('google-picker-modal')?.classList.add('hidden');
-              showAuthError(firebaseErrorMessage(err));
-              return;
             }
+          } else {
+            demoSession = true;
+            completeLogin('Google Demo User', 'google.user@axon.ai');
           }
-          demoSession = true;
-          completeLogin('AXON Demo User', 'demo@axon.ai');
         });
 
         $('btn-guest-login')?.addEventListener('click', () => {
@@ -4323,9 +4099,10 @@
         });
 
         $('btn-logout')?.addEventListener('click', async () => {
-          stopSpeaking(false);
+          stopSpeaking();
+          if (state.isGenerating) stopGeneration();
           demoSession = false;
-          if (firebaseReady && firebaseAuth) {
+          if (firebaseReady && firebaseAuth && firebaseAuth.currentUser) {
             try { await firebaseAuth.signOut(); } catch (e) {}
           }
           state.user = null;
@@ -4334,38 +4111,80 @@
           showToast('Signed out.');
         });
 
+        $('btn-open-sidebar')?.addEventListener('click', openSidebarMobile);
+        $('btn-close-sidebar')?.addEventListener('click', closeSidebarMobile);
+        $('sidebar-backdrop')?.addEventListener('click', closeSidebarMobile);
         $('btn-new-chat')?.addEventListener('click', () => createNewChat(true));
-        $('btn-new-page')?.addEventListener('click', () => {
-          createNewChat(true);
-          showToast('New Page opened');
-        });
+        $('btn-new-page')?.addEventListener('click', () => createNewChat(true));
 
         $('btn-header-websearch')?.addEventListener('click', () => {
           switchView('chat');
           const inp = $('chat-input');
-          inp.focus();
-          if (!inp.value.trim()) {
+          if (inp) {
             inp.value = 'Web search: ';
-            showToast('Type your search query and press Send');
-          } else {
-            sendMessage(`Web search: ${inp.value.trim()}`);
+            inp.focus();
           }
-        });
-
-        $('btn-header-voice')?.addEventListener('click', toggleVoiceControl);
-        $('btn-hud-stop-voice')?.addEventListener('click', () => {
-          if (state.settings.voiceControl) toggleVoiceControl();
+          showToast('Type your web search query and press Send.');
         });
 
         $('nav-settings')?.addEventListener('click', () => switchView('settings'));
         $('btn-settings-back')?.addEventListener('click', () => switchView('chat'));
+        $('btn-settings-info')?.addEventListener('click', () => openAdvancedSettingDialog('about'));
         $('btn-studio-back')?.addEventListener('click', () => switchView('chat'));
         $('btn-apps-back')?.addEventListener('click', () => switchView('chat'));
-        $('btn-settings-info')?.addEventListener('click', () => openAdvancedSettingDialog('about'));
 
-        $('btn-open-sidebar')?.addEventListener('click', openSidebarMobile);
-        $('btn-close-sidebar')?.addEventListener('click', closeSidebarMobile);
-        $('sidebar-backdrop')?.addEventListener('click', closeSidebarMobile);
+        $('btn-close-detail-modal')?.addEventListener('click', () => $('settings-detail-modal')?.classList.add('hidden'));
+        $('settings-detail-modal')?.addEventListener('click', (e) => {
+          if (e.target.id === 'settings-detail-modal' || e.target.closest('.close-detail-btn')) {
+            $('settings-detail-modal').classList.add('hidden');
+          }
+        });
+
+        document.querySelectorAll('.adv-row-btn').forEach(btn => {
+          btn.addEventListener('click', () => openAdvancedSettingDialog(btn.dataset.advPanel));
+        });
+
+        $('row-edit-profile')?.addEventListener('click', () => {
+          const titleEl = $('detail-modal-title');
+          const bodyEl = $('detail-modal-body');
+          const footerEl = $('detail-modal-footer');
+          titleEl.textContent = 'Edit Profile';
+          bodyEl.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Display Name</label>
+                <input id="edit-profile-name-input" type="text" value="${escapeHtml(state.user?.name || state.settings.profileName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Email Address</label>
+                <input id="edit-profile-email-input" type="email" value="${escapeHtml(state.user?.email || state.settings.profileEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+              </div>
+            </div>
+          `;
+          footerEl.innerHTML = `
+            <button type="button" class="close-detail-btn px-3.5 py-2 rounded-xl bg-slate-800 text-xs text-slate-300">Cancel</button>
+            <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('btn-save-profile-modal')?.addEventListener('click', () => {
+            const newName = ($('edit-profile-name-input')?.value || '').trim() || 'AXON User';
+            const newEmail = ($('edit-profile-email-input')?.value || '').trim() || 'user@axon.ai';
+            state.settings.profileName = newName;
+            state.settings.profileEmail = newEmail;
+            if (state.user) {
+              state.user.name = newName;
+              state.user.email = newEmail;
+              state.user.initials = newName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AU';
+              $('user-display-name').textContent = state.user.name;
+              $('user-display-email').textContent = state.user.email;
+              renderUserAvatarElement($('user-avatar'), state.user);
+            }
+            saveState();
+            renderSettingsPanel();
+            $('settings-detail-modal').classList.add('hidden');
+            showToast('Profile updated!');
+          });
+        });
 
         $('sidebar-chat-list')?.addEventListener('click', (e) => {
           const ctxBtn = e.target.closest('.open-chat-ctx-btn');
@@ -4374,33 +4193,35 @@
             openChatContextMenu(ctxBtn.dataset.chatId, ctxBtn);
             return;
           }
-
           const delBtn = e.target.closest('.delete-chat-btn');
           if (delBtn) {
             e.stopPropagation();
-            const id = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) state.activeChatId = state.chats[0]?.id || null;
-            if (!state.chats.length) createNewChat(false);
+            const cid = delBtn.dataset.chatId;
+            state.chats = state.chats.filter(c => c.id !== cid);
+            if (state.activeChatId === cid) {
+              const nextChat = state.chats.find(c => !c.archived);
+              state.activeChatId = nextChat ? nextChat.id : null;
+              if (!state.activeChatId) createNewChat(false);
+            }
             saveState();
             renderAll();
             return;
           }
-
-          const row = e.target.closest('.select-chat-btn');
-          if (row) {
-            const targetChat = state.chats.find(c => c.id === row.dataset.chatId);
-            if (!targetChat) return;
-            if (targetChat.locked) {
-              const enteredPin = prompt('Enter chat PIN to unlock:');
-              if (enteredPin !== targetChat.pinCode) {
-                showToast('Incorrect PIN');
+          const selectBtn = e.target.closest('.select-chat-btn');
+          if (selectBtn) {
+            const cid = selectBtn.dataset.chatId;
+            const target = state.chats.find(c => c.id === cid);
+            if (!target) return;
+            if (target.locked && target.pinCode) {
+              const entered = prompt('Enter chat PIN to unlock:');
+              if (entered !== target.pinCode) {
+                showToast('Incorrect chat PIN.');
                 return;
               }
             }
-            state.activeChatId = targetChat.id;
-            saveState();
+            state.activeChatId = cid;
             switchView('chat');
+            saveState();
             renderAll();
           }
         });
@@ -4410,7 +4231,7 @@
           if (!actBtn || !state.contextMenuChatId) return;
           const action = actBtn.dataset.chatAction;
           const chat = state.chats.find(c => c.id === state.contextMenuChatId);
-          $('chat-context-menu')?.classList.add('hidden');
+          $('chat-context-menu').classList.add('hidden');
           if (!chat) return;
 
           if (action === 'pin') {
@@ -4420,15 +4241,15 @@
             if (chat.locked) {
               chat.locked = false;
               chat.pinCode = '';
-              showToast('Chat unlocked');
+              showToast('Chat lock removed');
             } else {
-              const pin = prompt('Set a 4+ digit PIN for this chat:');
+              const pin = prompt('Set a 4-digit PIN for this chat:');
               if (pin && pin.trim().length >= 4) {
                 chat.locked = true;
                 chat.pinCode = pin.trim();
                 showToast('Chat locked with PIN');
               } else {
-                showToast('PIN must be at least 4 characters');
+                showToast('Enter at least 4 characters for PIN.');
               }
             }
           } else if (action === 'rename') {
@@ -4440,18 +4261,28 @@
           } else if (action === 'archive') {
             chat.archived = !chat.archived;
             if (chat.archived && state.activeChatId === chat.id) {
-              state.activeChatId = state.chats.find(c => !c.archived)?.id || null;
+              const fallback = state.chats.find(c => !c.archived);
+              state.activeChatId = fallback ? fallback.id : null;
               if (!state.activeChatId) createNewChat(false);
             }
             showToast(chat.archived ? 'Chat archived' : 'Chat unarchived');
           } else if (action === 'delete') {
             state.chats = state.chats.filter(c => c.id !== chat.id);
-            if (state.activeChatId === chat.id) state.activeChatId = state.chats[0]?.id || null;
-            if (!state.chats.length) createNewChat(false);
+            if (state.activeChatId === chat.id) {
+              const fallback = state.chats.find(c => !c.archived);
+              state.activeChatId = fallback ? fallback.id : null;
+              if (!state.activeChatId) createNewChat(false);
+            }
             showToast('Chat deleted');
           }
           saveState();
           renderAll();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('#chat-context-menu') && !e.target.closest('.open-chat-ctx-btn')) {
+            $('chat-context-menu')?.classList.add('hidden');
+          }
         });
 
         const chatInput = $('chat-input');
@@ -4467,6 +4298,9 @@
         });
 
         $('btn-send')?.addEventListener('click', () => sendMessage());
+        $('btn-quick-share')?.addEventListener('click', shareLatestMessage);
+        $('btn-quick-copy')?.addEventListener('click', copyLatestMessage);
+        $('btn-quick-save')?.addEventListener('click', saveLatestMessage);
 
         $('btn-plus-menu')?.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -4476,78 +4310,265 @@
           if (!e.target.closest('#plus-menu') && !e.target.closest('#btn-plus-menu')) {
             $('plus-menu')?.classList.add('hidden');
           }
-          if (!e.target.closest('#chat-context-menu') && !e.target.closest('.open-chat-ctx-btn')) {
-            $('chat-context-menu')?.classList.add('hidden');
-          }
         });
 
-        $('menu-send-photo')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); $('input-photo').click(); });
-        $('menu-send-video')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); $('input-video').click(); });
-        $('menu-open-camera')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); openCameraModal(); });
-        $('menu-send-file')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); $('input-file').click(); });
-        $('menu-mini-calc')?.addEventListener('click', () => {
-          $('plus-menu').classList.add('hidden');
-          sendMessage('calculator');
+        $('menu-send-photo')?.addEventListener('click', () => {
+          $('plus-menu')?.classList.add('hidden');
+          $('input-photo')?.click();
         });
-        $('menu-video-call')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); startVideoCall(); });
-        $('btn-inline-videocall')?.addEventListener('click', startVideoCall);
+        $('input-photo')?.addEventListener('change', (e) => {
+          if (e.target.files?.[0]) handleAttachmentFile(e.target.files[0], 'image');
+        });
+
+        $('menu-send-video')?.addEventListener('click', () => {
+          $('plus-menu')?.classList.add('hidden');
+          $('input-video')?.click();
+        });
+        $('input-video')?.addEventListener('change', (e) => {
+          if (e.target.files?.[0]) handleAttachmentFile(e.target.files[0], 'video');
+        });
+
+        $('menu-open-camera')?.addEventListener('click', () => {
+          $('plus-menu')?.classList.add('hidden');
+          openCameraModal();
+        });
+
+        $('menu-send-file')?.addEventListener('click', () => {
+          $('plus-menu')?.classList.add('hidden');
+          $('input-file')?.click();
+        });
+        $('input-file')?.addEventListener('change', (e) => {
+          if (e.target.files?.[0]) handleAttachmentFile(e.target.files[0], 'file');
+        });
+
+        $('menu-mini-calc')?.addEventListener('click', () => {
+          $('plus-menu')?.classList.add('hidden');
+          let chat = getActiveChat();
+          if (!chat) chat = createNewChat(true);
+          chat.messages.push({
+            id: 'msg_' + Date.now() + '_calc',
+            role: 'assistant',
+            text: 'Here is the AXON Mini Calculator:\n[MINI_CALCULATOR]',
+            timestamp: new Date().toISOString()
+          });
+          saveState();
+          renderMessages(false);
+        });
+
+        $('menu-video-call')?.addEventListener('click', () => {
+          $('plus-menu')?.classList.add('hidden');
+          openVideoCallModal();
+        });
+        $('btn-inline-videocall')?.addEventListener('click', openVideoCallModal);
 
         $('menu-deep-think')?.addEventListener('click', () => {
           state.deepThink = !state.deepThink;
           $('deep-think-status').textContent = state.deepThink ? 'On — Deep reasoning active' : 'Off — Standard speed';
-          $('plus-menu').classList.add('hidden');
-          showToast(state.deepThink ? 'Deep Think ON' : 'Deep Think OFF');
+          $('plus-menu')?.classList.add('hidden');
+          showToast(state.deepThink ? 'Deep Think enabled' : 'Deep Think disabled');
         });
 
-        $('input-photo')?.addEventListener('change', (e) => handlePhotoFile(e.target.files?.[0]));
-        $('input-video')?.addEventListener('change', (e) => handleVideoFile(e.target.files?.[0]));
-        $('input-file')?.addEventListener('change', (e) => handleGenericFile(e.target.files?.[0]));
         $('btn-remove-attachment')?.addEventListener('click', clearAttachment);
-
         $('btn-close-camera')?.addEventListener('click', closeCameraModal);
+        $('btn-camera-upload-alt')?.addEventListener('click', () => {
+          closeCameraModal();
+          $('input-photo')?.click();
+        });
         $('btn-camera-capture')?.addEventListener('click', captureCameraPhoto);
-        $('btn-camera-upload-alt')?.addEventListener('click', () => { closeCameraModal(); $('input-photo').click(); });
 
-        $('btn-end-call')?.addEventListener('click', endVideoCall);
+        $('btn-end-call')?.addEventListener('click', closeVideoCallModal);
         $('btn-call-mic')?.addEventListener('click', () => {
           callMicMuted = !callMicMuted;
-          if (callStream) callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
-          if (callMicMuted && callRecognition) {
-            try { callRecognition.stop(); } catch (e) {}
-          } else if (!callMicMuted) {
-            startCallSpeechListener();
+          if ($('call-voice-status')) {
+            $('call-voice-status').textContent = callMicMuted ? 'Mic Muted' : 'Mic Ready';
           }
-          $('btn-call-mic').classList.toggle('bg-rose-600/30', callMicMuted);
-          if ($('call-voice-status')) $('call-voice-status').textContent = callMicMuted ? 'Mic Muted' : 'Listening';
-          showToast(callMicMuted ? 'Microphone muted' : 'Microphone unmuted');
+          showToast(callMicMuted ? 'Microphone muted' : 'Microphone active');
         });
-
         $('btn-call-cam')?.addEventListener('click', async () => {
-          callCamOff = !callCamOff;
-          if (!callCamOff && (!callStream || !callStream.getVideoTracks().length)) {
-            const s = await acquireCallMediaStream(callFacingMode, true, !callMicMuted);
-            if (s) {
-              if (callStream) callStream.getTracks().forEach(t => t.stop());
-              callStream = s;
+          if (!callCamOff) {
+            callCamOff = true;
+            if (callStream) {
+              callStream.getTracks().forEach(t => t.stop());
+              callStream = null;
             }
-          } else if (callStream) {
-            callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
+            $('call-pip-video')?.classList.add('hidden');
+            if ($('call-camera-mode-badge')) $('call-camera-mode-badge').textContent = 'Camera Off';
+            showToast('Camera turned off');
+          } else {
+            const ok = await startCallCameraStream(callFacingMode);
+            if (!ok) showToast('Camera permission denied.');
           }
-          applyCallStreamToUi(callStream);
-          $('btn-call-cam').classList.toggle('bg-rose-600/30', callCamOff);
-          showToast(callCamOff ? 'Camera turned off' : 'Camera turned on');
+        });
+        $('btn-call-flip')?.addEventListener('click', async () => {
+          callFacingMode = callFacingMode === 'user' ? 'environment' : 'user';
+          const ok = await startCallCameraStream(callFacingMode);
+          if (!ok) showToast('Unable to switch camera.');
         });
 
-        $('btn-call-flip')?.addEventListener('click', flipCallCamera);
+        $('btn-header-voice')?.addEventListener('click', toggleVoiceControl);
+        $('btn-hud-stop-voice')?.addEventListener('click', () => {
+          if (state.settings.voiceControl) toggleVoiceControl();
+        });
+
+        $('btn-theme-dark')?.addEventListener('click', () => {
+          state.settings.theme = 'dark';
+          saveState();
+          applyAppearance();
+        });
+        $('btn-theme-light')?.addEventListener('click', () => {
+          state.settings.theme = 'light';
+          saveState();
+          applyAppearance();
+        });
+
+        $('setting-font-size')?.addEventListener('change', (e) => {
+          state.settings.fontSize = e.target.value;
+          saveState();
+          applyAppearance();
+        });
+
+        $('toggle-autoscroll')?.addEventListener('click', () => {
+          state.settings.autoScroll = !state.settings.autoScroll;
+          saveState();
+          renderToggles();
+        });
+
+        $('btn-open-memory-drawer')?.addEventListener('click', () => {
+          $('memory-manager-drawer')?.classList.toggle('hidden');
+        });
+
+        $('btn-save-supabase')?.addEventListener('click', async () => {
+          const urlVal = ($('supabase-url-input')?.value || '').trim();
+          const keyVal = ($('supabase-key-input')?.value || '').trim();
+          SUPABASE_CONFIG.url = urlVal;
+          SUPABASE_CONFIG.anonKey = keyVal;
+          try {
+            localStorage.setItem(SUPABASE_LOCAL_CREDS_KEY, JSON.stringify({ url: urlVal, anonKey: keyVal }));
+          } catch (e) {}
+          showToast('Supabase config saved. Syncing...');
+          await autoLoadUserMemoryAndChats();
+          showToast('Memory sync complete!');
+        });
+
+        $('btn-add-memory')?.addEventListener('click', async () => {
+          const inp = $('memory-manual-input');
+          const txt = (inp?.value || '').trim();
+          if (!txt) return;
+          await saveLongTermMemory(txt, ['manual']);
+          if (inp) inp.value = '';
+          showToast('Memory saved!');
+        });
+
+        $('memory-search-input')?.addEventListener('input', renderSettingsMemory);
+        $('btn-reload-memory')?.addEventListener('click', async () => {
+          await autoLoadUserMemoryAndChats();
+          showToast('Memories reloaded!');
+        });
+
+        $('btn-clear-memories')?.addEventListener('click', async () => {
+          if (!confirm('Delete all saved memories for this user?')) return;
+          state.memories = [];
+          await supabaseDeleteMemory(getUserScopeKey(), null);
+          saveState();
+          renderSettingsMemory();
+          renderSidebarChats();
+          showToast('All memories cleared.');
+        });
+
+        $('settings-memory-list')?.addEventListener('click', async (e) => {
+          const delBtn = e.target.closest('.delete-memory-btn');
+          if (!delBtn) return;
+          const memId = delBtn.dataset.memId;
+          state.memories = state.memories.filter(m => m.id !== memId);
+          await supabaseDeleteMemory(getUserScopeKey(), memId);
+          saveState();
+          renderSettingsMemory();
+          renderSidebarChats();
+          showToast('Memory deleted.');
+        });
+
+        $('btn-export-history')?.addEventListener('click', () => {
+          const blob = new Blob([JSON.stringify({
+            userScope: getUserScopeKey(),
+            exportedAt: new Date().toISOString(),
+            memories: state.memories,
+            chats: state.chats
+          }, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `axon-ai-workspace-${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast('Workspace exported as JSON!');
+        });
+
+        $('btn-clear-history')?.addEventListener('click', () => {
+          if (!confirm('Delete all chat history?')) return;
+          state.chats = [];
+          state.activeChatId = null;
+          createNewChat(false);
+          saveState();
+          renderAll();
+          showToast('All chat history cleared.');
+        });
+
+        $('studio-file-input')?.addEventListener('change', (e) => {
+          if (e.target.files?.[0]) loadStudioPhotoFile(e.target.files[0]);
+        });
+        $('studio-brightness')?.addEventListener('input', renderStudioCanvas);
+        $('studio-contrast')?.addEventListener('input', renderStudioCanvas);
+        $('studio-grayscale')?.addEventListener('input', renderStudioCanvas);
+        $('studio-reset-btn')?.addEventListener('click', () => {
+          if ($('studio-brightness')) $('studio-brightness').value = 100;
+          if ($('studio-contrast')) $('studio-contrast').value = 100;
+          if ($('studio-grayscale')) $('studio-grayscale').value = 0;
+          renderStudioCanvas();
+        });
+        $('studio-download-btn')?.addEventListener('click', () => {
+          const canvas = $('studio-canvas');
+          if (!canvas || !studioImageObj) { showToast('Upload a photo first.'); return; }
+          const link = document.createElement('a');
+          link.download = `xone-studio-${Date.now()}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          showToast('Photo downloaded!');
+        });
+        $('studio-ai-generate-btn')?.addEventListener('click', () => {
+          const mode = $('studio-ai-mode')?.value || 'cgi';
+          const promptVal = ($('studio-ai-prompt')?.value || '').trim();
+          const fullPrompt = `Generate an image: ${promptVal || 'Cinematic futuristic scene'} (${mode} style)`;
+          switchView('chat');
+          sendMessage(fullPrompt);
+        });
+
+        $('app-launcher-grid')?.addEventListener('click', (e) => {
+          const btn = e.target.closest('.launch-app-btn');
+          if (!btn) return;
+          const safeUrl = sanitizeHttpsUrl(btn.dataset.url);
+          if (safeUrl) window.open(safeUrl, '_blank', 'noopener,noreferrer');
+        });
+
+        $('btn-copy-pure-code')?.addEventListener('click', () => {
+          const ta = $('pure-code-content');
+          if (!ta) return;
+          navigator.clipboard?.writeText(ta.value).then(() => showToast('Pure code copied!'));
+        });
+        $('btn-close-pure-code')?.addEventListener('click', () => {
+          $('pure-code-drawer')?.classList.add('hidden');
+        });
 
         $('chat-messages')?.addEventListener('click', (e) => {
           const starter = e.target.closest('.starter-prompt');
-          if (starter) { sendMessage(starter.dataset.prompt); return; }
+          if (starter) {
+            sendMessage(starter.dataset.prompt);
+            return;
+          }
 
-          const regenImgBtn = e.target.closest('.btn-regenerate-image');
-          if (regenImgBtn) {
-            const p = decodeURIComponent(regenImgBtn.dataset.imgPrompt || '');
-            if (p) sendMessage(`Generate image: ${p}`);
+          const regenBtn = e.target.closest('.btn-regenerate-image');
+          if (regenBtn) {
+            const pVal = decodeURIComponent(regenBtn.dataset.imgPrompt || '');
+            sendMessage(`Generate an image: ${pVal}`);
             return;
           }
 
@@ -4555,49 +4576,156 @@
           if (calcBtn) {
             const shell = calcBtn.closest('.axon-calc-shell');
             const calcId = shell?.dataset.calcId;
-            if (calcId) handleCalculatorClick(calcId, calcBtn.dataset.calcAct, calcBtn.dataset.calcVal);
+            if (!calcId) return;
+            const st = state.calcStates[calcId] || { display: '0', expr: '' };
+            const act = calcBtn.dataset.calcAct;
+            const val = calcBtn.dataset.calcVal || '';
+
+            if (act === 'ac') {
+              st.display = '0';
+              st.expr = '';
+            } else if (act === 'back') {
+              if (st.expr.length > 0) st.expr = st.expr.slice(0, -1);
+              st.display = st.expr || '0';
+            } else if (act === 'num') {
+              if (val === '.' && st.expr.endsWith('.')) return;
+              st.expr += val;
+              st.display = st.expr;
+            } else if (act === 'op') {
+              if (!st.expr && st.display !== '0' && st.display !== 'Error') {
+                st.expr = st.display;
+              }
+              if (st.expr && !/[+\-*/]$/.test(st.expr)) {
+                st.expr += val;
+                st.display = st.expr;
+              }
+            } else if (act === 'eq') {
+              try {
+                const sanitized = st.expr.replace(/[^0-9+\-*/().]/g, '');
+                if (sanitized) {
+                  const result = Function(`"use strict"; return (${sanitized})`)();
+                  st.display = String(Number.isFinite(result) ? Number(result.toFixed(8)) : 'Error');
+                  st.expr = st.display === 'Error' ? '' : st.display;
+                }
+              } catch (err) {
+                st.display = 'Error';
+                st.expr = '';
+              }
+            }
+            state.calcStates[calcId] = st;
+            const dispEl = $(`calc-disp-${calcId}`);
+            if (dispEl) dispEl.textContent = st.display;
+            saveState();
             return;
           }
 
-          const chat = getActiveChat();
-          const msgId = e.target.closest('[data-msg-id]')?.dataset.msgId;
-          const blockIdx = Number(e.target.closest('[data-block-idx]')?.dataset.blockIdx ?? -1);
-          const msg = chat?.messages.find(m => m.id === msgId);
-
-          if (e.target.closest('.btn-copy-code-block') && msg) {
-            const blocks = extractCodeBlocksFromText(msg.text);
-            const codeToCopy = blocks[blockIdx]?.code || msg.text;
-            navigator.clipboard?.writeText(codeToCopy);
-            showToast('Code copied to clipboard!');
+          const copyCodeBtn = e.target.closest('.btn-copy-code-block');
+          if (copyCodeBtn) {
+            const msgId = copyCodeBtn.dataset.msgId;
+            const bIdx = Number(copyCodeBtn.dataset.blockIdx || 0);
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === msgId);
+            const matches = [...(msg?.text || '').matchAll(/```(\w+)?\n?([\s\S]*?)```/g)];
+            const codeText = matches[bIdx]?.[2]?.trim() || '';
+            navigator.clipboard?.writeText(codeText).then(() => showToast('Code block copied!'));
             return;
           }
 
-          if (e.target.closest('.btn-edit-code-block') && msg) {
-            const blocks = extractCodeBlocksFromText(msg.text);
-            const target = blocks[blockIdx] || blocks[0];
-            if (target) openPureCodeDrawer(target.code, target.lang);
+          const editCodeBtn = e.target.closest('.btn-edit-code-block');
+          if (editCodeBtn) {
+            const msgId = editCodeBtn.dataset.msgId;
+            const bIdx = Number(editCodeBtn.dataset.blockIdx || 0);
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === msgId);
+            const matches = [...(msg?.text || '').matchAll(/```(\w+)?\n?([\s\S]*?)```/g)];
+            const langLabel = (matches[bIdx]?.[1] || 'CODE').toUpperCase();
+            const codeText = matches[bIdx]?.[2]?.trim() || '';
+            $('pure-code-lang').textContent = `PURE CODE AREA • ${langLabel}`;
+            $('pure-code-content').value = codeText;
+            $('pure-code-drawer')?.classList.remove('hidden');
             return;
           }
 
-          if (e.target.closest('.btn-copy-msg') && msg) {
-            navigator.clipboard?.writeText(msg.text);
-            showToast('Copied to clipboard');
-          }
-          if (e.target.closest('.btn-speak-msg') && msg) {
-                        togglePauseResume(msg.id);
+          const copyBtn = e.target.closest('.btn-copy-msg');
+          if (copyBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === copyBtn.dataset.msgId);
+            if (msg) navigator.clipboard?.writeText(msg.text).then(() => showToast('Copied!'));
             return;
+          }
+
+          const speakBtn = e.target.closest('.btn-speak-msg');
+          if (speakBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === speakBtn.dataset.msgId);
+            if (msg) speakText(msg.text, null, msg.id);
+            return;
+          }
+
+          const stopSpeakBtn = e.target.closest('.btn-stop-speak');
+          if (stopSpeakBtn) {
+            stopSpeaking();
+            return;
+          }
+
+          const openCodeBtn = e.target.closest('.btn-open-code-msg');
+          if (openCodeBtn) {
+            const chat = getActiveChat();
+            const msg = chat?.messages.find(m => m.id === openCodeBtn.dataset.msgId);
+            if (msg) {
+              const codeMatches = [...msg.text.matchAll(/```(\w+)?\n?([\s\S]*?)```/g)];
+              const extracted = codeMatches.map(m => m[2].trim()).join('\n\n') || msg.text;
+              $('pure-code-lang').textContent = 'PURE CODE AREA';
+              $('pure-code-content').value = extracted;
+              $('pure-code-drawer')?.classList.remove('hidden');
+            }
           }
         });
 
-        $('btn-quick-share')?.addEventListener('click', shareLatestMessage);
-        $('btn-quick-copy')?.addEventListener('click', copyLatestMessage);
-        $('btn-quick-save')?.addEventListener('click', saveLatestMessage);
+        document.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            $('cmdk-modal')?.classList.toggle('hidden');
+          } else if (e.key === 'Escape') {
+            $('cmdk-modal')?.classList.add('hidden');
+            $('settings-detail-modal')?.classList.add('hidden');
+            $('chat-context-menu')?.classList.add('hidden');
+          }
+        });
+
+        $('btn-close-cmdk')?.addEventListener('click', () => $('cmdk-modal')?.classList.add('hidden'));
+        $('cmdk-modal')?.addEventListener('click', (e) => {
+          if (e.target.id === 'cmdk-modal') $('cmdk-modal').classList.add('hidden');
+          const item = e.target.closest('.cmdk-item');
+          if (!item) return;
+          const cmd = item.dataset.cmdk;
+          $('cmdk-modal').classList.add('hidden');
+          if (cmd === 'new-chat') createNewChat(true);
+          else if (cmd === 'web-search') $('btn-header-websearch')?.click();
+          else if (cmd === 'calculator') $('menu-mini-calc')?.click();
+          else if (cmd === 'settings') switchView('settings');
+          else if (cmd === 'photo-studio') switchView('photo-studio');
+          else if (cmd === 'apps') switchView('apps');
+          else if (cmd === 'video-call') openVideoCallModal();
+        });
+
+        if (typeof speechSynthesis !== 'undefined') {
+          speechSynthesis.onvoiceschanged = populateVoicesDropdown;
+        }
       }
 
-      // Initialize AXON AI
       document.addEventListener('DOMContentLoaded', () => {
+        loadStateForCurrentUser();
+        applyAppearance();
         bindEvents();
+        initializeFirebaseAuth();
+        setTimeout(() => {
+          if (!state.user && !splashDismissed) {
+            dismissSplashToLogin();
+          }
+        }, 1600);
       });
-    </script>
-  </body>
+    })();
+  </script>
+</body>
 </html>
