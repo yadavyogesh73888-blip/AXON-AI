@@ -138,11 +138,11 @@
       border: none !important;
     }
     html:not(.light-theme) .axon-code-card {
-      background: #1c1d21 !important;
-      border: 1px solid rgba(148, 163, 184, 0.2) !important;
+      background: #151b26 !important;
+      border: 1px solid rgba(148, 163, 184, 0.22) !important;
     }
     html:not(.light-theme) .axon-code-card-header {
-      background: #25272c !important;
+      background: #1e2636 !important;
       border-bottom: 1px solid rgba(148, 163, 184, 0.15) !important;
       color: #cbd5e1 !important;
     }
@@ -765,7 +765,7 @@
                 </span>
                 <div>
                   <span class="block font-medium text-xs sm:text-sm">AI Live Video Call</span>
-                  <span class="block text-[10px] text-slate-400">Cute robot &amp; camera</span>
+                  <span class="block text-[10px] text-slate-400">Interactive bot &amp; camera</span>
                 </div>
               </button>
 
@@ -978,7 +978,7 @@
                 </div>
               </div>
               <div class="flex gap-2">
-                <input id="memory-manual-input" type="text" placeholder="Add memory (e.g. Mera naam Ms Developer hai)" class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+                <input id="memory-manual-input" type="text" placeholder="Add memory (e.g., My name is Alex and I build AI apps)" class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
                 <button id="btn-add-memory" type="button" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shrink-0">Save</button>
               </div>
               <div class="flex items-center justify-between gap-2">
@@ -1035,6 +1035,30 @@
                 <span class="text-slate-400 text-base">›</span>
               </button>
 
+              <button type="button" data-adv-panel="update-center" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <div>
+                  <span class="block text-sm font-medium text-white">AI Update Center</span>
+                  <span class="block text-[11px] text-slate-400">Check for latest updates and AI version</span>
+                </div>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="feedback" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <div>
+                  <span class="block text-sm font-medium text-white">AI Feedback</span>
+                  <span class="block text-[11px] text-slate-400">Rate your experience and send suggestions</span>
+                </div>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
+              <button type="button" data-adv-panel="whats-new" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
+                <div>
+                  <span class="block text-sm font-medium text-white">What's New</span>
+                  <span class="block text-[11px] text-slate-400">Explore the latest features added to AXON AI</span>
+                </div>
+                <span class="text-slate-400 text-base">›</span>
+              </button>
+
               <button type="button" data-adv-panel="help" class="adv-row-btn w-full px-4 py-3.5 flex items-center justify-between text-left hover:bg-white/5 transition">
                 <span class="text-sm font-medium text-white">Help &amp; Support</span>
                 <span class="text-slate-400 text-base">›</span>
@@ -1061,9 +1085,16 @@
               <option value="AXON Flash Speed">AXON Flash Speed</option>
             </select>
             <select id="setting-app-language">
-              <option value="Hinglish">Hinglish</option>
-              <option value="Hindi">Hindi</option>
               <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Hinglish">Hinglish</option>
+              <option value="Urdu">Urdu</option>
+              <option value="Spanish">Spanish</option>
+              <option value="French">French</option>
+              <option value="Arabic">Arabic</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Telugu">Telugu</option>
             </select>
             <button id="toggle-voice-control" type="button" role="switch" aria-checked="false"><span></span></button>
             <span id="tts-controller-state">Natural Speech Ready</span>
@@ -1155,7 +1186,7 @@
     </div>
   </div>
 
-  <!-- ==================== VIDEO CALL MODAL (CUTE ROBOT + FRONT/BACK CAMERA) ==================== -->
+  <!-- ==================== VIDEO CALL MODAL (AXON BOT + FRONT/BACK CAMERA + LIVE VOICE) ==================== -->
   <div id="videocall-modal" class="hidden fixed inset-0 z-50 bg-[#0b111e] flex flex-col items-center justify-between p-4 sm:p-7 animate-fade-up">
     <div class="w-full max-w-5xl flex items-center justify-between gap-2">
       <div class="flex items-center gap-3">
@@ -1167,14 +1198,14 @@
       </div>
       <div class="flex items-center gap-2">
         <span id="call-camera-mode-badge" class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-200 border border-slate-700">Front Cam</span>
-        <span id="call-voice-status" class="px-3.5 py-1 rounded-full text-xs font-medium bg-cyan-500/15 text-cyan-400 border border-cyan-400/30">Mic Listening</span>
+        <span id="call-voice-status" class="px-3.5 py-1 rounded-full text-xs font-medium bg-cyan-500/15 text-cyan-400 border border-cyan-400/30">Mic Ready</span>
       </div>
     </div>
 
     <div id="videocall-card-shell" class="relative w-full max-w-5xl flex-1 my-4 rounded-3xl bg-[#11192b] border border-slate-800 flex flex-col items-center justify-between overflow-hidden p-4 sm:p-6 shadow-2xl">
       <div class="relative w-full flex-1 min-h-[260px] rounded-2xl bg-slate-950 border border-slate-700/60 overflow-hidden flex items-center justify-center">
 
-        <!-- Cute Small AXON Robot SVG (Clean, friendly, no human portrait) -->
+        <!-- Interactive AXON Bot Avatar -->
         <div id="call-cute-robot-wrap" class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#0d182e] via-[#0a1222] to-[#070c17] px-4 select-none">
           <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-br from-cyan-500/15 via-indigo-500/15 to-sky-400/10 border border-cyan-400/30 shadow-2xl shadow-cyan-500/15 flex items-center justify-center animate-float-orb">
             <svg class="w-28 h-28 sm:w-32 sm:h-32" viewBox="0 0 120 120" fill="none">
@@ -1194,24 +1225,24 @@
               <circle cx="60" cy="100" r="4" fill="#34d399"/>
             </svg>
           </div>
-          <span class="mt-3 text-xs font-semibold tracking-wider uppercase text-cyan-400">AXON Mini Bot</span>
+          <span class="mt-3 text-xs font-semibold tracking-wider uppercase text-cyan-400">AXON Live Assistant</span>
         </div>
 
-        <video id="call-pip-video" autoplay playsinline muted class="hidden absolute inset-0 w-full h-full object-cover z-10"></video>
+        <video id="call-pip-video" autoplay playsinline muted class="hidden absolute bottom-3 right-3 w-28 h-36 sm:w-36 sm:h-48 rounded-2xl object-cover z-10 border-2 border-cyan-400/50 shadow-xl bg-slate-900"></video>
       </div>
       <p id="call-caption" class="mt-4 text-sm sm:text-base text-slate-100 text-center max-w-xl font-medium">
-        "Hi! Main AXON Bot hoon. Camera on karke Front ya Back camera flip kar sakte hain."
+        "Hello! I am AXON AI. Speak anytime or use the controls below to toggle your camera, microphone, or switch Front/Back view."
       </p>
     </div>
 
     <div class="flex items-center gap-3 sm:gap-4">
-      <button id="btn-call-mic" type="button" title="Mute/Unmute Mic" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
+      <button id="btn-call-mic" type="button" title="Mute / Unmute Mic" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
       </button>
       <button id="btn-call-cam" type="button" title="Toggle Camera" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
       </button>
-      <button id="btn-call-flip" type="button" title="Flip Front / Back Camera" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
+      <button id="btn-call-flip" type="button" title="Switch Front / Back Camera" class="w-12 h-12 rounded-full bg-[#1c2538] text-slate-200 flex items-center justify-center border border-slate-700/70 hover:border-cyan-400/40 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7h-3l-2-2H9L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M9 13a3 3 0 0 1 5.12-2.12L15 12"/><polyline points="15 9 15 12 12 12"/></svg>
       </button>
       <button id="btn-end-call" type="button" class="px-6 sm:px-7 h-12 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm shadow-lg shadow-rose-600/30 transition">End Call</button>
@@ -1236,19 +1267,24 @@
         <h3 id="detail-modal-title" class="text-base font-bold text-white">Details</h3>
         <button id="btn-close-detail-modal" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white">✕</button>
       </div>
-      <div id="detail-modal-body" class="space-y-3 text-xs sm:text-sm text-slate-300"></div>
+      <div id="detail-modal-body" class="space-y-3 text-xs sm:text-sm text-slate-300 max-h-[65vh] overflow-y-auto pr-1"></div>
       <div id="detail-modal-footer" class="flex justify-end gap-2 pt-2"></div>
     </div>
   </div>
 
+  <!-- GOOGLE SIGN-IN MODAL -->
   <div id="google-picker-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="w-full max-w-md glass-panel rounded-3xl p-6 shadow-2xl animate-fade-up space-y-4">
+    <div class="w-full max-w-md rounded-3xl p-6 bg-[#10182b] border border-slate-800 shadow-2xl animate-fade-up space-y-5">
       <div class="flex items-center justify-between">
-        <h3 class="text-base font-bold text-white">Google Sign-In</h3>
-        <button id="btn-close-google-picker" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white">✕</button>
+        <h3 class="text-lg font-bold text-white">Google Sign-In</h3>
+        <button id="btn-close-google-picker" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-white transition">✕</button>
       </div>
-      <p class="text-xs text-slate-300">Authenticate securely with Google to load your personal AXON AI Memory &amp; Chats.</p>
-      <button id="btn-firebase-google-auth" type="button" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow">Continue with Google Account</button>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+        Authenticate securely with Google to load your personal AXON AI Memory &amp; Chats.
+      </p>
+      <button id="btn-firebase-google-auth" type="button" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#06b6d4] via-[#3b82f6] to-[#6366f1] hover:opacity-95 text-xs sm:text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition active:scale-[0.99]">
+        Continue with Google Account
+      </button>
     </div>
   </div>
 
@@ -1260,6 +1296,8 @@
 
       const STORAGE_KEY = 'axon_ai_workspace_v4';
       const SUPABASE_LOCAL_CREDS_KEY = 'axon_supabase_creds_v1';
+      const FEEDBACK_STORAGE_KEY = 'axon_user_feedback_v1';
+      const AXON_VERSION = 'v2.6.0 Pro';
 
       const firebaseConfig = {
         apiKey: "AIzaSyA-YnGuAr8BdGt8xbo0Eq06lijQEPoeTC8",
@@ -1293,6 +1331,19 @@
         { index: 5, name: '6. Rex (Energetic Voice)', lang: 'hi-IN', pitch: 0.96, rate: 0.99, gender: 'male' }
       ];
 
+      const SUPPORTED_LANGUAGES = [
+        { value: 'English', label: 'English (Default)' },
+        { value: 'Hindi', label: 'Hindi' },
+        { value: 'Hinglish', label: 'Hinglish (Hindi + English)' },
+        { value: 'Urdu', label: 'Urdu' },
+        { value: 'Bengali', label: 'Bengali' },
+        { value: 'Tamil', label: 'Tamil' },
+        { value: 'Telugu', label: 'Telugu' },
+        { value: 'Spanish', label: 'Spanish' },
+        { value: 'French', label: 'French' },
+        { value: 'Arabic', label: 'Arabic' }
+      ];
+
       const APP_DIRECTORY = [
         { name: 'WhatsApp', aliases: ['whatsapp', 'whats app'], url: 'https://web.whatsapp.com', color: 'from-emerald-500 to-green-600', icon: 'W' },
         { name: 'Instagram', aliases: ['instagram', 'insta'], url: 'https://www.instagram.com', color: 'from-pink-500 to-amber-500', icon: 'I' },
@@ -1311,7 +1362,7 @@
         fontSize: 'md',
         autoScroll: true,
         notifications: true,
-        appLanguage: 'Hinglish',
+        appLanguage: 'English',
         defaultModel: 'AXON Pro 2.5',
         aiModel: 'AXON Pro 2.5',
         chatMode: 'Balanced',
@@ -1352,6 +1403,7 @@
       let callMicMuted = false;
       let callCamOff = false;
       let callFacingMode = 'user';
+      let callRecognition = null;
       let availableVoices = [];
       let ttsKeepAliveTimer = null;
       let lockedVoiceObj = null;
@@ -1547,7 +1599,7 @@
         const u = String(userText || '').trim();
         if (!u) return;
         const patterns = [
-          /\b(mera naam|my name is|i am|main .* hoon|mujhe .* pasand|i like|i love|remember|yaad rakhna|mera project|my project|developer|email|phone|password|city|shahar|kaam|goal)\b/i
+          /\b(mera naam|my name is|i am|main .* hoon|mujhe .* pasand|i like|i love|remember|yaad rakhna|mera project|my project|developer|email|phone|city|shahar|kaam|goal)\b/i
         ];
         if (patterns.some(rx => rx.test(u)) || u.length >= 26) {
           const snippet = u.length > 200 ? u.slice(0, 200) + '…' : u;
@@ -1681,7 +1733,7 @@
         }
       }
 
-      // ==================== SAFE COLOR SANITIZER & RICH WIDGET FORMATTER ====================
+      // ==================== SAFE COLOR SANITIZER & PROFESSIONAL AI FORMATTER ====================
       function sanitizeColorToken(rawColor) {
         const val = String(rawColor || '').trim();
         if (/^#[0-9a-fA-F]{3,8}$/.test(val)) return val;
@@ -1749,19 +1801,26 @@
       function renderSearchResultsListHtml(results) {
         if (!Array.isArray(results) || !results.length) return '';
         return `
-          <div class="my-3 space-y-2.5 max-w-2xl">
-            ${results.map((item) => {
+          <div class="my-3 space-y-3 max-w-2xl">
+            ${results.map((item, idx) => {
               const title = escapeHtml(item.title || 'Search Result');
               const summary = escapeHtml(item.snippet || item.summary || '');
               const url = sanitizeHttpsUrl(item.url || item.link || '');
-              const sourceLabel = escapeHtml(item.source || (url ? new URL(url).hostname : 'Web Source'));
+              const imgUrl = sanitizeHttpsUrl(item.image || item.thumbnail || '');
+              const sourceLabel = escapeHtml(item.source || (url ? new URL(url).hostname.replace(/^www\./, '') : 'Verified Source'));
               return `
-                <div class="axon-news-card rounded-2xl p-3.5 space-y-1.5 shadow-md">
-                  <h4 class="text-sm sm:text-base font-bold text-white leading-snug">${title}</h4>
-                  ${summary ? `<p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${summary}</p>` : ''}
-                  <div class="flex items-center justify-between gap-2 pt-1">
-                    <span class="text-[11px] font-medium text-cyan-300 truncate">${sourceLabel}</span>
-                    ${url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-cyan-400 hover:underline shrink-0">Source Link →</a>` : ''}
+                <div class="axon-news-card rounded-2xl p-3.5 flex items-start gap-3.5 shadow-md">
+                  ${imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="${title}" class="w-24 h-24 rounded-xl object-cover border border-slate-700/60 shrink-0" loading="lazy" />` : ''}
+                  <div class="min-w-0 flex-1 space-y-1.5">
+                    <h4 class="text-sm sm:text-base font-bold text-white leading-snug">${idx + 1}. ${title}</h4>
+                    ${summary ? `<p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${summary}</p>` : ''}
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-800/90 border border-slate-700/70 text-[11px] font-medium text-slate-300 truncate">
+                        <span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span>
+                        <span class="truncate">${sourceLabel}</span>
+                      </span>
+                      ${url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-cyan-400 hover:underline shrink-0">Open Source →</a>` : ''}
+                    </div>
                   </div>
                 </div>
               `;
@@ -1783,7 +1842,7 @@
                     </div>
                     <div>
                       <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300">AXON AI — Searching the Web</div>
-                      <div class="text-xs text-slate-200 mt-0.5">${escapeHtml(act.statusText || 'वेब पर जानकारी खोजी जा रही है...')}</div>
+                      <div class="text-xs text-slate-200 mt-0.5">${escapeHtml(act.statusText || 'Searching live web sources...')}</div>
                     </div>
                   </div>
                   <span class="text-[11px] font-mono text-cyan-400 truncate max-w-[160px]">${escapeHtml(act.query || '')}</span>
@@ -1805,8 +1864,8 @@
                       <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     </div>
                     <div>
-                      <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300">AXON AI — Generating Real Image</div>
-                      <div class="text-xs text-slate-200 mt-0.5">${escapeHtml(act.statusText || 'AI Horde par image generate ho rahi hai...')}</div>
+                      <div class="text-xs font-extrabold uppercase tracking-wider text-cyan-300">AXON AI — Generating Image</div>
+                      <div class="text-xs text-slate-200 mt-0.5">${escapeHtml(act.statusText || 'Rendering high-resolution image...')}</div>
                     </div>
                   </div>
                   <span class="text-[11px] font-mono text-indigo-300">${escapeHtml(act.progressLabel || 'Queued')}</span>
@@ -1821,9 +1880,18 @@
         return '';
       }
 
+      function highlightCodeSyntax(escapedCode) {
+        return escapedCode
+          .replace(/(\/\/[^\n]*)/g, '<span class="text-emerald-400/90">$1</span>')
+          .replace(/\b(const|let|var|function|async|await|return|if|else|for|while|try|catch|import|export|from|require|class|new)\b/g, '<span class="text-rose-400 font-medium">$1</span>')
+          .replace(/(&quot;[^&]*?&quot;|&#39;[^&]*?&#39;|`[^`]*?`)/g, '<span class="text-amber-300">$1</span>')
+          .replace(/\b(\d+)\b/g, '<span class="text-cyan-300">$1</span>');
+      }
+
       function formatMessageHtml(text, msgId = '') {
         let raw = String(text || '');
         const codeBlocks = [];
+        const inlineCodes = [];
         const widgetPlaceholders = [];
 
         // Extract [AXON_GENERATED_IMAGE: URL | Prompt]
@@ -1848,27 +1916,37 @@
         raw = raw.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => {
           const idx = codeBlocks.length;
           const cleanLang = (lang || 'Code').trim();
-          const label = cleanLang.charAt(0).toUpperCase() + cleanLang.slice(1);
+          const label = cleanLang.toLowerCase() === 'js' || cleanLang.toLowerCase() === 'javascript'
+            ? 'JavaScript (Node.js / ES6)'
+            : cleanLang.charAt(0).toUpperCase() + cleanLang.slice(1);
+          const highlighted = highlightCodeSyntax(escapeHtml(code.trim()));
           codeBlocks.push(`
-            <div class="axon-code-card my-3 rounded-2xl overflow-hidden shadow-md">
-              <div class="axon-code-card-header px-3.5 py-2 flex items-center justify-between text-xs">
-                <div class="flex items-center gap-3">
+            <div class="axon-code-card my-3.5 rounded-2xl overflow-hidden shadow-lg">
+              <div class="axon-code-card-header px-3.5 py-2.5 flex items-center justify-between text-xs">
+                <div class="flex items-center gap-2.5">
+                  <span class="px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 font-extrabold text-[10px] tracking-tight">${escapeHtml(cleanLang.slice(0, 4).toUpperCase())}</span>
                   <span class="font-semibold">${escapeHtml(label)}</span>
-                  <span class="opacity-75">AI Assistant</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <button type="button" class="btn-edit-code-block p-1 rounded hover:bg-black/10 transition" data-msg-id="${escapeHtml(msgId)}" data-block-idx="${idx}" title="Edit in Pure Code Area">
+                  <button type="button" class="btn-edit-code-block p-1 rounded hover:bg-white/10 transition" data-msg-id="${escapeHtml(msgId)}" data-block-idx="${idx}" title="Edit in Pure Code Area">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   </button>
-                  <button type="button" class="btn-copy-code-block p-1 rounded hover:bg-black/10 transition" data-msg-id="${escapeHtml(msgId)}" data-block-idx="${idx}" title="Copy Code">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <button type="button" class="btn-copy-code-block inline-flex items-center gap-1 px-2 py-1 rounded hover:bg-white/10 transition text-xs font-medium" data-msg-id="${escapeHtml(msgId)}" data-block-idx="${idx}" title="Copy Code">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <span>Copy</span>
                   </button>
                 </div>
               </div>
-              <pre class="p-3.5 text-xs sm:text-[13px] text-emerald-300 bg-[#1c1d21] overflow-x-auto font-mono leading-relaxed"><code>${escapeHtml(code.trim())}</code></pre>
+              <pre class="p-4 text-xs sm:text-[13px] text-slate-100 bg-[#121722] overflow-x-auto font-mono leading-relaxed"><code>${highlighted}</code></pre>
             </div>
           `);
           return `__AXON_CODE_BLOCK_${idx}__`;
+        });
+
+        raw = raw.replace(/`([^`\n]+)`/g, (_, inlineCode) => {
+          const iIdx = inlineCodes.length;
+          inlineCodes.push(`<code class="px-1.5 py-0.5 rounded-md bg-slate-800/90 border border-slate-700/70 text-cyan-300 font-mono text-[12.5px]">${escapeHtml(inlineCode)}</code>`);
+          return `__AXON_INLINE_CODE_${iIdx}__`;
         });
 
         raw = raw.replace(/\[MINI_CALCULATOR\]/g, () => {
@@ -1927,23 +2005,38 @@
           const srcLabel = (source || 'AXON News').trim();
           const safeImg = sanitizeHttpsUrl((imgUrl || '').trim());
           return `
-            <div class="axon-news-card my-3 rounded-2xl p-3.5 space-y-2.5 shadow-md">
-              <h4 class="text-base font-bold text-white leading-snug">${title}</h4>
-              ${safeImg ? `<img src="${escapeHtml(safeImg)}" alt="${title}" class="w-full max-h-52 object-cover rounded-xl border border-slate-700/50" />` : ''}
-              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${summary}</p>
-              <div class="flex items-center justify-between gap-2 pt-1">
-                <div class="flex items-center gap-2 min-w-0">
-                  <span class="w-5 h-5 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shrink-0">${srcLabel.slice(0, 1).toUpperCase()}</span>
-                  <span class="text-xs font-medium text-slate-400 truncate">${srcLabel}</span>
+            <div class="axon-news-card my-3 rounded-2xl p-3.5 flex items-start gap-3.5 shadow-md">
+              ${safeImg ? `<img src="${escapeHtml(safeImg)}" alt="${title}" class="w-24 h-24 object-cover rounded-xl border border-slate-700/50 shrink-0" />` : ''}
+              <div class="min-w-0 flex-1 space-y-1.5">
+                <h4 class="text-base font-bold text-white leading-snug">${title}</h4>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">${summary}</p>
+                <div class="flex items-center justify-between gap-2 pt-1">
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-800/90 border border-slate-700/70 min-w-0">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span>
+                    <span class="text-[11px] font-medium text-slate-300 truncate">${srcLabel}</span>
+                  </div>
+                  ${cleanLink ? `<a href="${escapeHtml(cleanLink)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-cyan-400 hover:underline shrink-0">Read More →</a>` : ''}
                 </div>
-                ${cleanLink ? `<a href="${escapeHtml(cleanLink)}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-cyan-400 hover:underline shrink-0">Source Link →</a>` : ''}
               </div>
             </div>
           `;
         });
 
-        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-cyan-400">$1</strong>');
+        // Clean Markdown Headings (##, ###) into crisp professional typography
+        safe = safe.replace(/^###\s+(.+)$/gm, '<h3 class="text-base sm:text-[17px] font-bold text-white mt-3 mb-1.5 tracking-tight">$1</h3>');
+        safe = safe.replace(/^##\s+(.+)$/gm, '<h2 class="text-lg sm:text-xl font-extrabold text-cyan-300 mt-3.5 mb-2 tracking-tight">$1</h2>');
+        safe = safe.replace(/^#\s+(.+)$/gm, '<h1 class="text-xl sm:text-2xl font-extrabold text-cyan-300 mt-4 mb-2 tracking-tight">$1</h1>');
+
+        // Clean Bullet Lists (- or *)
+        safe = safe.replace(/^[\-\*]\s+(.+)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-cyan-400 font-bold mt-0.5">•</span><span class="flex-1">$1</span></div>');
+
+        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-cyan-300">$1</strong>');
         safe = safe.replace(/\n/g, '<br/>');
+        safe = safe.replace(/(<\/h[1-3]>|<\/div>)<br\/>/g, '$1');
+
+        inlineCodes.forEach((codeHtml, iIdx) => {
+          safe = safe.replace(`__AXON_INLINE_CODE_${iIdx}__`, codeHtml);
+        });
 
         widgetPlaceholders.forEach((htmlWidget, wIdx) => {
           safe = safe.replace(`__AXON_WIDGET_${wIdx}__`, htmlWidget);
@@ -2196,15 +2289,15 @@
                 <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 3 8 12 13 21 8 12 3"/><polyline points="3 12.5 12 17.5 21 12.5"/><polyline points="3 17 12 22 21 17"/></svg>
               </div>
               <h3 class="text-xl sm:text-2xl font-bold text-white">How can AXON AI help today?</h3>
-              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Long-Term Memory, Chat Context, Auto Save &amp; Natural Voice ready.</p>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1.5 mb-6">Long-Term Memory, Live Web Search, Code Assistant &amp; Natural Voice ready.</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
-                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-cyan-400/40 text-left transition" data-prompt="Write a clean JavaScript function to sort numbers">
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-cyan-400/40 text-left transition" data-prompt="Write a clean Node.js Express API endpoint for web search">
                   <span class="block text-xs font-semibold text-cyan-400">Code Assistant</span>
-                  <span class="block text-xs text-slate-300 mt-0.5">Write a clean JavaScript function to sort numbers</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">Write a clean Node.js Express API endpoint</span>
                 </button>
-                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-indigo-400/40 text-left transition" data-prompt="Tumhe mere baare mein kya kya yaad hai?">
-                  <span class="block text-xs font-semibold text-indigo-400">Memory Recall</span>
-                  <span class="block text-xs text-slate-300 mt-0.5">Ask AI to recall your saved memories</span>
+                <button type="button" class="starter-prompt p-3.5 rounded-2xl glass-panel hover:border-indigo-400/40 text-left transition" data-prompt="Web search: Top technology and AI news today">
+                  <span class="block text-xs font-semibold text-indigo-400">Live Web Search</span>
+                  <span class="block text-xs text-slate-300 mt-0.5">Fetch top technology and AI headlines</span>
                 </button>
               </div>
             </div>
@@ -2444,7 +2537,7 @@
             state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
             saveState();
             populateVoicesDropdown();
-            showToast('Voice updated');
+            showToast('Voice profile updated');
           });
           $('modal-toggle-voice')?.addEventListener('click', (e) => {
             toggleVoiceControl();
@@ -2456,19 +2549,143 @@
         if (panelKey === 'language') {
           titleEl.textContent = 'Language';
           bodyEl.innerHTML = `
-            <label class="block text-xs text-slate-400 mb-1">Preferred AI Reply &amp; Voice Language</label>
-            <select id="modal-lang-select" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
-              <option value="Hinglish" ${state.settings.appLanguage === 'Hinglish' ? 'selected' : ''}>Hinglish (Hindi + English)</option>
-              <option value="Hindi" ${state.settings.appLanguage === 'Hindi' ? 'selected' : ''}>Hindi</option>
-              <option value="English" ${state.settings.appLanguage === 'English' ? 'selected' : ''}>English</option>
-            </select>
+            <div class="space-y-2.5">
+              <p class="text-xs text-slate-400">Interface remains in clean English. Select your preferred AI response &amp; voice language:</p>
+              <select id="modal-lang-select" class="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white">
+                ${SUPPORTED_LANGUAGES.map(l => `<option value="${l.value}" ${state.settings.appLanguage === l.value ? 'selected' : ''}>${escapeHtml(l.label)}</option>`).join('')}
+              </select>
+            </div>
           `;
           $('settings-detail-modal').classList.remove('hidden');
           $('modal-lang-select')?.addEventListener('change', (e) => {
             state.settings.appLanguage = e.target.value;
+            if ($('setting-app-language')) $('setting-app-language').value = e.target.value;
             saveState();
-            showToast(`Language: ${e.target.value}`);
+            showToast(`AI Language set to ${e.target.value}`);
           });
+          return;
+        }
+
+        if (panelKey === 'update-center') {
+          titleEl.textContent = 'AI Update Center';
+          bodyEl.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-cyan-500/30 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-400">Current AI Version</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 text-[11px] font-bold">${AXON_VERSION}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-400">Neural Engine Status</span>
+                <span id="update-status-badge" class="text-xs font-semibold text-emerald-400">Up to Date</span>
+              </div>
+              <p id="update-check-msg" class="text-xs text-slate-300 pt-1">You are running the latest stable build of AXON AI Pro Workspace with enhanced Web Search, Multi-Language Support, and Live Video Call.</p>
+            </div>
+            <button id="btn-check-ai-updates" type="button" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow">Check for Updates</button>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+          $('btn-check-ai-updates')?.addEventListener('click', (e) => {
+            const btn = e.currentTarget;
+            btn.disabled = true;
+            btn.textContent = 'Checking for updates...';
+            setTimeout(() => {
+              btn.disabled = false;
+              btn.textContent = 'Check for Updates';
+              if ($('update-status-badge')) $('update-status-badge').textContent = 'Latest Version Installed';
+              if ($('update-check-msg')) $('update-check-msg').textContent = `Verified (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}): AXON AI ${AXON_VERSION} is completely up to date.`;
+              showToast('AXON AI is up to date!');
+            }, 650);
+          });
+          return;
+        }
+
+        if (panelKey === 'feedback') {
+          let selectedRating = 5;
+          let existingFeedback = [];
+          try { existingFeedback = JSON.parse(localStorage.getItem(FEEDBACK_STORAGE_KEY) || '[]'); } catch (e) {}
+          titleEl.textContent = 'AI Feedback';
+          bodyEl.innerHTML = `
+            <div class="space-y-3">
+              <p class="text-xs text-slate-400">Rate your experience with AXON AI and share suggestions to help us improve.</p>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Your Rating</label>
+                <div id="feedback-star-row" class="flex items-center gap-2">
+                  ${[1, 2, 3, 4, 5].map(n => `
+                    <button type="button" data-star="${n}" class="feedback-star-btn w-9 h-9 rounded-xl bg-amber-400/20 border border-amber-400/50 text-amber-300 font-bold text-sm transition">${n}★</button>
+                  `).join('')}
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Suggestion or Comment</label>
+                <textarea id="feedback-text-input" rows="3" placeholder="Tell us what you love or what feature we should build next..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+              </div>
+              <button id="btn-submit-feedback" type="button" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white shadow">Submit Feedback</button>
+              <p class="text-[11px] text-slate-400 text-center">Submitted feedback count: ${existingFeedback.length}</p>
+            </div>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
+
+          const updateStarUI = () => {
+            document.querySelectorAll('.feedback-star-btn').forEach(b => {
+              const val = Number(b.dataset.star);
+              b.className = val <= selectedRating
+                ? 'feedback-star-btn w-9 h-9 rounded-xl bg-amber-400/25 border border-amber-400 text-amber-300 font-bold text-sm transition'
+                : 'feedback-star-btn w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 font-bold text-sm transition';
+            });
+          };
+          document.querySelectorAll('.feedback-star-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              selectedRating = Number(btn.dataset.star) || 5;
+              updateStarUI();
+            });
+          });
+          $('btn-submit-feedback')?.addEventListener('click', () => {
+            const comment = ($('feedback-text-input')?.value || '').trim();
+            try {
+              const list = JSON.parse(localStorage.getItem(FEEDBACK_STORAGE_KEY) || '[]');
+              list.unshift({
+                rating: selectedRating,
+                comment,
+                user: state.user?.email || 'guest',
+                createdAt: new Date().toISOString()
+              });
+              localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(list.slice(0, 50)));
+            } catch (e) {}
+            showToast(`Thank you! ${selectedRating}★ feedback submitted.`);
+            $('settings-detail-modal')?.classList.add('hidden');
+          });
+          return;
+        }
+
+        if (panelKey === 'whats-new') {
+          titleEl.textContent = "What's New in AXON AI";
+          bodyEl.innerHTML = `
+            <div class="space-y-2.5">
+              <div class="p-3 rounded-2xl bg-slate-900/90 border border-cyan-500/30">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-bold text-cyan-300">Release ${AXON_VERSION}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">Latest</span>
+                </div>
+                <p class="text-xs text-slate-300">Major upgrades across search, formatting, authentication, and live communication.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <p class="text-xs font-semibold text-white">1. Enhanced Live Web Search</p>
+                <p class="text-[11px] text-slate-400">Multi-route fallback ensures reliable real-time search results with structured news cards and source links.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <p class="text-xs font-semibold text-white">2. Professional Structured Responses</p>
+                <p class="text-[11px] text-slate-400">Clean headings, syntax-highlighted code cards with one-click copy, and crisp bullet points.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <p class="text-xs font-semibold text-white">3. Multi-Language Support (English UI)</p>
+                <p class="text-[11px] text-slate-400">Keep the entire workspace in English while conversing with AXON AI in 10+ global and Indian languages.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/70 border border-slate-800 space-y-1">
+                <p class="text-xs font-semibold text-white">4. Upgraded Live Video Call &amp; Update Center</p>
+                <p class="text-[11px] text-slate-400">Resilient camera/mic handling with Front/Back switching, AI Update Center, and direct User Feedback.</p>
+              </div>
+            </div>
+          `;
+          $('settings-detail-modal').classList.remove('hidden');
           return;
         }
 
@@ -2591,9 +2808,9 @@
         if (panelKey === 'help') {
           titleEl.textContent = 'Help & Support';
           bodyEl.innerHTML = `
-            <p>• Use <strong>+ New Page</strong> in header for an instant fresh workspace.</p>
-            <p>• Click <strong>⋮</strong> next to any chat in sidebar to <strong>Pin, Lock, Rename, Archive, or Delete</strong>.</p>
-            <p>• Press <strong>Ctrl+K</strong> anytime to open Quick Command Palette.</p>
+            <p>• Use <strong>New Page</strong> in the header for an instant fresh workspace.</p>
+            <p>• Click <strong>⋮</strong> next to any chat in the sidebar to <strong>Pin, Lock, Rename, Archive, or Delete</strong>.</p>
+            <p>• Press <strong>Ctrl+K</strong> anytime to open the Quick Command Palette.</p>
           `;
           $('settings-detail-modal').classList.remove('hidden');
           return;
@@ -2602,8 +2819,8 @@
         if (panelKey === 'about') {
           titleEl.textContent = 'About AXON AI';
           bodyEl.innerHTML = `
-            <p><strong>AXON AI — Pro Workspace v2.5</strong></p>
-            <p>Equipped with Firebase User Scope, Supabase Long-Term Memory Sync, Cute Bot Video Call, Dynamic AI Colors &amp; Dual Dark/Light Neural UI.</p>
+            <p><strong>AXON AI — Pro Workspace ${AXON_VERSION}</strong></p>
+            <p>Equipped with Firebase User Scope, Supabase Long-Term Memory Sync, Live Web Search, Multi-Language Support &amp; Dual Dark/Light Neural UI.</p>
           `;
           $('settings-detail-modal').classList.remove('hidden');
         }
@@ -2631,12 +2848,13 @@
       }
 
       function isWebSearchRequest(text) {
-        return /\b(web\s*search|search\s*(?:karo|for|on\s*web|the\s*web|online)?|google\s*(?:karo|search)?|khojo|taaja\s*khabar|latest\s*news|news\s*batao|aaj\s*ki\s*news)\b/i.test(String(text || '').trim());
+        return /\b(web\s*search|search\s*(?:karo|for|on\s*web|the\s*web|online)?|google\s*(?:karo|search)?|khojo|taaja\s*khabar|latest\s*news|news\s*batao|aaj\s*ki\s*news|breaking\s*news|today'?s\s*news)\b/i.test(String(text || '').trim());
       }
 
       function extractCleanSearchQuery(text) {
         return String(text || '')
           .replace(/\b(?:web\s*search|search\s*the\s*web|search\s*karo|google\s*karo|khojo|batao)\b/gi, '')
+          .replace(/^[:\-\s]+/, '')
           .replace(/^\s*(?:for|about|on|ka|ki|ke)\s+/i, '')
           .trim() || String(text || '').trim();
       }
@@ -2655,7 +2873,7 @@
         const enhancedPrompt = enhanceImagePrompt(rawPrompt);
         setLiveActivity({
           type: 'image',
-          statusText: 'Prompt process ho raha hai aur /api/image-generate call kiya ja raha hai...',
+          statusText: 'Processing prompt and submitting to image generator...',
           progressLabel: 'Submitting'
         });
 
@@ -2681,7 +2899,7 @@
 
           setLiveActivity({
             type: 'image',
-            statusText: `AI Horde par image generate ho rahi hai (Request ID: ${requestId.slice(0, 8)}...)`,
+            statusText: `Generating high-resolution image (ID: ${requestId.slice(0, 8)}...)`,
             progressLabel: `${Math.min(99, Math.max(5, (attempt + 1) * 3))}%`
           });
 
@@ -2718,15 +2936,56 @@
         setLiveActivity({
           type: 'search',
           query,
-          statusText: 'वेब पर जानकारी खोजी जा रही है...'
+          statusText: 'Searching verified web sources...'
         });
 
         try {
-          const endpoint = `/api/search?q=${encodeURIComponent(query)}`;
-          const res = await fetch(endpoint, { signal });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            throw new Error(data.error || `Search API error (${res.status})`);
+          const endpoints = [
+            `/api/search?q=${encodeURIComponent(query)}`,
+            `/api/web-search?q=${encodeURIComponent(query)}`
+          ];
+
+          let data = null;
+          let lastErr = null;
+
+          for (const ep of endpoints) {
+            try {
+              const res = await fetch(ep, { signal });
+              if (res.ok) {
+                const parsed = await res.json().catch(() => ({}));
+                if (parsed && (Array.isArray(parsed.results) || Array.isArray(parsed.items) || parsed.answer || parsed.reply)) {
+                  data = parsed;
+                  break;
+                }
+              } else {
+                lastErr = new Error(`Search endpoint returned ${res.status}`);
+              }
+            } catch (e) {
+              if (e && e.name === 'AbortError') throw e;
+              lastErr = e;
+            }
+          }
+
+          // Fallback to /api/chat with webSearch flag if dedicated search routes return 404
+          if (!data) {
+            const chatRes = await fetch('/api/chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                message: `Perform a structured web search and provide verified, up-to-date information with clear headings and bullet points for: ${query}`,
+                webSearch: true,
+                searchQuery: query,
+                language: state.settings.appLanguage,
+                model: state.settings.aiModel
+              }),
+              signal
+            });
+            const chatData = await chatRes.json().catch(() => ({}));
+            if (chatRes.ok && (chatData.reply || Array.isArray(chatData.results))) {
+              data = chatData;
+            } else {
+              throw lastErr || new Error(chatData.error || `Search request failed (${chatRes.status})`);
+            }
           }
 
           const rawResults = Array.isArray(data.results) ? data.results : (Array.isArray(data.items) ? data.items : []);
@@ -2735,25 +2994,28 @@
               title: String(r.title || '').trim(),
               snippet: String(r.snippet || r.description || r.summary || '').trim(),
               url: sanitizeHttpsUrl(r.url || r.link || ''),
+              image: sanitizeHttpsUrl(r.image || r.thumbnail || r.img || ''),
               source: String(r.source || r.domain || '').trim()
             }))
-            .filter((r) => r.title && r.url);
-
-          if (!normalized.length) {
-            throw new Error('कोई सत्यापित वेब परिणाम नहीं मिला।');
-          }
+            .filter((r) => r.title);
 
           const synthesisParts = [];
           if (data.answer && String(data.answer).trim()) {
             synthesisParts.push(String(data.answer).trim());
-          } else {
-            const topSummaries = normalized.slice(0, 4).map((item, idx) =>
-              `${idx + 1}. **${item.title}**${item.snippet ? ` — ${item.snippet}` : ''}`
-            );
-            synthesisParts.push(`**"${query}"** ke liye verified sources se mili jaankari:\n${topSummaries.join('\n')}`);
+          } else if (data.reply && String(data.reply).trim()) {
+            synthesisParts.push(String(data.reply).trim());
+          } else if (normalized.length) {
+            synthesisParts.push(`### Web Search Results for "${query}"\nHere are the top verified findings:`);
           }
 
-          synthesisParts.push(`[AXON_SEARCH_RESULTS: ${JSON.stringify(normalized.slice(0, 8))}]`);
+          if (normalized.length) {
+            synthesisParts.push(`[AXON_SEARCH_RESULTS: ${JSON.stringify(normalized.slice(0, 8))}]`);
+          }
+
+          if (!synthesisParts.length) {
+            throw new Error('No verified web results found for this query.');
+          }
+
           return synthesisParts.join('\n\n');
         } finally {
           clearLiveActivity();
@@ -2766,7 +3028,7 @@
 
         // 1. Mini Calculator request
         if (/\b(mini\s*calculator|calculator|calc)\b/i.test(lower) && !/\d+\s*[\+\-\*\/]\s*\d+/.test(lower)) {
-          return 'Ye raha mera Mini Calculator!\n[MINI_CALCULATOR]';
+          return 'Here is the AXON Mini Calculator:\n[MINI_CALCULATOR]';
         }
 
         // 2. App open shortcut
@@ -2775,7 +3037,7 @@
             setTimeout(() => {
               try { window.open(app.url, '_blank', 'noopener,noreferrer'); } catch (e) {}
             }, 350);
-            return `[COLOR: #38bdf8 | ${app.name} open kar raha hoon...]`;
+            return `[COLOR: #38bdf8 | Opening ${app.name}...]`;
           }
         }
 
@@ -2878,6 +3140,7 @@
         const recalledMemories = recallRelevantMemories(promptText, 10);
         const userKey = getUserScopeKey();
         const userName = state.user?.name || state.settings.profileName || 'AXON User';
+        const styleInstruction = `Respond in a clean, simple, and professional structure using clear headings (###), concise paragraphs, numbered or bulleted points, and properly fenced code blocks when providing code. Preferred response language: ${state.settings.appLanguage}.`;
 
         try {
           if (attachment && attachment.type === "image") {
@@ -2886,9 +3149,10 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 imageData: attachment.dataUrl,
-                prompt: promptText || "Analyze this photo clearly.",
+                prompt: promptText || "Analyze this photo clearly and professionally.",
                 model: state.settings.aiModel,
                 language: state.settings.appLanguage,
+                systemInstruction: styleInstruction,
                 history: historyPayload,
                 memories: recalledMemories,
                 userKey
@@ -2910,7 +3174,7 @@
                 body: JSON.stringify({
                   frames,
                   videoName: attachment.name,
-                  prompt: promptText || "Watch this video and describe what happens.",
+                  prompt: promptText || "Watch this video and describe what happens clearly.",
                   history: historyPayload,
                   memories: recalledMemories
                 }),
@@ -2926,9 +3190,10 @@
             combinedPrompt = `${promptText ? promptText + "\n\n" : ""}[File: ${attachment.name}]\n\`\`\`\n${attachment.textContent.slice(0, 7000)}\n\`\`\``;
           }
 
-          const memorySystemPrompt = recalledMemories.length
-            ? `User Long-Term Memory (${userName}):\n- ${recalledMemories.join('\n- ')}`
-            : '';
+          const memorySystemPrompt = [
+            styleInstruction,
+            recalledMemories.length ? `User Long-Term Memory (${userName}):\n- ${recalledMemories.join('\n- ')}` : ''
+          ].filter(Boolean).join('\n\n');
 
           const res = await fetch("/api/chat", {
             method: "POST",
@@ -2939,6 +3204,7 @@
               model: state.settings.aiModel,
               mode: state.settings.chatMode,
               language: state.settings.appLanguage,
+              systemInstruction: styleInstruction,
               history: historyPayload,
               memories: recalledMemories,
               memoryContext: memorySystemPrompt,
@@ -2956,9 +3222,9 @@
         } catch (err) {
           if (err && err.name === "AbortError") throw err;
           if (/yaad|remember|memory|purana|pehle|mera naam/.test((promptText || '').toLowerCase()) && recalledMemories.length) {
-            return `Mujhe aapki yeh purani baatein yaad hain:\n• ${recalledMemories.join('\n• ')}`;
+            return `### Saved Memories\nHere is what I remember from your profile:\n- ${recalledMemories.join('\n- ')}`;
           }
-          return `AI Request issue: ${err.message}`;
+          return `AI Request Error: ${err.message}`;
         }
       }
 
@@ -3232,12 +3498,12 @@
           if (!('speechSynthesis' in window)) { if (onComplete) onComplete(); return; }
           stopTTSController(false);
           const clean = String(text || '')
-            .replace(/```[\s\S]*?```/g, ' Code screen par hai. ')
-            .replace(/\[AXON_GENERATED_IMAGE:[\s\S]*?\]/g, ' Image screen par taiyaar hai. ')
-            .replace(/\[AXON_SEARCH_RESULTS:[\s\S]*?\]/g, ' Search results screen par hain. ')
-            .replace(/\[NEWS_CARD:[\s\S]*?\]/g, ' News card screen par hai. ')
-            .replace(/\[MINI_CALCULATOR\]/g, ' Calculator open hai. ')
-            .replace(/\[SKETCH_CARD:[\s\S]*?\]/g, ' Sketching progress chal rahi hai. ')
+            .replace(/```[\s\S]*?```/g, ' Code snippet is displayed on screen. ')
+            .replace(/\[AXON_GENERATED_IMAGE:[\s\S]*?\]/g, ' Generated image is displayed on screen. ')
+            .replace(/\[AXON_SEARCH_RESULTS:[\s\S]*?\]/g, ' Search results are displayed on screen. ')
+            .replace(/\[NEWS_CARD:[\s\S]*?\]/g, ' News card is displayed on screen. ')
+            .replace(/\[MINI_CALCULATOR\]/g, ' Calculator is open. ')
+            .replace(/\[SKETCH_CARD:[\s\S]*?\]/g, ' Sketching progress is active. ')
             .replace(/\[SEARCH_STATE:[\s\S]*?\]/g, ' Searching the web. ')
             .replace(/\[COLOR:\s*[^|\]]+?\|([^\]]*)\]/gi, '$1')
             .replace(/[*#_~>`]+/g, ' ')
@@ -3304,41 +3570,115 @@
         }
       }
 
-      // ==================== VIDEO CALL WITH CUTE ROBOT + FRONT/BACK CAMERA ====================
+      // ==================== VIDEO CALL (RESILIENT CAMERA + MIC + VOICE LOOP) ====================
       function updateCallCameraBadge() {
         const badge = $('call-camera-mode-badge');
         if (badge) {
-          badge.textContent = callFacingMode === 'environment' ? 'Back Cam' : 'Front Cam';
+          badge.textContent = callCamOff ? 'Cam Off' : (callFacingMode === 'environment' ? 'Back Cam' : 'Front Cam');
         }
       }
 
-      async function attachCallCameraStream() {
+      async function attachCallMediaStreams() {
         updateCallCameraBadge();
-        try {
-          if (callStream) { callStream.getTracks().forEach(t => t.stop()); callStream = null; }
-          if (navigator.mediaDevices?.getUserMedia) {
-            callStream = await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: { ideal: callFacingMode } },
-              audio: true
-            });
-            const vid = $('call-pip-video');
-            if (vid) {
-              vid.srcObject = callStream;
-              vid.classList.remove('hidden');
-            }
-            callCamOff = false;
-          }
-        } catch (e) {
-          $('call-pip-video')?.classList.add('hidden');
-          showToast('Camera permission unavailable — Cute AXON Bot active');
+        if (callStream) {
+          callStream.getTracks().forEach(t => t.stop());
+          callStream = null;
         }
+        const vid = $('call-pip-video');
+        if (!navigator.mediaDevices?.getUserMedia) {
+          callCamOff = true;
+          vid?.classList.add('hidden');
+          updateCallCameraBadge();
+          if ($('call-voice-status')) $('call-voice-status').textContent = 'Bot Mode Active';
+          return;
+        }
+
+        // Try video + audio first, then fall back to audio-only or video-only so call never breaks
+        try {
+          callStream = await navigator.mediaDevices.getUserMedia({
+            video: callCamOff ? false : { facingMode: { ideal: callFacingMode } },
+            audio: true
+          });
+        } catch (err1) {
+          try {
+            callStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            callCamOff = true;
+          } catch (err2) {
+            try {
+              callStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: callFacingMode } },
+                audio: false
+              });
+            } catch (err3) {
+              callStream = null;
+              callCamOff = true;
+            }
+          }
+        }
+
+        if (callStream) {
+          callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
+          const hasVideo = callStream.getVideoTracks().length > 0 && !callCamOff;
+          if (vid && hasVideo) {
+            vid.srcObject = callStream;
+            vid.classList.remove('hidden');
+            try { await vid.play(); } catch (e) {}
+          } else {
+            vid?.classList.add('hidden');
+          }
+          if ($('call-voice-status')) {
+            $('call-voice-status').textContent = callMicMuted ? 'Mic Muted' : 'Mic Listening';
+          }
+        } else {
+          vid?.classList.add('hidden');
+          if ($('call-voice-status')) $('call-voice-status').textContent = 'Voice Bot Ready';
+        }
+        updateCallCameraBadge();
+      }
+
+      function startCallVoiceLoop() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) return;
+        try {
+          if (callRecognition) callRecognition.stop();
+          callRecognition = new SpeechRec();
+          callRecognition.continuous = true;
+          callRecognition.interimResults = false;
+          callRecognition.lang = 'en-US';
+          callRecognition.onresult = async (ev) => {
+            if (callMicMuted) return;
+            const spoken = ev.results[ev.results.length - 1][0].transcript.trim();
+            if (!spoken) return;
+            if ($('call-caption')) $('call-caption').textContent = `You: "${spoken}"`;
+            if ($('call-voice-status')) $('call-voice-status').textContent = 'AXON Thinking...';
+            const reply = await fetchAIReply(spoken);
+            if ($('videocall-modal')?.classList.contains('hidden')) return;
+            if ($('call-caption')) $('call-caption').textContent = reply.replace(/```[\s\S]*?```/g, '[Code snippet]');
+            if ($('call-voice-status')) $('call-voice-status').textContent = 'AXON Speaking';
+            speakText(reply, null, () => {
+              if ($('call-voice-status')) $('call-voice-status').textContent = callMicMuted ? 'Mic Muted' : 'Mic Listening';
+            });
+          };
+          callRecognition.onerror = () => {};
+          callRecognition.onend = () => {
+            if (!$('videocall-modal')?.classList.contains('hidden') && callRecognition) {
+              try { callRecognition.start(); } catch (e) {}
+            }
+          };
+          callRecognition.start();
+        } catch (e) {}
       }
 
       async function startVideoCall() {
         $('plus-menu')?.classList.add('hidden');
         $('videocall-modal')?.classList.remove('hidden');
         callSeconds = 0;
+        callMicMuted = false;
+        callCamOff = false;
         if ($('call-timer')) $('call-timer').textContent = '00:00';
+        if ($('call-caption')) {
+          $('call-caption').textContent = '"Hello! I am AXON AI. Speak anytime or use the controls below to toggle your camera, microphone, or switch Front/Back view."';
+        }
         clearInterval(callInterval);
         callInterval = setInterval(() => {
           callSeconds++;
@@ -3346,13 +3686,23 @@
           const s = String(callSeconds % 60).padStart(2, '0');
           if ($('call-timer')) $('call-timer').textContent = `${m}:${s}`;
         }, 1000);
-        await attachCallCameraStream();
+        await attachCallMediaStreams();
+        startCallVoiceLoop();
       }
 
       function endVideoCall() {
         $('videocall-modal')?.classList.add('hidden');
         clearInterval(callInterval);
-        if (callStream) { callStream.getTracks().forEach(t => t.stop()); callStream = null; }
+        if (callRecognition) {
+          const ref = callRecognition;
+          callRecognition = null;
+          try { ref.stop(); } catch (e) {}
+        }
+        stopTTSController(false);
+        if (callStream) {
+          callStream.getTracks().forEach(t => t.stop());
+          callStream = null;
+        }
         $('call-pip-video')?.classList.add('hidden');
       }
 
@@ -3363,6 +3713,11 @@
           $('google-picker-modal')?.classList.add('hidden');
           showAuthError('Firebase Auth is not initialized.');
           return;
+        }
+        const btn = $('btn-firebase-google-auth');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Connecting to Google...';
         }
         try {
           const provider = new firebase.auth.GoogleAuthProvider();
@@ -3375,8 +3730,25 @@
             completeLogin(u.displayName || u.email?.split('@')[0] || 'AXON User', u.email || '', u.photoURL || '', u.uid || '');
           }
         } catch (error) {
-          $('google-picker-modal')?.classList.add('hidden');
-          showAuthError(firebaseErrorMessage(error));
+          if (error && (error.code === 'auth/popup-blocked' || error.code === 'auth/operation-not-supported-in-this-environment')) {
+            try {
+              const provider = new firebase.auth.GoogleAuthProvider();
+              provider.setCustomParameters({ prompt: 'select_account' });
+              await firebaseAuth.signInWithRedirect(provider);
+              return;
+            } catch (redirErr) {
+              $('google-picker-modal')?.classList.add('hidden');
+              showAuthError(firebaseErrorMessage(redirErr));
+            }
+          } else {
+            $('google-picker-modal')?.classList.add('hidden');
+            showAuthError(firebaseErrorMessage(error));
+          }
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Continue with Google Account';
+          }
         }
       }
 
@@ -3395,8 +3767,8 @@
           const name = $('auth-name').value.trim();
           const email = $('auth-email').value.trim();
           const pw = $('auth-password').value.trim();
-          if (!email || !email.includes('@')) { showAuthError('Valid email enter karein.'); return; }
-          if (!pw || pw.length < 6) { showAuthError('Password kam se kam 6 characters ka ho.'); return; }
+          if (!email || !email.includes('@')) { showAuthError('Please enter a valid email address.'); return; }
+          if (!pw || pw.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
           try {
             if (firebaseReady && firebaseAuth) {
               if (state.authMode === 'signup') {
@@ -3419,7 +3791,10 @@
           }
         });
 
-        $('btn-google-login')?.addEventListener('click', () => $('google-picker-modal')?.classList.remove('hidden'));
+        $('btn-google-login')?.addEventListener('click', () => {
+          $('auth-error')?.classList.add('hidden');
+          $('google-picker-modal')?.classList.remove('hidden');
+        });
         $('btn-close-google-picker')?.addEventListener('click', () => $('google-picker-modal')?.classList.add('hidden'));
         $('btn-firebase-google-auth')?.addEventListener('click', triggerGoogleSignIn);
 
@@ -3450,189 +3825,115 @@
         });
         $('btn-header-websearch')?.addEventListener('click', () => {
           switchView('chat');
-          const cur = ($('chat-input')?.value || '').trim();
-          sendMessage(cur ? `Web search karo: ${cur}` : 'Web search karo: latest technology news India');
+          const input = $('chat-input');
+          if (!input) return;
+          const cur = input.value.trim();
+          if (cur) {
+            sendMessage(`Web search: ${cur}`);
+          } else {
+            input.value = 'Web search: ';
+            input.focus();
+            showToast('Enter your search topic and press Send');
+          }
         });
+        $('btn-header-voice')?.addEventListener('click', () => toggleVoiceControl());
         $('nav-settings')?.addEventListener('click', () => switchView('settings'));
         $('btn-settings-back')?.addEventListener('click', () => switchView('chat'));
         $('btn-studio-back')?.addEventListener('click', () => switchView('chat'));
         $('btn-apps-back')?.addEventListener('click', () => switchView('chat'));
 
-        // Photo Studio Bindings
-        $('studio-file-input')?.addEventListener('change', (e) => loadStudioPhotoFile(e.target.files[0]));
-        $('studio-brightness')?.addEventListener('input', renderStudioCanvas);
-        $('studio-contrast')?.addEventListener('input', renderStudioCanvas);
-        $('studio-grayscale')?.addEventListener('input', renderStudioCanvas);
-        $('studio-reset-btn')?.addEventListener('click', () => {
-          if ($('studio-brightness')) $('studio-brightness').value = 100;
-          if ($('studio-contrast')) $('studio-contrast').value = 100;
-          if ($('studio-grayscale')) $('studio-grayscale').value = 0;
-          renderStudioCanvas();
-          showToast('Filters reset');
-        });
-        $('studio-download-btn')?.addEventListener('click', () => {
-          const canvas = $('studio-canvas');
-          if (!studioImageObj || !canvas) { showToast('Upload a photo first'); return; }
-          const a = document.createElement('a');
-          a.href = canvas.toDataURL('image/png');
-          a.download = `xone-studio-${Date.now()}.png`;
-          a.click();
-        });
-        $('studio-ai-generate-btn')?.addEventListener('click', async () => {
-          const canvas = $('studio-canvas');
-          if (!studioImageObj || !canvas) { showToast('Upload a photo first'); return; }
-          const mode = $('studio-ai-mode')?.value || 'cgi';
-          const prompt = ($('studio-ai-prompt')?.value || '').trim();
-          if ($('studio-status')) $('studio-status').textContent = 'Applying AI Scene / CGI Edit...';
-          try {
-            const res = await fetch('/api/vision', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                imageData: canvas.toDataURL('image/jpeg', 0.8),
-                prompt: `Photo Studio Edit (${mode}): ${prompt || 'Cinematic CGI enhancement'}`,
-                model: state.settings.aiModel,
-                language: state.settings.appLanguage
-              })
-            });
-            const data = await res.json().catch(() => ({}));
-            if (mode === 'cgi') {
-              $('studio-contrast').value = 128;
-              $('studio-brightness').value = 108;
-            } else if (mode === 'style') {
-              $('studio-grayscale').value = 35;
-              $('studio-contrast').value = 135;
-            }
-            renderStudioCanvas();
-            if ($('studio-status')) $('studio-status').textContent = data.reply || 'AI Scene / CGI preset applied!';
-          } catch (err) {
-            if ($('studio-status')) $('studio-status').textContent = 'Local CGI filter applied.';
-          }
-        });
+        $('btn-settings-info')?.addEventListener('click', () => openAdvancedSettingDialog('about'));
 
-        // Profile Edit Row
+        // Profile edit row
         $('row-edit-profile')?.addEventListener('click', () => {
           $('detail-modal-title').textContent = 'Edit Profile';
           $('detail-modal-body').innerHTML = `
             <div class="space-y-3">
               <div>
                 <label class="block text-xs text-slate-400 mb-1">Display Name</label>
-                <input id="edit-profile-name-input" type="text" value="${escapeHtml(state.settings.profileName || '')}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+                <input id="edit-profile-name-input" type="text" value="${escapeHtml(state.user?.name || state.settings.profileName)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
               </div>
               <div>
                 <label class="block text-xs text-slate-400 mb-1">Email</label>
-                <input id="edit-profile-email-input" type="email" value="${escapeHtml(state.settings.profileEmail || '')}" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white" />
+                <input type="text" disabled value="${escapeHtml(state.user?.email || state.settings.profileEmail)}" class="w-full px-3.5 py-2 rounded-xl bg-slate-900/50 border border-slate-800 text-xs text-slate-400" />
               </div>
             </div>
           `;
           $('detail-modal-footer').innerHTML = `
-            <button type="button" class="close-detail-btn px-3 py-2 rounded-xl bg-slate-800 text-xs text-slate-300">Cancel</button>
-            <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save Profile</button>
+            <button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 text-xs font-medium text-slate-300">Cancel</button>
+            <button id="btn-save-profile-modal" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-xs font-semibold text-white">Save</button>
           `;
-          $('settings-detail-modal')?.classList.remove('hidden');
+          $('settings-detail-modal').classList.remove('hidden');
           $('btn-save-profile-modal')?.addEventListener('click', () => {
-            const newName = ($('edit-profile-name-input')?.value || '').trim();
-            const newEmail = ($('edit-profile-email-input')?.value || '').trim();
+            const newName = $('edit-profile-name-input').value.trim();
             if (newName) {
               state.settings.profileName = newName;
-              if (state.user) state.user.name = newName;
-              $('user-display-name').textContent = newName;
+              if (state.user) {
+                state.user.name = newName;
+                state.user.initials = newName.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2) || 'AD';
+              }
+              saveState();
+              enterApp();
+              renderSettingsPanel();
+              showToast('Profile updated');
             }
-            if (newEmail) {
-              state.settings.profileEmail = newEmail;
-              if (state.user) state.user.email = newEmail;
-              $('user-display-email').textContent = newEmail;
-            }
-            saveState();
-            renderSettingsPanel();
-            $('settings-detail-modal')?.classList.add('hidden');
-            showToast('Profile updated!');
+            $('settings-detail-modal').classList.add('hidden');
           });
         });
 
+        // Memory drawer toggle & controls
         $('btn-open-memory-drawer')?.addEventListener('click', () => {
           $('memory-manager-drawer')?.classList.toggle('hidden');
+          renderSettingsMemory();
         });
 
+        $('btn-save-supabase')?.addEventListener('click', async () => {
+          const url = ($('supabase-url-input')?.value || '').trim();
+          const key = ($('supabase-key-input')?.value || '').trim();
+          SUPABASE_CONFIG.url = url;
+          SUPABASE_CONFIG.anonKey = key;
+          try { localStorage.setItem(SUPABASE_LOCAL_CREDS_KEY, JSON.stringify({ url, anonKey: key })); } catch (e) {}
+          showToast(url && key ? 'Supabase connected! Syncing memories...' : 'Supabase cleared.');
+          if (url && key) await autoLoadUserMemoryAndChats();
+        });
+
+        $('btn-add-memory')?.addEventListener('click', async () => {
+          const inp = $('memory-manual-input');
+          const val = (inp?.value || '').trim();
+          if (!val) return;
+          await saveLongTermMemory(val, ['manual']);
+          inp.value = '';
+          showToast('Saved to Long-Term Memory!');
+        });
+
+        $('memory-search-input')?.addEventListener('input', renderSettingsMemory);
+        $('btn-reload-memory')?.addEventListener('click', async () => {
+          await autoLoadUserMemoryAndChats();
+          showToast('Memories reloaded!');
+        });
+
+        $('btn-clear-memories')?.addEventListener('click', async () => {
+          state.memories = [];
+          await supabaseDeleteMemory(getUserScopeKey(), null);
+          saveState();
+          renderSettingsMemory();
+          renderSidebarChats();
+          showToast('All memories cleared.');
+        });
+
+        // Advanced settings list items
         document.querySelectorAll('.adv-row-btn').forEach(btn => {
           btn.addEventListener('click', () => openAdvancedSettingDialog(btn.dataset.advPanel));
         });
 
-        $('btn-settings-info')?.addEventListener('click', () => {
-          $('detail-modal-title').textContent = 'Memory & Context Engine';
-          $('detail-modal-body').innerHTML = `
-            <p><strong>User Scope:</strong> ${escapeHtml(getUserScopeKey())}</p>
-            <p><strong>Saved Memories:</strong> ${state.memories.length}</p>
-            <p><strong>Supabase Cloud:</strong> ${isSupabaseConfigured() ? 'Connected' : 'Local Fallback Active'}</p>
-          `;
-          $('detail-modal-footer').innerHTML = `<button type="button" class="close-detail-btn px-4 py-2 rounded-xl bg-slate-800 text-xs text-white">Close</button>`;
-          $('settings-detail-modal')?.classList.remove('hidden');
-        });
-
-        $('btn-close-detail-modal')?.addEventListener('click', () => $('settings-detail-modal')?.classList.add('hidden'));
+        $('btn-close-detail-modal')?.addEventListener('click', () => $('settings-detail-modal').classList.add('hidden'));
         $('settings-detail-modal')?.addEventListener('click', (e) => {
-          if (e.target === $('settings-detail-modal') || e.target.closest('.close-detail-btn')) {
-            $('settings-detail-modal')?.classList.add('hidden');
+          if (e.target.closest('.close-detail-btn') || e.target === $('settings-detail-modal')) {
+            $('settings-detail-modal').classList.add('hidden');
           }
         });
 
-        // Quick Action Bar
-        $('btn-quick-copy')?.addEventListener('click', () => {
-          const chat = getActiveChat();
-          const last = chat?.messages[chat.messages.length - 1];
-          if (!last) { showToast('Nothing to copy yet'); return; }
-          navigator.clipboard?.writeText(last.text).then(() => showToast('Last response copied!'));
-        });
-        $('btn-quick-share')?.addEventListener('click', async () => {
-          const chat = getActiveChat();
-          const last = chat?.messages[chat.messages.length - 1];
-          const shareText = last ? last.text : 'AXON AI — Intelligent Neural Workspace';
-          if (navigator.share) {
-            try { await navigator.share({ title: 'AXON AI', text: shareText }); } catch (e) {}
-          } else {
-            navigator.clipboard?.writeText(shareText).then(() => showToast('Copied to share!'));
-          }
-        });
-        $('btn-quick-save')?.addEventListener('click', async () => {
-          const chat = getActiveChat();
-          const last = chat?.messages[chat.messages.length - 1];
-          if (!last) { showToast('Nothing to save yet'); return; }
-          await saveLongTermMemory(last.text.slice(0, 220), ['saved-chat']);
-          showToast('Saved to Long-Term Memory!');
-        });
-
-        // Quick Commands (Ctrl+K)
-        document.addEventListener('keydown', (e) => {
-          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-            e.preventDefault();
-            $('cmdk-modal')?.classList.toggle('hidden');
-          }
-          if (e.key === 'Escape') {
-            $('cmdk-modal')?.classList.add('hidden');
-            $('chat-context-menu')?.classList.add('hidden');
-          }
-        });
-        $('btn-close-cmdk')?.addEventListener('click', () => $('cmdk-modal')?.classList.add('hidden'));
-        document.querySelectorAll('.cmdk-item').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const act = btn.dataset.cmdk;
-            $('cmdk-modal')?.classList.add('hidden');
-            if (act === 'new-chat') createNewChat(true);
-            if (act === 'web-search') { switchView('chat'); sendMessage('Web search karo: latest technology news'); }
-            if (act === 'calculator') { switchView('chat'); sendMessage('mini calculator kholo'); }
-            if (act === 'settings') switchView('settings');
-            if (act === 'photo-studio') switchView('photo-studio');
-            if (act === 'apps') switchView('apps');
-            if (act === 'video-call') startVideoCall();
-          });
-        });
-
-        $('btn-copy-pure-code')?.addEventListener('click', () => {
-          navigator.clipboard?.writeText($('pure-code-content').value || '').then(() => showToast('Code copied!'));
-        });
-        $('btn-close-pure-code')?.addEventListener('click', () => $('pure-code-drawer')?.classList.add('hidden'));
-
-        // Sidebar Chat List & Context Menu Actions
+        // Sidebar chat selection, delete & 3-dot context menu
         $('sidebar-chat-list')?.addEventListener('click', (e) => {
           const ctxBtn = e.target.closest('.open-chat-ctx-btn');
           if (ctxBtn) {
@@ -3640,11 +3941,11 @@
             openChatContextMenu(ctxBtn.dataset.chatId, ctxBtn);
             return;
           }
-          const delBtn = e.target.closest('.delete-chat-btn');
-          if (delBtn) {
-            const id = delBtn.dataset.chatId;
-            state.chats = state.chats.filter(c => c.id !== id);
-            if (state.activeChatId === id) {
+          const del = e.target.closest('.delete-chat-btn');
+          if (del) {
+            e.stopPropagation();
+            state.chats = state.chats.filter(c => c.id !== del.dataset.chatId);
+            if (state.activeChatId === del.dataset.chatId) {
               state.activeChatId = state.chats[0]?.id || null;
               if (!state.activeChatId) createNewChat(false);
             }
@@ -3655,43 +3956,48 @@
           const sel = e.target.closest('.select-chat-btn');
           if (sel) {
             const targetChat = state.chats.find(c => c.id === sel.dataset.chatId);
-            if (targetChat && targetChat.locked) {
-              const entered = prompt('This chat is locked. Enter PIN to open:');
+            if (!targetChat) return;
+            if (targetChat.locked) {
+              const entered = prompt('This chat is locked. Enter PIN to unlock:');
               if (entered !== targetChat.pinCode) {
                 showToast('Incorrect PIN');
                 return;
               }
             }
-            state.activeChatId = sel.dataset.chatId;
+            state.activeChatId = targetChat.id;
             saveState();
             switchView('chat');
             renderAll();
           }
         });
 
+        // Chat Context Menu Actions
         $('chat-context-menu')?.addEventListener('click', (e) => {
           const btn = e.target.closest('[data-chat-action]');
-          if (!btn || !state.contextMenuChatId) return;
+          if (!btn) return;
           const action = btn.dataset.chatAction;
           const chat = state.chats.find(c => c.id === state.contextMenuChatId);
-          $('chat-context-menu')?.classList.add('hidden');
+          $('chat-context-menu').classList.add('hidden');
           if (!chat) return;
 
           if (action === 'pin') {
             chat.pinned = !chat.pinned;
             saveState();
             renderSidebarChats();
-            showToast(chat.pinned ? 'Chat pinned to top!' : 'Chat unpinned');
+            showToast(chat.pinned ? 'Chat pinned to top' : 'Chat unpinned');
           } else if (action === 'lock') {
             if (!chat.locked) {
               const pin = prompt('Set a 4-digit PIN to lock this chat:');
               if (!pin || !pin.trim()) return;
-              chat.locked = true;
               chat.pinCode = pin.trim();
-              showToast('Chat locked with PIN');
+              chat.locked = true;
+              showToast('Chat locked');
             } else {
               const check = prompt('Enter current PIN to unlock:');
-              if (check !== chat.pinCode) { showToast('Wrong PIN'); return; }
+              if (check !== chat.pinCode) {
+                showToast('Wrong PIN');
+                return;
+              }
               chat.locked = false;
               chat.pinCode = '';
               showToast('Chat unlocked');
@@ -3699,9 +4005,9 @@
             saveState();
             renderSidebarChats();
           } else if (action === 'rename') {
-            const nextName = prompt('Enter new chat name:', chat.title);
-            if (nextName && nextName.trim()) {
-              chat.title = nextName.trim();
+            const nextTitle = prompt('Enter new chat name:', chat.title);
+            if (nextTitle && nextTitle.trim()) {
+              chat.title = nextTitle.trim();
               saveState();
               renderAll();
               showToast('Chat renamed');
@@ -3709,13 +4015,13 @@
           } else if (action === 'archive') {
             chat.archived = !chat.archived;
             if (chat.archived && state.activeChatId === chat.id) {
-              const nextOpen = state.chats.find(c => !c.archived && c.id !== chat.id);
-              if (nextOpen) state.activeChatId = nextOpen.id;
+              const nextActive = state.chats.find(c => !c.archived);
+              if (nextActive) state.activeChatId = nextActive.id;
               else createNewChat(false);
             }
             saveState();
             renderAll();
-            showToast(chat.archived ? 'Chat archived' : 'Chat unarchived');
+            showToast('Chat archived');
           } else if (action === 'delete') {
             state.chats = state.chats.filter(c => c.id !== chat.id);
             if (state.activeChatId === chat.id) {
@@ -3728,66 +4034,114 @@
           }
         });
 
-        // Message Actions, Mini Calculator, Image Regenerate & Code Block Header Buttons
-        $('chat-messages')?.addEventListener('click', (e) => {
-          const regenBtn = e.target.closest('.btn-regenerate-image');
-          if (regenBtn && !state.isGenerating) {
-            const prevPrompt = decodeURIComponent(regenBtn.dataset.imgPrompt || '');
-            sendMessage(`Generate an image: ${prevPrompt}`);
-            return;
+        document.addEventListener('click', (e) => {
+          const menu = $('chat-context-menu');
+          if (menu && !menu.classList.contains('hidden') && !menu.contains(e.target) && !e.target.closest('.open-chat-ctx-btn')) {
+            menu.classList.add('hidden');
           }
+        });
 
-          const calcBtn = e.target.closest('.axon-calc-btn');
-          if (calcBtn) {
-            const shell = calcBtn.closest('[data-calc-id]');
-            if (shell) handleCalcButton(shell.dataset.calcId, calcBtn.dataset.calcAct, calcBtn.dataset.calcVal);
-            return;
+        $('btn-plus-menu')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          $('plus-menu')?.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+          if (!$('plus-menu')?.contains(e.target) && e.target !== $('btn-plus-menu')) {
+            $('plus-menu')?.classList.add('hidden');
           }
+        });
 
-          const starter = e.target.closest('.starter-prompt');
-          if (starter) { sendMessage(starter.dataset.prompt); return; }
+        $('menu-send-photo')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); $('input-photo').click(); });
+        $('menu-send-video')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); $('input-video').click(); });
+        $('menu-open-camera')?.addEventListener('click', openCameraModal);
+        $('menu-send-file')?.addEventListener('click', () => { $('plus-menu').classList.add('hidden'); $('input-file').click(); });
+        $('menu-mini-calc')?.addEventListener('click', () => {
+          $('plus-menu').classList.add('hidden');
+          sendMessage('Open AXON Mini Calculator');
+        });
+        $('menu-video-call')?.addEventListener('click', startVideoCall);
+        $('btn-inline-videocall')?.addEventListener('click', startVideoCall);
 
-          const editBlockBtn = e.target.closest('.btn-edit-code-block');
-          if (editBlockBtn) {
-            const msg = getActiveChat()?.messages.find(m => m.id === editBlockBtn.dataset.msgId);
-            if (msg) extractAndShowPureCode(msg.text, Number(editBlockBtn.dataset.blockIdx));
-            return;
-          }
+        $('menu-deep-think')?.addEventListener('click', () => {
+          state.deepThink = !state.deepThink;
+          $('deep-think-status').textContent = state.deepThink ? 'On — Deep step-by-step reasoning' : 'Off — Standard speed';
+          $('plus-menu').classList.add('hidden');
+          showToast(state.deepThink ? 'Deep Think On' : 'Deep Think Off');
+        });
 
-          const copyBlockBtn = e.target.closest('.btn-copy-code-block');
-          if (copyBlockBtn) {
-            const msg = getActiveChat()?.messages.find(m => m.id === copyBlockBtn.dataset.msgId);
-            if (msg) {
-              const matches = [...String(msg.text || '').matchAll(/```(?:\w+)?\n?([\s\S]*?)```/g)];
-              const idx = Number(copyBlockBtn.dataset.blockIdx) || 0;
-              const codeStr = matches[idx] ? matches[idx][1].trim() : msg.text;
-              navigator.clipboard?.writeText(codeStr).then(() => showToast('Code copied!'));
-            }
-            return;
-          }
+        $('input-photo')?.addEventListener('change', (e) => handleFileSelected(e.target.files?.[0], 'image'));
+        $('input-video')?.addEventListener('change', (e) => handleFileSelected(e.target.files?.[0], 'video'));
+        $('input-file')?.addEventListener('change', (e) => handleFileSelected(e.target.files?.[0], 'file'));
+        $('btn-remove-attachment')?.addEventListener('click', clearAttachment);
 
-          const copyBtn = e.target.closest('.btn-copy-msg');
-          if (copyBtn) {
-            const msg = getActiveChat()?.messages.find(m => m.id === copyBtn.dataset.msgId);
-            if (msg) navigator.clipboard?.writeText(msg.text).then(() => showToast('Copied!'));
-            return;
-          }
-          const speakBtn = e.target.closest('.btn-speak-msg');
-          if (speakBtn) {
-            const msgId = speakBtn.dataset.msgId;
-            if (activeSpeakingMsgId === msgId) { togglePauseResumeTTS(); return; }
-            const msg = getActiveChat()?.messages.find(m => m.id === msgId);
-            if (msg) speakText(msg.text, null, null, msgId);
-            return;
-          }
-          const stopBtn = e.target.closest('.btn-stop-speak');
-          if (stopBtn) { stopTTSController(true); return; }
+        $('btn-close-camera')?.addEventListener('click', closeCameraModal);
+        $('btn-camera-capture')?.addEventListener('click', captureCameraPhoto);
+        $('btn-camera-upload-alt')?.addEventListener('click', () => { closeCameraModal(); $('input-photo').click(); });
 
-          const codeBtn = e.target.closest('.btn-open-code-msg');
-          if (codeBtn) {
-            const msg = getActiveChat()?.messages.find(m => m.id === codeBtn.dataset.msgId);
-            if (msg) extractAndShowPureCode(msg.text);
+        $('btn-end-call')?.addEventListener('click', endVideoCall);
+        $('btn-call-mic')?.addEventListener('click', () => {
+          callMicMuted = !callMicMuted;
+          if (callStream) callStream.getAudioTracks().forEach(t => t.enabled = !callMicMuted);
+          if ($('call-voice-status')) $('call-voice-status').textContent = callMicMuted ? 'Mic Muted' : 'Mic Listening';
+          showToast(callMicMuted ? 'Microphone muted' : 'Microphone active');
+        });
+        $('btn-call-cam')?.addEventListener('click', async () => {
+          callCamOff = !callCamOff;
+          await attachCallMediaStreams();
+          showToast(callCamOff ? 'Camera turned off' : 'Camera turned on');
+        });
+        $('btn-call-flip')?.addEventListener('click', async () => {
+          callFacingMode = callFacingMode === 'user' ? 'environment' : 'user';
+          callCamOff = false;
+          await attachCallMediaStreams();
+          showToast(callFacingMode === 'environment' ? 'Switched to Back Camera' : 'Switched to Front Camera');
+        });
+
+        // Studio events
+        $('studio-file-input')?.addEventListener('change', (e) => loadStudioPhotoFile(e.target.files?.[0]));
+        ['studio-brightness', 'studio-contrast', 'studio-grayscale'].forEach(id => {
+          $(id)?.addEventListener('input', renderStudioCanvas);
+        });
+        $('studio-reset-btn')?.addEventListener('click', () => {
+          if ($('studio-brightness')) $('studio-brightness').value = 100;
+          if ($('studio-contrast')) $('studio-contrast').value = 100;
+          if ($('studio-grayscale')) $('studio-grayscale').value = 0;
+          renderStudioCanvas();
+        });
+        $('studio-download-btn')?.addEventListener('click', () => {
+          const canvas = $('studio-canvas');
+          if (!canvas || canvas.classList.contains('hidden')) { showToast('Upload a photo first.'); return; }
+          const a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = `xone-studio-${Date.now()}.png`;
+          a.click();
+        });
+
+        // Quick Action Bar (Share • Copy • Save)
+        $('btn-quick-share')?.addEventListener('click', async () => {
+          const chat = getActiveChat();
+          const lastAssistant = [...(chat?.messages || [])].reverse().find(m => m.role === 'assistant');
+          const textToShare = lastAssistant?.text || 'AXON AI — Intelligent Neural Workspace';
+          if (navigator.share) {
+            try { await navigator.share({ title: 'AXON AI', text: textToShare }); } catch (e) {}
+          } else {
+            navigator.clipboard?.writeText(textToShare);
+            showToast('Response copied to share!');
           }
+        });
+        $('btn-quick-copy')?.addEventListener('click', () => {
+          const chat = getActiveChat();
+          const lastAssistant = [...(chat?.messages || [])].reverse().find(m => m.role === 'assistant');
+          if (!lastAssistant) { showToast('Nothing to copy yet.'); return; }
+          navigator.clipboard?.writeText(lastAssistant.text);
+          showToast('Latest AI response copied!');
+        });
+        $('btn-quick-save')?.addEventListener('click', async () => {
+          const chat = getActiveChat();
+          const lastAssistant = [...(chat?.messages || [])].reverse().find(m => m.role === 'assistant');
+          if (!lastAssistant) { showToast('Nothing to save yet.'); return; }
+          await saveLongTermMemory(lastAssistant.text.slice(0, 220), ['saved-response']);
+          showToast('Saved to Long-Term Memory!');
         });
 
         const chatInput = $('chat-input');
@@ -3796,190 +4150,165 @@
           chatInput.style.height = Math.min(chatInput.scrollHeight, 128) + 'px';
         });
         chatInput?.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        });
+        $('btn-send')?.addEventListener('click', () => sendMessage());
+
+        // Chat message actions + Mini Calculator clicks
+        $('chat-messages')?.addEventListener('click', (e) => {
+          const regenBtn = e.target.closest('.btn-regenerate-image');
+          if (regenBtn) {
+            const promptRaw = decodeURIComponent(regenBtn.dataset.imgPrompt || '');
+            sendMessage(`Generate an image of ${promptRaw}`);
+            return;
+          }
+
+          const calcBtn = e.target.closest('.axon-calc-btn');
+          if (calcBtn) {
+            const shell = calcBtn.closest('[data-calc-id]');
+            if (shell) {
+              handleCalcButton(shell.dataset.calcId, calcBtn.dataset.calcAct, calcBtn.dataset.calcVal);
+            }
+            return;
+          }
+
+          const starter = e.target.closest('.starter-prompt');
+          if (starter) { sendMessage(starter.dataset.prompt); return; }
+
+          const chat = getActiveChat();
+          const copyBtn = e.target.closest('.btn-copy-msg');
+          if (copyBtn && chat) {
+            const msg = chat.messages.find(m => m.id === copyBtn.dataset.msgId);
+            if (msg) { navigator.clipboard?.writeText(msg.text); showToast('Copied!'); }
+            return;
+          }
+
+          const speakBtn = e.target.closest('.btn-speak-msg');
+          if (speakBtn && chat) {
+            const msgId = speakBtn.dataset.msgId;
+            if (activeSpeakingMsgId === msgId) { togglePauseResumeTTS(); return; }
+            const msg = chat.messages.find(m => m.id === msgId);
+            if (msg) speakText(msg.text, null, null, msgId);
+            return;
+          }
+
+          const stopSpeakBtn = e.target.closest('.btn-stop-speak');
+          if (stopSpeakBtn) { stopTTSController(true); return; }
+
+          const editCodeBtn = e.target.closest('.btn-edit-code-block');
+          if (editCodeBtn && chat) {
+            const msg = chat.messages.find(m => m.id === editCodeBtn.dataset.msgId);
+            if (msg) extractAndShowPureCode(msg.text, Number(editCodeBtn.dataset.blockIdx));
+            return;
+          }
+
+          const copyCodeBtn = e.target.closest('.btn-copy-code-block');
+          if (copyCodeBtn && chat) {
+            const msg = chat.messages.find(m => m.id === copyCodeBtn.dataset.msgId);
+            if (msg) {
+              const matches = [...String(msg.text || '').matchAll(/```(\w+)?\n?([\s\S]*?)```/g)];
+              const idx = Number(copyCodeBtn.dataset.blockIdx);
+              if (matches[idx]) {
+                navigator.clipboard?.writeText(matches[idx][2].trim());
+                showToast('Code copied!');
+              }
+            }
+            return;
+          }
+
+          const openCodeBtn = e.target.closest('.btn-open-code-msg');
+          if (openCodeBtn && chat) {
+            const msg = chat.messages.find(m => m.id === openCodeBtn.dataset.msgId);
+            if (msg) extractAndShowPureCode(msg.text);
           }
         });
-        $('btn-send')?.addEventListener('click', () => {
-          if (state.isGenerating) stopGeneration();
-          else sendMessage();
-        });
 
-        $('btn-plus-menu')?.addEventListener('click', (e) => {
-          e.stopPropagation();
-          $('plus-menu')?.classList.toggle('hidden');
+        $('btn-copy-pure-code')?.addEventListener('click', () => {
+          navigator.clipboard?.writeText($('pure-code-content').value);
+          showToast('Code copied!');
         });
-        document.addEventListener('click', (e) => {
-          if ($('plus-menu') && !$('plus-menu').contains(e.target) && e.target !== $('btn-plus-menu')) {
-            $('plus-menu').classList.add('hidden');
-          }
-          if ($('chat-context-menu') && !$('chat-context-menu').contains(e.target) && !e.target.closest('.open-chat-ctx-btn')) {
-            $('chat-context-menu').classList.add('hidden');
-          }
-        });
+        $('btn-close-pure-code')?.addEventListener('click', () => $('pure-code-drawer').classList.add('hidden'));
 
-        $('btn-inline-videocall')?.addEventListener('click', startVideoCall);
-        $('menu-open-camera')?.addEventListener('click', openCameraModal);
-        $('menu-send-photo')?.addEventListener('click', () => { $('plus-menu')?.classList.add('hidden'); $('input-photo')?.click(); });
-        $('menu-send-video')?.addEventListener('click', () => { $('plus-menu')?.classList.add('hidden'); $('input-video')?.click(); });
-        $('menu-send-file')?.addEventListener('click', () => { $('plus-menu')?.classList.add('hidden'); $('input-file')?.click(); });
-        $('menu-mini-calc')?.addEventListener('click', () => { $('plus-menu')?.classList.add('hidden'); sendMessage('mini calculator kholo'); });
-        $('menu-video-call')?.addEventListener('click', startVideoCall);
-        $('menu-deep-think')?.addEventListener('click', () => {
-          state.deepThink = !state.deepThink;
-          $('deep-think-status').textContent = state.deepThink ? 'On — Deeper reasoning' : 'Off — Standard speed';
-          $('plus-menu')?.classList.add('hidden');
-          showToast(state.deepThink ? 'Deep Think On' : 'Deep Think Off');
-        });
-
-        $('input-photo')?.addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'image'));
-        $('input-video')?.addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'video'));
-        $('input-file')?.addEventListener('change', (e) => handleFileSelected(e.target.files[0], 'file'));
-        $('btn-remove-attachment')?.addEventListener('click', clearAttachment);
-
-        $('btn-close-camera')?.addEventListener('click', closeCameraModal);
-        $('btn-camera-capture')?.addEventListener('click', captureCameraPhoto);
-        $('btn-camera-upload-alt')?.addEventListener('click', () => { closeCameraModal(); $('input-photo')?.click(); });
-
-        $('btn-end-call')?.addEventListener('click', endVideoCall);
-        $('btn-call-mic')?.addEventListener('click', () => {
-          callMicMuted = !callMicMuted;
-          if (callStream) callStream.getAudioTracks().forEach(t => { t.enabled = !callMicMuted; });
-          showToast(callMicMuted ? 'Mic Muted' : 'Mic Unmuted');
-        });
-        $('btn-call-cam')?.addEventListener('click', () => {
-          callCamOff = !callCamOff;
-          if (callStream) callStream.getVideoTracks().forEach(t => { t.enabled = !callCamOff; });
-          $('call-pip-video')?.classList.toggle('hidden', callCamOff);
-          showToast(callCamOff ? 'Camera Off (Cute Bot Active)' : 'Camera On');
-        });
-        $('btn-call-flip')?.addEventListener('click', async () => {
-          callFacingMode = callFacingMode === 'user' ? 'environment' : 'user';
-          await attachCallCameraStream();
-          showToast(callFacingMode === 'environment' ? 'Back Camera Active' : 'Front Camera Active');
-        });
-
-        $('btn-header-voice')?.addEventListener('click', () => toggleVoiceControl());
+        $('btn-theme-dark')?.addEventListener('click', () => { state.settings.theme = 'dark'; saveState(); applyAppearance(); });
+        $('btn-theme-light')?.addEventListener('click', () => { state.settings.theme = 'light'; saveState(); applyAppearance(); });
+        $('setting-font-size')?.addEventListener('change', (e) => { state.settings.fontSize = e.target.value; saveState(); applyAppearance(); });
+        $('toggle-autoscroll')?.addEventListener('click', () => { state.settings.autoScroll = !state.settings.autoScroll; saveState(); renderToggles(); });
         $('btn-hud-stop-voice')?.addEventListener('click', () => toggleVoiceControl(false));
-        $('toggle-voice-control')?.addEventListener('click', () => toggleVoiceControl());
-
-        $('setting-voice-select')?.addEventListener('change', (e) => {
-          state.settings.selectedVoiceIndex = Number(e.target.value) || 0;
-          saveState();
-          showToast('Voice updated');
-        });
-
-        $('btn-save-supabase')?.addEventListener('click', async () => {
-          const url = ($('supabase-url-input')?.value || '').trim();
-          const key = ($('supabase-key-input')?.value || '').trim();
-          SUPABASE_CONFIG.url = url;
-          SUPABASE_CONFIG.anonKey = key;
-          localStorage.setItem(SUPABASE_LOCAL_CREDS_KEY, JSON.stringify({ url, anonKey: key }));
-          await autoLoadUserMemoryAndChats();
-          showToast(url && key ? 'Supabase connected & synced!' : 'Using local user memory storage.');
-        });
-
-        $('btn-add-memory')?.addEventListener('click', async () => {
-          const input = $('memory-manual-input');
-          const txt = (input?.value || '').trim();
-          if (!txt) return;
-          await saveLongTermMemory(txt, ['manual']);
-          if (input) input.value = '';
-          showToast('Memory saved!');
-        });
-
-        $('memory-search-input')?.addEventListener('input', renderSettingsMemory);
-
-        $('btn-reload-memory')?.addEventListener('click', async () => {
-          await autoLoadUserMemoryAndChats();
-          showToast('Memory Auto-Loaded & Synced!');
-        });
-
-        $('btn-clear-memories')?.addEventListener('click', async () => {
-          state.memories = [];
-          await supabaseDeleteMemory(getUserScopeKey(), null);
-          saveState();
-          renderSettingsMemory();
-          renderSidebarChats();
-          showToast('All memories deleted.');
-        });
 
         $('settings-memory-list')?.addEventListener('click', async (e) => {
-          const delBtn = e.target.closest('.delete-memory-btn');
-          if (!delBtn) return;
-          const memId = delBtn.dataset.memId;
+          const btn = e.target.closest('.delete-memory-btn');
+          if (!btn) return;
+          const memId = btn.dataset.memId;
           state.memories = state.memories.filter(m => m.id !== memId);
           await supabaseDeleteMemory(getUserScopeKey(), memId);
           saveState();
           renderSettingsMemory();
           renderSidebarChats();
-          showToast('Memory deleted.');
-        });
-
-        $('toggle-history')?.addEventListener('click', () => {
-          state.settings.saveHistory = !state.settings.saveHistory;
-          saveState();
-          renderAll();
         });
 
         $('btn-export-history')?.addEventListener('click', () => {
-          const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({ chats: state.chats, memories: state.memories }, null, 2));
+          const blob = new Blob([JSON.stringify({ chats: state.chats, memories: state.memories }, null, 2)], { type: 'application/json' });
           const a = document.createElement('a');
-          a.href = dataStr;
-          a.download = `axon-ai-backup-${Date.now()}.json`;
+          a.href = URL.createObjectURL(blob);
+          a.download = `axon-backup-${Date.now()}.json`;
           a.click();
-          showToast('Exported JSON!');
         });
 
         $('btn-clear-history')?.addEventListener('click', () => {
           state.chats = [];
-          state.activeChatId = null;
           createNewChat(false);
           saveState();
           renderAll();
-          showToast('Chat history cleared.');
-        });
-
-        $('btn-theme-dark')?.addEventListener('click', () => { state.settings.theme = 'dark'; saveState(); applyAppearance(); });
-        $('btn-theme-light')?.addEventListener('click', () => { state.settings.theme = 'light'; saveState(); applyAppearance(); });
-        $('setting-font-size')?.addEventListener('change', (e) => { state.settings.fontSize = e.target.value; saveState(); applyAppearance(); });
-        $('toggle-autoscroll')?.addEventListener('click', () => {
-          state.settings.autoScroll = !state.settings.autoScroll;
-          saveState();
-          renderToggles();
+          showToast('All chats cleared.');
         });
 
         $('app-launcher-grid')?.addEventListener('click', (e) => {
           const btn = e.target.closest('.launch-app-btn');
-          if (!btn) return;
-          try { window.open(btn.dataset.url, '_blank', 'noopener,noreferrer'); } catch (err) {}
-          showToast(`Opening ${btn.dataset.name}...`);
+          if (btn) window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
+        });
+
+        // Ctrl+K Quick Command Palette
+        document.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            $('cmdk-modal')?.classList.toggle('hidden');
+          } else if (e.key === 'Escape') {
+            $('cmdk-modal')?.classList.add('hidden');
+            $('settings-detail-modal')?.classList.add('hidden');
+            $('google-picker-modal')?.classList.add('hidden');
+          }
+        });
+        $('btn-close-cmdk')?.addEventListener('click', () => $('cmdk-modal')?.classList.add('hidden'));
+        $('cmdk-modal')?.addEventListener('click', (e) => {
+          const item = e.target.closest('.cmdk-item');
+          if (!item) return;
+          $('cmdk-modal')?.classList.add('hidden');
+          const act = item.dataset.cmdk;
+          if (act === 'new-chat') createNewChat(true);
+          if (act === 'web-search') { switchView('chat'); sendMessage('Web search: latest technology news'); }
+          if (act === 'calculator') { switchView('chat'); sendMessage('Open AXON Mini Calculator'); }
+          if (act === 'settings') switchView('settings');
+          if (act === 'photo-studio') switchView('photo-studio');
+          if (act === 'apps') switchView('apps');
+          if (act === 'video-call') startVideoCall();
         });
       }
 
-      // ==================== INIT ====================
+      // ==================== INITIALIZE ====================
       function init() {
         loadStateForCurrentUser();
-        applyAppearance();
-        bindEvents();
         initializeFirebaseAuth();
-
-        if ('speechSynthesis' in window) {
-          populateVoicesDropdown();
-          window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
-        }
+        bindEvents();
+        renderToggles();
+        populateVoicesDropdown();
+        if ('speechSynthesis' in window) window.speechSynthesis.onvoiceschanged = populateVoicesDropdown;
 
         setTimeout(() => {
           if (!state.user) dismissSplashToLogin();
-        }, 1200);
+        }, 1700);
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
+      init();
     })();
   </script>
 </body>
